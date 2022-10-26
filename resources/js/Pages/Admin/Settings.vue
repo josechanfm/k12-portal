@@ -5,7 +5,6 @@ import Supplier from '@/Pages/Admin/Supplier.vue';
 import { defineComponent, ref } from 'vue';
 
 const activeKey = ref('1');
-
 </script>
 
 <template>
