@@ -1,12 +1,4 @@
 <template>
-    {{formState}}
-    {{modalMode}}
-    <span v-if="modalMode!=''">
-        edit or add
-    </span>
-    <span v-else>
-        null
-    </span>
     <a-button type="primary" @click="addRecord">Add</a-button>
     <a-table :dataSource="dataSource.dataSet" :columns="columns">
         <template #bodyCell="{column, text, record, index}">
@@ -21,23 +13,22 @@
     </a-table>
 
 
-    <a-modal v-model:visible="modalVisible" :title="modalMode" width="60%" @ok="handleOk">
+    <a-modal v-model:visible="modalVisible" :title="modalTitle" width="60%">
         <a-form
-            :model="formState"
+            :model="modalForm"
             name="basic"
             :label-col="{ span: 8 }"
             :wrapper-col="{ span: 16 }"
             autocomplete="off"
-            @finish="onFinish"
-            @finishFailed="onFinishFailed"
+
         >
-            <a-input type="hidden" v-model:value="formState.id"/>
+            <a-input type="hidden" v-model:value="modalForm.id"/>
             <a-form-item 
                 label="Name Zh"
                 name="name_zh"
                 :rules="[{ required: true, message: 'Please input Supplier name in Chinese' }]"
             >
-                <a-input v-model:value="formState.name_zh" />
+                <a-input v-model:value="modalForm.name_zh" />
             </a-form-item>
 
             <a-form-item
@@ -45,7 +36,7 @@
                 name="name_en"
                 :rules="[{ required: true, message: 'Please input Supplier name in English!' }]"
             >
-                <a-input v-model:value="formState.name_en" />
+                <a-input v-model:value="modalForm.name_en" />
             </a-form-item>
 
             <a-form-item
@@ -53,7 +44,7 @@
                 name="email"
                 :rules="[{ required: true, message: 'Please input Email' }]"
             >
-                <a-input v-model:value="formState.email" />
+                <a-input v-model:value="modalForm.email" />
             </a-form-item>
 
             <a-form-item
@@ -61,7 +52,7 @@
                 name="phone"
                 :rules="[{ required: true, message: 'Please input contact Phone number' }]"
             >
-                <a-input v-model:value="formState.phone" />
+                <a-input v-model:value="modalForm.phone" />
             </a-form-item>
 
             <a-form-item
@@ -70,7 +61,7 @@
                 :rules="[{ required: true, message: 'Please input location address' }]"
             >
                 <a-textarea
-                    v-model:value="formState.address"
+                    v-model:value="modalForm.address"
                     placeholder="Please input address location of the company"
                     :auto-size="{ minRows: 2, maxRows: 5 }"
                 />
@@ -82,7 +73,7 @@
                 :rules="[{ required: true, message: 'Please input category' }]"
             >
                 <a-select
-                    v-model:value="formState.category"
+                    v-model:value="modalForm.category"
                     mode="multiple"
                     style="width: 100%"
                     placeholder="Select Item..."
@@ -98,7 +89,7 @@
                 name="register_date"
                 :rules="[{ required: true, message: 'Register date' }]"
             >
-                <a-date-picker v-model:value="formState.register_date" value-format="YYYY-MM-DD" />
+                <a-date-picker v-model:value="modalForm.register_date" value-format="YYYY-MM-DD" />
             </a-form-item>
             
             <a-form-item
@@ -106,7 +97,7 @@
                 name="disproved_date"
                 :rules="[{ required: true, message: 'Disproved date' }]"
             >
-                <a-date-picker v-model:value="formState.disproved_date" value-format="YYYY-MM-DD" />
+                <a-date-picker v-model:value="modalForm.disproved_date" value-format="YYYY-MM-DD" />
             </a-form-item>
 
             <a-form-item
@@ -115,7 +106,7 @@
                 :rules="[{ required: true, message: 'Remark' }]"
             >
                 <a-textarea
-                    v-model:value="formState.remark"
+                    v-model:value="modalForm.remark"
                     placeholder="Remark"
                     :auto-size="{ minRows: 2, maxRows: 5 }"
                 />
@@ -127,25 +118,28 @@
                 name="active"
                 :rules="[{ required: true, message: 'Active' }]"
             >
-                <a-switch v-model:checked="formState.active" checked-children="开" un-checked-children="关" />
+                <a-switch v-model:checked="modalForm.active" checked-children="开" un-checked-children="关" />
             </a-form-item>
 
             <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
-            <a-button type="primary" html-type="submit">Submit</a-button>
+            <a-button type="primary" @click="updateRecord(modalForm)">Save</a-button>
             </a-form-item>
         </a-form>
     </a-modal>    
 </template>
 
 <script>
+//import { Form } from 'ant-design-vue';
+import { useForm } from "@inertiajs/inertia-vue3";
 
 export default{
     data(){
         return{
             dataSource:{},
-            formState:{},
+            modalForm:{},
             modalVisible:false,
-            modalMode:'close',
+            modalTitle:'',
+            modalMode:'',
             columns:[
                 {
                     title: 'Name',
@@ -185,7 +179,6 @@ export default{
             ],
         }
     },
-    props:[],
     mounted(){
         this.fetchData();
     },
@@ -204,25 +197,45 @@ export default{
                 active:0,
             }
         },
-
+        openModal(score){
+            if(score=='Add'){
+                this.modalTitle="Add Supplier";
+                this.modalVisible=true;
+                this.modalMode='Add';
+            }else if(score=='Edit'){
+                this.modalTitle="Edit Supplier";
+                this.modalMode='Edit';
+                this.modalVisible=true;
+            }else{
+                this.modalTitle="Undefined";
+                this.modalMode='Close';
+                this.modalVisible=true;
+            }
+            
+        },
+        closeModal(){
+            this.modalTitle="Undefined";
+            this.modalMode='Close';
+            this.modalVisible=false;
+        },
         editRecord(record){
-            this.formState={...record};
-            this.modalVisible = true;
-            this.modalMode="edit";
+            this.modalForm={...record};
+            this.openModal('Edit');
         },
         deleteRecord(index){
             alert("Delete Record: "+index);
         },
         addRecord(){
-            this.formState={}
-            this.modalVisible=true;
-            this.modalMode="add";
+            this.modalForm={}
+            this.openModal('Add');
         },
-        addStore(){
+        storeRecord(){
             this.modalVisible=false;
             this.modalMode="close";
         },
-        addUpdate(){
+        updateRecord(data){
+            data._method = 'PATCH';
+            this.$inertia.post('/supplier/' + data.id, data)
             this.modalVisible=false;
             this.modalMode="close";
         },

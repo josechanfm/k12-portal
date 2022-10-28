@@ -74,7 +74,25 @@ class SupplierController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // Validator::make($request->all(),[
+        //     'merchant_id'=>['required'],
+        // ])->validate();
+        if($request->has('id')){
+            $supplier=Supplier::find($id);
+            $supplier->name_zh=$request->name_zh;
+            $supplier->save();
+            //Supplier::find($request->input('id'))->update($request->all());
+            return redirect()->back()
+                ->with('message','Payment Updated Successful.');
+        }else{
+            return response()->json([
+                'data' => $request,
+            ]);
+            // return redirect()->back()
+            //     ->with('error','Payment Updated NOT Successful.');
+        }
+
+
     }
 
     /**
