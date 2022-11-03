@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Supplier;
+use Illuminate\Support\Facades\Validator;
 
 class SupplierController extends Controller
 {
@@ -15,10 +16,7 @@ class SupplierController extends Controller
     public function index()
     {
         $data = Supplier::paginate(5);
-        return response()->json([
-            'dataSet'=>$data,
-            'status'=>true,
-        ]);
+        return response()->json($data);
 
     }
 
@@ -40,7 +38,16 @@ class SupplierController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Validator::make($request->all(), [
+            'name_zh' => ['required'],
+            'phone' => ['required'],
+            'address' => ['required'],
+            'registed_date' => ['required'],
+        ])->validate();
+
+        Supplier::create($request->all());
+        return redirect()->back();
+
     }
 
     /**
@@ -74,22 +81,19 @@ class SupplierController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Validator::make($request->all(),[
-        //     'merchant_id'=>['required'],
-        // ])->validate();
+        Validator::make($request->all(), [
+            'name_zh' => ['required'],
+            'phone' => ['required'],
+            'address' => ['required'],
+            'registed_date' => ['required'],
+        ])->validate();
         if($request->has('id')){
             $supplier=Supplier::find($id);
             $supplier->name_zh=$request->name_zh;
             $supplier->save();
-            //Supplier::find($request->input('id'))->update($request->all());
-            return redirect()->back()
-                ->with('message','Payment Updated Successful.');
+            return redirect()->back();
         }else{
-            return response()->json([
-                'data' => $request,
-            ]);
-            // return redirect()->back()
-            //     ->with('error','Payment Updated NOT Successful.');
+            return redirect()->back();
         }
 
 
@@ -103,6 +107,13 @@ class SupplierController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $supplier=Supplier::find($id);
+        if($supplier){
+            $supplier->delete();
+            return redirect()->back()
+                ->with('message', 'Blog Delete Successfully');
+
+        }
+        
     }
 }

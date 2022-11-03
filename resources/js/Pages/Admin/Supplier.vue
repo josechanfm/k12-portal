@@ -1,32 +1,36 @@
 <template>
-    <a-button type="primary" @click="addRecord">Add</a-button>
-    <a-table :dataSource="dataSource.dataSet" :columns="columns">
+    {{dataSource}}
+    <a-button type="primary" @click="createRecord()">Add</a-button>
+    <a-table :dataSource="dataSource.data" :columns="columns">
         <template #bodyCell="{column, text, record, index}">
             <template v-if="column.dataIndex!='operation'">
                 {{record[column.dataIndex]}}
             </template>
             <template v-else>
-                <a-button @click="editRecord(record)">Edit</a-button>
-                <a-button @click="deleteRecord(index)">Delete</a-button>
+                <a-button @click="editRecord(index)">Edit</a-button>
+                <a-button @click="deleteRecord(record.id)">Delete</a-button>
             </template>
         </template>
     </a-table>
 
 
-    <a-modal v-model:visible="modalVisible" :title="modalTitle" width="60%">
+    <a-modal v-model:visible="modalVisible" :title="modalTitle" width="60%" @update="updateRecord(modalForm)" @onCancel="closeModal()">
         <a-form
             :model="modalForm"
-            name="basic"
+            name="supplier"
             :label-col="{ span: 8 }"
             :wrapper-col="{ span: 16 }"
             autocomplete="off"
-
+            :rules="rules"
+            :validate-messages="validateMessages"
+            @validate="handleValidate"
+            @onFinish="onFinish"
+            @onFinishFailed="onFinishFailed"
         >
             <a-input type="hidden" v-model:value="modalForm.id"/>
             <a-form-item 
                 label="Name Zh"
                 name="name_zh"
-                :rules="[{ required: true, message: 'Please input Supplier name in Chinese' }]"
             >
                 <a-input v-model:value="modalForm.name_zh" />
             </a-form-item>
@@ -34,7 +38,6 @@
             <a-form-item
                 label="Name En"
                 name="name_en"
-                :rules="[{ required: true, message: 'Please input Supplier name in English!' }]"
             >
                 <a-input v-model:value="modalForm.name_en" />
             </a-form-item>
@@ -42,7 +45,6 @@
             <a-form-item
                 label="Email"
                 name="email"
-                :rules="[{ required: true, message: 'Please input Email' }]"
             >
                 <a-input v-model:value="modalForm.email" />
             </a-form-item>
@@ -50,7 +52,6 @@
             <a-form-item
                 label="Phone"
                 name="phone"
-                :rules="[{ required: true, message: 'Please input contact Phone number' }]"
             >
                 <a-input v-model:value="modalForm.phone" />
             </a-form-item>
@@ -58,7 +59,6 @@
             <a-form-item
                 label="Address"
                 name="address"
-                :rules="[{ required: true, message: 'Please input location address' }]"
             >
                 <a-textarea
                     v-model:value="modalForm.address"
@@ -70,7 +70,6 @@
             <a-form-item
                 label="Category"
                 name="category"
-                :rules="[{ required: true, message: 'Please input category' }]"
             >
                 <a-select
                     v-model:value="modalForm.category"
@@ -85,17 +84,15 @@
             </a-form-item>
 
             <a-form-item
-                label="Register Date"
-                name="register_date"
-                :rules="[{ required: true, message: 'Register date' }]"
+                label="Registed Date"
+                name="registed_date"
             >
-                <a-date-picker v-model:value="modalForm.register_date" value-format="YYYY-MM-DD" />
+                <a-date-picker v-model:value="modalForm.registed_date" value-format="YYYY-MM-DD" />
             </a-form-item>
             
             <a-form-item
                 label="Disproved Date"
                 name="disproved_date"
-                :rules="[{ required: true, message: 'Disproved date' }]"
             >
                 <a-date-picker v-model:value="modalForm.disproved_date" value-format="YYYY-MM-DD" />
             </a-form-item>
@@ -103,7 +100,6 @@
             <a-form-item
                 label="Remark"
                 name="remark"
-                :rules="[{ required: true, message: 'Remark' }]"
             >
                 <a-textarea
                     v-model:value="modalForm.remark"
@@ -116,27 +112,29 @@
             <a-form-item
                 label="Active"
                 name="active"
-                :rules="[{ required: true, message: 'Active' }]"
             >
                 <a-switch v-model:checked="modalForm.active" checked-children="开" un-checked-children="关" />
             </a-form-item>
-
-            <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
-            <a-button type="primary" @click="updateRecord(modalForm)">Save</a-button>
-            </a-form-item>
+            <!-- <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
+            </a-form-item> -->
         </a-form>
+        <template #footer>
+            <a-button v-if="modalMode=='Edit'" key="Update" type="primary" :loading="loading" @click="updateRecord(modalForm)">Update</a-button>
+            <a-button v-if="modalMode=='Create'"  key="Store" type="primary" :loading="loading" @click="storeRecord(modalForm)">Add</a-button>
+        </template>
     </a-modal>    
 </template>
 
 <script>
 //import { Form } from 'ant-design-vue';
-import { useForm } from "@inertiajs/inertia-vue3";
+//import { useForm } from "@inertiajs/inertia-vue3";
+import {ref} from 'vue';
 
 export default{
     data(){
         return{
-            dataSource:{},
-            modalForm:{},
+            dataSource:[],
+            modalForm:ref(),
             modalVisible:false,
             modalTitle:'',
             modalMode:'',
@@ -177,6 +175,31 @@ export default{
                     label: 'Yiminghe',
                 }
             ],
+            loading:false,
+            rules:{
+                name_zh:{
+                    required:true,
+                },
+                phone:[{
+                    required:true,
+                }],
+                address:[{
+                    required:true,
+                }],
+                registed_date:[{
+                    required:true,
+                }],
+            },
+            validateMessages:{
+                required: '${label} is required!',
+                types: {
+                    email: '${label} is not a valid email!',
+                    number: '${label} is not a valid number!',
+                },
+                number: {
+                    range: '${label} must be between ${min} and ${max}',
+                },
+            }
         }
     },
     mounted(){
@@ -197,61 +220,105 @@ export default{
                 active:0,
             }
         },
-        openModal(score){
-            if(score=='Add'){
-                this.modalTitle="Add Supplier";
+        ChangeModalMode(mode){
+            console.log("watch: "+mode);
+            if(mode=='Create'){
+                this.modalMode=mode;
+                this.modalTitle='Create Record';
                 this.modalVisible=true;
-                this.modalMode='Add';
-            }else if(score=='Edit'){
-                this.modalTitle="Edit Supplier";
-                this.modalMode='Edit';
+            }else if(mode=='Edit'){
+                this.modalMode=mode;
+                this.modalTitle='Edit Record';
                 this.modalVisible=true;
             }else{
-                this.modalTitle="Undefined";
                 this.modalMode='Close';
-                this.modalVisible=true;
+                this.modalTitle='Modal Mode undefined';
+                this.modalVisible=false;
             }
-            
         },
         closeModal(){
-            this.modalTitle="Undefined";
-            this.modalMode='Close';
-            this.modalVisible=false;
+            console.log("cancel to close modal");
+            this.ChangeModalMode('Close');
         },
-        editRecord(record){
-            this.modalForm={...record};
-            this.openModal('Edit');
+        editRecord(index){
+            console.log('edit');
+            console.log(this.dataSource.data[index]);
+            this.modalForm={...this.dataSource.data[index]};
+            this.ChangeModalMode('Edit');
         },
-        deleteRecord(index){
-            alert("Delete Record: "+index);
+        deleteRecord(recordId){
+            console.log(recordId);
+            if (!confirm('Are you sure want to remove?')) return;
+            this.$inertia.delete('/supplier/' + recordId,{
+                onSuccess: (page)=>{
+                    console.log(page);
+                },
+                onError: (error)=>{
+                    console.log(error);
+                }
+            });
+            this.ChangeModalMode('Close');
         },
-        addRecord(){
-            this.modalForm={}
-            this.openModal('Add');
+        createRecord(){
+            this.modalForm={};
+            this.ChangeModalMode('Create');
         },
         storeRecord(){
-            this.modalVisible=false;
-            this.modalMode="close";
+            this.loading=true;
+            this.$inertia.post('/supplier/', this.modalForm,{
+                onSuccess:(page)=>{
+                    console.log(page);
+                    this.ChangeModalMode('Close');
+                },
+                onError:(error)=>{
+                    console.log(error);
+                }
+            });
+            this.loading=false;
         },
         updateRecord(data){
+            //this.modalForm.validateFields();
+            console.log("validate Status: "+this.validateStatus);
+            
+            this.loading=true;
             data._method = 'PATCH';
-            this.$inertia.post('/supplier/' + data.id, data)
-            this.modalVisible=false;
-            this.modalMode="close";
+            this.$inertia.post('/supplier/' + data.id, data,{
+                onSuccess:(page)=>{
+                    console.log(page);
+                    this.modalVisible=false;
+                    this.ChangeModalMode('Close');
+                },
+                onError:(error)=>{
+                    console.log(error);
+                }
+            });
+            this.loading=false;
         },
         handleOk(e) {
-            console.log(e);
-            this.modalVisible = false;
+            //console.log(e);
             this.modalMode="close";
         },
         fetchData(){
-            axios.get("../supplier")
+            this.loading=true;
+            axios.get("/supplier")
                 .then(response=>{
-                    this.dataSource.dataSet=response.data.dataSet.data;
+                    this.dataSource=response.data;
                     console.log(response.data);
                 }
-            )
+            );
+            this.loading=false;
+        },
+        //validate on field keychange
+        handleValidate(field){
+            console.log("handleValidate: "+field);
+        },
+        onFinish(value){
+            console.log("onFinish"+value);
+        },
+        onFinishFailed(errorInfo){
+            console.log('errorInfo: '+errorInfo);
         }
-    }
+    },
+
 }
 </script>
