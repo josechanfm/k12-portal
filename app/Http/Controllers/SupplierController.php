@@ -87,18 +87,20 @@ class SupplierController extends Controller
             'address' => ['required'],
             'registed_date' => ['required'],
         ])->validate();
+        
         if($request->has('id')){
             $supplier=Supplier::find($id);
             $supplier->name_zh=$request->name_zh;
+            $supplier->phone=$request->phone;
             $supplier->save();
+            //return response()->json($supplier);
             return redirect()->back();
+            //return redirect()->back();
+            //return redirect()->route('settings');
         }else{
             return redirect()->back();
         }
-
-
     }
-
     /**
      * Remove the specified resource from storage.
      *

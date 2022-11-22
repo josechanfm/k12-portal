@@ -41,3 +41,9 @@ Route::middleware([
     Route::resource('/supplier',SupplierController::class);
 });
 
+Route::get('/test',function(){
+    return Inertia::render('Welcome');
+});
+
+
+

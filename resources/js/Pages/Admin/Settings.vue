@@ -19,13 +19,13 @@ const activeKey = ref('1');
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <a-tabs v-model:activeKey="activeKey">
-                        <a-tab-pane key="1" tab="Tab 1">
+                        <a-tab-pane key="1" tab="Supplier">
                             <Supplier/>
                         </a-tab-pane>
-                        <a-tab-pane key="2" tab="Tab 2" force-render>
+                        <a-tab-pane key="2" tab="Category" force-render>
                             Content of Tab Pane 2
                         </a-tab-pane>
-                        <a-tab-pane key="3" tab="Tab 3">
+                        <a-tab-pane key="3" tab="Location">
                             Content of Tab Pane 3
                         </a-tab-pane>
                     </a-tabs>
