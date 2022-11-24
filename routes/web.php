@@ -4,6 +4,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\SupplierController;;
+use App\Http\Controllers\PaymentSpaController;;
+use App\Http\Controllers\YearController;;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,6 +16,7 @@ use App\Http\Controllers\SupplierController;;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -45,5 +48,7 @@ Route::get('/test',function(){
     return Inertia::render('Welcome');
 });
 
+Route::resource('/payments',PaymentSpaController::class);
+Route::resource('/years',YearController::class);
 
 
