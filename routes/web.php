@@ -3,9 +3,12 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\SupplierController;;
-use App\Http\Controllers\PaymentSpaController;;
-use App\Http\Controllers\YearController;;
+use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\PaymentSpaController;
+use App\Http\Controllers\YearController;
+use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\CourseController;
+use App\Http\Controllers\KlassController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -50,5 +53,10 @@ Route::get('/test',function(){
 
 Route::resource('/payments',PaymentSpaController::class);
 Route::resource('/years',YearController::class);
+Route::resource('/subjects',SubjectController::class);
+Route::resource('/courses',CourseController::class);
+Route::resource('/klasses',KlassController::class);
+Route::get('/year/klass/disciplines/{klassId}',[KlassController::class,'disciplines']);
+Route::get('/year/klasses/{yearId}',[YearController::class,'year']);
 
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Year;
+use App\Models\Klass;
 use Illuminate\Support\Facades\Validator;
 
 class YearController extends Controller
@@ -87,5 +88,11 @@ class YearController extends Controller
                 ->with('message', 'Blog Delete Successfully');
 
         }
+    }
+    public function year($yearId){
+        $data=Klass::where('year_id',$yearId)->get();
+        return Inertia::render('Admin/Year_klasses',[
+            'klasses'=>$data,
+        ]);
     }
 }

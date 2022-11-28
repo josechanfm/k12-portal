@@ -2,19 +2,17 @@
     <AdminLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                School Years
+                Subjects template
             </h2>
         </template>
-
         <button @click="createRecord()"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Create New School Year</button>
-            <a-table :dataSource="years.data" :columns="columns">
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Create Subject template</button>
+            <a-table :dataSource="subjects.data" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex!='operation'">
                         {{record[column.dataIndex]}}
                     </template>
                     <template v-else>
-                        <a :href="'/year/klasses/'+record.id">Klasses</a>
                         <a-button @click="editRecord(index)">Edit</a-button>
                         <a-button @click="deleteRecord(record.id)">Delete</a-button>
                     </template>
@@ -26,7 +24,7 @@
         <a-form
             ref="modalRef"
             :model="modalForm"
-            name="supplier"
+            name="subjects"
             :label-col="{ span: 8 }"
             :wrapper-col="{ span: 16 }"
             autocomplete="off"
@@ -40,80 +38,18 @@
             <a-form-item label="Abbr" name="abbr">
                 <a-input v-model:value="modalForm.abbr" style="width: 100px"/>
             </a-form-item>
-            <a-form-item label="Title" name="Title">
-                <a-input v-model:value="modalForm.title" />
+            <a-form-item label="Title Zh" name="title_zh">
+                <a-input v-model:value="modalForm.title_zh" />
+            </a-form-item>
+            <a-form-item label="Title En" name="title_en">
+                <a-input v-model:value="modalForm.title_en" />
+            </a-form-item>
+            <a-form-item label="Type" name="type">
+                <a-input v-model:value="modalForm.type" />
             </a-form-item>
             <a-form-item label="Description" name="description">
                 <a-textarea v-model:value="modalForm.description" />
             </a-form-item>
-            <a-divider orientation="left">Kindergarten</a-divider>
-            <a-row>
-                <a-col :span="8"></a-col>
-                <a-col :span="8">
-                    <a-form-item label="K Section" name="ksection">
-                        <a-select
-                        v-model.value="modalForm.ksection"
-                        :options="sectionOptions"
-                        style="width: 80px"
-                        />
-                    </a-form-item>
-                </a-col>
-                <a-col :span="8">
-                    <a-form-item label="K Grade" name="kgrade">
-                        <a-select
-                        v-model.value="modalForm.kgrade"
-                        :options="gradeOptions"
-                        style="width: 80px"
-                        />
-                    </a-form-item>
-                </a-col>
-            </a-row>
-            <a-divider orientation="left">Primary</a-divider>
-            <a-row>
-                <a-col :span="8"></a-col>
-                <a-col :span="8">
-                    <a-form-item label="P Section" name="psection">
-                        <a-select
-                        v-model.value="modalForm.psection"
-                        :options="sectionOptions"
-                        style="width: 80px"
-                        />
-                    </a-form-item>
-                </a-col>
-                <a-col :span="8">
-                    <a-form-item label="P Grade" name="pgrade">
-                        <a-select
-                        v-model.value="modalForm.pgrade"
-                        :options="gradeOptions"
-                        style="width: 80px"
-                        />
-                    </a-form-item>
-                </a-col>
-            </a-row>
-            <a-divider orientation="left">Secondary</a-divider>
-            <a-row>
-                <a-col :span="8"></a-col>
-                <a-col :span="8">
-                    <a-form-item label="S Section" name="ssection">
-                        <a-select
-                        v-model.value="modalForm.ssection"
-                        :options="sectionOptions"
-                        style="width: 80px"
-                        />
-                    </a-form-item>
-                </a-col>
-                <a-col :span="8">
-                    <a-form-item label="S Grade" name="sgrade">
-                        <a-select
-                        v-model.value="modalForm.sgrade"
-                        :options="gradeOptions"
-                        style="width: 80px"
-                        />
-                    </a-form-item>
-                </a-col>
-            </a-row>
-
-            
 
 
 
@@ -138,7 +74,7 @@ export default {
     components: {
         AdminLayout,
     },
-    props: ['years', 'errors'],
+    props: ['subjects', 'errors'],
     data() {
         return {
             paymentList: [],
@@ -151,6 +87,7 @@ export default {
             modalTitle:'School Year Creation',
             modalForm:{},
             dataSource:[],
+            currentId:null,
             loading:false,
             columns:[
                 {
@@ -159,36 +96,29 @@ export default {
                     key: 'abbr',
                 },
                 {
-                    title: 'Title',
-                    dataIndex: 'title',
-                    key: 'title',
+                    title: 'Title_zh',
+                    dataIndex: 'title_zh',
+                    key: 'title_zh',
                 },
                 {
-                    title: 'Start',
-                    dataIndex: 'start',
-                    key: 'start',
+                    title: 'Title_en',
+                    dataIndex: 'title_en',
+                    key: 'title_en',
                 },
                 {
-                    title: 'End',
-                    dataIndex: 'end',
-                    key: 'end',
-                },                {
                     title: 'Operation',
                     dataIndex: 'operation',
                     key: 'operation',
                 },
             ],
             rules:{
-                name_zh:{
+                abbr:{
                     required:true,
                 },
-                phone:[{
+                title_zh:[{
                     required:true,
                 }],
-                address:[{
-                    required:true,
-                }],
-                registed_date:[{
+                type:[{
                     required:true,
                 }],
             },
@@ -278,44 +208,6 @@ export default {
                 body: null,
             }
         },
-        save(data) {
-            this.$inertia.post('/payments', data)
-            this.reset();
-            this.closeModal();
-            this.editMode = false;
-        },
-        edit(data) {
-            this.form = Object.assign({}, data);
-            this.editMode = true;
-            this.openModal();
-        },
-        update(data) {
-            data._method = 'PATCH';
-            this.$inertia.post('/payments/' + data.id, data, {
-                onSuccess: (page) => {
-                    this.modalVisible = false;
-                    this.reset();
-                    this.closeModal();
-                },
-                onError: (error) => {
-                    console.log(error);
-                }
-            });
-
-
-            //this.reset();
-            //this.closeModal();
-        },
-        deleteRow(data) {
-            if (!confirm('Are you sure want to remove?')) return;
-            data._method = 'DELETE';
-            this.$inertia.post('/payments/' + data.id, data)
-                .then(response => {
-                    console.log(response.data);
-                })
-            this.reset();
-            this.closeModal();
-        },
         ChangeModalMode(mode){
             console.log("watch: "+mode);
             if(mode=='Create'){
@@ -338,7 +230,7 @@ export default {
         storeRecord(data){
             this.$refs.modalRef.validateFields().then(()=>{
                 this.loading=true;
-                this.$inertia.post('/supplier/', data,{
+                this.$inertia.post('/subjects/', data,{
                     onSuccess:(page)=>{
                         this.ChangeModalMode('Close');
                     },
@@ -351,35 +243,15 @@ export default {
                 console.log(err);
             });
         },
-        editRecord(index){
-            console.log(index);
-            this.modalForm={...this.years.data[index]};
-            this.currentId=index;
-            this.ChangeModalMode('Edit');
-        },
-        deleteRecord(recordId){
-            console.log(recordId);
-            if (!confirm('Are you sure want to remove?')) return;
-            this.$inertia.delete('/years/' + recordId,{
-                onSuccess: (page)=>{
-                    console.log(page);
-                },
-                onError: (error)=>{
-                    console.log(error);
-                }
-            });
-            this.ChangeModalMode('Close');
-        },
-
         updateRecord(data){
             this.$refs.modalRef.validateFields().then(()=>{
                 this.loading=true;
                 data._method = 'PATCH';
-                this.$inertia.post('/supplier/' + data.id, data,{
+                this.$inertia.post('/subjects/' + data.id, data,{
                     onSuccess:(page)=>{
                         this.modalVisible=false;
                         this.ChangeModalMode('Close');
-                        this.fetchData();
+                        //this.fetchData();
                     },
                     onError:(error)=>{
                         console.log(error);
@@ -391,6 +263,26 @@ export default {
             });
            
         },
+        editRecord(index){
+            console.log(index);
+            this.modalForm={...this.subjects.data[index]};
+            this.currentId=index;
+            this.ChangeModalMode('Edit');
+        },
+        deleteRecord(recordId){
+            console.log(recordId);
+            if (!confirm('Are you sure want to remove?')) return;
+            this.$inertia.delete('/subjects/' + recordId,{
+                onSuccess: (page)=>{
+                    console.log(page);
+                },
+                onError: (error)=>{
+                    console.log(error);
+                }
+            });
+            this.ChangeModalMode('Close');
+        },
+
         createRecord(){
             this.modalForm={};
             this.ChangeModalMode('Create');
