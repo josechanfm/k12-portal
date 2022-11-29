@@ -9,7 +9,7 @@ class Subject extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'abbr', 'title_zh', 'title_en','type','description',
+        'abbr', 'title_zh', 'title_en','type','description', 'active',
     ];
 
     public function klasses(){

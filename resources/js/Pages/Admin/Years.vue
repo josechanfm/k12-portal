@@ -17,6 +17,7 @@
                         <a :href="'/year/klasses/'+record.id">Klasses</a>
                         <a-button @click="editRecord(index)">Edit</a-button>
                         <a-button @click="deleteRecord(record.id)">Delete</a-button>
+                        <a-button :href="'year/subjects/'+record.id">Subject template</a-button>
                     </template>
                 </template>
             </a-table>

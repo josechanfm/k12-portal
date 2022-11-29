@@ -58,5 +58,6 @@ Route::resource('/courses',CourseController::class);
 Route::resource('/klasses',KlassController::class);
 Route::get('/year/klass/disciplines/{klassId}',[KlassController::class,'disciplines']);
 Route::get('/year/klasses/{yearId}',[YearController::class,'year']);
+Route::get('/year/subjects/{yearId}',[YearController::class,'subjects']);
 
 

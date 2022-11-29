@@ -5,6 +5,8 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Year;
 use App\Models\Klass;
+use App\Models\Subject;
+use App\Models\Config;
 use Illuminate\Support\Facades\Validator;
 
 class YearController extends Controller
@@ -93,6 +95,18 @@ class YearController extends Controller
         $data=Klass::where('year_id',$yearId)->get();
         return Inertia::render('Admin/Year_klasses',[
             'klasses'=>$data,
+        ]);
+    }
+    public function subjects($yearId){
+        $year=Year::find($yearId);
+        $subjects=Subject::where('active',1)->get();
+        $klasses=Klass::select('id as value','acronym as label')->where('year_id',$yearId)->get();
+        $config=json_decode(Config::where('key','grades')->first()->value,true);
+        return Inertia::render('Admin/Year_subjects',[
+            'year'=>$year,
+            'subjects'=>$subjects,
+            'klasses'=>$klasses,
+            'config'=>$config
         ]);
     }
 }
