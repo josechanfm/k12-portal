@@ -5,15 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Student extends Model
+class Klassmate extends Model
 {
     use HasFactory;
-    protected $fillable=['name_zh','name_fn','gender','dob'];
+    //protected $table = 'klassmates';
+    protected $fillable = ['klass_student_id','point'];
 
-    public function klasses(){
-        return $this->belongsToMany(Klass::class,'klassmates','student_id','klass_id');
-    }
     public function scores(){
         return $this->hasMany(Score::class);
+    }
+    public function students(){
+        
     }
 }

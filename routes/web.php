@@ -9,6 +9,8 @@ use App\Http\Controllers\YearController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\KlassController;
+use App\Http\Controllers\YearPlan\YearPlanController;
+use App\Http\Controllers\YearPlan\PromotionController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -60,4 +62,11 @@ Route::get('/year/klass/disciplines/{klassId}',[KlassController::class,'discipli
 Route::get('/year/klasses/{yearId}',[YearController::class,'year']);
 Route::get('/year/subjects/{yearId}',[YearController::class,'subjects']);
 
+Route::resource('/promotion',PromotionController::class);
+Route::get('/promotion/klass/{klassId}',[PromotionController::class,'klass']);
+Route::get('/promotion/grade/{gradeId}',[PromotionController::class,'grade']);
+
+Route::prefix('year_plan')->group(function(){
+    Route::resource('/dashboard',YearPlanController::class);
+});
 

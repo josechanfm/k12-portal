@@ -12,7 +12,7 @@ class Subject extends Model
         'abbr', 'title_zh', 'title_en','type','description', 'active',
     ];
 
-    public function klasses(){
-        return $this->belongsTo(Klass::class);
-    }
+    // public function klasses(){
+    //     return $this->belongsToMany(Klass::class);
+    // }
 }
