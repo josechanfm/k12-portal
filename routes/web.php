@@ -5,12 +5,13 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\PaymentSpaController;
-use App\Http\Controllers\YearController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\KlassController;
-use App\Http\Controllers\YearPlan\YearPlanController;
-use App\Http\Controllers\YearPlan\PromotionController;
+use App\Http\Controllers\Essential\YearController;
+use App\Http\Controllers\Essential\GradeController;
+use App\Http\Controllers\Essential\YearPlanController;
+use App\Http\Controllers\Essential\PromotionController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -54,7 +55,6 @@ Route::get('/test',function(){
 });
 
 Route::resource('/payments',PaymentSpaController::class);
-Route::resource('/years',YearController::class);
 Route::resource('/subjects',SubjectController::class);
 Route::resource('/courses',CourseController::class);
 Route::resource('/klasses',KlassController::class);
@@ -67,7 +67,9 @@ Route::get('/promotion/klass/{klassId}',[PromotionController::class,'klass']);
 Route::get('/promotion/grade/{gradeId}',[PromotionController::class,'grade']);
 Route::get('/promotion/data/{klassId}',[PromotionController::class,'data']);
 
-Route::prefix('year_plan')->group(function(){
+Route::prefix('essential')->group(function(){
+    Route::resource('/years',YearController::class);
+    Route::resource('/grades/{yearId}',GradeController::class);
     Route::resource('/dashboard',YearPlanController::class);
 });
 

@@ -5,25 +5,29 @@
                 School Years
             </h2>
         </template>
-        
-        <button @click="createRecord()"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Create New School Year</button>
+        <button @click="createRecord()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">
+            Create New School Year
+        </button>
             <a-table :dataSource="years.data" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
-                    <template v-if="column.dataIndex!='operation'">
-                        {{record[column.dataIndex]}}
-                    </template>
-                    <template v-else>
-                        <a :href="'/year/klasses/'+record.id">Klasses</a>
+                    <template v-if="column.dataIndex=='operation'">
+                        <a :href="'/essential/grades/'+record.id">Klasses</a>
                         <a-button @click="editRecord(index)">Edit</a-button>
                         <a-button @click="deleteRecord(record.id)">Delete</a-button>
                         <a-button :href="'year/subjects/'+record.id">Subject template</a-button>
+                    </template>
+                    <template v-else-if="column.dataIndex=='grade_group'">
+                        <a-tag v-for="item in record[column.dataIndex]">{{item.initial}}:{{item.count}}</a-tag>
+                    </template>
+                    <template v-else>
+                        {{record[column.dataIndex]}}
                     </template>
                 </template>
             </a-table>
 
         <!-- Modal Start-->
         <a-modal v-model:visible="modalVisible" :title="modalTitle" width="60%" @update="updateRecord(modalForm)" @onCancel="closeModal()">
+            {{modalForm.period.map((t)=> t.format('YYYY-MM-DD'))}}
         <a-form
             ref="modalRef"
             :model="modalForm"
@@ -73,7 +77,7 @@
                         <a-form-item label="K Klass" name="kklass">
                             <a-select
                             v-model:value="modalForm.kklass"
-                            :options="klassOptions"
+                            :options="kklassOptions"
                             style="width: 80px"
                             />
                         </a-form-item>
@@ -82,7 +86,7 @@
                         <a-form-item label="K Grade" name="kgrade">
                             <a-select
                             v-model:value="modalForm.kgrade"
-                            :options="gradeOptions"
+                            :options="kgradeOptions"
                             style="width: 80px"
                             />
                         </a-form-item>
@@ -95,7 +99,7 @@
                         <a-form-item label="P Klass" name="pklass">
                             <a-select
                             v-model:value="modalForm.pklass"
-                            :options="klassOptions"
+                            :options="pklassOptions"
                             style="width: 80px"
                             />
                         </a-form-item>
@@ -104,7 +108,7 @@
                         <a-form-item label="P Grade" name="pgrade">
                             <a-select
                             v-model:value="modalForm.pgrade"
-                            :options="gradeOptions"
+                            :options="pgradeOptions"
                             style="width: 80px"
                             />
                         </a-form-item>
@@ -117,7 +121,7 @@
                         <a-form-item label="S Klass" name="sklass">
                             <a-select
                             v-model:value="modalForm.sklass"
-                            :options="klassOptions"
+                            :options="sklassOptions"
                             style="width: 80px"
                             />
                         </a-form-item>
@@ -126,7 +130,7 @@
                         <a-form-item label="S Grade" name="sgrade">
                             <a-select
                             v-model:value="modalForm.sgrade"
-                            :options="gradeOptions"
+                            :options="sgradeOptions"
                             style="width: 80px"
                             />
                         </a-form-item>
@@ -154,16 +158,16 @@
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { defineComponent, reactive } from 'vue';
 import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
-dayjs.extend(utc);
-dayjs.extend(timezone);
+// import utc from 'dayjs/plugin/utc';
+// import timezone from 'dayjs/plugin/timezone';
+// dayjs.extend(utc);
+// dayjs.extend(timezone);
 
 export default {
     components: {
         AdminLayout,
     },
-    props: ['years', 'errors'],
+    props: ['years','param','errors'],
     data() {
         return {
             paymentList: [],
@@ -234,6 +238,8 @@ export default {
                     range: '${label} must be between ${min} and ${max}',
                 },
             },
+            kklassOptions:[],
+            kgradeOptions:[],
             klassOptions:[
                 {
                     value: '0',
@@ -307,59 +313,15 @@ export default {
 
         }
     },
+    mounted() {
+        this.kgradeOptions=Array(this.param.kgrade+1).fill().map((_, i) => {return {value:i, label:i++}});
+        this.kklassOptions=Array(this.param.kklass+1).fill().map((_, i) => {return {value:i, label:i++}});
+        this.pgradeOptions=Array(this.param.pgrade+1).fill().map((_, i) => {return {value:i, label:i++}});
+        this.pklassOptions=Array(this.param.pklass+1).fill().map((_, i) => {return {value:i, label:i++}});
+        this.sgradeOptions=Array(this.param.sgrade+1).fill().map((_, i) => {return {value:i, label:i++}});
+        this.sklassOptions=Array(this.param.sklass+1).fill().map((_, i) => {return {value:i, label:i++}});
+    },
     methods: {
-        openModal() {
-            this.isOpen = true;
-        },
-        closeModal() {
-            this.isOpen = false;
-            this.reset();
-            this.editMode = false;
-        },
-        reset() {
-            this.form = {
-                title: null,
-                body: null,
-            }
-        },
-        save(data) {
-            this.$inertia.post('/payments', data)
-            this.reset();
-            this.closeModal();
-            this.editMode = false;
-        },
-        edit(data) {
-            this.form = Object.assign({}, data);
-            this.editMode = true;
-            this.openModal();
-        },
-        update(data) {
-            data._method = 'PATCH';
-            this.$inertia.post('/payments/' + data.id, data, {
-                onSuccess: (page) => {
-                    this.modalVisible = false;
-                    this.reset();
-                    this.closeModal();
-                },
-                onError: (error) => {
-                    console.log(error);
-                }
-            });
-
-
-            //this.reset();
-            //this.closeModal();
-        },
-        deleteRow(data) {
-            if (!confirm('Are you sure want to remove?')) return;
-            data._method = 'DELETE';
-            this.$inertia.post('/payments/' + data.id, data)
-                .then(response => {
-                    console.log(response.data);
-                })
-            this.reset();
-            this.closeModal();
-        },
         ChangeModalMode(mode){
             if(mode=='Create'){
                 this.modalMode=mode;
@@ -376,8 +338,17 @@ export default {
             }
             this.$refs.modalRef!==undefined?this.$refs.modalRef.resetFields():'';
         },
-
-
+        createRecord(){
+            this.modalForm={};
+            this.modalForm.period=[dayjs('2022/09/01', this.dateFormat), dayjs('2023/07/01', this.dateFormat)];
+            this.modalForm.kklass=this.param.kklassDefault;
+            this.modalForm.kgrade=this.param.kgradeDefault;
+            this.modalForm.pklass=this.param.pklassDefault;
+            this.modalForm.pgrade=this.param.pgradeDefault;
+            this.modalForm.sklass=this.param.sklassDefault;
+            this.modalForm.sgrade=this.param.sgradeDefault;
+            this.ChangeModalMode('Create');
+        },
         storeRecord(data){
             this.$refs.modalRef.validateFields().then(()=>{
                 this.loading=true;
@@ -401,20 +372,6 @@ export default {
             this.currentId=index;
             this.ChangeModalMode('Edit');
         },
-        deleteRecord(recordId){
-            console.log(recordId);
-            if (!confirm('Are you sure want to remove?')) return;
-            this.$inertia.delete('/years/' + recordId,{
-                onSuccess: (page)=>{
-                    console.log(page);
-                },
-                onError: (error)=>{
-                    console.log(error);
-                }
-            });
-            this.ChangeModalMode('Close');
-        },
-
         updateRecord(data){
             this.$refs.modalRef.validateFields().then(()=>{
                 this.loading=true;
@@ -434,10 +391,18 @@ export default {
             });
            
         },
-        createRecord(){
-            this.modalForm={};
-            this.modalForm.period=[dayjs('2022/09/01', this.dateFormat), dayjs('2023/07/01', this.dateFormat)];
-            this.ChangeModalMode('Create');
+        deleteRecord(recordId){
+            console.log(recordId);
+            if (!confirm('Are you sure want to remove?')) return;
+            this.$inertia.delete('/years/' + recordId,{
+                onSuccess: (page)=>{
+                    console.log(page);
+                },
+                onError: (error)=>{
+                    console.log(error);
+                }
+            });
+            this.ChangeModalMode('Close');
         },
         handleValidate(field){
             console.log("handleValidate: "+field);

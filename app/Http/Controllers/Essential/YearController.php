@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Essential;
+
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Year;
@@ -20,7 +22,11 @@ class YearController extends Controller
     public function index()
     {
         $data = Year::withCount('grades')->paginate(5);
-        return Inertia::render('Admin/Years',['years'=>$data]);
+        $param=json_decode(Config::where('key','year_creation')->first()->value);
+        return Inertia::render('Essential/Years',[
+            'years'=>$data,
+            'param'=>$param
+        ]);
         //return response()->json($data);
     }
 
@@ -78,6 +84,24 @@ class YearController extends Controller
         $sgrade=$request->input('sgrade');
         $level=1;
         $letters=['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','W','X','Y','Z'];
+        for($i=1;$i<=$kgrade;$i++){
+            $grade=new Grade;
+            $grade->year_id=$yearId;
+            $grade->level=$level++;
+            $grade->initial='P';
+            $grade->tag=$grade->initial.($i);
+            $grade->active=1;
+            $grade->save();
+            $gradeId=$grade->id;
+            for($j=1;$j<=$kklass;$j++){
+                $klass=new Klass;
+                $klass->grade_id=$gradeId;
+                $klass->letter=$letters[$j-1];
+                $klass->tag==$letters[$j];
+                $klass->save();
+            }
+        }
+
         for($i=1;$i<=$pgrade;$i++){
             $grade=new Grade;
             $grade->year_id=$yearId;

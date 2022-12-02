@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\YearPlan;
+namespace App\Http\Controllers\Essential;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -30,7 +30,7 @@ class YearPlanController extends Controller
         $config=json_decode(Config::where('key','grades')->first()->value,true);
         $grades=json_decode(Config::where('key','grades')->first()->value,true);
         $klassesSubjects=Klass::where('year_id',$yearId)->with('subjects')->get();
-        return Inertia::render('YearPlan/Dashboard',[
+        return Inertia::render('Essential/Dashboard',[
             'year'=>$year,
             'subjects'=>$subjects,
             'klasses'=>$klasses,
@@ -48,7 +48,7 @@ class YearPlanController extends Controller
      */
     public function create()
     {
-        return Inertia::render('YearPlan/Dashboard');
+        return Inertia::render('Essential/Dashboard');
     }
 
     /**

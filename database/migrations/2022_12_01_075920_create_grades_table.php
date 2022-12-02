@@ -17,11 +17,12 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('year_id');
             $table->string('level');
-            $table->char('initial',5);
+            $table->string('initial',5);
+            $table->string('initial',5);
             $table->string('title_zh')->nullable();
             $table->string('title_en')->nullable();
             $table->text('description')->nullable();
-            $table->integer('version');
+            $table->integer('version')->default(0);
             $table->boolean('active')->default(true);
             $table->timestamps();
         });

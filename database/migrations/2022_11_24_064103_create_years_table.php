@@ -15,12 +15,14 @@ return new class extends Migration
     {
         Schema::create('years', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('herit');
             $table->string('abbr');
             $table->string('title');
             $table->text('description')->nullable();
             $table->text('meta')->nullable();
             $table->date('start')->nullable();
             $table->date('end')->nullable();
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }

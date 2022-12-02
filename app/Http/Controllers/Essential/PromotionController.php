@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\YearPlan;
+namespace App\Http\Controllers\Essential;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
