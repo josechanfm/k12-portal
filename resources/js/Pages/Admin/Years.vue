@@ -5,7 +5,7 @@
                 School Years
             </h2>
         </template>
-
+        
         <button @click="createRecord()"
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Create New School Year</button>
             <a-table :dataSource="years.data" :columns="columns">
@@ -38,82 +38,101 @@
             @onFinishFailed="onFinishFailed"
         >
             <a-input type="hidden" v-model:value="modalForm.id"/>
+            <a-form-item label="Herit" name="herit">
+                <a-select
+                    v-model:value="modalForm.herit"
+                    :options="years.data.map((y)=>{
+                        return {
+                            value: y.id,
+                            label: y.title
+                        }
+                    })"
+                    style="width: 100%"
+                />
+            </a-form-item>
+
             <a-form-item label="Abbr" name="abbr">
                 <a-input v-model:value="modalForm.abbr" style="width: 100px"/>
             </a-form-item>
             <a-form-item label="Title" name="Title">
                 <a-input v-model:value="modalForm.title" />
             </a-form-item>
-            <a-form-item label="Description" name="description">
-                <a-textarea v-model:value="modalForm.description" />
+            <a-form-item label="period" name="Period">
+                <a-range-picker v-model:value="modalForm.period" />
             </a-form-item>
-            <a-divider orientation="left">Kindergarten</a-divider>
-            <a-row>
-                <a-col :span="8"></a-col>
-                <a-col :span="8">
-                    <a-form-item label="K Section" name="ksection">
-                        <a-select
-                        v-model.value="modalForm.ksection"
-                        :options="sectionOptions"
-                        style="width: 80px"
-                        />
-                    </a-form-item>
-                </a-col>
-                <a-col :span="8">
-                    <a-form-item label="K Grade" name="kgrade">
-                        <a-select
-                        v-model.value="modalForm.kgrade"
-                        :options="gradeOptions"
-                        style="width: 80px"
-                        />
-                    </a-form-item>
-                </a-col>
-            </a-row>
-            <a-divider orientation="left">Primary</a-divider>
-            <a-row>
-                <a-col :span="8"></a-col>
-                <a-col :span="8">
-                    <a-form-item label="P Section" name="psection">
-                        <a-select
-                        v-model.value="modalForm.psection"
-                        :options="sectionOptions"
-                        style="width: 80px"
-                        />
-                    </a-form-item>
-                </a-col>
-                <a-col :span="8">
-                    <a-form-item label="P Grade" name="pgrade">
-                        <a-select
-                        v-model.value="modalForm.pgrade"
-                        :options="gradeOptions"
-                        style="width: 80px"
-                        />
-                    </a-form-item>
-                </a-col>
-            </a-row>
-            <a-divider orientation="left">Secondary</a-divider>
-            <a-row>
-                <a-col :span="8"></a-col>
-                <a-col :span="8">
-                    <a-form-item label="S Section" name="ssection">
-                        <a-select
-                        v-model.value="modalForm.ssection"
-                        :options="sectionOptions"
-                        style="width: 80px"
-                        />
-                    </a-form-item>
-                </a-col>
-                <a-col :span="8">
-                    <a-form-item label="S Grade" name="sgrade">
-                        <a-select
-                        v-model.value="modalForm.sgrade"
-                        :options="gradeOptions"
-                        style="width: 80px"
-                        />
-                    </a-form-item>
-                </a-col>
-            </a-row>
+            
+            <div v-if="modalMode=='Create'">
+                <a-form-item label="Description" name="description">
+                    <a-textarea v-model:value="modalForm.description" />
+                </a-form-item>
 
+                <a-divider orientation="left">Kindergarten</a-divider>
+                <a-row>
+                    <a-col :span="8"></a-col>
+                    <a-col :span="8">
+                        <a-form-item label="K Klass" name="kklass">
+                            <a-select
+                            v-model:value="modalForm.kklass"
+                            :options="klassOptions"
+                            style="width: 80px"
+                            />
+                        </a-form-item>
+                    </a-col>
+                    <a-col :span="8">
+                        <a-form-item label="K Grade" name="kgrade">
+                            <a-select
+                            v-model:value="modalForm.kgrade"
+                            :options="gradeOptions"
+                            style="width: 80px"
+                            />
+                        </a-form-item>
+                    </a-col>
+                </a-row>
+                <a-divider orientation="left">Primary</a-divider>
+                <a-row>
+                    <a-col :span="8"></a-col>
+                    <a-col :span="8">
+                        <a-form-item label="P Klass" name="pklass">
+                            <a-select
+                            v-model:value="modalForm.pklass"
+                            :options="klassOptions"
+                            style="width: 80px"
+                            />
+                        </a-form-item>
+                    </a-col>
+                    <a-col :span="8">
+                        <a-form-item label="P Grade" name="pgrade">
+                            <a-select
+                            v-model:value="modalForm.pgrade"
+                            :options="gradeOptions"
+                            style="width: 80px"
+                            />
+                        </a-form-item>
+                    </a-col>
+                </a-row>
+                <a-divider orientation="left">Secondary</a-divider>
+                <a-row>
+                    <a-col :span="8"></a-col>
+                    <a-col :span="8">
+                        <a-form-item label="S Klass" name="sklass">
+                            <a-select
+                            v-model:value="modalForm.sklass"
+                            :options="klassOptions"
+                            style="width: 80px"
+                            />
+                        </a-form-item>
+                    </a-col>
+                    <a-col :span="8">
+                        <a-form-item label="S Grade" name="sgrade">
+                            <a-select
+                            v-model:value="modalForm.sgrade"
+                            :options="gradeOptions"
+                            style="width: 80px"
+                            />
+                        </a-form-item>
+                    </a-col>
+                </a-row>
+            </div>
             
 
 
@@ -134,6 +153,11 @@
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { defineComponent, reactive } from 'vue';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export default {
     components: {
@@ -152,6 +176,7 @@ export default {
             modalTitle:'School Year Creation',
             modalForm:{},
             dataSource:[],
+            dateFormat:'YYYY-MM-DD',
             loading:false,
             columns:[
                 {
@@ -173,7 +198,13 @@ export default {
                     title: 'End',
                     dataIndex: 'end',
                     key: 'end',
-                },                {
+                },
+                {
+                    title: 'Grade Group',
+                    dataIndex: 'grade_group',
+                    key: 'grade_group',
+                },
+                {
                     title: 'Operation',
                     dataIndex: 'operation',
                     key: 'operation',
@@ -203,8 +234,11 @@ export default {
                     range: '${label} must be between ${min} and ${max}',
                 },
             },
-            sectionOptions:[
+            klassOptions:[
                 {
+                    value: '0',
+                    label: '0',
+                },{
                     value: '1',
                     label: '1',
                 }, {
@@ -216,10 +250,19 @@ export default {
                 }, {
                     value: '4',
                     label: '4',
+                }, {
+                    value: '5',
+                    label: '5',
+                }, {
+                    value: '6',
+                    label: '6',
                 }
             ],
             gradeOptions:[
                 {
+                    value: '0',
+                    label: '0',
+                },{
                     value: '1',
                     label: '1',
                 }, {
@@ -318,7 +361,6 @@ export default {
             this.closeModal();
         },
         ChangeModalMode(mode){
-            console.log("watch: "+mode);
             if(mode=='Create'){
                 this.modalMode=mode;
                 this.modalTitle='School Year Creation';
@@ -339,7 +381,7 @@ export default {
         storeRecord(data){
             this.$refs.modalRef.validateFields().then(()=>{
                 this.loading=true;
-                this.$inertia.post('/supplier/', data,{
+                this.$inertia.post('/years/', data,{
                     onSuccess:(page)=>{
                         this.ChangeModalMode('Close');
                     },
@@ -355,6 +397,7 @@ export default {
         editRecord(index){
             console.log(index);
             this.modalForm={...this.years.data[index]};
+            this.modalForm.period=[dayjs(this.modalForm.start, this.dateFormat), dayjs(this.modalForm.end, this.dateFormat)];
             this.currentId=index;
             this.ChangeModalMode('Edit');
         },
@@ -376,11 +419,10 @@ export default {
             this.$refs.modalRef.validateFields().then(()=>{
                 this.loading=true;
                 data._method = 'PATCH';
-                this.$inertia.post('/supplier/' + data.id, data,{
+                this.$inertia.post('/years/' + data.id, data,{
                     onSuccess:(page)=>{
                         this.modalVisible=false;
                         this.ChangeModalMode('Close');
-                        this.fetchData();
                     },
                     onError:(error)=>{
                         console.log(error);
@@ -394,6 +436,7 @@ export default {
         },
         createRecord(){
             this.modalForm={};
+            this.modalForm.period=[dayjs('2022/09/01', this.dateFormat), dayjs('2023/07/01', this.dateFormat)];
             this.ChangeModalMode('Create');
         },
         handleValidate(field){

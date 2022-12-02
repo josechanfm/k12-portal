@@ -15,8 +15,19 @@ class Klass extends Model
     // public function subjects(){
     //     return $this->belongsToMany(Subject::class);
     // }
+    protected $appends= ['initial','acronym'];
+    
+    public function getInitialAttribute(){
+        return Grade::find($this->grade_id)->initial;
+    }
+    public function getAcronymAttribute(){
+        return Grade::find($this->grade_id)->initial.$this->letter;
+    }
+    public function grade(){
+        return $this->belongsTo(Grade::class);
+    }
     public function students(){
-        return $this->belongsToMany(Student::class,'klassmates','klass_id','student_id')->withPivot(['id as pivot_klassmate_id','stream','state','promote']);
+        return $this->belongsToMany(Student::class,'klass_students','klass_id','student_id')->withPivot(['id as pivot_klassmate_id','stream','state','promote']);
     }
     public function courses(){
         return $this->hasMany(Course::class);

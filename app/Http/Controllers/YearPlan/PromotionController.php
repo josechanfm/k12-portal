@@ -118,11 +118,22 @@ class PromotionController extends Controller
         echo $klasses;
     }
     public function klass($klassId){
+        
+        $grade=Klass::find($klassId)->grade;
+        $year=Year::find($grade->year_id);
+        $nextYear=Year::where('herit',$year->id)->first();
+        $nextGrade=Grade::where('year_id',$nextYear->id)->where('level',($grade->level+1))->first();
         $klass=Klass::find($klassId);
+        $nextKlasses=Klass::where('grade_id',$nextGrade->id)->get();
         $students=Klass::find($klassId)->students;
         //$courses=Klass::find($klassId)->courses;
         return Inertia::render('Annual/Promotion',[
+            'year'=>$year,
+            'nextYear'=>$nextYear,
+            'grade'=>$grade,
+            'nextGrade'=>$nextGrade,
             'klass'=>$klass,
+            'nextKlasses'=>$nextKlasses,
             'students'=>$students,
 
         ]);
@@ -130,40 +141,47 @@ class PromotionController extends Controller
 
     public function data($yearId){
         $year=Year::find($yearId);
-        $klassesStudents=Klass::where('year_id',$yearId)->with('students')->with('courses')->get();
-        $klassesStudents=Klass::where('year_id',$yearId)->with('students')->with('courses')->get();
-        $klassStudents=Klass::find(1)->students;
-        $klassCourses=Klass::find(1)->courses;
-        $yearCourses=Year::find(1)->courses;
-        $yearStudents=Year::find(1)->students;
-        $klassmateScores=Klassmate::find(1)->scores;
-        $scoreCourse=Score::find(1)->course;
-        $courseScores=Course::where('klass_id',1)->with('scores')->get();
-        $klassCourseScores=Course::find(1)->students;
-        echo 'All Students and courses of each klass in a year<br>';
-        echo $klassesStudents;
-        echo '<hr>';
-        echo 'Students in klass 1<br>';
-        echo $klassStudents;
-        echo '<hr>';
-        echo 'Courses in klass 1<br>';
-        echo $klassCourses;
-        echo '<hr>';
-        echo 'All Courses in year 1<br>';
-        echo $yearCourses;
-        echo '<hr>';
-        echo 'All Students in year 1<br>';
-        echo $yearStudents;
-        echo '<hr>';
-        echo 'All scores of a klassmate<br>';
-        echo $klassmateScores;
-        echo '<hr>';
-        echo 'a score of course<br>';
-        echo $scoreCourse;
-        echo '<hr>';
-        echo 'All scores of a couse in a klass<br>';
-        echo $courseScores;
-        echo '<hr>';
+        $yearGrades=Year::find($yearId)->grades;
+        $yearKlasses=Year::find($yearId)->klasses;
+        //$klassesStudents=Klass::where('year_id',$yearId)->with('students')->with('courses')->get();
+        // $klassesStudents=Klass::where('year_id',$yearId)->with('students')->with('courses')->get();
+        // $klassStudents=Klass::find(1)->students;
+        // $klassCourses=Klass::find(1)->courses;
+        // $yearCourses=Year::find(1)->courses;
+        // $yearStudents=Year::find(1)->students;
+        // $klassmateScores=Klassmate::find(1)->scores;
+        // $scoreCourse=Score::find(1)->course;
+        // $courseScores=Course::where('klass_id',1)->with('scores')->get();
+        // $klassCourseScores=Course::find(1)->students;
+        
+        echo $year;
+        echo $yearGrades;
+        echo $yearKlasses;
+        
+        // echo 'All Students and courses of each klass in a year<br>';
+        // echo $klassesStudents;
+        // echo '<hr>';
+        // echo 'Students in klass 1<br>';
+        // echo $klassStudents;
+        // echo '<hr>';
+        // echo 'Courses in klass 1<br>';
+        // echo $klassCourses;
+        // echo '<hr>';
+        // echo 'All Courses in year 1<br>';
+        // echo $yearCourses;
+        // echo '<hr>';
+        // echo 'All Students in year 1<br>';
+        // echo $yearStudents;
+        // echo '<hr>';
+        // echo 'All scores of a klassmate<br>';
+        // echo $klassmateScores;
+        // echo '<hr>';
+        // echo 'a score of course<br>';
+        // echo $scoreCourse;
+        // echo '<hr>';
+        // echo 'All scores of a couse in a klass<br>';
+        // echo $courseScores;
+        // echo '<hr>';
 
         // $klass=Klass::find($klassId);
         // $klassStudents=Klass::with('students')->find($klassId);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Year;
+use App\Models\Grade;
 use App\Models\Klass;
 use App\Models\Subject;
 use App\Models\Config;
@@ -18,7 +19,7 @@ class YearController extends Controller
      */
     public function index()
     {
-        $data = Year::paginate(5);
+        $data = Year::withCount('grades')->paginate(5);
         return Inertia::render('Admin/Years',['years'=>$data]);
         //return response()->json($data);
     }
@@ -44,13 +45,73 @@ class YearController extends Controller
     public function store(Request $request)
     {
         Validator::make($request->all(), [
-            'merchant_id' => ['required'],
+            'abbr' => ['required'],
+            'title' => ['required'],
+            'period'=> ['required'],
+            'kklass'=> ['required'],
+            'kgrade'=> ['required'],
+            'pklass'=> ['required'],
+            'pgrade'=> ['required'],
+            'sklass'=> ['required'],
+            'sgrade'=> ['required'],
         ])->validate();
+
         $request['notify_url']='https://abc.com';
         $request['return_url']='https://efg.com';
         $request['sign']='md5';
 
-        Year::create($request->all());
+        $year=new Year;
+        $year->herit = $request->input('herit') ?? 0;
+        $year->abbr = $request->input('abbr');
+        $year->title = $request->input('title');
+        $year->start = date('Y-m-d', strtotime($request->input('period')[0]));
+        $year->end = date('Y-m-d', strtotime($request->input('period')[1]));
+        $year->description= $request->input('description') ?? "";
+        $year->active=1;
+        $year->save();
+        $yearId=$year->id;
+        $kklass=$request->input('kklass');
+        $kgrade=$request->input('kgrade');
+        $pklass=$request->input('pklass');
+        $pgrade=$request->input('pgrade');
+        $sklass=$request->input('sklass');
+        $sgrade=$request->input('sgrade');
+        $level=1;
+        $letters=['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','W','X','Y','Z'];
+        for($i=1;$i<=$pgrade;$i++){
+            $grade=new Grade;
+            $grade->year_id=$yearId;
+            $grade->level=$level++;
+            $grade->initial='P';
+            $grade->tag=$grade->initial.($i);
+            $grade->active=1;
+            $grade->save();
+            $gradeId=$grade->id;
+            for($j=1;$j<=$pklass;$j++){
+                $klass=new Klass;
+                $klass->grade_id=$gradeId;
+                $klass->letter=$letters[$j-1];
+                $klass->tag==$letters[$j];
+                $klass->save();
+            }
+        }
+        for($i=1;$i<=$sgrade;$i++){
+            $grade=new Grade;   
+            $grade->year_id=$yearId;
+            $grade->level=$level++;
+            $grade->initial='S';
+            $grade->tag=$grade->initial.($i);
+            $grade->active=1;
+            $grade->save();
+            $gradeId=$grade->id;
+            for($j=1;$j<=$sklass;$j++){
+                $klass=new Klass;
+                $klass->grade_id=$gradeId;
+                $klass->letter=$letters[$j-1];
+                $klass->tag==$letters[$j];
+                $klass->save();
+            }
+        }
   
         return redirect()->back()
                     ->with('message', 'Article Created Successfully.');
@@ -66,11 +127,21 @@ class YearController extends Controller
     public function update(Request $request, $id)
     {
         Validator::make($request->all(),[
-            'merchant_id'=>['required'],
-            'merchantTid'=>['required'],
+            'abbr' => ['required'],
+            'title' => ['required'],
+            'period'=> ['required'],
         ])->validate();
         if($request->has('id')){
-            Year::find($request->input('id'))->update($request->all());
+            $year=Year::find($request->input('id'));
+            $year->herit = $request->input('herit') ?? 0;
+            $year->abbr = $request->input('abbr');
+            $year->title = $request->input('title');
+            $year->start = date('Y-m-d', strtotime($request->input('period')[0]));
+            $year->end = date('Y-m-d', strtotime($request->input('period')[1]));
+            $year->description= $request->input('description') ?? "";
+            $year->active=1;
+            $year->save();
+    
         }
         return redirect()->back();
     }

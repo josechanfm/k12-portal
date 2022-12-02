@@ -5,9 +5,15 @@
                 Year Plan Dashboard
             </h2>
         </template>
+        <p>Year: {{year}}</p>
+        <p>Next Year: {{nextYear}}</p>
+        <p>Grade: {{grade}}</p>
+        <p>Next Grade: {{nextGrade}}</p>
+        <p>Klass: {{klass}}</p>
+        <p>Next Klasses: {{nextKlasses}}</p>
 <!-- 
         <p>Year: {{year}}</p>
-        <p>Klass: {{klasses}}</p>
+        
         <p>Grades:{{grades}}</p>
         <hr>
         <p>{{klassesSubjects}}</p> 
@@ -90,7 +96,7 @@ export default {
         PromoteLetters,
         StudyStream
     },
-    props: ['klass','students'],
+    props: ['year','nextYear','grade','nextGrade','klass','nextKlasses','students'],
     data() {
         return {
             selectAll:false,

@@ -11,7 +11,7 @@ class Student extends Model
     protected $fillable=['name_zh','name_fn','gender','dob'];
 
     public function klasses(){
-        return $this->belongsToMany(Klass::class,'klassmates','student_id','klass_id');
+        return $this->belongsToMany(Klass::class,'klass_students','student_id','klass_id');
     }
     public function scores(){
         return $this->hasMany(Score::class);

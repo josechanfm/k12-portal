@@ -65,6 +65,7 @@ Route::get('/year/subjects/{yearId}',[YearController::class,'subjects']);
 Route::resource('/promotion',PromotionController::class);
 Route::get('/promotion/klass/{klassId}',[PromotionController::class,'klass']);
 Route::get('/promotion/grade/{gradeId}',[PromotionController::class,'grade']);
+Route::get('/promotion/data/{klassId}',[PromotionController::class,'data']);
 
 Route::prefix('year_plan')->group(function(){
     Route::resource('/dashboard',YearPlanController::class);
