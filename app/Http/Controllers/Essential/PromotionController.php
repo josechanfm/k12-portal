@@ -24,24 +24,25 @@ class PromotionController extends Controller
     public function index(Request $request)
     {
 
-        if(!$request->yearId){
-            return redirect('/admin');
+        $yearId=$request->input('yearId');
+        if(!$yearId){
+            $yearId=Config::where('key','current_year')->first()->value;
         }
-        $yearId=$request->yearId;
         $year=Year::find($yearId);
         //$subjects=Subject::where('active',1)->get();
         // $klassOptions=Klass::select('id as value','acronym as label')->where('year_id',$yearId)->get();
-        // $klasses=Klass::where('year_id',$yearId)->get();
+        //$klasses=Grade::where('year_id',$yearId)->with('klasses')->get();
         // $config=json_decode(Config::where('key','grades')->first()->value,true);
-        // $grades=json_decode(Config::where('key','grades')->first()->value,true);
+        //$grades=json_decode(Config::where('key','grades')->first()->value,true);
         // $klassesSubjects=Klass::where('year_id',$yearId)->with('subjects')->get();
-        return Inertia::render('Annual/Dashboard',[
+        $grades=Grade::where('year_id',$yearId)->with('klasses')->get();
+        return Inertia::render('Essential/Dashboard',[
             'year'=>$year,
             //'subjects'=>$subjects,
-            // 'klasses'=>$klasses,
+            //'klasses'=>$klasses,
             // 'klassOptions'=>$klassOptions,
             // 'config'=>$config,
-            // 'grades'=>$grades,
+            'grades'=>$grades,
             // 'klassesSubjects'=>$klassesSubjects
         ]);
     }

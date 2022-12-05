@@ -6,6 +6,7 @@
             </h2>
         </template>
         <p>Year: {{year}}</p>
+        <p>Grades: {{grades}}</p>
         <p>Next Year: {{nextYear}}</p>
         <p>Grade: {{grade}}</p>
         <p>Next Grade: {{nextGrade}}</p>
@@ -96,7 +97,7 @@ export default {
         PromoteLetters,
         StudyStream
     },
-    props: ['year','nextYear','grade','nextGrade','klass','nextKlasses','students'],
+    props: ['year','nextYear','grades','nextGrade','klass','nextKlasses','students'],
     data() {
         return {
             selectAll:false,

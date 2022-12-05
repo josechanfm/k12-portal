@@ -45,7 +45,9 @@
               <template #icon>
                 <PieChartOutlined />
               </template>
-              {{ item.title }}
+                <a :href="item.url">
+                  {{ item.title }}
+                </a>
             </a-menu-item>
           </template>
           <template v-else>
@@ -61,8 +63,17 @@
   };
   const list = [{
     key: '1',
-    title: 'Option 1',
-  }, {
+    title: 'Essentials',
+    children: [{
+      key: '1.1',
+      title: 'Years',
+      url:'/essential/years',
+    },{
+      key: '1.2',
+      title: 'Grades',
+      url:'/essential/grades',
+    }],
+  },{
     key: '2',
     title: 'Navigation 2',
     children: [{

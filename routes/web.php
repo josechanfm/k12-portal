@@ -65,11 +65,12 @@ Route::get('/year/subjects/{yearId}',[YearController::class,'subjects']);
 Route::resource('/promotion',PromotionController::class);
 Route::get('/promotion/klass/{klassId}',[PromotionController::class,'klass']);
 Route::get('/promotion/grade/{gradeId}',[PromotionController::class,'grade']);
-Route::get('/promotion/data/{klassId}',[PromotionController::class,'data']);
+Route::get('/promotion/data/{gradesklassId}',[PromotionController::class,'data']);
 
 Route::prefix('essential')->group(function(){
     Route::resource('/years',YearController::class);
-    Route::resource('/grades/{yearId}',GradeController::class);
+    Route::resource('/klasses',KlassController::class);
+    Route::resource('/grades',GradeController::class);
     Route::resource('/dashboard',YearPlanController::class);
 });
 

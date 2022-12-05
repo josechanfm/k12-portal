@@ -11,13 +11,14 @@
             <a-table :dataSource="years.data" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
-                        <a :href="'/essential/grades/'+record.id">Klasses</a>
+                        <a :href="'/essential/grades?yearId='+record.id">Grade</a>
                         <a-button @click="editRecord(index)">Edit</a-button>
                         <a-button @click="deleteRecord(record.id)">Delete</a-button>
                         <a-button :href="'year/subjects/'+record.id">Subject template</a-button>
                     </template>
                     <template v-else-if="column.dataIndex=='grade_group'">
-                        <a-tag v-for="item in record[column.dataIndex]">{{item.initial}}:{{item.count}}</a-tag>
+                        <a-tag v-for="item in record[column.dataIndex]" 
+                            :color="item.initial=='P'?'blue':item.initial=='S'?'green':'cyan'">{{item.initial}}:{{item.count}}</a-tag>
                     </template>
                     <template v-else>
                         {{record[column.dataIndex]}}
@@ -170,6 +171,8 @@ export default {
     props: ['years','param','errors'],
     data() {
         return {
+            kgrade:0,
+            kklass:0,
             paymentList: [],
             editMode: false,
             isOpen: false,

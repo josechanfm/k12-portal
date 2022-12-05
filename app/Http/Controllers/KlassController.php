@@ -25,7 +25,7 @@ class KlassController extends Controller
         if($request->klass){
             return redirect('year/klass/disciplines/'.$request->klass);
         };
-        $data = Klass::paginate(5);
+        $data = Klass::paginate(100);
         //$data=Klass::where('year_id',1)->paginate(5);
         //return response()->json($data);
         return Inertia::render('Admin/Klasses',[

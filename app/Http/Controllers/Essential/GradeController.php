@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Grade;
+use App\Models\Config;
 
 class GradeController extends Controller
 {
@@ -14,8 +15,12 @@ class GradeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($yearId)
+    public function index(Request $request)
     {
+        $yearId=$request->input('yearId');
+        if(!$yearId){
+            $yearId=Config::where('key','current_year')->first()->value;
+        }
         $grades = Grade::where('year_id',$yearId)->get();
         return Inertia::render('Essential/Grades',[
             'grades'=>$grades,
