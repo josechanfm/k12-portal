@@ -97,7 +97,7 @@ export default {
         PromoteLetters,
         StudyStream
     },
-    props: ['year','nextYear','grades','nextGrade','klass','nextKlasses','students'],
+    props: ['year','grades'],
     data() {
         return {
             selectAll:false,

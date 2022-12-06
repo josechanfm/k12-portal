@@ -74,3 +74,6 @@ Route::prefix('essential')->group(function(){
     Route::resource('/dashboard',YearPlanController::class);
 });
 
+Route::get('promote/getStudents/{klassId}',[PromotionController::class,'getStudents']);
+Route::post('promote/updateStudents',[PromotionController::class,'updateStudents']);
+

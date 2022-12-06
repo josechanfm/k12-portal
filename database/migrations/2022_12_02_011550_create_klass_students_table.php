@@ -17,9 +17,11 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('klass_id');
             $table->bigInteger('student_id');
+            $table->Integer('student_number')->default(0);
             $table->char('state',3)->default('ACT');
             $table->char('stream',3)->default('ART');
-            $table->tinyInteger('promote');
+            $table->Integer('promote')->default(0);
+            $table->Integer('promote_to')->default(0);
             $table->timestamps();
         });
     }

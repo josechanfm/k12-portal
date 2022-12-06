@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class KlassStudent extends Model
 {
     use HasFactory;
+    protected $fillable=['promote_to'];
+
 }

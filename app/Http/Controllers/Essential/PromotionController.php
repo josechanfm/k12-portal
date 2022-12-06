@@ -10,9 +10,10 @@ use App\Models\Grade;
 use App\Models\Subject;
 use App\Models\Klass;
 use App\Models\Config;
-use App\Models\Klassmate;
+use App\Models\KlassStudent;
 use App\Models\Score;
 use App\Models\Course;
+use Illuminate\Support\Facades\DB;
 
 class PromotionController extends Controller
 {
@@ -24,26 +25,20 @@ class PromotionController extends Controller
     public function index(Request $request)
     {
 
-        $yearId=$request->input('yearId');
-        if(!$yearId){
+        $gradeId=$request->input('gradeId');
+        if(!$gradeId){
             $yearId=Config::where('key','current_year')->first()->value;
+            $year=Year::find($yearId);
+            $grades=Grade::where('year_id',$yearId)->with('klasses')->get();
+        }else{
+            $grades=Grade::where('id',$gradeId)->with('klasses')->get();
+            $year=Year::find($grades[0]->year_id);
         }
-        $year=Year::find($yearId);
-        //$subjects=Subject::where('active',1)->get();
-        // $klassOptions=Klass::select('id as value','acronym as label')->where('year_id',$yearId)->get();
-        //$klasses=Grade::where('year_id',$yearId)->with('klasses')->get();
-        // $config=json_decode(Config::where('key','grades')->first()->value,true);
-        //$grades=json_decode(Config::where('key','grades')->first()->value,true);
-        // $klassesSubjects=Klass::where('year_id',$yearId)->with('subjects')->get();
-        $grades=Grade::where('year_id',$yearId)->with('klasses')->get();
+        // echo $grades;
+        // echo $year;
         return Inertia::render('Essential/Dashboard',[
             'year'=>$year,
-            //'subjects'=>$subjects,
-            //'klasses'=>$klasses,
-            // 'klassOptions'=>$klassOptions,
-            // 'config'=>$config,
             'grades'=>$grades,
-            // 'klassesSubjects'=>$klassesSubjects
         ]);
     }
 
@@ -112,14 +107,52 @@ class PromotionController extends Controller
     {
         //
     }
+    public function updateStudents(Request $request){
+        $students=$request->input('students');
+        foreach($students as $std){
+            switch(true){
+                case $std['id']>0:
+                    KlassStudent::find($std['id'])->update(['promote_to'=>$std['promote_to']]);    
+                    break;
+                case $std['id']=-9:
+                    KlassStudent::find($std['id'])->update(['promote_to'=>0]);
+                    break;
+                case $std['id']=-1:
+                    KlassStudent::find($std['id'])->update(['promote_to'=>-1]);
+                    break;
+            }
+          
+        }
+        return response()->json($students);
+    }
+    public function getStudents($klassId){
+        $students=Klass::find($klassId)->students;
+        $currentGrade=Grade::find(Klass::find($klassId)->grade_id);
+        $currentYear=Year::find($currentGrade->year_id);
+        $nextYear=Year::where('start','>',$currentYear->start)->orderBy('start','ASC')->first();
+        $nextGrade=Grade::where('year_id',$nextYear->id)->where('level',$currentGrade->level+1)->first();
+        $nextGradeKlasses=Klass::where('grade_id',$nextGrade->id)->get();
+        $ks=KlassStudent::find(1);
+        $data=[
+            'students'=>$students,
+            'currentYear'=>$currentYear,
+            'currentGrade'=>$currentGrade,
+            'nextYear'=>$nextYear,
+            'nextGrade'=>$nextGrade,
+            'nextGradeKlasses'=>$nextGradeKlasses,
+            'ks'=>$ks
+        ];
+        return response()->json($data);
 
+        //$students=Klass::find($klassId)->students;
+        //echo $students;
+    }
     
     public function grade($gradeId){
         $klasses=Grade::find($gradeId)->klasses;
         echo $klasses;
     }
     public function klass($klassId){
-        
         $grade=Klass::find($klassId)->grade;
         $year=Year::find($grade->year_id);
         $nextYear=Year::where('herit',$year->id)->first();

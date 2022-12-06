@@ -28,7 +28,6 @@
 
         <!-- Modal Start-->
         <a-modal v-model:visible="modalVisible" :title="modalTitle" width="60%" @update="updateRecord(modalForm)" @onCancel="closeModal()">
-            {{modalForm.period.map((t)=> t.format('YYYY-MM-DD'))}}
         <a-form
             ref="modalRef"
             :model="modalForm"
@@ -43,19 +42,6 @@
             @onFinishFailed="onFinishFailed"
         >
             <a-input type="hidden" v-model:value="modalForm.id"/>
-            <a-form-item label="Herit" name="herit">
-                <a-select
-                    v-model:value="modalForm.herit"
-                    :options="years.data.map((y)=>{
-                        return {
-                            value: y.id,
-                            label: y.title
-                        }
-                    })"
-                    style="width: 100%"
-                />
-            </a-form-item>
-
             <a-form-item label="Abbr" name="abbr">
                 <a-input v-model:value="modalForm.abbr" style="width: 100px"/>
             </a-form-item>
@@ -355,7 +341,7 @@ export default {
         storeRecord(data){
             this.$refs.modalRef.validateFields().then(()=>{
                 this.loading=true;
-                this.$inertia.post('/years/', data,{
+                this.$inertia.post('/essential/years/', data,{
                     onSuccess:(page)=>{
                         this.ChangeModalMode('Close');
                     },
@@ -379,7 +365,7 @@ export default {
             this.$refs.modalRef.validateFields().then(()=>{
                 this.loading=true;
                 data._method = 'PATCH';
-                this.$inertia.post('/years/' + data.id, data,{
+                this.$inertia.post('/essential/years/' + data.id, data,{
                     onSuccess:(page)=>{
                         this.modalVisible=false;
                         this.ChangeModalMode('Close');
@@ -397,7 +383,7 @@ export default {
         deleteRecord(recordId){
             console.log(recordId);
             if (!confirm('Are you sure want to remove?')) return;
-            this.$inertia.delete('/years/' + recordId,{
+            this.$inertia.delete('/essential/years/' + recordId,{
                 onSuccess: (page)=>{
                     console.log(page);
                 },

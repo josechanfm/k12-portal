@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Klass;
 use App\Models\Year;
+use App\Models\Grade;
 use App\Models\Disciplines;
 use Illuminate\Support\Facades\Validator;
 

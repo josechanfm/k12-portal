@@ -62,12 +62,7 @@ class YearController extends Controller
             'sgrade'=> ['required'],
         ])->validate();
 
-        $request['notify_url']='https://abc.com';
-        $request['return_url']='https://efg.com';
-        $request['sign']='md5';
-
         $year=new Year;
-        $year->herit = $request->input('herit') ?? 0;
         $year->abbr = $request->input('abbr');
         $year->title = $request->input('title');
         $year->start = date('Y-m-d', strtotime($request->input('period')[0]));

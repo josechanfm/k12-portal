@@ -2,28 +2,27 @@
     <AdminLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Year Plan Dashboard
+                升班操作
             </h2>
         </template>
+        <p>Abbr: {{year.abbr}}</p>
+        <p>Title: {{year.title}}</p>
+        <p>Description: {{year.description}}</p>
+        <p>Start: {{year.start}}</p>
+        <p>End: {{year.end}}</p>
+        <p>Active: {{year.active}}</p>
+        <p>
+            <ul>
+                <li v-for="group in year.grade_group">
+                   {{group.initial}} : {{group.count}}
+                </li>
+            </ul>
+        </p>
+        <p>{{promotion.currentYear}}</p>
 
-        <p>Year: {{year}}</p>
-        <!-- <p>Klass: {{klasses}}</p> -->
-        <!-- <p>Grades:{{grades}}</p> -->
+        <p class="text-red-500">To process specific GRADE, provide parameter with &gradeId=&ltgradeId&gt</p>
         <hr>
-        <p>{{klassesSubjects}}</p> 
 
-
-        <a-steps :current="1">
-            <a-step>
-            <!-- <span slot="title">Finished</span> -->
-            <template #title>Finished</template>
-            <template #description>
-                <span>This is a description.</span>
-            </template>
-            </a-step>
-            <a-step title="In Progress" sub-title="Left 00:00:08" description="This is a description." />
-            <a-step title="Waiting" description="This is a description." />
-        </a-steps>        
         <a-tabs v-model:activeKey="activeKey">
             <a-tab-pane key="grade" tab="Grade">
                 <h3>Number of class for each grade</h3>
@@ -36,42 +35,59 @@
                             <th class="text-left">Titile Zh</th>
                             <th class="text-left">Version</th>
                             <th class="text-left">Active</th>
-                            <th class="text-left">Operation</th>
+                            <th class="text-left">Class</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(grade, key) in grades">
+                        <tr v-for="(grade, gradeKey) in grades">
                             <td class="text-left">{{grade.level}}</td>
                             <td class="text-left">{{grade.initial}}</td>
                             <td class="text-left">{{grade.tag}}</td>
                             <td class="text-left">{{grade.title_zh}}</td>
                             <td class="text-left">{{grade.version}}</td>
                             <td class="text-left">{{grade.active}}</td>
-                            <td class="text-left"><span @click="selectGrade(key)">Klass</span></td>
+                            <td class="text-left">
+                                <ul>
+                                    <li v-for="(klass, klassKey) in grade.klasses">
+                                        <span @click="selectGradeKlass(gradeKey,klassKey)">{{grade.tag}}{{klass.letter}}</span>
+                                    </li>
+                                </ul>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </a-tab-pane>
-            <a-tab-pane key="klass" :tab="'Klass '+ (selectedGrade.tag!=='undefined'?selectedGrade.tag:'')" :disabled="(selectedGrade.length===0)">
-                <h3>Level: {{selectedGrade.level}}</h3>
-                <h3>Initial: {{selectedGrade.initial}}</h3>
-                <h3>Tag: {{selectedGrade.tag}}</h3>
-                <h3>Title: {{selectedGrade.title_zh}}</h3>
+            <a-tab-pane key="students" tab="Students" :disabled="(promotion.students.length==0)">
+                <p>{{promotion.students}}</p>
+                <p>{{promotion.currentGrade}}</p>
+                <p>{{promotion.nextYear}}</p>
+                <p>{{promotion.nextGrade}}</p>
+                <p>{{promotion.nextGradeKlasses}}</p>
+                <p>Promote: {{promotion.currentGrade.tag}} to {{promotion.nextGrade.tag}}</p>
+                <a-button type="primary" @click="confirmPromotion()">確認升班</a-button>
                 <table width="100%">
                     <thead>
                         <tr>
-                            <th class="text-left">Letter</th>
-                            <th class="text-left">Tag</th>
-                            <th class="text-left">Acronym</th>
-                            <th class="text-left">Room</th>
+                            <th class="text-left">Number</th>
+                            <th class="text-left">Name Zh</th>
+                            <th class="text-left">Stream</th>
+                            <th class="text-left">State</th>
+                            <th class="text-left">Promote Class</th>
+                            <th class="text-left">Operation</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="klass in selectedGrade.klasses">
-                            <td class="text-left">{{klass.letter}}</td>
-                            <td class="text-left">{{klass.tag}}</td>
-                            <td class="text-left">{{klass.acronym}}</td>
-                            <td class="text-left">{{klass.room}}</td>
+                        <tr v-for="student in promotion.students">
+                            <td class="text-left">{{(student.pivot.student_number)}}</td>
+                            <td class="text-left">{{(student.name_zh)}}</td>
+                            <td class="text-left">{{(student.pivot.stream)}}</td>
+                            <td class="text-left">{{(student.pivot.state)}}</td>
+                            <td class="text-left">
+                                <a-tag v-for="klass in promotion.nextGradeKlasses" :color="klass.id==student.pivot.promote_to?'blue':''" @click="promoteStudent(klass.id, student)">{{klass.letter}}</a-tag>
+                                <a-tag @click="(student.pivot.promote_to=-9)">重設</a-tag>
+                                <a-tag @click="(student.pivot.promote_to=-1)" :color="student.pivot.promote_to==-1?'blue':''">留班</a-tag>
+                            </td>
+                            <td class="text-left"><span>ss</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -96,43 +112,60 @@ export default {
     data() {
         return {
             activeKey:"grade",
-            selectedGrade:[],
-            // klassNumber:[
-            //     { value: "A", label: 'A' },
-            //     { value: "B", label: 'B' },
-            //     { value: "C", label: 'C' },
-            //     { value: "D", label: 'D' },
-            //     { value: "E", label: 'E' },
-            //     { value: "F", label: 'F' },
-            // ],
-            // klassColumns: [
-            //     {
-            //         title: 'Grade',
-            //         dataIndex:'grade',
-            //     },
-            //     {
-            //         title: 'Initial',
-            //         dataIndex:'initial',
-            //     }
-            // ],
-            // subjectColumns: [
-            //     {
-            //         title: 'Abbr',
-            //         dataIndex:'abbr',
-            //     },
-            //     {
-            //         title: 'Title Zh',
-            //         dataIndex:'title_zh',
-            //     }
-            // ]
+            promotion:{
+                'students':[],
+                'currentGrade':{},
+                'currentYear':{},
+                'nextGrade':{},
+                'nextYear':{}
+            },
+            selectedGradeKey:null,
+            selectedKlassKey:null,
         }
     },
     methods: {
-        selectGrade(gradeId){
-            console.log(gradeId);
-            this.selectedGrade = {...this.grades[gradeId]};
-            this.activeKey="klass";
+        selectGradeKlass(gradeKey,klassKey){
+            this.selectedGradeKey=gradeKey;
+            this.selectedKlassKey=klassKey;
+            console.log(this.grades[this.selectedGradeKey].klasses[this.selectedKlassKey].id);
+
+            var klassId=this.grades[this.selectedGradeKey].klasses[this.selectedKlassKey].id;
+            axios.get('/promote/getStudents/'+klassId)
+                .then(response=>{
+                    this.promotion = response.data;
+                    console.log(this.promotion);
+                    this.activeKey="students";
+                });
+        },
+        promoteStudent(klassId, student){
+            student.pivot.promote_to=klassId;
+        },
+        confirmPromotion(){
+            var students=this.promotion.students.map((std)=>{
+                return {
+                    'id':std.pivot.klass_student_id,
+                    'promote_to':std.pivot.promote_to
+                }
+            });
+            //students._method = 'PATCH';
+            axios.post('promote/updateStudents',{students:students})
+                .then(response=>{
+                    console.log(response.data);
+                })
+                .catch(error=>{
+                    console.log(error);
+                })
+
+            // console.log(students);
+            // students.forEach((std)=>{
+            //         console.log(std.klass_student_id+" = "+std.promote_to);
+            //     }
+
+            // )
+            //console.log(this.promotion.students);
         }
+
     },
 }
 </script>
+
