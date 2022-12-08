@@ -64,7 +64,9 @@ export default {
     mounted() {
     },
     methods: {
-
+        createRecord(){
+            console.log('create record');
+        }
     },
 }
 </script>

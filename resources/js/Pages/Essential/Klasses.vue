@@ -13,7 +13,7 @@
                         {{record[column.dataIndex]}}
                     </template>
                     <template v-else>
-                        <a :href="'/klasses/'+record.id">View</a>
+                        <a :href="'/essential/klasses/'+record.id">View</a>
                         <a-button @click="editRecord(index)">Edit</a-button>
                         <a-button @click="deleteRecord(record.id)">Delete</a-button>
                     </template>
@@ -270,7 +270,7 @@ export default {
         storeRecord(data){
             this.$refs.modalRef.validateFields().then(()=>{
                 this.loading=true;
-                this.$inertia.post('/klasses/', data,{
+                this.$inertia.post('/essential/klasses/', data,{
                     onSuccess:(page)=>{
                         this.ChangeModalMode('Close');
                     },
@@ -287,7 +287,7 @@ export default {
             this.$refs.modalRef.validateFields().then(()=>{
                 this.loading=true;
                 data._method = 'PATCH';
-                this.$inertia.post('/klasses/' + data.id, data,{
+                this.$inertia.post('/essential/klasses/' + data.id, data,{
                     onSuccess:(page)=>{
                         this.modalVisible=false;
                         this.ChangeModalMode('Close');
@@ -311,7 +311,7 @@ export default {
         deleteRecord(recordId){
             console.log(recordId);
             if (!confirm('Are you sure want to remove?')) return;
-            this.$inertia.delete('/klasses/' + recordId,{
+            this.$inertia.delete('/essential/klasses/' + recordId,{
                 onSuccess: (page)=>{
                     console.log(page);
                 },

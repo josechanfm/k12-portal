@@ -29,6 +29,9 @@ class Klass extends Model
     public function students(){
         return $this->belongsToMany(Student::class,'klass_students','klass_id','student_id')->withPivot(['id as pivot_klass_student_id','student_number','stream','state','promote','promote_to']);
     }
+    public function promoteTo(){
+        return $this->belongsToMany(Student::class,'klass_students','promote_to','student_id')->withPivot(['id as pivot_klass_student_id','student_number','stream','state','promote','promote_to','id as klass_id']);
+    }
     public function courses(){
         return $this->hasMany(Course::class);
     }

@@ -23,7 +23,13 @@ class Year extends Model
     public function klasses(){
         return $this->hasManyThrough(Klass::class, Grade::class);
     }
-
+    public static function nextYear($yearId){
+        $year=Year::find($yearId);
+        return Year::where('start','>',$year->start)->orderBy('start','ASC')->first();
+    }
+    public static function nextYear2(){
+        return "OKOK";
+    }
     public function courses(){
         return $this->hasManyThrough(Course::class, Klass::class);
     }

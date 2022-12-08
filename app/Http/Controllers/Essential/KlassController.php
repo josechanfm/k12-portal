@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Essential;
 
+use App\Http\Controllers\Controller;
 use App\Models\Discipline;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -29,7 +30,7 @@ class KlassController extends Controller
         $data = Klass::paginate(100);
         //$data=Klass::where('year_id',1)->paginate(5);
         //return response()->json($data);
-        return Inertia::render('Admin/Klasses',[
+        return Inertia::render('Essential/Klasses',[
             'klasses'=>$data,
             'school_years'=>Year::select('id as value','abbr as label')->get(),
             'initials'=>[['value'=>'A','label'=>'A'],['value'=>'B','label'=>'B']],

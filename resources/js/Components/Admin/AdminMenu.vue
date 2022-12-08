@@ -72,16 +72,28 @@
       key: '1.2',
       title: 'Grades',
       url:'/essential/grades',
+    },{
+      key: '1.3',
+      title: 'Class',
+      url:'/essential/klasses',
     }],
   },{
     key: '2',
-    title: 'Navigation 2',
+    title: 'Promotion',
     children: [{
       key: '2.1',
+      title: 'Promotion',
+      url:'/promotion',
+    }],
+  },{
+    key: '3',
+    title: 'Navigation 3',
+    children: [{
+      key: '3.1',
       title: 'Navigation 3',
       children: [{
-        key: '2.1.1',
-        title: 'Option 2.1.1',
+        key: '3.1.1',
+        title: 'Option 3.1.1',
       }],
     }],
   }];

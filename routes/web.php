@@ -7,7 +7,7 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\PaymentSpaController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\CourseController;
-use App\Http\Controllers\KlassController;
+use App\Http\Controllers\Essential\KlassController;
 use App\Http\Controllers\Essential\YearController;
 use App\Http\Controllers\Essential\GradeController;
 use App\Http\Controllers\Essential\YearPlanController;
@@ -65,7 +65,7 @@ Route::get('/year/subjects/{yearId}',[YearController::class,'subjects']);
 Route::resource('/promotion',PromotionController::class);
 Route::get('/promotion/klass/{klassId}',[PromotionController::class,'klass']);
 Route::get('/promotion/grade/{gradeId}',[PromotionController::class,'grade']);
-Route::get('/promotion/data/{gradesklassId}',[PromotionController::class,'data']);
+//Route::get('/promotion/data/{gradesklassId}',[PromotionController::class,'data']);
 
 Route::prefix('essential')->group(function(){
     Route::resource('/years',YearController::class);
@@ -76,4 +76,5 @@ Route::prefix('essential')->group(function(){
 
 Route::get('promote/getStudents/{klassId}',[PromotionController::class,'getStudents']);
 Route::post('promote/updateStudents',[PromotionController::class,'updateStudents']);
+Route::get('promote/data/{yearId}',[PromotionController::class, 'data']);
 

@@ -26,19 +26,23 @@ class PromotionController extends Controller
     {
 
         $gradeId=$request->input('gradeId');
-        if(!$gradeId){
-            $yearId=Config::where('key','current_year')->first()->value;
-            $year=Year::find($yearId);
-            $grades=Grade::where('year_id',$yearId)->with('klasses')->get();
-        }else{
+        if($gradeId){
             $grades=Grade::where('id',$gradeId)->with('klasses')->get();
             $year=Year::find($grades[0]->year_id);
+        }else{
+            $yearId=Config::where('key','current_year')->first()->value;
+            $year=Year::find($yearId);
+            $nextYear=Year::nextYear($yearId);
+            $grades=Grade::where('year_id',$yearId)->with('klasses')->get();
+            $nextGrades=Grade::where('year_id',$nextYear->id)->with('klasses')->get();
         }
         // echo $grades;
         // echo $year;
         return Inertia::render('Essential/Dashboard',[
             'year'=>$year,
             'grades'=>$grades,
+            'nextYear'=>$nextYear,
+            'nextGrades'=>$nextGrades
         ]);
     }
 
@@ -129,10 +133,9 @@ class PromotionController extends Controller
         $students=Klass::find($klassId)->students;
         $currentGrade=Grade::find(Klass::find($klassId)->grade_id);
         $currentYear=Year::find($currentGrade->year_id);
-        $nextYear=Year::where('start','>',$currentYear->start)->orderBy('start','ASC')->first();
+        $nextYear=Year::nextYear($currentYear->id);
         $nextGrade=Grade::where('year_id',$nextYear->id)->where('level',$currentGrade->level+1)->first();
         $nextGradeKlasses=Klass::where('grade_id',$nextGrade->id)->get();
-        $ks=KlassStudent::find(1);
         $data=[
             'students'=>$students,
             'currentYear'=>$currentYear,
@@ -140,7 +143,6 @@ class PromotionController extends Controller
             'nextYear'=>$nextYear,
             'nextGrade'=>$nextGrade,
             'nextGradeKlasses'=>$nextGradeKlasses,
-            'ks'=>$ks
         ];
         return response()->json($data);
 
@@ -155,7 +157,7 @@ class PromotionController extends Controller
     public function klass($klassId){
         $grade=Klass::find($klassId)->grade;
         $year=Year::find($grade->year_id);
-        $nextYear=Year::where('herit',$year->id)->first();
+        $nextYear=Year::nextYear($year->id);;
         $nextGrade=Grade::where('year_id',$nextYear->id)->where('level',($grade->level+1))->first();
         $klass=Klass::find($klassId);
         $nextKlasses=Klass::where('grade_id',$nextGrade->id)->get();
@@ -175,60 +177,31 @@ class PromotionController extends Controller
 
     public function data($yearId){
         $year=Year::find($yearId);
+        $nextYear=Year::nextYear($year->id);
         $yearGrades=Year::find($yearId)->grades;
         $yearKlasses=Year::find($yearId)->klasses;
-        //$klassesStudents=Klass::where('year_id',$yearId)->with('students')->with('courses')->get();
-        // $klassesStudents=Klass::where('year_id',$yearId)->with('students')->with('courses')->get();
-        // $klassStudents=Klass::find(1)->students;
-        // $klassCourses=Klass::find(1)->courses;
-        // $yearCourses=Year::find(1)->courses;
-        // $yearStudents=Year::find(1)->students;
-        // $klassmateScores=Klassmate::find(1)->scores;
-        // $scoreCourse=Score::find(1)->course;
-        // $courseScores=Course::where('klass_id',1)->with('scores')->get();
-        // $klassCourseScores=Course::find(1)->students;
+        $promoteTo=Klass::find(74)->promoteTo;
+
+        $nextYearGrades=Year::find($nextYear->id)->grades;
         
+        echo "Promote To<br>";
+        echo $promoteTo;
+        echo '<hr>';
+        echo "Year<br>";
         echo $year;
+        echo '<hr>';
+        echo "Next Year<br>";
+        echo $nextYear;
+        echo '<hr>';
+        echo "Year Grades<br>";
         echo $yearGrades;
+        echo '<hr>';
+        echo "Year Klasses<br>";
         echo $yearKlasses;
-        
-        // echo 'All Students and courses of each klass in a year<br>';
-        // echo $klassesStudents;
-        // echo '<hr>';
-        // echo 'Students in klass 1<br>';
-        // echo $klassStudents;
-        // echo '<hr>';
-        // echo 'Courses in klass 1<br>';
-        // echo $klassCourses;
-        // echo '<hr>';
-        // echo 'All Courses in year 1<br>';
-        // echo $yearCourses;
-        // echo '<hr>';
-        // echo 'All Students in year 1<br>';
-        // echo $yearStudents;
-        // echo '<hr>';
-        // echo 'All scores of a klassmate<br>';
-        // echo $klassmateScores;
-        // echo '<hr>';
-        // echo 'a score of course<br>';
-        // echo $scoreCourse;
-        // echo '<hr>';
-        // echo 'All scores of a couse in a klass<br>';
-        // echo $courseScores;
-        // echo '<hr>';
+        echo '<hr>';
+        echo "Next Year Grades<br>";
+        echo $nextYearGrades;
+        echo '<hr>';
 
-        // $klass=Klass::find($klassId);
-        // $klassStudents=Klass::with('students')->find($klassId);
-        // // return response()->json([
-        // //     'klass'=>$klass,
-        // //     'klassStudents'=>$klassStudents
-
-        // // ]);
-        // return Inertia::render('YearPlan/PromoteKlass',[
-        //     'klass'=>$klass,
-        //     'klassStudents'=>$klassStudents
-        // ]);
     }
-
-
 }
