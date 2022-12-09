@@ -79,6 +79,8 @@
             <PromoteState :state="2"/>
        </div>
 
+       
+
     </AdminLayout>
 
 </template>

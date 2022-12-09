@@ -1,23 +1,30 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Course;
-use Illuminate\Support\Facades\Validator;
+use App\Models\Year;
+use App\Models\Grade;
+use App\Models\Klass;
 
-class CourseController extends Controller
+class KlassController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index()
     {
-        $data = Course::paginate(5);
-        return response()->json($data);
-        //return Inertia::render('Admin/Courses',['courses'=>$data]);
+        $year=Year::where('active',1)->orderBy('start','DESC')->first();
+        $grades=Grade::where('year_id',$year->id)->with('klasses')->get();
+
+        return Inertia::render('Manage/Klass',[
+            'year'=>$year,
+            'grades'=>$grades,
+        ]);
     }
 
     /**
@@ -38,16 +45,7 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
-        Validator::make($request->all(), [
-            'name_zh' => ['required'],
-            'phone' => ['required'],
-            'address' => ['required'],
-            'registed_date' => ['required'],
-        ])->validate();
-
-        Course::create($request->all());
-        return redirect()->back();
-
+        //
     }
 
     /**
@@ -81,26 +79,9 @@ class CourseController extends Controller
      */
     public function update(Request $request, $id)
     {
-        Validator::make($request->all(), [
-            'name_zh' => ['required'],
-            'phone' => ['required'],
-            'address' => ['required'],
-            'registed_date' => ['required'],
-        ])->validate();
-        
-        if($request->has('id')){
-            $course=Course::find($id);
-            $course->name_zh=$request->name_zh;
-            $course->phone=$request->phone;
-            $course->save();
-            //return response()->json($course);
-            return redirect()->back();
-            //return redirect()->back();
-            //return redirect()->route('settings');
-        }else{
-            return redirect()->back();
-        }
+        //
     }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -109,13 +90,21 @@ class CourseController extends Controller
      */
     public function destroy($id)
     {
-        $course=Course::find($id);
-        if($course){
-            $course->delete();
-            return redirect()->back()
-                ->with('message', 'Blog Delete Successfully');
+        //
+    }
 
-        }
-        
+
+    public function courses($klassId){
+        $courses=Klass::find($klassId)->courses;
+        echo $courses;
+    }
+    public function students($klassId){
+        $courses=Klass::find($klassId)->students;
+        echo $courses;
+    }
+    public function scores($klassId){
+        $scores=Klass::find($klassId)->scores;
+        echo $scores;
+
     }
 }

@@ -29,6 +29,8 @@ class PromotionController extends Controller
         if($gradeId){
             $grades=Grade::where('id',$gradeId)->with('klasses')->get();
             $year=Year::find($grades[0]->year_id);
+            $nextYear=Year::nextYear($grades[0]->year_id);
+            $nextGrades=Grade::where('year_id',$nextYear->id)->with('klasses')->get();
         }else{
             $yearId=Config::where('key','current_year')->first()->value;
             $year=Year::find($yearId);
@@ -125,8 +127,16 @@ class PromotionController extends Controller
                     KlassStudent::find($std['id'])->update(['promote_to'=>-1]);
                     break;
             }
-          
         }
+        return response()->json($students);
+    }
+    public function getPromotedStudents($klassId){
+        $students=Klass::find($klassId)->promoteTo;
+        foreach($students as $i=>$std){
+            $students[$i]->pivot->letter=Klass::find($std->pivot->klass_id)->letter;
+        }
+        
+        //echo $students;
         return response()->json($students);
     }
     public function getStudents($klassId){

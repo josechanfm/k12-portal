@@ -57,7 +57,14 @@ Route::get('/test',function(){
 Route::resource('/payments',PaymentSpaController::class);
 Route::resource('/subjects',SubjectController::class);
 Route::resource('/courses',CourseController::class);
-Route::resource('/klasses',KlassController::class);
+Route::prefix('manage/')->group(function(){
+    Route::resource('/klass',App\Http\Controllers\KlassController::class);
+    Route::get('/courses/{klassId}',[App\Http\Controllers\KlassController::class, 'courses']);
+    Route::get('/students/{klassId}',[App\Http\Controllers\KlassController::class,'students']);
+    Route::get('/scores/{klassId}',[App\Http\Controllers\KlassController::class,'scores']);
+});
+
+
 Route::get('/year/klass/disciplines/{klassId}',[KlassController::class,'disciplines']);
 Route::get('/year/klasses/{yearId}',[YearController::class,'year']);
 Route::get('/year/subjects/{yearId}',[YearController::class,'subjects']);
@@ -75,6 +82,8 @@ Route::prefix('essential')->group(function(){
 });
 
 Route::get('promote/getStudents/{klassId}',[PromotionController::class,'getStudents']);
+Route::get('promote/getPromotedStudents/{klassId}',[PromotionController::class,'getPromotedStudents']);
 Route::post('promote/updateStudents',[PromotionController::class,'updateStudents']);
 Route::get('promote/data/{yearId}',[PromotionController::class, 'data']);
+
 
