@@ -6,25 +6,22 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Year;
-use App\Models\Grade;
-use App\Models\Config;
+use App\Models\Subject;
 
-class GradeController extends Controller
+class SubjectController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $yearId=$request->input('yearId');
-        if(!$yearId){
-            $yearId=Year::where('active',1)->orderBy('start','DESC')->first()->id;
-        }
-        $grades = Grade::where('year_id',$yearId)->get();
-        return Inertia::render('Essential/Grades',[
-            'grades'=>$grades,
+        $year=Year::currentYear();
+        $subjects=Subject::where('year_id',$year->id)->with('klasses')->get();
+        return Inertia::render('Essential/Subject',[
+            'year'=>$year,
+            'subjects'=>$subjects
         ]);
     }
 

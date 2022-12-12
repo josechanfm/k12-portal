@@ -15,13 +15,14 @@ return new class extends Migration
     {
         Schema::create('klass_students', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('klass_id');
-            $table->bigInteger('student_id');
+            $table->bigInteger('klass_id')->default(0);
+            $table->bigInteger('student_id')->default(0);
             $table->Integer('student_number')->default(0);
             $table->char('state',3)->default('ACT');
             $table->char('stream',3)->default('ART');
-            $table->Integer('promote')->default(0);
-            $table->Integer('promote_to')->default(0);
+            $table->bigInteger('promote')->default(0);
+            $table->bigInteger('promote_to')->default(0);
+            $table->string('score_scheme')->nullable();
             $table->timestamps();
         });
     }

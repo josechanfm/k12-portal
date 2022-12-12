@@ -32,14 +32,17 @@ class PromotionController extends Controller
             $nextYear=Year::nextYear($grades[0]->year_id);
             $nextGrades=Grade::where('year_id',$nextYear->id)->with('klasses')->get();
         }else{
-            $yearId=Config::where('key','current_year')->first()->value;
-            $year=Year::find($yearId);
-            $nextYear=Year::nextYear($yearId);
-            $grades=Grade::where('year_id',$yearId)->with('klasses')->get();
+            $year=Year::where('active',1)->orderBy('start','DESC')->first();
+            //$year=Year::find($year->id);
+            $nextYear=Year::nextYear($year->id);
+            $grades=Grade::where('year_id',$year->id)->with('klasses')->get();
             $nextGrades=Grade::where('year_id',$nextYear->id)->with('klasses')->get();
         }
-        // echo $grades;
+        // echo 'promote';
+        // // echo $grades;
         // echo $year;
+        // echo $nextYear;
+        //***** Check if any of the varible not completed  jump to the error page******/
         return Inertia::render('Essential/Dashboard',[
             'year'=>$year,
             'grades'=>$grades,

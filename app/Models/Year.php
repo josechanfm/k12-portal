@@ -27,8 +27,8 @@ class Year extends Model
         $year=Year::find($yearId);
         return Year::where('start','>',$year->start)->orderBy('start','ASC')->first();
     }
-    public static function nextYear2(){
-        return "OKOK";
+    public static function currentYear(){
+        return Year::where('active',1)->orderBy('start','DESC')->first();
     }
     public function courses(){
         return $this->hasManyThrough(Course::class, Klass::class);

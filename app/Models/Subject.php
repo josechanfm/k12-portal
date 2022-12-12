@@ -7,12 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Subject extends Model
 {
+    use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
+
     use HasFactory;
     protected $fillable = [
         'abbr', 'title_zh', 'title_en','type','description', 'active',
     ];
 
-    // public function klasses(){
-    //     return $this->belongsToMany(Klass::class);
-    // }
+    public function courses(){
+        return $this->hasMany(Course::class);
+    }
+    public function klasses(){
+        return $this->hasManyDeep(Klass::class,['courses']);
+    }
 }

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Essential;
+namespace App\Http\Controllers\Manage;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Year;
 use App\Models\Grade;
-use App\Models\Config;
+use App\Models\Klass;
 
 class GradeController extends Controller
 {
@@ -16,14 +16,14 @@ class GradeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+
+    public function index()
     {
-        $yearId=$request->input('yearId');
-        if(!$yearId){
-            $yearId=Year::where('active',1)->orderBy('start','DESC')->first()->id;
-        }
-        $grades = Grade::where('year_id',$yearId)->get();
-        return Inertia::render('Essential/Grades',[
+        $year=Year::where('active',1)->orderBy('start','DESC')->first();
+        $grades=Grade::where('year_id',$year->id)->with('klasses')->get();
+
+        return Inertia::render('Manage/Grade',[
+            'year'=>$year,
             'grades'=>$grades,
         ]);
     }
@@ -93,4 +93,21 @@ class GradeController extends Controller
     {
         //
     }
+
+
+    public function courses($klassId){
+        $courses=Klass::find($klassId)->courses;
+        echo $courses;
+    }
+    public function students($klassId){
+        $students=Klass::find($klassId)->students;
+        echo $students;
+    }
+    public function scores($klassId){
+        $scores=Klass::find($klassId)->scores($klassId);
+        echo $scores;
+
+    }
+
+
 }

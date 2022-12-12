@@ -16,12 +16,16 @@ return new class extends Migration
         Schema::create('courses', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('klass_id');
-            $table->bigInteger('staff_id');
+            $table->bigInteger('staff_id')->nullable();
             $table->string('abbr');
             $table->string('title_zh');
-            $table->string('title_en');
-            $table->string('type');
+            $table->string('title_en')->nullable();
+            $table->string('type')->nullable();
+            $table->string('stream',3)->nullable();
+            $table->tinyInteger('elective');
             $table->text('description')->nullable();
+            $table->bigInteger('subject_id')->nullable();
+            $table->tinyInteger('active');
             $table->timestamps();
         });
     }

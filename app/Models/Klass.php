@@ -23,7 +23,8 @@ class Klass extends Model
         return Grade::find($this->grade_id)->initial;
     }
     public function getAcronymAttribute(){
-        return Grade::find($this->grade_id)->initial.$this->letter;
+        $grade=Grade::find($this->grade_id);
+        return $grade->initial.$grade->level.$this->letter;
     }
     public function getStudentCountAttribute(){
         return KlassStudent::where('klass_id',$this->id)->count();
@@ -43,8 +44,13 @@ class Klass extends Model
     public function courses(){
         return $this->hasMany(Course::class);
     }
-    public function scores(){
-        return $this->hasManyDeep(Score::class,[KlassStudent::class ]);
+    public static function klass_scores($klassId){
+        $students=Klass::find($klassId)->students;
+        foreach($students as $student){
+            $student->scores=Score::where('klass_student_id',$student->pivot->klass_student_id)->get();
+        }
+        return $students;
+        //return $this->hasManyThrough(Score::class,KlassStudent::class);
     }
     
 }

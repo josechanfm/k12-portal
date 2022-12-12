@@ -7,6 +7,8 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use App\Models\Klass;
 use App\Models\Grade;
+use App\Models\Year;
+use App\Models\KlassStudent;
 
 class KlassStudentSeeder extends Seeder
 {
@@ -17,9 +19,9 @@ class KlassStudentSeeder extends Seeder
      */
     public function run()
     {
-        $yearId=1;
+        $year=Year::currentYear();
         $studentId=1;
-        $grades=Grade::where('year_id',$yearId)->get();
+        $grades=Grade::where('year_id',$year->id)->get();
         foreach ($grades as $grade) {
             $klasses=Klass::where('grade_id',$grade->id)->get();
             foreach ($klasses as $klass) {

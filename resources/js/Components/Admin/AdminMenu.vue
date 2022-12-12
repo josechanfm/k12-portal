@@ -76,6 +76,10 @@
       key: '1.3',
       title: 'Class',
       url:'/essential/klasses',
+    },{
+      key: '1.3',
+      title: 'Subjects',
+      url:'/essential/subjects',
     }],
   },{
     key: '2',
@@ -83,7 +87,7 @@
     children: [{
       key: '2.1',
       title: 'Promotion',
-      url:'/promotion',
+      url:'/promote',
     }],
   },{
     key: '3',

@@ -17,6 +17,9 @@ class Course extends Model
         return $this->hasMany(Score::class);
     }
     public function students(){
-        return $this->belongsToMany(Student::class,'scores','klassmate_id','course_id');
+        return $this->belongsToMany(Student::class);
+    }
+    public function subject(){
+        return $this->belongsTo(Subject::class);
     }
 }
