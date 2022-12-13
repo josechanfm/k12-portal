@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->text('meta')->nullable();
+            $table->text('transcript')->nullable();
             $table->date('start')->nullable();
             $table->date('end')->nullable();
             $table->boolean('active')->default(true);

@@ -23,9 +23,11 @@ return new class extends Migration
             $table->string('type')->nullable();
             $table->string('stream',3)->nullable();
             $table->tinyInteger('elective');
+            $table->string('score_column')->nullable();
             $table->text('description')->nullable();
             $table->bigInteger('subject_id')->nullable();
             $table->tinyInteger('active');
+            $table->string('socre_scheme')->nullable();
             $table->timestamps();
         });
     }

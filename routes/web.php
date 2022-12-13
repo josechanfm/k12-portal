@@ -59,10 +59,12 @@ Route::resource('/subjects',SubjectController::class);
 Route::resource('/courses',CourseController::class);
 Route::prefix('manage/')->group(function(){
     Route::resource('/grades',App\Http\Controllers\Manage\GradeController::class);
-    Route::get('/courses/{klassId}',[App\Http\Controllers\Manage\GradeController::class, 'courses']);
+    //Route::get('/courses/{klassId}',[App\Http\Controllers\Manage\GradeController::class, 'courses']);
     Route::get('/students/{klassId}',[App\Http\Controllers\Manage\GradeController::class,'students']);
     Route::get('/scores/{klassId}',[App\Http\Controllers\Manage\GradeController::class,'scores']);
-    Route::resource('/klass/{klassId}',App\Http\Controllers\Manage\KlassController::class);
+    Route::resource('/course',App\Http\Controllers\Manage\CourseController::class);
+    Route::resource('/klass',App\Http\Controllers\Manage\KlassController::class);
+    Route::get('/test_data',[App\Http\Controllers\Manage\KlassController::class,'test_data']);
 
 });
 

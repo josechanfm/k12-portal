@@ -5,6 +5,12 @@
                 年級管理
             </h2>
         </template>
+        <a-tree
+            checkable
+            :tree-data="courseScores"
+        >
+        {{title}}
+        </a-tree>
         <a-tabs v-model:activeKey="activeKey">
             <a-tab-pane key="grade" :tab="`Grade (`+year.abbr+`)`">
                 <table width="100%">
@@ -106,7 +112,7 @@ export default {
     components: {
         AdminLayout, TeamOutlined
     },
-    props: ['year','grades'],
+    props: ['year','grades','courseScores'],
     data() {
         return {
             activeKey:'grade',

@@ -21,7 +21,6 @@ return new class extends Migration
             $table->char('tag',5)->nullable();
             $table->char('acronym',5)->nullable();
             $table->string('room')->nullable();
-            $table->string('score_scheme')->nullable();
             $table->timestamps();
         });
     }

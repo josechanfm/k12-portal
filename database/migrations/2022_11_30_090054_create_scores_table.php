@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('klass_student_id');
             $table->bigInteger('course_id');
+            $table->string('scope');
             $table->string('type');
             $table->integer('point');
             $table->timestamps();

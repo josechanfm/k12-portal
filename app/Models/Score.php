@@ -12,4 +12,10 @@ class Score extends Model
     public function course(){
         return $this->belongsTo(Course::class);
     }
+
+    public function student(){
+        //return $this->belongsTo(KlassStudent::class,'klass_student_id','id');
+        return $this->belongsToMany(Student::class,'klass_students','student_id','klass_id');
+        
+    }
 }
