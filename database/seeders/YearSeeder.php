@@ -14,7 +14,7 @@ class YearSeeder extends Seeder
      */
     public function run()
     {
-        $yearId=DB::table('years')->order_by('id','desc')->first()->id;
+        //$yearId=DB::table('years')->orderBy('id','desc')->first()->id;
         for($y=2021;$y<=2023;$y++){
             DB::table('years')->insert([
                 'abbr'=>$y,
@@ -28,6 +28,7 @@ class YearSeeder extends Seeder
                 DB::table('grades')->insert([
                         'year_id'=>$yearId,
                         'level'=>$i,
+                        'tag'=>'P',
                         'initial'=>'P'.$i,
                         'version'=>1,
                         'active'=>1
@@ -37,6 +38,7 @@ class YearSeeder extends Seeder
                 DB::table('grades')->insert([
                         'year_id'=>$yearId,
                         'level'=>$i,
+                        'tag'=>'S',
                         'initial'=>'S'.$i-6,
                         'version'=>1,
                         'active'=>1

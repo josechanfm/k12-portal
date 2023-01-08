@@ -65,6 +65,7 @@ Route::prefix('manage/')->group(function(){
     Route::resource('/course',App\Http\Controllers\Manage\CourseController::class);
     Route::resource('/klass',App\Http\Controllers\Manage\KlassController::class);
     Route::get('/test_data',[App\Http\Controllers\Manage\KlassController::class,'test_data']);
+    Route::get('/transcript',[App\Http\Controllers\Manage\TranscriptController::class,'index']);
 
 });
 

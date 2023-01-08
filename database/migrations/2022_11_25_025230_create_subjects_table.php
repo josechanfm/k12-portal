@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('year');
+            $table->bigInteger('year_id');
             $table->string('abbr')->nullable();
             $table->string('title_zh')->nullable();
             $table->string('title_en')->nullable();

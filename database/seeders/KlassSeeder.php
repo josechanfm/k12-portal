@@ -23,7 +23,7 @@ class KlassSeeder extends Seeder
             foreach($initial as $ini){
                 DB::table('klasses')->insert([
                     'grade_id'=>$g,
-                    'initial'=>$ini,
+                    'tag'=>$ini,
                 ]);
             }
         }

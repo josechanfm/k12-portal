@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('grade_id')->on('grades')->onDelete('restrict');
             $table->bigInteger('head_id')->on('staffs')->onDelete('restrict')->nullable();
-            $table->char('letter',5);
+            $table->char('letter',5)->nullable();
             $table->char('tag',5)->nullable();
             $table->char('acronym',5)->nullable();
             $table->string('room')->nullable();
