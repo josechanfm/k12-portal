@@ -5,9 +5,6 @@
                 Score
             </h2>
         </template>
-        {{ scores }}
-        <hr>
-        {{ students_scores }}
         <a-button type="primary" @click="scoreModal">Score</a-button>
         <a-modal v-model:visible="modal.isOpen" title="Basic Modal" @ok="handleOk">
             <p>Some contents...</p>
@@ -40,16 +37,18 @@
                             <th>Name</th>
                             <td v-for="column in score_columns">{{ column.name }}</td>
                         </tr>
-                        <tr v-for="student in students_scores">
-                            <td>{{ student.name_zh }}</td>
-                            <td v-for="score in student.scores" v-if="student.scores.length>0">{{ score.point }}</td>
-                            <td v-else>0</td>
+                        <tr v-for="(score, key) in scores">
+                            <td>{{ score.student_name }}</td>
+                            <td v-for="column in score_columns">
+                                <a-input  v-model:value="score['score_'+key+'_'+column.id]" />
+                            </td>
                         </tr>
                     </table>
                 </div>
             </div>
         </div>
 
+        {{ scores }}
 
     </AdminLayout>
 
@@ -71,6 +70,9 @@ export default {
             scores:{},
             columns: [
                 {
+                    title: 'Term',
+                    dataIndex: 'term_id',
+                },{
                     title: 'Name',
                     dataIndex: 'name',
                 }, {
@@ -88,22 +90,20 @@ export default {
         }
     },
     created(){
-        var score=[];
         this.students_scores.forEach(student => {
+            var score={};
             score['student_name']=student.name_zh
             this.score_columns.forEach(column => {
-                score[column.name]=0
-                const found = student.scores.find(s => {
-                    return s.score_column_id==column.id
-                })
-                //this.scores[column.name]=foundpoint
-                if(found){
-                    score[column.name]=found.point
-                }
+                score['score_'+student.pivot.klass_student_id+"_"+column.id]=''
             })
-            Object.assign(this.scores, score);
+            this.scores[student.pivot.klass_student_id]=score;
         })
-        console.log(this.scores)
+        this.students_scores.forEach(student => {
+            student.scores.forEach(score => {
+                this.scores[student.pivot.klass_student_id]['score_'+score.klass_student_id+'_'+score.score_column_id]=score.point;
+            })
+        })
+        //console.log(this.scores)
     },
     methods: {
         scoreModal() {

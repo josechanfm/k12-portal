@@ -19,7 +19,7 @@ class ScoreController extends Controller
     {
         $kid=$request->kid;
         $klass=Klass::find($kid);
-        $scoreColumns=ScoreColumn::where('klass_id',$klass->id)->get();
+        $scoreColumns=ScoreColumn::where('klass_id',$klass->id)->orderBy('sequence')->get();
         $studentsScores=Klass::klass_scores($kid);
     
         return Inertia::render('Manage/Score',[

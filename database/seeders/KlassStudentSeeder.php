@@ -23,9 +23,9 @@ class KlassStudentSeeder extends Seeder
         $studentId=1;
         $grades=Grade::where('year_id',$year->id)->get();
         foreach ($grades as $grade) {
-            echo json_encode($grade);
+            // echo json_encode($grade);
             $klasses=Klass::where('grade_id',$grade->id)->get();
-            echo json_encode($klasses);
+            // echo json_encode($klasses);
             foreach ($klasses as $klass) {
                 
                 for($i=1;$i<=21;$i++){

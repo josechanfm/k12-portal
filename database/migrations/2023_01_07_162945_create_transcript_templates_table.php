@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('transcript_templates', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('klass_id');
             $table->enum('category',['PERSONAL','SUBJECT','ATTITUDE','SUMMARY','GENERAL']);
             $table->string('field_name');
             $table->string('title_zh')->nullable();
