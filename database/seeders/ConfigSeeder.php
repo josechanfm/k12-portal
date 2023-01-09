@@ -29,7 +29,7 @@ class ConfigSeeder extends Seeder
         ]);
         DB::table('configs')->insert([
             'key' => 'year_creation',
-            'value' => '{ "kgrade":3, "kklass":3, "kgradeDefault":0, "kklassDefault":0, "pgrade":6, "pklass":5, "pgradeDefault":6, "pklassDefault":4, "sgrade":6, "sklass":5, "sgradeDefault":6, "sklassDefault":4, }',
+            'value' => '{ "kgrade":3, "kklass":3, "kgradeDefault":0, "kklassDefault":0, "pgrade":6, "pklass":5, "pgradeDefault":6, "pklassDefault":4, "sgrade":6, "sklass":5, "sgradeDefault":6, "sklassDefault":4 }',
         ]);
         // DB::table('configs')->insert([
         //     'key' => 'current_year',

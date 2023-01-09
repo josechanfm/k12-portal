@@ -9,7 +9,6 @@
             checkable
             :tree-data="courseScores"
         >
-        {{title}}
         </a-tree>
         <a-tabs v-model:activeKey="activeKey">
             <a-tab-pane key="grade" :tab="`Grade (`+year.abbr+`)`">
@@ -58,7 +57,7 @@
                     </tbody>
                 </table>
             </a-tab-pane>
-            <a-tab-pane key="course" tab="Courses ">
+            <a-tab-pane key="course" tab="Courses " :disabled="courses.length<=0">
                 <table width="100%">
                     <thead>
                         <tr>
@@ -79,7 +78,7 @@
                 </table>
 
             </a-tab-pane>
-            <a-tab-pane key="student" tab="Students ">
+            <a-tab-pane key="student" tab="Students" :disabled="students.length<=0">
                 <table width="100%">
                     <thead>
                         <tr>
@@ -117,14 +116,15 @@ export default {
         return {
             activeKey:'grade',
             courses:[],
-            student:[],
+            students:[],
         }
     },
     methods: {
-        selectKlass(klassId){
+        selectKlass(klassId){   
             axios.get('/manage/students/'+klassId)
                 .then(response=>{
                     this.students = response.data;
+                    this.courses = [];
                     this.activeKey='student';
                 });
         },
@@ -132,6 +132,7 @@ export default {
             axios.get('/manage/courses/'+klassId)
                 .then(response=>{
                     this.courses = response.data;
+                    this.students = [];
                     this.activeKey='course';
                 });
         }

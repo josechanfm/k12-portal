@@ -13,13 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('klasses', function (Blueprint $table) {
+        Schema::create('score_columns', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('grade_id')->on('grades')->onDelete('restrict');
-            $table->bigInteger('head_id')->on('staffs')->onDelete('restrict')->nullable();
-            $table->char('letter',5)->nullable();
-            $table->char('tag',5)->nullable();
-            $table->string('room')->nullable();
+            $table->bigInteger('klass_id');
+            $table->bigInteger('term_id');
+            $table->string('name');
+            $table->string('type')->nullable();
+            $table->string('scheme')->nullable();
+            $table->string('description')->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('klasses');
+        Schema::dropIfExists('score_columns');
     }
 };

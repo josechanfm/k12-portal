@@ -11,7 +11,7 @@
         <a-table :dataSource="grades" :columns="columns">
             <template #bodyCell="{column, text, record, index}">
                 <template v-if="column.dataIndex=='operation'">
-                    <a-button @click="editRecord(index)">Edit</a-button>
+                    <a-button @click="editRecord(record)">Edit</a-button>
                     <a-button @click="deleteRecord(record.id)">Delete</a-button>
                 </template>
                 <template v-else>
@@ -57,15 +57,21 @@ export default {
                     title: 'Operation',
                     dataIndex: 'operation',
                 }
-
             ]
         }
     },
     mounted() {
     },
     methods: {
+        editRecord(record){
+            console.log('edit record ');
+            console.log(record);
+        },
         createRecord(){
             console.log('create record');
+        },
+        deleteRecord(recordid){
+            console.log('delte record '+recordId);
         }
     },
 }

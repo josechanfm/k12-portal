@@ -16,8 +16,9 @@ return new class extends Migration
         Schema::create('grades', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('year_id');
-            $table->string('level');
-            $table->string('initial',5);
+            $table->integer('rank');
+            $table->char('initial',1);
+            $table->integer('level');            
             $table->string('tag',5)->nullable();
             $table->string('title_zh')->nullable();
             $table->string('title_en')->nullable();

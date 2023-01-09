@@ -27,7 +27,9 @@ class DatabaseSeeder extends Seeder
             KlassStudentSeeder::class,
             LocationSeeder::class,
             SupplierSeeder::class,
-            UserSeeder::class
+            UserSeeder::class,
+            TranscriptTemplateSeeder::class,
+            TranscriptSeeder::class,
         ]);
         // \App\Models\User::factory(10)->create();
 

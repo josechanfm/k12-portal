@@ -111,6 +111,10 @@ class KLassController extends Controller
             echo '<hr>';
         }
     }
+    public function klass_scores($klassId){
+        $scores=Klass::klass_scores($klassId);
+        echo $scores;
+    }
 
 
 

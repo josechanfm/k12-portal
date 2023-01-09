@@ -77,15 +77,19 @@
       title: 'Class',
       url:'/essential/klasses',
     },{
-      key: '1.3',
+      key: '1.4',
       title: 'Subjects',
       url:'/essential/subjects',
     }],
   },{
     key: '2',
-    title: 'Promotion',
+    title: 'Manage',
     children: [{
       key: '2.1',
+      title: 'Grade',
+      url:'/manage/grades',
+    },{
+      key: '2.2',
       title: 'Promotion',
       url:'/promote',
     }],

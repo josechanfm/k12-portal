@@ -5,29 +5,27 @@ namespace App\Http\Controllers\Manage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Year;
-use App\Models\Grade;
 use App\Models\Klass;
-use App\Models\CourseScore;
+use App\Models\ScoreColumn;
 
-class GradeController extends Controller
+class ScoreController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-
-    public function index()
+    public function index(Request $request)
     {
-        $year=Year::where('active',1)->orderBy('start','DESC')->first();
-        $grades=Grade::where('year_id',$year->id)->with('klasses')->get();
-        $courseScores=CourseScore::tree(1);
-
-        return Inertia::render('Manage/Grade',[
-            'year'=>$year,
-            'grades'=>$grades,
-            'courseScores'=>$courseScores
+        $kid=$request->kid;
+        $klass=Klass::find($kid);
+        $scoreColumns=ScoreColumn::where('klass_id',$klass->id)->get();
+        $studentsScores=Klass::klass_scores($kid);
+    
+        return Inertia::render('Manage/Score',[
+            'score_columns'=>$scoreColumns,
+            'klass'=>$klass,
+            'students_scores'=>$studentsScores
         ]);
     }
 
@@ -96,15 +94,4 @@ class GradeController extends Controller
     {
         //
     }
-
-
-    public function courses($klassId){
-        $courses=Klass::find($klassId)->courses;
-        echo $courses;
-    }
-    public function students($klassId){
-        $students=Klass::find($klassId)->students;
-        echo $students;
-    }
-
 }

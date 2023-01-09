@@ -114,25 +114,14 @@ export default {
             columns:[
                 {
                     title: 'Year',
-                    dataIndex: 'year_id',
-                    key: 'year_id',
+                    dataIndex: 'year_abbr',
+                    key: 'year_abbr',
                 },
                 {
-                    title: 'Grade',
-                    dataIndex: 'grade',
-                    key: 'grade',
-                },
-                {
-                    title: 'Initial',
-                    dataIndex: 'initial',
-                    key: 'initial',
-                },
-                {
-                    title: 'Acronym',
-                    dataIndex: 'acronym',
-                    key: 'acronym',
-                },
-                {
+                    title: 'Tag',
+                    dataIndex: 'tag',
+                    key: 'tag',
+                },{
                     title: 'Room',
                     dataIndex: 'room',
                     key: 'room',

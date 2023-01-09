@@ -75,7 +75,7 @@ class KlassController extends Controller
      */
     public function show($id)
     {
-        $data=Klass::find($id)->get();
+        $data=Klass::find($id);
         return response()->json($data);
     }
 

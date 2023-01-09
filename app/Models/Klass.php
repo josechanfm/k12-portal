@@ -10,22 +10,18 @@ class Klass extends Model
     use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
     use HasFactory;
-    protected $fillable=['year_id','grade','initial','acronym','room','head_id'];
-
-    
+    protected $fillable=['grade_id','head_id','initial','tag','room'];
     
     // public function subjects(){
     //     return $this->belongsToMany(Subject::class);
     // }
-    protected $appends= ['initial','acronym','student_count','promoted_count'];
+   
+    protected $appends= ['student_count','promoted_count','year_abbr'];
     
-    public function getInitialAttribute(){
-        return Grade::find($this->grade_id)->initial;
+    public function getYearAbbrAttribute(){
+        return Grade::find($this->grade_id)->year->abbr;
     }
-    public function getAcronymAttribute(){
-        $grade=Grade::find($this->grade_id);
-        return $grade->initial.$grade->level.$this->letter;
-    }
+
     public function getStudentCountAttribute(){
         return KlassStudent::where('klass_id',$this->id)->count();
     }
@@ -46,11 +42,10 @@ class Klass extends Model
     }
     public static function klass_scores($klassId){
         $students=Klass::find($klassId)->students;
-        foreach($students as $student){
+        foreach($students as $i=>$student){
             $student->scores=Score::where('klass_student_id',$student->pivot->klass_student_id)->get();
         }
         return $students;
-        //return $this->hasManyThrough(Score::class,KlassStudent::class);
     }
     
 }
