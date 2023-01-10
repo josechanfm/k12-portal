@@ -17,6 +17,8 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('klass_id');
             $table->bigInteger('term_id');
+            $table->bigInteger('course_id');
+            $table->integer('sequence');
             $table->string('name');
             $table->string('type')->nullable();
             $table->string('scheme')->nullable();

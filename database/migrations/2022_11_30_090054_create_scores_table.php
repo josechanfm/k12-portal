@@ -16,11 +16,9 @@ return new class extends Migration
         Schema::create('scores', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('klass_student_id');
-            $table->bigInteger('course_id')->nullable();
             $table->bigInteger('score_column_id');            
-            $table->string('scope')->nullable();
-            $table->string('type')->nullable();
-            $table->integer('point');
+            $table->string('point')->nullable();
+            $table->string('remark');
             $table->timestamps();
         });
     }

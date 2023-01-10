@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Klass;
+use App\Models\Score;
 use App\Models\ScoreColumn;
 
 class ScoreController extends Controller
@@ -79,9 +80,15 @@ class ScoreController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $data=$request->all();
+        Score::upsert(
+            $request->all(),
+            ['klass_student_id','score_column_id'],
+            ['point']
+        );
+        return $data;
     }
 
     /**
@@ -94,4 +101,5 @@ class ScoreController extends Controller
     {
         //
     }
+
 }

@@ -64,6 +64,7 @@ Route::prefix('manage/')->group(function(){
     Route::get('/students/{klassId}',[App\Http\Controllers\Manage\GradeController::class,'students']);
     Route::get('/klass_scores/{klassId}',[App\Http\Controllers\Manage\KlassController::class,'klass_scores']);
     Route::get('/score',[App\Http\Controllers\Manage\ScoreController::class,'index']);
+    Route::post('/score_update',[App\Http\Controllers\Manage\ScoreController::class,'update']);
     Route::resource('/course',App\Http\Controllers\Manage\CourseController::class);
     Route::resource('/klass',App\Http\Controllers\Manage\KlassController::class);
     Route::get('/test_data',[App\Http\Controllers\Manage\KlassController::class,'test_data']);
@@ -73,9 +74,9 @@ Route::prefix('manage/')->group(function(){
 });
 
 
-Route::get('/year/klass/disciplines/{klassId}',[KlassController::class,'disciplines']);
-Route::get('/year/klasses/{yearId}',[YearController::class,'year']);
-Route::get('/year/subjects/{yearId}',[YearController::class,'subjects']);
+//Route::get('/year/klass/disciplines/{klassId}',[KlassController::class,'disciplines']);
+//Route::get('/year/klasses/{yearId}',[YearController::class,'year']);
+//Route::get('/year/subjects/{yearId}',[YearController::class,'subjects']);
 
 // Route::resource('/promotion',PromotionController::class);
 // Route::get('/promotion/klass/{klassId}',[PromotionController::class,'klass']);

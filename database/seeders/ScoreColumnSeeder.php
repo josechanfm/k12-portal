@@ -18,21 +18,25 @@ class ScoreColumnSeeder extends Seeder
         DB::table('score_columns')->insert([
             'klass_id'=>1,
             'term_id'=>1,
+            'sequence'=>1,
             'name'=>'Test1',
         ]);
         DB::table('score_columns')->insert([
             'klass_id'=>1,
             'term_id'=>1,
+            'sequence'=>2,
             'name'=>'Exam',
         ]);
         DB::table('score_columns')->insert([
             'klass_id'=>1,
             'term_id'=>2,
+            'sequence'=>3,
             'name'=>'Test2',
         ]);
         DB::table('score_columns')->insert([
             'klass_id'=>1,
             'term_id'=>2,
+            'sequence'=>4,
             'name'=>'Exam',
         ]);
 

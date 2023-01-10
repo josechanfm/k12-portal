@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Score extends Model
 {
     use HasFactory;
+    protected $fillable=['klass_student_id','score_column_id','point'];
+
+    public function score_column(){
+        return $this->belongsTo(ScoreColumn::class);
+    }
 
     public function course(){
         return $this->belongsTo(Course::class);
