@@ -2,29 +2,10 @@
     <AdminLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Score
+                Score for {{ klass.tag }}
             </h2>
         </template>
         <a-button type="primary" @click="onClickScoreModal">Score</a-button>
-        <a-modal v-model:visible="modal.isOpen" :title="modal.title" @ok="handleOk">
-            {{ modal.data }}
-            <a-form 
-                :model="modal.data"
-                name="score_column"
-            >
-                <a-form-item label="name" name="name" :rules="[{required:true, message:'Please input score column name'}]">
-                    <a-input v-model:value="modal.data.name"/>
-                </a-form-item>
-                <a-input v-model:value="modal.data.klass_id"/>
-                <a-input v-model:value="modal.data.term_id"/>
-                <a-input v-model:value="modal.data.sequence"/> 
-                <a-input v-model:value="modal.data.scheme"/> 
-                <a-input v-model:value="modal.data.description"/> 
-            </a-form>
-            <p>Some contents...</p>
-            <p>Some contents...</p>
-            <p>Some contents...</p>
-        </a-modal>
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -62,6 +43,25 @@
                 </div>
             </div>
         </div>
+
+        <a-modal v-model:visible="modal.isOpen" :title="modal.title" @ok="handleOk">
+            <a-form 
+                :model="modal.data"
+                name="score_column"
+            >
+                <a-form-item label="name" name="name" :rules="[{required:true, message:'Please input score column name'}]">
+                    <a-input v-model:value="modal.data.name"/>
+                </a-form-item>
+                <a-input v-model:value="modal.data.klass_id"/>
+                <a-input v-model:value="modal.data.term_id"/>
+                <a-input v-model:value="modal.data.sequence"/> 
+                <a-input v-model:value="modal.data.scheme"/> 
+                <a-input v-model:value="modal.data.description"/> 
+            </a-form>
+            <p>Some contents...</p>
+            <p>Some contents...</p>
+            <p>Some contents...</p>
+        </a-modal>
     </AdminLayout>
 
 </template>
@@ -82,6 +82,10 @@ export default {
                 isOpen: false,
                 title:'Score Column',
                 data:{}
+            },
+            tableCell:{
+                row:0,
+                column:0
             },
             scores:{},
             columns: [
@@ -126,7 +130,6 @@ export default {
     mounted() {
         console.log(this.$refs.scoreTable);
         this.$refs.scoreTable.addEventListener('keydown', (e) => {
-            console.log(e.key);
             switch(e.key){
                 case 'ArrowUp':
                     console.log("up");
@@ -144,7 +147,13 @@ export default {
             if (e.key == 'Escape') {
                 this.showModal = !this.showModal;
             }
-        });
+        })
+        const inputs=this.$refs.scoreTable.getElementsByTagName("input");
+        for(var i=0; i<inputs.length; i++){
+            inputs[i].addEventListener("focus", (e) => {
+                console.log(e.target.closest("tr").nextElementSibling);
+            })
+        }
     },
     methods: {
         onKeypressed(event){

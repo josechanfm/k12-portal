@@ -23,6 +23,7 @@
                             <th class="text-left">Active</th>
                             <th class="text-left">Students</th>
                             <th class="text-left">Courses</th>
+                            <th class="text-left">Scores</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -51,7 +52,15 @@
                                         <span @click="selectCourse(klass.id)">Courses</span>
                                     </li>
                                 </ul>
+                            </td>
+                            <td>
+                                <ul>
+                                    <li v-for="(klass, klassKey) in grade.klasses" :klass_id="klass.id">
+                                        
+                                        <Link :href="'score?kid='+klass.id" method="get" as="button" type="button">Score</Link>
 
+                                    </li>
+                                </ul>
                             </td>
                         </tr>
                     </tbody>
@@ -106,10 +115,11 @@
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { TeamOutlined } from '@ant-design/icons-vue';
+import { Link } from '@inertiajs/inertia-vue3';
 
 export default {
     components: {
-        AdminLayout, TeamOutlined
+        AdminLayout, TeamOutlined, Link
     },
     props: ['year','grades','courseScores'],
     data() {

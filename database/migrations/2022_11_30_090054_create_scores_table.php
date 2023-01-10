@@ -18,7 +18,7 @@ return new class extends Migration
             $table->bigInteger('klass_student_id');
             $table->bigInteger('score_column_id');            
             $table->string('point')->nullable();
-            $table->string('remark');
+            $table->string('remark')->nullable();
             $table->timestamps();
         });
     }

@@ -17,26 +17,17 @@ class ScoreSeeder extends Seeder
     {
         DB::table('scores')->insert([
             'klass_student_id'=>3,
-            'course_id'=>1,
             'score_column_id'=>1,
-            'scope'=>'scope',
-            'type'=>'type',
             'point'=>100
         ]);
         DB::table('scores')->insert([
             'klass_student_id'=>5,
-            'course_id'=>1,
             'score_column_id'=>1,
-            'scope'=>'scope',
-            'type'=>'type',
             'point'=>80
         ]);
         DB::table('scores')->insert([
             'klass_student_id'=>3,
-            'course_id'=>1,
             'score_column_id'=>2,
-            'scope'=>'scope',
-            'type'=>'type',
             'point'=>90
         ]);
     }
