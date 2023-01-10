@@ -48,19 +48,28 @@
             <a-form 
                 :model="modal.data"
                 name="score_column"
+                ref="modalScoreColumn"
+                @finish="onModalFinish"
             >
-                <a-form-item label="name" name="name" :rules="[{required:true, message:'Please input score column name'}]">
+                <a-form-item label="Name" :name="['name']" :rules="[{required:true, message:'Please input score column name'}]">
                     <a-input v-model:value="modal.data.name"/>
                 </a-form-item>
-                <a-input v-model:value="modal.data.klass_id"/>
-                <a-input v-model:value="modal.data.term_id"/>
-                <a-input v-model:value="modal.data.sequence"/> 
-                <a-input v-model:value="modal.data.scheme"/> 
-                <a-input v-model:value="modal.data.description"/> 
+                <a-form-item label="Class" :name="['klass_id']" :rules="[{required:true, message:'Please input score column name'}]">
+                    <a-input v-model:value="modal.data.klass_id"/>
+                </a-form-item>
+                <a-form-item label="Term" :name="['term_id']" :rules="[{required:true, message:'Please input score column name'}]">
+                    <a-input v-model:value="modal.data.term_id"/>
+                </a-form-item>
+                <a-form-item label="sequence" :name="['sequence']" >
+                    <a-input v-model:value="modal.data.sequence"/> 
+                </a-form-item>
+                <a-form-item label="Scheme" :name="['scheme']">
+                    <a-input v-model:value="modal.data.scheme" /> 
+                </a-form-item>
+                <a-form-item label="Description" :name="['description']">
+                    <a-input v-model:value="modal.data.description"/> 
+                </a-form-item>
             </a-form>
-            <p>Some contents...</p>
-            <p>Some contents...</p>
-            <p>Some contents...</p>
         </a-modal>
     </AdminLayout>
 
@@ -85,7 +94,9 @@ export default {
             },
             tableCell:{
                 row:0,
-                column:0
+                col:0,
+                maxRow:this.students_scores.length,
+                maxCol:this.score_columns.length
             },
             scores:{},
             columns: [
@@ -128,30 +139,31 @@ export default {
         
     },
     mounted() {
-        console.log(this.$refs.scoreTable);
         this.$refs.scoreTable.addEventListener('keydown', (e) => {
             switch(e.key){
                 case 'ArrowUp':
-                    console.log("up");
+                    this.tableCell.row>1?this.tableCell.row--:'';
                     break;
                 case 'ArrowDown':
-                    console.log("down");
+                    this.tableCell.row<this.tableCell.maxRow?this.tableCell.row++:'';
                     break;
                 case 'ArrowLeft':
-                    console.log("left");
+                    this.tableCell.col>1?this.tableCell.col--:'';
                     break;
                 case 'ArrowRight':
-                    console.log("right");
+                    this.tableCell.col<this.tableCell.maxCol?this.tableCell.col++:'';
                     break;
             }
-            if (e.key == 'Escape') {
-                this.showModal = !this.showModal;
+            var input =this.$refs.scoreTable.rows[this.tableCell.row].cells[this.tableCell.col].getElementsByTagName("input");
+            if(input.length>0){
+                input[0].focus();
             }
         })
         const inputs=this.$refs.scoreTable.getElementsByTagName("input");
         for(var i=0; i<inputs.length; i++){
             inputs[i].addEventListener("focus", (e) => {
-                console.log(e.target.closest("tr").nextElementSibling);
+                this.tableCell.row=e.target.closest('tr').rowIndex;
+                this.tableCell.col=e.target.closest('td').cellIndex;
             })
         }
     },
@@ -178,6 +190,9 @@ export default {
 
             console.log(recordId);
         },
+        onModalFinish(){
+            console.log("modal finish");
+        },
         saveScores(){
             var data=[];
             Object.entries(this.scores).forEach(score => {
@@ -203,6 +218,12 @@ export default {
             
             console.log("modal ok " + this.modal.mode);
             this.modal.mode=null;
+
+            this.$refs.modalScoreColumn.validateFields().then(()=>{
+                console.log("valid");
+            }).catch(err => {
+                console.log(err);
+            })
         }
     },
 }
