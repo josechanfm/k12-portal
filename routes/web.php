@@ -93,6 +93,8 @@ Route::prefix('essential')->group(function(){
     Route::resource('/grades',App\Http\Controllers\Essential\GradeController::class);
     Route::resource('/klasses',App\Http\Controllers\Essential\KlassController::class);
     Route::resource('/subjects',App\Http\Controllers\Essential\SubjectController::class);
+    Route::resource('/users',App\Http\Controllers\Essential\UserController::class);
+    Route::resource('/roles',App\Http\Controllers\Essential\RoleController::class);
 });
 
 Route::prefix('promote')->group(function(){
