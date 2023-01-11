@@ -70,9 +70,13 @@ Route::prefix('manage/')->group(function(){
     Route::get('/test_data',[App\Http\Controllers\Manage\KlassController::class,'test_data']);
     Route::get('/transcript',[App\Http\Controllers\Manage\TranscriptController::class,'index']);
     Route::get('/transcript/klass_student/{id}',[App\Http\Controllers\Manage\TranscriptController::class,'klassStudent']);
-
+    Route::get('teaching',[App\Http\Controllers\Manage\TeacherController::class,'teaching']);
+    Route::resource('teacher',App\Http\Controllers\Manage\TeacherController::class);
 });
 
+Route::prefix('teacher/')->group(function(){
+    Route::resource('/',App\Http\Controllers\Teacher\DashboardController::class);
+});
 
 //Route::get('/year/klass/disciplines/{klassId}',[KlassController::class,'disciplines']);
 //Route::get('/year/klasses/{yearId}',[YearController::class,'year']);

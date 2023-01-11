@@ -90,18 +90,38 @@
       url:'/manage/grades',
     },{
       key: '2.2',
+      title: 'Teacher',
+      url:'/manage/teacher',
+    },{
+      key: '2.3',
       title: 'Promotion',
       url:'/promote',
     }],
   },{
     key: '3',
-    title: 'Navigation 3',
+    title: 'Teacher',
     children: [{
       key: '3.1',
-      title: 'Navigation 3',
+      title: 'Teaching',
+      url:'/manage/teaching',
+    },{
+      key: '3.2',
+      title: 'Teacher',
+      url:'/manage/teacher',
+    },{
+      key: '3.3',
+      title: 'Promotion',
+      url:'/promote',
+    }],
+  },{
+    key: '4',
+    title: 'Navigation 4',
+    children: [{
+      key: '4.1',
+      title: 'Navigation 4',
       children: [{
-        key: '3.1.1',
-        title: 'Option 3.1.1',
+        key: '4.1.1',
+        title: 'Option 4.1.1',
       }],
     }],
   }];

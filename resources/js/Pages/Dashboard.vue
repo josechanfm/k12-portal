@@ -42,6 +42,21 @@ import Welcome from '@/Components/Welcome.vue';
                     <p>students: Has many students</p>
                     <p>promoteTo: </p>
                     <p>klass_scores/{klassId}:</p>
+                    <a-typography-title :level="3">升班 Promote</a-typography-title>
+                    <p>在klass_student table上, 增加了多個欄位,用於區分以學生為單位的 "在學狀況" "文理方向", "升班情況"</p>
+                    <p>這表格以在讀班級為單位,換而言之,是某學生在某一年,所在讀的年級與班別.</p>
+                    <p>state: 在學狀況</p>
+                    <p>stream: 文理方向</p>
+                    <p>promote: 當年是否以升班或留班</p>
+                    <p>promote_to: 下年升或留至哪一班</p>
+                    <a-typography-title :level="3">Course</a-typography-title>
+                    <a-typography-title :level="5">Relationships</a-typography-title>
+                        <p>belongsToMany('teachers')</p>                    
+                    <a-typography-title :level="3">Teacher</a-typography-title>
+                    <a-typography-title :level="5">Relationships</a-typography-title>
+                        <p>belongsToMany('course')</p>
+                        <p>belongsto('staff')</p>
+                    <a-typography-title :level="3">Staff</a-typography-title>
                 </div>
             </div>
         </div>

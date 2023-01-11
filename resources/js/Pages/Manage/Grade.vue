@@ -23,7 +23,6 @@
                             <th class="text-left">Active</th>
                             <th class="text-left">Students</th>
                             <th class="text-left">Courses</th>
-                            <th class="text-left">Scores</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -53,15 +52,6 @@
                                     </li>
                                 </ul>
                             </td>
-                            <td>
-                                <ul>
-                                    <li v-for="(klass, klassKey) in grade.klasses" :klass_id="klass.id">
-                                        
-                                        <Link :href="'score?kid='+klass.id" method="get" as="button" type="button">Score</Link>
-
-                                    </li>
-                                </ul>
-                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -74,6 +64,7 @@
                             <th class="text-left">Title</th>
                             <th class="text-left">Type</th>
                             <th class="text-left">Teacher</th>
+                            <th class="text-left">Score</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -82,6 +73,9 @@
                             <td class="text-left">{{ course.title_zh }}</td>
                             <td class="text-left">{{ course.stream }}</td>
                             <td class="text-left">{{ course.staff_id }}</td>
+                            <td class="text-left">
+                                <Link :href="'score?kid='+course.klass_id + '&cid='+course.id" method="get" as="button" type="button">Score</Link>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

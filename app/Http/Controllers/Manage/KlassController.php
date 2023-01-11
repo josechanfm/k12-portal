@@ -9,6 +9,8 @@ use App\Models\Config;
 use App\Models\Year;
 use App\Models\Grade;
 use App\Models\Klass;
+use App\Models\Staff;
+use App\Models\Teacher;
 use App\Models\CourseScore;
 
 
@@ -22,7 +24,10 @@ class KLassController extends Controller
 
     public function index()
     {
-
+        $klass=Klass::with('courses')->find(1);
+        $teacher=Teacher::with('courses')->find(1);
+        return response($teacher);
+        //return response($klass);
     }
 
     /**

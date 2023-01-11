@@ -5,29 +5,20 @@ namespace App\Http\Controllers\Manage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Klass;
-use App\Models\Score;
-use App\Models\ScoreColumn;
+use App\Models\Teacher;
 
-class ScoreController extends Controller
+class TeacherController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $kid=$request->kid;
-        $cid=$request->cid;
-        $klass=Klass::find($kid);
-        $scoreColumns=ScoreColumn::where('klass_id',$kid)->where('course_id',$cid)->orderBy('sequence')->get();
-        $studentsScores=Klass::klass_scores($kid);
-    
-        return Inertia::render('Manage/Score',[
-            'score_columns'=>$scoreColumns,
-            'klass'=>$klass,
-            'students_scores'=>$studentsScores
+        $teachers=Teacher::with('courses')->get();
+        return Inertia::render('Manage/Teacher',[
+            'teachers' => $teachers,
         ]);
     }
 
@@ -81,15 +72,9 @@ class ScoreController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        $data=$request->all();
-        Score::upsert(
-            $request->all(),
-            ['klass_student_id','score_column_id'],
-            ['point']
-        );
-        return $data;
+        //
     }
 
     /**
@@ -103,4 +88,11 @@ class ScoreController extends Controller
         //
     }
 
+    public function teaching(Request $request){
+        $tid=$request->tid;
+        $teacher=Teacher::with('courses')->find($tid);
+        return Inertia::render('Manage/Teaching',[
+            'teacher'=>$teacher
+        ]);
+    }
 }

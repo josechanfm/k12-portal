@@ -12,7 +12,6 @@ class Course extends Model
     public function klass(){
         return $this->belongsTo(Klass::class);
     }
-
     public function scores(){
         return $this->hasMany(Score::class);
     }

@@ -15,8 +15,9 @@ return new class extends Migration
     {
         Schema::create('staff', function (Blueprint $table) {
             $table->id();
+            $table->string('code')->nullable();
             $table->string('name_zh');
-            $table->string('name_fn');
+            $table->string('name_fn')->nullable();
             $table->char('gender');
             $table->date('dob')->nullable();
             $table->string('mobile')->nullable();
