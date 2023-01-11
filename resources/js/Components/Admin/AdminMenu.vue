@@ -1,5 +1,7 @@
 <template>
     <div>
+      <a-button v-can="'add'">Add</a-button>
+      <a-button v-role="'admin'">Is admin</a-button>
       <a-menu
         v-model:openKeys="openKeys"
         v-model:selectedKeys="selectedKeys"
