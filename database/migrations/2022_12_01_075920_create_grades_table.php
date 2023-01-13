@@ -17,9 +17,10 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('year_id');
             $table->integer('rank');
-            $table->char('initial',1);
+            $table->char('initial',2);
             $table->integer('level');            
             $table->string('tag',5)->nullable();
+            $table->string('byname',5)->nullable();
             $table->string('title_zh')->nullable();
             $table->string('title_en')->nullable();
             $table->text('description')->nullable();

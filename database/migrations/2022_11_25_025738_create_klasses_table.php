@@ -19,6 +19,7 @@ return new class extends Migration
             $table->bigInteger('head_id')->on('teachers')->onDelete('restrict')->nullable();
             $table->char('letter',5)->nullable();
             $table->char('tag',5)->nullable();
+            $table->string('byname')->nullable();
             $table->string('room')->nullable();
             $table->timestamps();
         });
