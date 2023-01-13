@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('start_grade')->nullable();
             $table->string('sic')->nullable();
             $table->string('phone')->nullable();
-            $table->string('dsej')->nullable();
+            $table->string('dsej_num')->nullable();
             $table->string('medical_num')->nullable();
             $table->date('entry_date')->nullable();
 
@@ -33,7 +33,7 @@ return new class extends Migration
             $table->string('religion')->nullable();
             $table->string('phone_sms')->nullable();
             $table->string('phone_home')->nullable();
-            $table->string('guardian')->nullable();
+            $table->string('carer')->nullable();
 
             $table->text('address')->nullable();
             $table->text('id_card')->nullable();
@@ -49,8 +49,9 @@ return new class extends Migration
             $table->integer('sibling')->nullable();
             $table->integer('sibling_at_work')->nullable();
 
-            $table->text('parents')->nullable();
-            $table->text('parents')->nullable();
+            $table->text('parent')->nullable();
+            $table->text('garidan')->nullable();
+            $table->text('liaison')->nullable();
 
             $table->timestamps();
         });

@@ -71,7 +71,8 @@ Route::prefix('manage/')->group(function(){
     Route::get('/transcript',[App\Http\Controllers\Manage\TranscriptController::class,'index']);
     Route::get('/transcript/klass_student/{id}',[App\Http\Controllers\Manage\TranscriptController::class,'klassStudent']);
     Route::get('teaching',[App\Http\Controllers\Manage\TeacherController::class,'teaching']);
-    Route::resource('teacher',App\Http\Controllers\Manage\TeacherController::class);
+    Route::resource('/teacher',App\Http\Controllers\Manage\TeacherController::class);
+    Route::resource('/student',App\Http\Controllers\Manage\StudentController::class);
 });
 
 Route::prefix('teacher/')->group(function(){
