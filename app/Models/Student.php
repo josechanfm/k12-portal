@@ -16,4 +16,14 @@ class Student extends Model
     // public static function scores(){
     //     return $this->hasManyThrough(Score::class, KlassStudent::class);
     // }
+
+    
+    public function addresses(){
+        return $this->morphMany(Address::class, 'addressable');
+    }
+
+    public function address(){
+        return $this->morphOne(Address::class, 'addressable')->latestOfMany();
+    }
+
 }

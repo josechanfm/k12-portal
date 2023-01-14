@@ -43,7 +43,7 @@ return new class extends Migration
             $table->date('baptized')->nullable();
             $table->date('first_communion')->nullable();
             $table->string('past_entry_grade')->nullable();
-            $table->date('past_entry')->nullable();
+            $table->date('past_entry_date')->nullable();
             $table->string('past_grade')->nullable();
             $table->date('validat_stay')->nullable();
             $table->integer('sibling')->nullable();

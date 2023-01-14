@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Student;
+use App\Models\Address;
 
 class StudentController extends Controller
 {
@@ -16,7 +17,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $students=Student::paginate(20);
+        $students=Student::with('address')->paginate(10);
         return Inertia::render('Manage/Student',[
             'students'=>$students
         ]);
@@ -51,7 +52,7 @@ class StudentController extends Controller
      */
     public function show($id)
     {
-        $student=Student::find($id);
+        $student=Student::with('address')->find($id);
         return Inertia::render('Manage/StudentProfile',[
             'student'=>$student
         ]);
