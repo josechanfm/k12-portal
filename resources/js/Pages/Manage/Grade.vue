@@ -64,6 +64,7 @@
                             <th class="text-left">Title</th>
                             <th class="text-left">Type</th>
                             <th class="text-left">Teacher</th>
+                            <th class="text-left">Head Teacher</th>
                             <th class="text-left">Score</th>
                         </tr>
                     </thead>
@@ -72,9 +73,20 @@
                             <td class="text-left">{{ course.abbr }}</td>
                             <td class="text-left">{{ course.title_zh }}</td>
                             <td class="text-left">{{ course.stream }}</td>
-                            <td class="text-left">{{ course.staff_id }}</td>
                             <td class="text-left">
-                                <Link :href="'score?kid='+course.klass_id + '&cid='+course.id" method="get" as="button" type="button">Score</Link>
+                                <ul>
+                                    <li v-for="teacher in course.teachers">
+                                        {{ teacher.name_zh }} ({{ teacher.staff_id }} )
+                                    </li>
+                                </ul>
+                            </td>
+                            <td class="text-left">
+                                <template v-for="teacher in course.teachers" >
+                                    <span v-if="teacher.pivot.is_head">{{teacher.name_zh}}</span>
+                                </template>
+                            </td>
+                            <td class="text-left">
+                                <Link :href="'score?cid='+course.id" method="get" as="button" type="button">Score</Link>
                             </td>
                         </tr>
                     </tbody>

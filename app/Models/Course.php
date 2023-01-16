@@ -19,6 +19,9 @@ class Course extends Model
     public function students(){
         return $this->belongsToMany(Student::class,'klass_students','klass_id','student_id')->withPivot(['id as pivot_klass_student_id','student_number','stream','state','promote','promote_to']);
     }
+    public function teachers(){
+        return $this->belongsToMany(Teacher::class,'course_teachers','course_id','teacher_id')->withPivot('is_head');
+    }
     public function subject(){
         return $this->belongsTo(Subject::class);
     }
@@ -28,5 +31,14 @@ class Course extends Model
             $student->scores=Score::where('klass_student_id',$student->pivot->klass_student_id)->get();
         }
         return $students;
+    }
+    public static function students_scores($cid){
+        $course=Course::find($cid);
+        $students=Klass::find($course->klass_id)->students;
+        foreach($students as $student){
+            $student->scores=Score::where('klass_student_id',$student->pivot->klass_student_id)->get();
+        }
+        return $students;
+
     }
 }

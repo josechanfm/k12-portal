@@ -2,7 +2,13 @@
     <AdminLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Score for {{ klass.tag }}
+                Score for {{ course.klass.tag }} {{ course.title_zh }}
+                <br/>
+                <span v-for="teacher in course.teachers">
+                    {{ teacher.name_zh }} 
+                    <span v-if="teacher.pivot.is_head">(Head)</span>
+                    &nbsp;
+                </span>
             </h2>
         </template>
         <a-button type="primary" @click="onClickScoreModal">Score</a-button>
@@ -14,6 +20,9 @@
                             <template v-if="column.dataIndex == 'operation'">
                                 <a-button @click="onClickEditScoreColumn(record)">Edit</a-button>
                                 <a-button @click="onClickDeleteScoreColumn(record.id)">Delete</a-button>
+                            </template>
+                            <template v-else-if="column.dataIndex=='course_id'">
+                                {{ record.course.title_zh }}
                             </template>
                             <template v-else>
                                 {{ record[column.dataIndex]}}
@@ -44,7 +53,7 @@
             </div>
         </div>
 
-        <a-modal v-model:visible="modal.isOpen" :title="modal.title" @ok="handleOk">
+        <a-modal v-model:visible="modal.isOpen" :title="modal.title" @ok="handleScoreColumnChange">
             <a-form 
                 :model="modal.data"
                 name="score_column"
@@ -56,6 +65,9 @@
                 </a-form-item>
                 <a-form-item label="Class" :name="['klass_id']" :rules="[{required:true, message:'Please input score column name'}]">
                     <a-input v-model:value="modal.data.klass_id"/>
+                </a-form-item>
+                <a-form-item label="Course" :name="['course_id']" :rules="[{required:true, message:'Please input score column name'}]">
+                    <a-input v-model:value="modal.data.course_id"/>
                 </a-form-item>
                 <a-form-item label="Term" :name="['term_id']" :rules="[{required:true, message:'Please input score column name'}]">
                     <a-input v-model:value="modal.data.term_id"/>
@@ -82,7 +94,7 @@ export default {
     components: {
         AdminLayout
     },
-    props: ['score_columns', 'klass', 'students_scores'],
+    props: ['course', 'score_columns', 'students_scores'],
     data() {
         return {
             keypressed:"",
@@ -104,15 +116,18 @@ export default {
                     title: 'Term',
                     dataIndex: 'term_id',
                 },{
-                    title: 'Name',
+                    title: 'Course',
+                    dataIndex: 'course_id',
+                },{
+                    title: 'Sore Name',
                     dataIndex: 'name',
-                }, {
+                },{
                     title: 'Type',
                     dataIndex: 'type',
-                }, {
+                },{
                     title: 'Schema',
                     dataIndex: 'schema',
-                }, {
+                },{
                     title: 'Operation',
                     dataIndex: 'operation',
                 }
@@ -214,16 +229,44 @@ export default {
                     console.log(resp.data)
                 );
         },
-        handleOk() {
-            
-            console.log("modal ok " + this.modal.mode);
-            this.modal.mode=null;
-
+        handleScoreColumnChange() {
             this.$refs.modalScoreColumn.validateFields().then(()=>{
-                console.log("valid");
+                if(this.modal.mode=='ADD'){
+                    this.createScoreColumn(this.modal.data);
+                    console.log("??modal ok " + this.modal.mode);
+                    this.modal.mode=null;
+                }else if(this.modal.mode=='EDIT'){
+                    console.log("to update");
+                    this.updateScoreColumn(this.modal.data);
+                }
+
             }).catch(err => {
                 console.log(err);
             })
+
+        },
+        createScoreColumn(data){
+            this.$inertia.post('/manage/score_column/', data, {
+                    onSuccess: (page) => {
+                        this.modal.mode=null;
+                        this.modal.isOpen=false;
+                    },
+                    onError: (error) => {
+                        console.log(error);
+                    }
+            });
+        },
+        updateScoreColumn(data){
+            console.log("in update");
+            this.$inertia.put('/manage/score_column/'+data.id, data, {
+                    onSuccess: (page) => {
+                        this.modal.mode=null;
+                        this.modal.isOpen=false;
+                    },
+                    onError: (error) => {
+                        console.log(error);
+                    }
+            });
         }
     },
 }

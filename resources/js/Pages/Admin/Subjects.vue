@@ -14,46 +14,22 @@
                         {{record[column.dataIndex]}}
                     </template>
                     <template v-else>
-                        <a-button @click="editRecord(index)">Edit</a-button>
+                        <a-button @click="onClickEditSubject(record)">Edit..</a-button>
                         <a-button @click="deleteRecord(record.id)">Delete</a-button>
                     </template>
                 </template>
             </a-table>
 
         <!-- Modal Start-->
-        <a-modal v-model:visible="modalVisible" :title="modalTitle" width="60%" @update="updateRecord(modalForm)" @onCancel="closeModal()">
+        <a-modal v-model:visible="modal.isOpen" :title="modalTitle" width="60%" @update="updateRecord(modalForm)" @onCancel="closeModal()">
         <a-form
-            ref="modalRef"
-            :model="modalForm"
-            name="subjects"
-            :label-col="{ span: 8 }"
-            :wrapper-col="{ span: 16 }"
-            autocomplete="off"
-            :rules="rules"
-            :validate-messages="validateMessages"
-            @validate="handleValidate"
-            @finish="onFinish"
-            @onFinishFailed="onFinishFailed"
+            :model="modal.data"
+                name="Subjects"
+                ref="modalSubjects"
         >
-            <a-input type="hidden" v-model:value="modalForm.id"/>
-            <a-form-item label="Abbr" name="abbr">
-                <a-input v-model:value="modalForm.abbr" style="width: 100px"/>
-            </a-form-item>
-            <a-form-item label="Title Zh" name="title_zh">
-                <a-input v-model:value="modalForm.title_zh" />
-            </a-form-item>
-            <a-form-item label="Title En" name="title_en">
-                <a-input v-model:value="modalForm.title_en" />
-            </a-form-item>
-            <a-form-item label="Type" name="type">
-                <a-input v-model:value="modalForm.type" />
-            </a-form-item>
-            <a-form-item label="Description" name="description">
-                <a-textarea v-model:value="modalForm.description" />
-            </a-form-item>
-
-
-
+                <a-form-item label="Name" :name="['name_zh']" :rules="[{required:true, message:'Please input score column name'}]">
+                    <a-input v-model:value="modal.data.name_zh"/>
+                </a-form-item>
 
 
         </a-form>
@@ -79,8 +55,12 @@ export default {
     data() {
         return {
             paymentList: [],
-            editMode: false,
-            isOpen: false,
+            modal: {
+                mode:null,
+                isOpen: false,
+                title:'Subject',
+                data:{}
+            },
             form: {
                 title: null,
             },
@@ -264,11 +244,11 @@ export default {
             });
            
         },
-        editRecord(index){
-            console.log(index);
-            this.modalForm={...this.subjects.data[index]};
-            this.currentId=index;
-            this.ChangeModalMode('Edit');
+        onClickEditSubject(record){
+            this.modal.data=record;
+            this.modal.title="Edit Score Column";
+            this.modal.mode='EDIT';
+            this.modal.isOpen = true;
         },
         deleteRecord(recordId){
             console.log(recordId);

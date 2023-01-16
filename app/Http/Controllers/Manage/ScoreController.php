@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Manage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Klass;
+use App\Models\Course;
 use App\Models\Score;
 use App\Models\ScoreColumn;
 
@@ -18,15 +18,16 @@ class ScoreController extends Controller
      */
     public function index(Request $request)
     {
-        $kid=$request->kid;
         $cid=$request->cid;
-        $klass=Klass::find($kid);
-        $scoreColumns=ScoreColumn::where('klass_id',$kid)->where('course_id',$cid)->orderBy('sequence')->get();
-        $studentsScores=Klass::klass_scores($kid);
-    
+        $scoreColumns=ScoreColumn::with('course')->where('course_id',$cid)->orderByRaw('-sequence DESC')->get();
+        //$studentsScores=Klass::klass_scores($kid);
+        $studentsScores=Course::students_scores($cid);
+        $course=Course::with('klass')->with('teachers')->find($cid);
+        //return response($studentsScores);
+
         return Inertia::render('Manage/Score',[
+            'course'=>$course,
             'score_columns'=>$scoreColumns,
-            'klass'=>$klass,
             'students_scores'=>$studentsScores
         ]);
     }

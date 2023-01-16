@@ -16,7 +16,7 @@ class TeacherSeeder extends Seeder
     public function run()
     {
 
-        for($s=50;$s<=100;$s++){
+        for($s=30;$s<=100;$s++){
             DB::table('teachers')->insert([
                 'staff_id'=>$s,
             ]);

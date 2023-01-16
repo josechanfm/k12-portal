@@ -11,7 +11,7 @@
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
                         <a :href="'/essential/subjects/'+record.id">View</a>
-                        <a-button @click="editRecord(index)">Edit</a-button>
+                        <a-button @click="onClickEditSubject(record)">Edit</a-button>
                         <a-button @click="deleteRecord(record.id)">Delete</a-button>
                     </template>
                     <template v-else-if="column.dataIndex=='courses'">
@@ -26,63 +26,39 @@
             </a-table>
 
         <!-- Modal Start-->
-        <a-modal v-model:visible="modalVisible" :title="modalTitle" width="60%" @update="updateRecord(modalForm)" @onCancel="closeModal()">
+        <a-modal v-model:visible="modal.isOpen" :title="modalTitle" width="60%" @update="updateRecord(modalForm)" @onCancel="closeModal()">
+        
+        {{ modal.data }}
         <a-form
-            ref="modalRef"
-            :model="modalForm"
-            name="klasses"
-            :label-col="{ span: 8 }"
-            :wrapper-col="{ span: 16 }"
-            autocomplete="off"
-            :rules="rules"
-            :validate-messages="validateMessages"
-            @validate="handleValidate"
-            @finish="onFinish"
-            @onFinishFailed="onFinishFailed"
+            :model="modal.data"
+            name="Subject"
+            ref="modalSubject"
+            @finish="onModalFinish"
         >
-            <a-input type="hidden" v-model:value="modalForm.id"/>
-            <a-form-item label="School Year" name="year_id">
-                
-                <a-select
-                    v-model:value="modalForm.year_id"
-                    style="width: 100%"
-                    placeholder="Select Item..."
-                    max-tag-count="responsive"
-                    :options="school_years"
-                ></a-select>
-
+            <a-form-item label="year_id" name="year_id">
+                <a-input v-model:value="modal.data.year_id" />
             </a-form-item>
-            <a-form-item label="Grade" name="grade">
-                <a-select
-                    v-model:value="modalForm.grade"
-                    style="width: 100%"
-                    placeholder="Select Item..."
-                    max-tag-count="responsive"
-                    :options="grades"
-                ></a-select>
-
+            <a-form-item label="科目代號" name="code">
+                <a-input v-model:value="modal.data.code" />
             </a-form-item>
-            <a-form-item label="Initial" name="initial">
-                <a-select
-                    v-model:value="modalForm.initial"
-                    style="width: 100%"
-                    placeholder="Select Item..."
-                    max-tag-count="responsive"
-                    :options="initials"
-                ></a-select>
-
+            <a-form-item label="科目名稱 (中文)" name="title_zh">
+                <a-input v-model:value="modal.data.title_zh" />
             </a-form-item>
-            <a-form-item label="Acronym" name="acronym">
-                <a-input v-model:value="modalForm.acronym" />
+            <a-form-item label="分類" name="type">
+                <a-input v-model:value="modal.data.type" />
             </a-form-item>
-            <a-form-item label="Room" name="room">
-                <a-input v-model:value="modalForm.room" />
+            <a-form-item label="專業方向" name="stream">
+                <a-input v-model:value="modal.data.stream" />
             </a-form-item>
-            <a-form-item label="Head Teacher" name="head_id">
-                <a-input v-model:value="modalForm.head_id" />
+            <a-form-item label="必修/選修" name="elective">
+                <a-input v-model:value="modal.data.elective" />
             </a-form-item>
-            
-
+            <a-form-item label="簡介" name="description">
+                <a-textarea v-model:value="modal.data.descriion" placeholder="textarea with clear icon" allow-clear />
+            </a-form-item>
+            <a-form-item label="有效" name="active">
+                <a-switch v-model:checked="modal.data.active" :checkedValue="1" :uncheckedValue="0"/>
+            </a-form-item>
         </a-form>
         <template #footer>
             <a-button v-if="modalMode=='Edit'" key="Update" type="primary" :loading="loading" @click="updateRecord(modalForm)">Update</a-button>
@@ -106,8 +82,12 @@ export default {
     data() {
         return {
             paymentList: [],
-            editMode: false,
-            isOpen: false,
+            modal: {
+                mode:null,
+                isOpen: false,
+                title:'Score Column',
+                data:{}
+            },
             form: {
                 title: null,
             },
@@ -312,11 +292,11 @@ export default {
             });
            
         },
-        editRecord(index){
-            console.log(index);
-            this.modalForm={...this.klasses.data[index]};
-            this.currentId=index;
-            this.ChangeModalMode('Edit');
+        onClickEditSubject(record){
+            this.modal.data={...record};
+            this.modal.title="Edit Subject";
+            this.modal.mode='EDIT';
+            this.modal.isOpen = true;
         },
         deleteRecord(recordId){
             console.log(recordId);

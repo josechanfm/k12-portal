@@ -65,6 +65,7 @@ Route::prefix('manage/')->group(function(){
     Route::get('/klass_scores/{klassId}',[App\Http\Controllers\Manage\KlassController::class,'klass_scores']);
     Route::get('/score',[App\Http\Controllers\Manage\ScoreController::class,'index']);
     Route::post('/score_update',[App\Http\Controllers\Manage\ScoreController::class,'update']);
+    Route::resource('/score_column',App\Http\Controllers\Manage\ScoreColumnController::class);
     Route::resource('/course',App\Http\Controllers\Manage\CourseController::class);
     Route::resource('/klass',App\Http\Controllers\Manage\KlassController::class);
     Route::get('/test_data',[App\Http\Controllers\Manage\KlassController::class,'test_data']);

@@ -13,10 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('course_teacher', function (Blueprint $table) {
+        Schema::create('course_teachers', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('course_id');
             $table->bigInteger('teacher_id');
+            $table->boolean('is_head');
             $table->timestamps();
         });
     }
