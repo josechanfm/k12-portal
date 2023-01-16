@@ -1,3 +1,4 @@
+Rename as AIMS prefix with K12
 GLOSSORY
 - 序號 id
 - 學年
