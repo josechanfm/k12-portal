@@ -35,20 +35,6 @@ return new class extends Migration
             $table->string('phone_home')->nullable();
             $table->string('carer')->nullable();
 
-            $table->text('address')->nullable();
-            $table->text('id_card')->nullable();
-            $table->text('bank')->nullable();
-
-            $table->string('holy_name')->nullable();
-            $table->date('baptized')->nullable();
-            $table->date('first_communion')->nullable();
-            $table->string('past_entry_grade')->nullable();
-            $table->date('past_entry_date')->nullable();
-            $table->string('past_grade')->nullable();
-            $table->date('validat_stay')->nullable();
-            $table->integer('sibling')->nullable();
-            $table->integer('sibling_at_work')->nullable();
-
             $table->text('parent')->nullable();
             $table->text('garidan')->nullable();
             $table->text('liaison')->nullable();

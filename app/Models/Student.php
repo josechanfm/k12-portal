@@ -25,5 +25,28 @@ class Student extends Model
     public function address(){
         return $this->morphOne(Address::class, 'addressable')->latestOfMany();
     }
-
+    public function identity_document(){
+        return $this->morphOne(IdentityDocument::class, 'identity_documentable')->latestOfMany();
+    }
+    public function bank(){
+        return $this->morphOne(Bank::class, 'bankable')->latestOfMany();
+    }
+    public function detail(){
+        return $this->hasOne(StudentDetail::class);
+    }
+    public function parent()
+    {
+        return $this->hasOne(Parental::class);
+    }
+    public function guardians()
+    {
+        return $this->hasMany(Guardian::class);
+    }
+    public function guardian()
+    {
+        return $this->hasOne(Guardian::class)->latestOfMany();
+    }
+    public function healthcare(){
+        return $this->hasOne(Healthcare::class);
+    }
 }

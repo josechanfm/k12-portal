@@ -17,7 +17,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $students=Student::with('address')->paginate(10);
+        $students=Student::paginate(10);
         return Inertia::render('Manage/Student',[
             'students'=>$students
         ]);
@@ -52,7 +52,8 @@ class StudentController extends Controller
      */
     public function show($id)
     {
-        $student=Student::with('address')->find($id);
+        $student=Student::with('address')->with('identity_document')->with('bank')->with('detail')->with('parent')->with('guardian')->find($id);
+        // echo json_encode($student);
         return Inertia::render('Manage/StudentProfile',[
             'student'=>$student
         ]);

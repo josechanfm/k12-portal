@@ -25,7 +25,6 @@
                 name="advanced_search"
                 class="ant-advanced-search-form"
                 :model="student"
-                @finish="onFinish"
                 >
                 <a-collapse v-model:activeKey="activeKey">
                     <a-collapse-panel key="basic" header="學生基本資料">
@@ -128,135 +127,170 @@
                         </a-descriptions>
                     </a-collapse-panel>
                     <a-collapse-panel key="id_card" header="證件資料">
-                        {{ student }}
+                        <a-descriptions :column="2" bordered>
+                            <a-descriptions-item label="居留種類" >
+                                <a-input v-model:value="student.identity_document.residentship" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="發出地點" >
+                                    <a-input v-model:value="student.identity_document.residentship" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="證件編號" >
+                                    <a-input v-model:value="student.identity_document.residentship" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="證件有效日期" >
+                                    <a-input v-model:value="student.identity_document.residentship" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="回鄉證" >
+                                    <a-input v-model:value="student.identity_document.residentship" />
+                            </a-descriptions-item>
+                        </a-descriptions>
+                        
                     </a-collapse-panel>
                     <a-collapse-panel key="bank" header="銀行資料">
-                        {{ student }}
+                        <a-descriptions bordered>
+                            <a-descriptions-item label="銀行" >
+                                <a-input v-model:value="student.bank.bank_name" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="戶口名稱" >
+                                <a-input v-model:value="student.bank.account_name" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="銀行帳號" >
+                                <a-input v-model:value="student.bank.account_number" />
+                            </a-descriptions-item>
+                        </a-descriptions>
                     </a-collapse-panel>
                     <a-collapse-panel key="detail" header="學生詳細資料">
-                        {{ student }}
+                        <a-descriptions bordered>
+                            <a-descriptions-item label="聖名" >
+                                <a-input v-model:value="student.detail.holy_name" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="領洗日期" >
+                                <a-input v-model:value="student.detail.baptized" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="初領聖體日期" >
+                                <a-input v-model:value="student.detail.first_communion" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="有效日期(逗留)" >
+                                <a-input v-model:value="student.detail.valid_stay" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="兄弟姊妹總數" >
+                                <a-input v-model:value="student.detail.sibling" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="已工作兄弟姊妹總數" >
+                                <a-input v-model:value="student.detail_sibling_at_work" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="入校年級(過去就讀)" >
+                                <a-input v-model:value="student.detail.past_grade" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="入校日期(過去就讀)" >
+                                <a-input v-model:value="student.detail.past_entry_date" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="就讀年級(過去就讀)" >
+                                <a-input v-model:value="student.detail.past_entry_grade" />
+                            </a-descriptions-item>
+                        </a-descriptions>
                     </a-collapse-panel>
                     <a-collapse-panel key="parent" header="父母資料">
-                        {{ student }}
+                        <a-descriptions bordered>
+                            <a-descriptions-item label="父親姓名" >
+                                <a-input v-model:value="student.parent.father_name" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="父親工作機構" >
+                                <a-input v-model:value="student.parent.father_organization" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="父親職業" >
+                                <a-input v-model:value="student.parent.father_job" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="父親手提電話" >
+                                <a-input v-model:value="student.parent.father_phone" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="父親住址" :span="2">
+                                <a-input v-model:value="student.parent.father_address" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="母親姓名" >
+                                <a-input v-model:value="student.parent.mother_name" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="母親工作機構" >
+                                <a-input v-model:value="student.parent.mother_organization" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="母親職業" >
+                                <a-input v-model:value="student.parent.mother_job" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="母親手提電話" >
+                                <a-input v-model:value="student.parent.mother_phone" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="母親住址" >
+                                <a-input v-model:value="student.parent.mother_address" />
+                            </a-descriptions-item>
+                        </a-descriptions>
                     </a-collapse-panel>
                     <a-collapse-panel key="guardian" header="監護人資料">
-                        {{ student }}
+                        <a-descriptions bordered>
+                            <a-descriptions-item label="監護人姓名" >
+                                <a-input v-model:value="student.guardian.name" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="監護人職業" >
+                                <a-input v-model:value="student.guardian.job" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="監護人機構電話" >
+                                <a-input v-model:value="student.guardian.organization_phone" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="監護人關係" >
+                                <a-input v-model:value="student.guardian.relation" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="監護人工作機構" :span="2">
+                                <a-input v-model:value="student.guardian.organization" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="監護人電話" >
+                                <a-input v-model:value="student.guardian.phone" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="監護人居住地區" :span="2">
+                                <a-input v-model:value="student.guardian.zone"/>
+                            </a-descriptions-item>
+                            <a-descriptions-item label="監護人郵政編號" >
+                                <a-input v-model:value="student.guardian.post_code"/>
+                            </a-descriptions-item>
+                            <a-descriptions-item label="監護人街道名稱" :span="2">
+                                <a-input v-model:value="student.guardian.road_name" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="監護人門牌,大廈,樓座">
+                                <a-input v-model:value="student.guardian.address" />
+                            </a-descriptions-item>
+                        </a-descriptions>
                     </a-collapse-panel>
                     <a-collapse-panel key="health" header="健康相關">
-                        {{ student }}
-                    </a-collapse-panel>
-                    <a-collapse-panel key="1" headd="This is panel header 1">
-                        <a-form
-                            ref="formRef"
-                            name="advanced_search"
-                            class="ant-advanced-search-form"
-                            :model="formState"
-                            @finish="onFinish"
-                            >
-                            <a-row :gutter="24">
-                                <template v-for="i in 10" :key="i">
-                                <a-col v-show="expand || i <= 6" :span="8">
-                                    <a-form-item
-                                    :name="`field-${i}`"
-                                    :label="`field-${i}`"
-                                    :rules="[{ required: true, message: 'input something' }]"
-                                    >
-                                    <a-input v-model:value="formState[`field-${i}`]" placeholder="placeholder"></a-input>
-                                    </a-form-item>
-                                </a-col>
-                                </template>
-                            </a-row>
-                            <a-row>
-                                <a-col :span="24" style="text-align: right">
-                                <a-button type="primary" html-type="submit">Search</a-button>
-                                <a-button style="margin: 0 8px" @click="() => formRef.resetFields()">Clear</a-button>
-                                <a style="font-size: 12px" @click="expand = !expand">
-                                    <template v-if="expand">
-                                    <UpOutlined />
-                                    </template>
-                                    <template v-else>
-                                    <DownOutlined />
-                                    </template>
-                                    Collapse
-                                </a>
-                                </a-col>
-                            </a-row>
-                            </a-form>
-                    </a-collapse-panel>
-                    <a-collapse-panel key="2" header="This is panel header 2">
-                        <a-form
-                            :model="formState"
-                            name="time_related_controls"
-                            v-bind="formItemLayout"
-                        >
-                            <a-form-item name="date-picker" label="DatePicker" v-bind="config">
-                            <a-date-picker v-model:value="formState['date-picker']" value-format="YYYY-MM-DD" />
-                            </a-form-item>
-                            <a-form-item name="date-time-picker" label="DatePicker[showTime]" v-bind="config">
-                            <a-date-picker
-                                v-model:value="formState['date-time-picker']"
-                                show-time
-                                format="YYYY-MM-DD HH:mm:ss"
-                                value-format="YYYY-MM-DD HH:mm:ss"
-                            />
-                            </a-form-item>
-                            <a-form-item name="month-picker" label="MonthPicker" v-bind="config">
-                            <a-date-picker
-                                v-model:value="formState['month-picker']"
-                                value-format="YYYY-MM"
-                                picker="month"
-                            />
-                            </a-form-item>
-                            <a-form-item name="range-picker" label="RangePicker" v-bind="rangeConfig">
-                            <a-range-picker v-model:value="formState['range-picker']" value-format="YYYY-MM-DD" />
-                            </a-form-item>
-                            <a-form-item name="range-time-picker" label="RangePicker[showTime]" v-bind="rangeConfig">
-                            <a-range-picker
-                                v-model:value="formState['range-time-picker']"
-                                show-time
-                                format="YYYY-MM-DD HH:mm:ss"
-                                value-format="YYYY-MM-DD HH:mm:ss"
-                            />
-                            </a-form-item>
-                            <a-form-item name="time-picker" label="TimePicker" v-bind="config">
-                            <a-time-picker v-model:value="formState['time-picker']" value-format="HH:mm:ss" />
-                            </a-form-item>
-                            <a-form-item
-                            :wrapper-col="{
-                                xs: { span: 24, offset: 0 },
-                                sm: { span: 16, offset: 8 },
-                            }"
-                            >
-                            <a-button type="primary" html-type="submit">Submit</a-button>
-                            </a-form-item>
-                        </a-form>
-                    </a-collapse-panel>
-                    <a-collapse-panel key="3" header="This is panel header 3">
-                        <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
-                            <a-form-item label="Activity name" >
-                                <a-input v-model:value="modelRef.name" />
-                            </a-form-item>
-                            <a-form-item label="Activity zone" >
-                            <a-select v-model:value="modelRef.region" placeholder="please select your zone">
-                                <a-select-option value="shanghai">Zone one</a-select-option>
-                                <a-select-option value="beijing">Zone two</a-select-option>
-                            </a-select>
-                            </a-form-item>
-                            <a-form-item label="Activity type" >
-                            <a-checkbox-group v-model:value="modelRef.type">
-                                <a-checkbox value="1" name="type">Online</a-checkbox>
-                                <a-checkbox value="2" name="type">Promotion</a-checkbox>
-                                <a-checkbox value="3" name="type">Offline</a-checkbox>
-                            </a-checkbox-group>
-                            </a-form-item>
-                            <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-                            <a-button type="primary" @click.prevent="onSubmit">Create</a-button>
-                            <a-button style="margin-left: 10px" @click="resetFields">Reset</a-button>
-                            </a-form-item>
-                        </a-form>
-                    </a-collapse-panel>
-                    <a-collapse-panel key="4" header="This is panel header 4">
-                        {{ student }}
+                        <a-descriptions bordered>
+                            <a-descriptions-item label="醫院" >
+                                <a-input v-model:value="student.healthcare.hospital" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="學生健康情況" :span="2">
+                                <a-input v-model:value="student.healthcare.health_state" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="已接種新冠疫苖" >
+                                <a-input v-model:value="student.healthcare.covid_19" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="疫苖接種次數" >
+                                <a-input v-model:value="student.healthcare.vaccine_count" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="最近接種疫苖" >
+                                <a-input v-model:value="student.healthcare.last_vaccine" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="患病"  :span="3">
+                                <a-input v-model:value="student.healthcare.illness" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="創傷"  :span="3">
+                                <a-input v-model:value="student.healthcare.trauma" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="創傷治療"  :span="3">
+                                <a-input v-model:value="student.healthcare.trauma_treatment" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="食物過敏"  :span="3">
+                                <a-input v-model:value="student.healthcare.food_allergy" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="藥物過敏"  :span="3">
+                                <a-input v-model:value="student.healthcare.medicine_allergy" />
+                            </a-descriptions-item>
+                        </a-descriptions>
                     </a-collapse-panel>
                 </a-collapse>
             </a-form>
@@ -277,26 +311,18 @@ export default {
         return {
             activeKey: ['basic'],
             isEdit:false,
-            formState: {},
-            modelRef:{},
-            formItemLayout: {
-                labelCol: {
-                    xs: { span: 24 },
-                    sm: { span: 8 },
-                },
-                wrapperCol: {
-                    xs: { span: 24 },
-                    sm: { span: 16 },
-                },
-            },
-            labelCol: {
-                span: 10,
-            },
-            wrapperCol: {
-                span: 14,
-            },
+            labelCol: {span: 10},
+            wrapperCol: {span: 14},
         }
     },
+    created(){
+        if(this.student.address==null) this.student.address={}
+        if(this.student.identity_document==null) this.student.identity_document={}
+        if(this.student.bank==null) this.student.bank={}
+        if(this.student.parent==null) this.student.parent={}
+        if(this.student.guardian==null) this.student.guardian={}
+        if(this.student.healthcare==null) this.student.healthcare={}
+    }, 
     methods: {
         onChangeEditMode(){
             console.log(this.isEdit);
