@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Discipline;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Config;
 use App\Models\Klass;
 use App\Models\Year;
 use App\Models\Grade;
@@ -21,20 +22,24 @@ class KlassController extends Controller
      */
     public function index(Request $request)
     {
-        if($request->year){
-            return redirect('year/klasses/'.$request->year);
-        };
-        if($request->klass){
-            return redirect('year/klass/disciplines/'.$request->klass);
-        };
-        $data = Klass::paginate(100);
+        if($request->yearId){
+            $year=Year::find($request->yearId);
+        }else{
+            $year=Year::where('active',1)->first();
+        }
+        //$data = Klass::with('grade')->paginate(100);
+        $klasses=$year->klasses;
+        $grades=Grade::whereBelongsTo($year)->get();
+        // echo json_encode($grades);
+        // return true;
         //$data=Klass::where('year_id',1)->paginate(5);
         //return response()->json($data);
         return Inertia::render('Essential/Klasses',[
-            'klasses'=>$data,
-            'school_years'=>Year::select('id as value','abbr as label')->get(),
-            'initials'=>[['value'=>'A','label'=>'A'],['value'=>'B','label'=>'B']],
-            'grades'=>[['value'=>'P1','label'=>'P1'],['value'=>'P2','label'=>'P2']]
+            'selected_year'=>Year::find($year->id),
+            'klasses'=>$klasses,
+            'school_years'=>Year::get(),
+            'klass_letters'=>json_decode(Config::where('key','klass_letters')->first()->value),
+            'grades'=>$grades
         ]);
     }
 
@@ -57,14 +62,16 @@ class KlassController extends Controller
     public function store(Request $request)
     {
         Validator::make($request->all(), [
-            'year_id' => ['required'],
-            'grade' => ['required'],
-            'initial' => ['required'],
+            'grade_id' => ['required'],
+            'letter' => ['required'],
         ])->validate();
-
-        Klass::create($request->all());
-        return redirect()->back();
-
+            $klass=new Klass;
+            $klass->grade_id=$request->grade_id;
+            $klass->letter=$request->letter;
+            $klass->room=$request->room;
+            $klass->tag=Grade::find($request->grade_id)->tag.$request->letter;
+            $klass->save();
+            return redirect()->back();
     }
 
     /**
@@ -100,17 +107,16 @@ class KlassController extends Controller
     public function update(Request $request, $id)
     {
         Validator::make($request->all(), [
-            'year_id' => ['required'],
-            'grade' => ['required'],
-            'initial' => ['required'],
+            'grade_id' => ['required'],
+            'letter' => ['required'],
         ])->validate();
         
         if($request->has('id')){
             $klass=Klass::find($id);
-            $klass->year_id=$request->year_id;
-            $klass->grade=$request->grade;
-            $klass->initial=$request->initial;
-            $klass->acronym=$request->acronym?$request->acronym:$request->grade.$request->initial;
+            $klass->grade_id=$request->grade_id;
+            $klass->letter=$request->letter;
+            $klass->room=$request->room;
+            $klass->tag=Grade::find($request->grade_id)->tag.$request->letter;
             $klass->save();
             //return response()->json($klass);
             return redirect()->back();

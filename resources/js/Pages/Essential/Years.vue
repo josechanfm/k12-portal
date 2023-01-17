@@ -11,7 +11,8 @@
             <a-table :dataSource="years.data" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
-                        <a :href="'/essential/grades?yearId='+record.id">Grade</a>
+                        <a :href="'/essential/grades?yearId='+record.id">Grades</a>
+                        <a :href="'/essential/klasses?yearId='+record.id">Classes</a>
                         <a-button @click="editRecord(index)">Edit</a-button>
                         <a-button @click="deleteRecord(record.id)">Delete</a-button>
                         <a-button :href="'year/subjects/'+record.id">Subject template</a-button>

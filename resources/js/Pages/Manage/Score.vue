@@ -11,18 +11,15 @@
                 </span>
             </h2>
         </template>
-        <a-button type="primary" @click="onClickScoreModal">Score</a-button>
+        <a-button type="primary" @click="onClickAddScoreColumn">Score</a-button>
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <a-table :dataSource="score_columns" :columns="columns">
+                    <a-table :dataSource="score_columns" :columns="columns" >
                         <template #bodyCell="{ column, text, record, index }">
                             <template v-if="column.dataIndex == 'operation'">
                                 <a-button @click="onClickEditScoreColumn(record)">Edit</a-button>
                                 <a-button @click="onClickDeleteScoreColumn(record.id)">Delete</a-button>
-                            </template>
-                            <template v-else-if="column.dataIndex=='course_id'">
-                                {{ record.course.title_zh }}
                             </template>
                             <template v-else>
                                 {{ record[column.dataIndex]}}
@@ -60,14 +57,9 @@
                 ref="modalScoreColumn"
                 @finish="onModalFinish"
             >
+            
                 <a-form-item label="Name" :name="['name']" :rules="[{required:true, message:'Please input score column name'}]">
                     <a-input v-model:value="modal.data.name"/>
-                </a-form-item>
-                <a-form-item label="Class" :name="['klass_id']" :rules="[{required:true, message:'Please input score column name'}]">
-                    <a-input v-model:value="modal.data.klass_id"/>
-                </a-form-item>
-                <a-form-item label="Course" :name="['course_id']" :rules="[{required:true, message:'Please input score column name'}]">
-                    <a-input v-model:value="modal.data.course_id"/>
                 </a-form-item>
                 <a-form-item label="Term" :name="['term_id']" :rules="[{required:true, message:'Please input score column name'}]">
                     <a-input v-model:value="modal.data.term_id"/>
@@ -80,6 +72,12 @@
                 </a-form-item>
                 <a-form-item label="Description" :name="['description']">
                     <a-input v-model:value="modal.data.description"/> 
+                </a-form-item>
+                <a-form-item label="Course" :name="['course_id']" :rules="[{required:true, message:'Please input score column course_id'}]" :hidden="true">
+                    <a-input v-model:value="modal.data.course_id"/>
+                </a-form-item>
+                <a-form-item label="Type" :name="['type']"  :rules="[{required:true, message:'Please input score column type'}]" :hidden="true">
+                    <a-input v-model:value="modal.data.type" /> 
                 </a-form-item>
             </a-form>
         </a-modal>
@@ -115,9 +113,6 @@ export default {
                 {
                     title: 'Term',
                     dataIndex: 'term_id',
-                },{
-                    title: 'Course',
-                    dataIndex: 'course_id',
                 },{
                     title: 'Sore Name',
                     dataIndex: 'name',
@@ -188,8 +183,10 @@ export default {
             this.keypressed=event.keyCode;
             console.log(event.keyCode);
         },
-        onClickScoreModal() {
+        onClickAddScoreColumn() {
             this.modal.data={};
+            this.modal.data.course_id=this.course.id;
+            this.modal.data.type='SUB';
             this.modal.title="Add Score Column";
             this.modal.mode='ADD';
             this.modal.isOpen = true;

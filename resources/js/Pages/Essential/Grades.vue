@@ -34,6 +34,12 @@ export default {
     props: ['grades','errors'],
     data() {
         return {
+            modal: {
+                mode:null,
+                isOpen: false,
+                title:'Klasses',
+                data:{}
+            },
             columns:[
                 {
                     title: 'Level',

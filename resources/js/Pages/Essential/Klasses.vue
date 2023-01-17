@@ -7,24 +7,24 @@
         </template>
         <button @click="createRecord()"
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Create Subject template</button>
-            <a-table :dataSource="klasses.data" :columns="columns">
+            <a-table :dataSource="klasses" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex!='operation'">
                         {{record[column.dataIndex]}}
                     </template>
                     <template v-else>
-                        <a :href="'/essential/klasses/'+record.id">View</a>
-                        <a-button @click="editRecord(index)">Edit</a-button>
-                        <a-button @click="deleteRecord(record.id)">Delete</a-button>
+                        <a-button @click="editRecord(record)">Edit</a-button>
                     </template>
                 </template>
             </a-table>
 
         <!-- Modal Start-->
-        <a-modal v-model:visible="modalVisible" :title="modalTitle" width="60%" @update="updateRecord(modalForm)" @onCancel="closeModal()">
+        <a-modal v-model:visible="modal.isOpen" 
+            :title="modal.title" width="60%" 
+        >
         <a-form
             ref="modalRef"
-            :model="modalForm"
+            :model="modal.data"
             name="klasses"
             :label-col="{ span: 8 }"
             :wrapper-col="{ span: 16 }"
@@ -35,53 +35,34 @@
             @finish="onFinish"
             @onFinishFailed="onFinishFailed"
         >
-            <a-input type="hidden" v-model:value="modalForm.id"/>
-            <a-form-item label="School Year" name="year_id">
-                
+            <a-form-item label="Grade" name="grade" >
                 <a-select
-                    v-model:value="modalForm.year_id"
+                    v-model:value="modal.data.grade_id"
                     style="width: 100%"
                     placeholder="Select Item..."
                     max-tag-count="responsive"
-                    :options="school_years"
+                    :options="grades.map(grade=>({value:grade.id, label:grade.tag}))"
+                    disable="true"
                 ></a-select>
 
             </a-form-item>
-            <a-form-item label="Grade" name="grade">
+            <a-form-item label="Letter" name="letter">
                 <a-select
-                    v-model:value="modalForm.grade"
+                    v-model:value="modal.data.letter"
                     style="width: 100%"
                     placeholder="Select Item..."
                     max-tag-count="responsive"
-                    :options="grades"
+                    :options="klass_letters"
                 ></a-select>
 
-            </a-form-item>
-            <a-form-item label="Initial" name="initial">
-                <a-select
-                    v-model:value="modalForm.initial"
-                    style="width: 100%"
-                    placeholder="Select Item..."
-                    max-tag-count="responsive"
-                    :options="initials"
-                ></a-select>
-
-            </a-form-item>
-            <a-form-item label="Acronym" name="acronym">
-                <a-input v-model:value="modalForm.acronym" />
             </a-form-item>
             <a-form-item label="Room" name="room">
-                <a-input v-model:value="modalForm.room" />
+                <a-input v-model:value="modal.data.room" />
             </a-form-item>
-            <a-form-item label="Head Teacher" name="head_id">
-                <a-input v-model:value="modalForm.head_id" />
-            </a-form-item>
-            
-
         </a-form>
         <template #footer>
-            <a-button v-if="modalMode=='Edit'" key="Update" type="primary" :loading="loading" @click="updateRecord(modalForm)">Update</a-button>
-            <a-button v-if="modalMode=='Create'"  key="Store" type="primary" :loading="loading" @click="storeRecord(modalForm)">Add</a-button>
+            <a-button v-if="modal.mode=='EDIT'" key="Update" type="primary" :loading="loading" @click="updateRecord()">Update</a-button>
+            <a-button v-if="modal.mode=='CREATE'"  key="Store" type="primary" :loading="loading" @click="storeRecord()">Add</a-button>
         </template>
     </a-modal>    
     <!-- Modal End-->
@@ -97,18 +78,19 @@ export default {
     components: {
         AdminLayout,
     },
-    props: ['klasses','school_years','grades','initials', 'errors'],
+    props: ['selected_year','klasses','school_years','grades','klass_letters', 'errors'],
     data() {
         return {
             paymentList: [],
-            editMode: false,
-            isOpen: false,
             form: {
                 title: null,
             },
-            modalVisible:false,
-            modalTitle:'School Year Creation',
-            modalForm:{},
+            modal: {
+                mode:null,
+                isOpen: false,
+                title:'Klasses',
+                data:{}
+            },
             dataSource:[],
             loading:false,
             columns:[
@@ -223,107 +205,53 @@ export default {
         }
     },
     methods: {
-        openModal() {
-            this.isOpen = true;
-        },
         closeModal() {
             this.isOpen = false;
             this.reset();
             this.editMode = false;
         },
-        reset() {
-            this.form = {
-                title: null,
-                body: null,
-            }
-        },
-        ChangeModalMode(mode){
-            console.log("watch: "+mode);
-            if(mode=='Create'){
-                this.modalMode=mode;
-                this.modalTitle='School Year Creation';
-                this.modalVisible=true;
-            }else if(mode=='Edit'){
-                this.modalMode=mode;
-                this.modalTitle='School Year Editing';
-                this.modalVisible=true;
-            }else{
-                this.modalMode='Close';
-                this.modalTitle='Modal Mode undefined';
-                this.modalVisible=false;
-            }
-            this.$refs.modalRef!==undefined?this.$refs.modalRef.resetFields():'';
-        },
-
-
-        storeRecord(data){
+        storeRecord(){
             this.$refs.modalRef.validateFields().then(()=>{
-                this.loading=true;
-                this.$inertia.post('/essential/klasses/', data,{
+                this.$inertia.post('/essential/klasses/', this.modal.data,{
                     onSuccess:(page)=>{
-                        this.ChangeModalMode('Close');
+                        console.log(page);
                     },
                     onError:(err)=>{
                         console.log(err);
                     }
                 });
-                this.loading=false;
             }).catch(err => {
                 console.log(err);
             });
         },
-        updateRecord(data){
+        updateRecord(){
             this.$refs.modalRef.validateFields().then(()=>{
-                this.loading=true;
-                data._method = 'PATCH';
-                this.$inertia.post('/essential/klasses/' + data.id, data,{
+                this.modal.data._method = 'PATCH';
+                this.$inertia.post('/essential/klasses/' + this.modal.data.id, this.modal.data,{
                     onSuccess:(page)=>{
-                        this.modalVisible=false;
-                        this.ChangeModalMode('Close');
+                        this.modal.isOpen=false;
                     },
                     onError:(error)=>{
                         console.log(error);
                     }
                 });
-                this.loading=false;                
             }).catch(err => {
                 console.log("error", err);
             });
            
         },
-        editRecord(index){
-            console.log(index);
-            this.modalForm={...this.klasses.data[index]};
-            this.currentId=index;
-            this.ChangeModalMode('Edit');
+        editRecord(record){
+            this.modal.data={...record};
+            this.modal.mode='EDIT';
+            this.modal.title="Edit klasses of "+this.selected_year.abbr;
+            this.modal.isOpen = true;
         },
-        deleteRecord(recordId){
-            console.log(recordId);
-            if (!confirm('Are you sure want to remove?')) return;
-            this.$inertia.delete('/essential/klasses/' + recordId,{
-                onSuccess: (page)=>{
-                    console.log(page);
-                },
-                onError: (error)=>{
-                    console.log(error);
-                }
-            });
-            this.ChangeModalMode('Close');
-        },
-
         createRecord(){
-            this.modalForm={};
-            this.ChangeModalMode('Create');
+            this.modal.data={};
+            this.modal.mode='CREATE';
+            this.modal.title="Create klasses of "+this.selected_year.abbr;
+            this.modal.isOpen = true;
         },
-        handleValidate(field){
-            console.log("handleValidate: "+field);
-        },
-        onFinish(value){
-            console.log("onFinish"+value);
-        },
-        onFinishFailed(errorInfo){
-            console.log('errorInfo: '+errorInfo);
-        }
     },
 }
 </script>

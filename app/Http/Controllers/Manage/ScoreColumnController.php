@@ -37,7 +37,6 @@ class ScoreColumnController extends Controller
     public function store(Request $request)
     {
         $ScoreColumn=new ScoreColumn;
-        $ScoreColumn->klass_id=$request->klass_id;
         $ScoreColumn->term_id=$request->term_id;
         $ScoreColumn->course_id=$request->course_id;
         $ScoreColumn->sequence=$request->sequence;
@@ -80,7 +79,6 @@ class ScoreColumnController extends Controller
     public function update(Request $request, $id)
     {
         $ScoreColumn=ScoreColumn::find($id);
-        $ScoreColumn->klass_id=$request->klass_id;
         $ScoreColumn->term_id=$request->term_id;
         $ScoreColumn->course_id=$request->course_id;
         $ScoreColumn->sequence=$request->sequence;

@@ -62,7 +62,7 @@
                         <tr>
                             <th class="text-left">Abbr</th>
                             <th class="text-left">Title</th>
-                            <th class="text-left">Type</th>
+                            <th class="text-left">Stream</th>
                             <th class="text-left">Teacher</th>
                             <th class="text-left">Head Teacher</th>
                             <th class="text-left">Score</th>
