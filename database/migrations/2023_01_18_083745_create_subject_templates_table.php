@@ -13,16 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('years', function (Blueprint $table) {
+        Schema::create('subject_templates', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('year_id');
             $table->string('code');
-            $table->string('title');
+            $table->string('title_zh')->nullable();
+            $table->string('title_en')->nullable();
+            $table->string('type',3)->nullable();
+            $table->string('stream',3)->nullable();
+            $table->string('elective',4);
             $table->text('description')->nullable();
-            $table->text('meta')->nullable();
-            $table->text('transcript')->nullable();
-            $table->date('start')->nullable();
-            $table->date('end')->nullable();
-            $table->boolean('active')->default(true);
+            $table->boolean('active');
             $table->timestamps();
         });
     }
@@ -34,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('years');
+        Schema::dropIfExists('subject_templates');
     }
 };

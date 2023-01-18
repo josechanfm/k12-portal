@@ -19,11 +19,15 @@ class GradeController extends Controller
     public function index(Request $request)
     {
         $yearId=$request->input('yearId');
-        if(!$yearId){
-            $yearId=Year::where('active',1)->orderBy('start','DESC')->first()->id;
+        if($yearId){
+            $year=Year::find($yearId);
+        }else{
+            $year=Year::where('active',1)->orderBy('start','DESC')->first();
         }
-        $grades = Grade::where('year_id',$yearId)->get();
+
+        $grades = Grade::with('subjects')->whereBelongsTo($year)->get();
         return Inertia::render('Essential/Grades',[
+            'year'=>$year,
             'grades'=>$grades,
         ]);
     }
@@ -80,7 +84,21 @@ class GradeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if($request->has('id')){
+            $grade=Grade::find($id);
+            $grade->year_id=1;
+            $grade->rank=$request->rank;
+            $grade->initial=$request->initial;
+            $grade->initial=$request->level;
+            $grade->tag=$request->initial.$request->level;
+            $grade->title_zh=$request->title_zh;
+            $grade->title_en=$request->title_en;
+            $grade->description=$request->description;
+            $grade->version=$request->version;
+            $grade->active=$request->active;
+            $grade->update($request->all());
+        }
+        return redirect()->back();
     }
 
     /**

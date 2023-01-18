@@ -22,24 +22,14 @@ class KlassController extends Controller
      */
     public function index(Request $request)
     {
-        if($request->yearId){
-            $year=Year::find($request->yearId);
-        }else{
-            $year=Year::where('active',1)->first();
-        }
-        //$data = Klass::with('grade')->paginate(100);
-        $klasses=$year->klasses;
-        $grades=Grade::whereBelongsTo($year)->get();
-        // echo json_encode($grades);
-        // return true;
-        //$data=Klass::where('year_id',1)->paginate(5);
-        //return response()->json($data);
+        $grade=Grade::with('year')->find($request->gid);
+        $grades=Grade::where('year_id',$grade->year_id)->get();
+        $klasses=Klass::whereBelongsTo($grade)->get();
         return Inertia::render('Essential/Klasses',[
-            'selected_year'=>Year::find($year->id),
             'klasses'=>$klasses,
-            'school_years'=>Year::get(),
-            'klass_letters'=>json_decode(Config::where('key','klass_letters')->first()->value),
-            'grades'=>$grades
+            'grade'=>$grade,
+            'grades'=>$grades,
+            'klass_letters'=>json_decode(Config::where('key','klass_letters')->first()->value)
         ]);
     }
 
@@ -65,14 +55,14 @@ class KlassController extends Controller
             'grade_id' => ['required'],
             'letter' => ['required'],
         ])->validate();
-            $klass=new Klass;
-            $klass->grade_id=$request->grade_id;
-            $klass->letter=$request->letter;
-            $klass->room=$request->room;
-            $klass->tag=Grade::find($request->grade_id)->tag.$request->letter;
-            $klass->save();
-            return redirect()->back();
-    }
+        $klass=new Klass;
+        $klass->grade_id=$request->grade_id;
+        $klass->letter=$request->letter;
+        $klass->room=$request->room;
+        $klass->tag=Grade::find($request->grade_id)->tag.$request->letter;
+        $klass->save();
+        return redirect()->back();
+}
 
     /**
      * Display the specified resource.

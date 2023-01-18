@@ -5,6 +5,12 @@
                 All Klasses
             </h2>
         </template>
+        <a-typography-title :level="4">學年:{{ grade.year.code }}</a-typography-title>
+        <a-typography-title :level="4">年級:{{ grade.tag }}</a-typography-title>
+        {{ grades }}
+        <a-radio-group v-model:value="gradeSelected" button-style="solid" :change="onChangeGradeSelect()">
+            <a-radio-button v-for="grade in grades" :value="grade.id">{{ grade.tag }}</a-radio-button>
+        </a-radio-group>
         <button @click="createRecord()"
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Create Subject template</button>
             <a-table :dataSource="klasses" :columns="columns">
@@ -32,20 +38,11 @@
             :rules="rules"
             :validate-messages="validateMessages"
             @validate="handleValidate"
-            @finish="onFinish"
-            @onFinishFailed="onFinishFailed"
         >
             <a-form-item label="Grade" name="grade" >
-                <a-select
-                    v-model:value="modal.data.grade_id"
-                    style="width: 100%"
-                    placeholder="Select Item..."
-                    max-tag-count="responsive"
-                    :options="grades.map(grade=>({value:grade.id, label:grade.tag}))"
-                    disable="true"
-                ></a-select>
-
+                {{ grade.tag }}
             </a-form-item>
+
             <a-form-item label="Letter" name="letter">
                 <a-select
                     v-model:value="modal.data.letter"
@@ -78,13 +75,10 @@ export default {
     components: {
         AdminLayout,
     },
-    props: ['selected_year','klasses','school_years','grades','klass_letters', 'errors'],
+    props: ['grades','grade','klasses','klass_letters'],
     data() {
         return {
-            paymentList: [],
-            form: {
-                title: null,
-            },
+            gradeSelected:1,
             modal: {
                 mode:null,
                 isOpen: false,
@@ -92,13 +86,7 @@ export default {
                 data:{}
             },
             dataSource:[],
-            loading:false,
             columns:[
-                {
-                    title: 'Year',
-                    dataIndex: 'year_abbr',
-                    key: 'year_abbr',
-                },
                 {
                     title: 'Tag',
                     dataIndex: 'tag',
@@ -226,8 +214,7 @@ export default {
         },
         updateRecord(){
             this.$refs.modalRef.validateFields().then(()=>{
-                this.modal.data._method = 'PATCH';
-                this.$inertia.post('/essential/klasses/' + this.modal.data.id, this.modal.data,{
+                this.$inertia.put('/essential/klasses/' + this.modal.data.id, this.modal.data,{
                     onSuccess:(page)=>{
                         this.modal.isOpen=false;
                     },
@@ -243,15 +230,20 @@ export default {
         editRecord(record){
             this.modal.data={...record};
             this.modal.mode='EDIT';
-            this.modal.title="Edit klasses of "+this.selected_year.abbr;
+            this.modal.title="Edit klasses ";
             this.modal.isOpen = true;
         },
         createRecord(){
             this.modal.data={};
+            this.modal.data.grade_id=this.grade.id;
             this.modal.mode='CREATE';
-            this.modal.title="Create klasses of "+this.selected_year.abbr;
+            this.modal.title="Create klasses";
             this.modal.isOpen = true;
         },
+        onChangeGradeSelect(){
+            console.log(this.gradeSelected);
+            //this.$inertia.get('klasses?gid='+this.gradeSelected);
+        }
     },
 }
 </script>

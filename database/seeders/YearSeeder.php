@@ -19,7 +19,7 @@ class YearSeeder extends Seeder
         //$yearId=DB::table('years')->orderBy('id','desc')->first()->id;
         for($y=2021;$y<2023;$y++){
             DB::table('years')->insert([
-                'abbr'=>$y,
+                'code'=>$y,
                 'title'=>$y.'-'.($y+1),
                 'start'=>$y.'-09-01',
                 'end'=>($y+1).'-07-30',

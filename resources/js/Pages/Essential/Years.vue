@@ -43,8 +43,8 @@
             @onFinishFailed="onFinishFailed"
         >
             <a-input type="hidden" v-model:value="modalForm.id"/>
-            <a-form-item label="Abbr" name="abbr">
-                <a-input v-model:value="modalForm.abbr" style="width: 100px"/>
+            <a-form-item label="code" name="code">
+                <a-input v-model:value="modalForm.code" style="width: 100px"/>
             </a-form-item>
             <a-form-item label="Title" name="Title">
                 <a-input v-model:value="modalForm.title" />
@@ -174,9 +174,9 @@ export default {
             loading:false,
             columns:[
                 {
-                    title: 'Abbr',
-                    dataIndex: 'abbr',
-                    key: 'abbr',
+                    title: 'Code',
+                    dataIndex: 'code',
+                    key: 'code',
                 },
                 {
                     title: 'Title',

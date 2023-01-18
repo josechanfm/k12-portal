@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Essential;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Year;
+use App\Models\Grade;
 use App\Models\Subject;
+use Illuminate\Support\Facades\Validator;
 
 class SubjectController extends Controller
 {
@@ -15,12 +16,12 @@ class SubjectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $year=Year::currentYear();
-        $subjects=Subject::where('year_id',$year->id)->with('klasses')->get();
+        $grade=Grade::find($request->gid);
+        $subjects=Subject::whereBelongsTo($grade)->get();
         return Inertia::render('Essential/Subject',[
-            'year'=>$year,
+            'grade'=>$grade,
             'subjects'=>$subjects
         ]);
     }
@@ -43,7 +44,23 @@ class SubjectController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Validator::make($request->all(), [
+            'grade_id' => ['required'],
+            'code' => ['required'],
+        ])->validate();
+
+        $subject=new Subject;
+        $subject->grade_id=$request->grade_id;
+        $subject->code=$request->code;
+        $subject->title_zh=$request->title_zh;
+        $subject->title_en=$request->title_en;
+        $subject->type=$request->type;
+        $subject->stream=$request->stream;
+        $subject->elective=$request->elective;
+        $subject->description=$request->description;
+        $subject->active=$request->active;
+        $subject->save();
+        return redirect()->back();
     }
 
     /**
@@ -77,7 +94,24 @@ class SubjectController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        Validator::make($request->all(), [
+            'grade_id' => ['required'],
+            'code' => ['required'],
+        ])->validate();
+        if($request->has('id')){
+            $subject=Subject::find($id);
+            $subject->grade_id=$request->grade_id;
+            $subject->code=$request->code;
+            $subject->title_zh=$request->title_zh;
+            $subject->title_en=$request->title_en;
+            $subject->type=$request->type;
+            $subject->stream=$request->stream;
+            $subject->elective=$request->elective;
+            $subject->description=$request->description;
+            $subject->active=$request->active;
+            $subject->save();
+        }
+        return redirect()->back();
     }
 
     /**
