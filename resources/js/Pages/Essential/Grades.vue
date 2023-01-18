@@ -16,6 +16,7 @@
             <template #bodyCell="{column, text, record, index}">
                 <template v-if="column.dataIndex=='operation'">
                     <Link :href="'subjects?gid='+record.id" method="get" as="button" type="button">Subjects</Link>
+                    <Link :href="'klasses?gid='+record.id" method="get" as="button" type="button">Classes</Link>
                     <a-button @click="editRecord(record)">Edit</a-button>
                     <a-button @click="deleteRecord(record.id)">Delete</a-button>
                 </template>

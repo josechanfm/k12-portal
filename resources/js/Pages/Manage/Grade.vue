@@ -5,13 +5,12 @@
                 年級管理
             </h2>
         </template>
-        <a-tree
-            checkable
-            :tree-data="courseScores"
-        >
-        </a-tree>
+        <a-typography-title :level="4">學年代號: {{ year.code }}</a-typography-title>
+        <a-typography-title :level="4">學年全稱: {{ year.title }}</a-typography-title>
+        <a-typography-title :level="4">學年開始: {{ year.start }}</a-typography-title>
+        <a-typography-title :level="4">學年結束: {{ year.end }}</a-typography-title>
         <a-tabs v-model:activeKey="activeKey">
-            <a-tab-pane key="grade" :tab="`Grade (`+year.abbr+`)`">
+            <a-tab-pane key="grade" tab="Grade">
                 <table width="100%">
                     <thead>
                         <tr>
@@ -127,7 +126,7 @@ export default {
     components: {
         AdminLayout, TeamOutlined, Link
     },
-    props: ['year','grades','courseScores'],
+    props: ['year','grades'],
     data() {
         return {
             activeKey:'grade',

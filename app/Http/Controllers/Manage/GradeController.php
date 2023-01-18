@@ -23,12 +23,10 @@ class GradeController extends Controller
     {
         $year=Year::where('active',1)->orderBy('start','DESC')->first();
         $grades=Grade::where('year_id',$year->id)->with('klasses')->get();
-        $courseScores=CourseScore::tree(1);
 
         return Inertia::render('Manage/Grade',[
             'year'=>$year,
             'grades'=>$grades,
-            'courseScores'=>$courseScores
         ]);
     }
 

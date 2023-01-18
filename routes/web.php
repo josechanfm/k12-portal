@@ -92,6 +92,7 @@ Route::prefix('teacher/')->group(function(){
 Route::prefix('essential')->group(function(){
     Route::resource('/dashboard',App\Http\Controllers\Essential\YearPlanController::class);
     Route::resource('/years',App\Http\Controllers\Essential\YearController::class);
+    Route::resource('/subjectTemplate',App\Http\Controllers\Essential\SubjectTemplateController::class);
     Route::resource('/grades',App\Http\Controllers\Essential\GradeController::class);
     Route::resource('/klasses',App\Http\Controllers\Essential\KlassController::class);
     Route::resource('/subjects',App\Http\Controllers\Essential\SubjectController::class);

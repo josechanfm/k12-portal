@@ -19,14 +19,14 @@ class CourseSeeder extends Seeder
      */
     public function run()
     {
-        $year=Year::currentYear();
-        $subjects=Subject::where('year_id',$year->id)->get();
+        //$year=Year::currentYear();
+        $subjects=Subject::where('grade_id',1)->get();
         $klasses=Klass::take(2)->get();
         foreach($klasses as $klass){
             foreach($subjects as $subject){
                 Course::create([
                     'klass_id'=>$klass->id,
-                    'abbr'=>$subject->abbr,
+                    'code'=>$subject->code,
                     'title_zh'=>$subject->title_zh,
                     'title_en'=>$subject->title_en,
                     'stream'=>$subject->stream,

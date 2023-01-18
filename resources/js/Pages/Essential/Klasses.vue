@@ -7,12 +7,13 @@
         </template>
         <a-typography-title :level="4">學年:{{ grade.year.code }}</a-typography-title>
         <a-typography-title :level="4">年級:{{ grade.tag }}</a-typography-title>
-        {{ grades }}
-        <a-radio-group v-model:value="gradeSelected" button-style="solid" :change="onChangeGradeSelect()">
-            <a-radio-button v-for="grade in grades" :value="grade.id">{{ grade.tag }}</a-radio-button>
-        </a-radio-group>
+        <Link v-for="g in grades" :href="'klasses?gid='+g.id" method="get" 
+            class="px-3 py-2 mr-2 rounded text-white text-sm font-bold whitespace-no-wrap bg-blue-600 hover:bg-blue-800">
+            {{ g.tag }}
+        </Link>
+        <br>
         <button @click="createRecord()"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Create Subject template</button>
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Create Class</button>
             <a-table :dataSource="klasses" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex!='operation'">
@@ -70,10 +71,12 @@
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { defineComponent, reactive } from 'vue';
+import { Link } from '@inertiajs/inertia-vue3';
 
 export default {
     components: {
         AdminLayout,
+        Link
     },
     props: ['grades','grade','klasses','klass_letters'],
     data() {
@@ -95,13 +98,7 @@ export default {
                     title: 'Room',
                     dataIndex: 'room',
                     key: 'room',
-                },
-                {
-                    title: 'Head',
-                    dataIndex: 'head_id',
-                    key: 'head_id',
-                },
-                {
+                },{
                     title: 'Operation',
                     dataIndex: 'operation',
                     key: 'operation',

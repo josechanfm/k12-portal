@@ -18,7 +18,7 @@ class SubjectSeeder extends Seeder
     {
         $year=Year::currentYear();
         DB::table('subjects')->insert([
-            'year_id'=>$year->id,
+            'grade_id'=>$year->id,
             'code'=>'CHN',
             'title_zh'=>'中文',
             'title_en'=>'Chinese',
@@ -28,7 +28,7 @@ class SubjectSeeder extends Seeder
             'active'=>1
         ]);
         DB::table('subjects')->insert([
-            'year_id'=>$year->id,
+            'grade_id'=>$year->id,
             'code'=>'ENG',
             'title_zh'=>'英文',
             'title_en'=>'English',
@@ -38,7 +38,7 @@ class SubjectSeeder extends Seeder
             'active'=>1
         ]);
         DB::table('subjects')->insert([
-            'year_id'=>$year->id,
+            'grade_id'=>$year->id,
             'code'=>'MAT',
             'title_zh'=>'數學',
             'title_en'=>'Mathematic',
@@ -48,7 +48,7 @@ class SubjectSeeder extends Seeder
             'active'=>1
         ]);
         DB::table('subjects')->insert([
-            'year_id'=>$year->id,
+            'grade_id'=>$year->id,
             'code'=>'PHY',
             'title_zh'=>'物理',
             'title_en'=>'Physics',
@@ -58,7 +58,7 @@ class SubjectSeeder extends Seeder
             'active'=>1
         ]);
         DB::table('subjects')->insert([
-            'year_id'=>$year->id,
+            'grade_id'=>$year->id,
             'code'=>'GEN',
             'title_zh'=>'常識',
             'title_en'=>'General',

@@ -2,11 +2,9 @@
     <AdminLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                學年科目列表
+                總科目列表
             </h2>
         </template>
-        <a-typography-title :level="3">年級: {{ grade.tag }}</a-typography-title>
-        <a-typography-title :level="3">年級全稱: {{ grade.title_zh }}</a-typography-title>
         <button @click="onClickCreate()"
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Create Subject template</button>
             <a-table :dataSource="subjects" :columns="columns">
@@ -28,13 +26,7 @@
 
         <!-- Modal Start-->
         <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="60%" @update="updateRecord()" @onCancel="closeModal()">
-            <a-checkbox-group v-if="modal.mode=='CREATE'"
-                v-model:value="selectedSubjects" 
-                name="checkboxgroup" 
-                :options="subjectTemplates.map(subject=>({value:subject.code,label:subject.title_zh+' ('+subject.stream+')'}))" 
-            />
             <a-form
-                v-if="modal.mode=='EDIT'"
                 :model="modal.data"
                 name="Subject"
                 ref="modalRef"
@@ -42,7 +34,7 @@
                 :validate-messages="validateMessages"
             >
                 <a-form-item label="科目代號" name="code">
-                    {{ modal.data.code }}
+                    <a-input v-model:value="modal.data.code" />
                 </a-form-item>
                 <a-form-item label="科目名稱 (中文)" name="title_zh">
                     <a-input v-model:value="modal.data.title_zh" />
@@ -69,6 +61,9 @@
                 <a-form-item label="簡介" name="description">
                     <a-textarea v-model:value="modal.data.description" placeholder="textarea with clear icon" allow-clear />
                 </a-form-item>
+                <a-form-item label="版本" name="type">
+                    <a-input-number v-model:value="modal.data.version" />
+                </a-form-item>
                 <a-form-item label="有效" name="active">
                     <a-switch v-model:checked="modal.data.active" :checkedValue="1" :uncheckedValue="0"/>
                 </a-form-item>
@@ -92,7 +87,7 @@ export default {
     components: {
         AdminLayout,
     },
-    props: ['grade','subjects','subjectTemplates'],
+    props: ['subjects'],
     data() {
         return {
             modal: {
@@ -101,7 +96,6 @@ export default {
                 title:'Subjects',
                 data:{}
             },
-            selectedSubjects:[],
             dataSource:[],
             columns:[
                 {
@@ -185,12 +179,9 @@ export default {
     },
     methods: {
         onClickCreate(record){
-            this.selectedSubjects=this.subjects.map(subject=>subject.code);
-            // console.log(this.selectedSubjects);
-            // this.modal.data={};
-            // this.modal.data.grade_id=this.grade.id;
-            // this.modal.data.stream='LIB';
-            // this.modal.data.elective='COP';
+            this.modal.data={};
+            this.modal.data.stream='LIB';
+            this.modal.data.elective='COP';
             this.modal.title="Edit Subject";
             this.modal.mode='CREATE';
             this.modal.isOpen = true;
@@ -202,34 +193,23 @@ export default {
             this.modal.isOpen = true;
         },
         storeRecord(){
-            console.log(this.selectedSubjects);
-            this.$inertia.post('/essential/subjects/', {selectedSubjects:this.selectedSubjects},{
-                onSuccess:(page)=>{
-                    console.log(page);
-                    this.modal.isOpen=false;
-                },
-                onError:(err)=>{
-                    console.log(err);
-                }
+            this.$refs.modalRef.validateFields().then(()=>{
+                this.$inertia.post('/essential/subjectTemplate/', this.modal.data,{
+                    onSuccess:(page)=>{
+                        console.log(page);
+                        this.modal.isOpen=false;
+                    },
+                    onError:(err)=>{
+                        console.log(err);
+                    }
+                });
+            }).catch(err => {
+                console.log(err);
             });
-
-            // this.$refs.modalRef.validateFields().then(()=>{
-            //     this.$inertia.post('/essential/subjects/', this.modal.data,{
-            //         onSuccess:(page)=>{
-            //             console.log(page);
-            //             this.modal.isOpen=false;
-            //         },
-            //         onError:(err)=>{
-            //             console.log(err);
-            //         }
-            //     });
-            // }).catch(err => {
-            //     console.log(err);
-            // });
         },
         updateRecord(){
             this.$refs.modalRef.validateFields().then(()=>{
-                this.$inertia.put('/essential/subjects/' + this.modal.data.id, this.modal.data,{
+                this.$inertia.put('/essential/subjectTemplate/' + this.modal.data.id, this.modal.data,{
                     onSuccess:(page)=>{
                         console.log(page);
                         this.modal.isOpen=false;

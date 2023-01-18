@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Grade;
 use App\Models\Subject;
+use App\Models\SubjectTemplate;
 use Illuminate\Support\Facades\Validator;
 
 class SubjectController extends Controller
@@ -20,9 +21,11 @@ class SubjectController extends Controller
     {
         $grade=Grade::find($request->gid);
         $subjects=Subject::whereBelongsTo($grade)->get();
+        $subjectTemplates=SubjectTemplate::where('active',1)->orderBy('type')->orderBy('stream')->get();
         return Inertia::render('Essential/Subject',[
             'grade'=>$grade,
-            'subjects'=>$subjects
+            'subjects'=>$subjects,
+            'subjectTemplates'=>$subjectTemplates
         ]);
     }
 
@@ -44,22 +47,27 @@ class SubjectController extends Controller
      */
     public function store(Request $request)
     {
-        Validator::make($request->all(), [
-            'grade_id' => ['required'],
-            'code' => ['required'],
-        ])->validate();
-
-        $subject=new Subject;
-        $subject->grade_id=$request->grade_id;
-        $subject->code=$request->code;
-        $subject->title_zh=$request->title_zh;
-        $subject->title_en=$request->title_en;
-        $subject->type=$request->type;
-        $subject->stream=$request->stream;
-        $subject->elective=$request->elective;
-        $subject->description=$request->description;
-        $subject->active=$request->active;
-        $subject->save();
+        $selectedSubjects=$request->selectedSubjects;
+        $subjectTemplates=SubjectTemplate::whereIn('code',$selectedSubjects)->get();
+        $fields=[];
+        $records=[];
+        foreach($subjectTemplates as $st){
+            $fields['grade_id']=1;
+            $fields['code']=$st->code;
+            $fields['title_zh']=$st->title_zh;
+            $fields['title_en']=$st->title_en;
+            $fields['type']=$st->type;
+            $fields['stream']=$st->stream;
+            $fields['elective']=$st->elective;
+            $fields['active']=true;
+            $records[]=$fields;
+        }
+        Subject::upsert(
+            $records,
+            ['grade_id','code'],
+            ['title_zh','title_en','type','stream','elective','active']
+        );
+        Subject::whereNotIn('code',$selectedSubjects)->where('grade_id',1)->delete();
         return redirect()->back();
     }
 
@@ -71,7 +79,30 @@ class SubjectController extends Controller
      */
     public function show($id)
     {
-        //
+        $s=['ENG','CHN','MAT'];
+        $subjectTemplates=SubjectTemplate::whereIn('code',$s)->get();
+        $fields=[];
+        $records=[];
+        foreach($subjectTemplates as $st){
+            $fields['grade_id']=1;
+            $fields['code']=$st->code;
+            $fields['title_zh']=$st->title_zh;
+            $fields['title_en']=$st->title_en;
+            $fields['type']=$st->type;
+            $fields['stream']=$st->stream;
+            $fields['elective']=$st->elective;
+            $fields['active']=true;
+            $records[]=$fields;
+        }
+        echo json_encode($records);
+        Subject::upsert(
+            $records,
+            ['grade_id','code'],
+            ['title_zh','title_en','type','stream','elective','active']
+        );
+        Subject::whereNotIn('code',$s)->where('grade_id',1)->delete();
+
+        echo json_encode($subjectTemplates);
     }
 
     /**
@@ -100,8 +131,6 @@ class SubjectController extends Controller
         ])->validate();
         if($request->has('id')){
             $subject=Subject::find($id);
-            $subject->grade_id=$request->grade_id;
-            $subject->code=$request->code;
             $subject->title_zh=$request->title_zh;
             $subject->title_en=$request->title_en;
             $subject->type=$request->type;
