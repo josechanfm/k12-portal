@@ -6,6 +6,10 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
+use App\Models\Klass;
+use App\Observers\KlassObserver;
+use App\Models\Course;
+use App\Observers\CourseObserver;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -27,7 +31,9 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Klass::observe(KlassObserver::class);
+        Course::observe(CourseObserver::class);
+
     }
 
     /**

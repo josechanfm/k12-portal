@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('title_zh')->nullable();
             $table->string('title_en')->nullable();
             $table->text('description')->nullable();
-            $table->integer('version')->default(0);
+            $table->integer('version')->nullable();
             $table->boolean('active')->default(true);
             $table->timestamps();
         });

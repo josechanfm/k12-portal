@@ -25,7 +25,7 @@ class GradeController extends Controller
             $year=Year::where('active',1)->orderBy('start','DESC')->first();
         }
 
-        $grades = Grade::with('subjects')->whereBelongsTo($year)->get();
+        $grades = Grade::with('subjects')->whereBelongsTo($year)->orderBy('rank')->get();
         return Inertia::render('Essential/Grades',[
             'year'=>$year,
             'grades'=>$grades,
@@ -50,7 +50,19 @@ class GradeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $grade=new Grade;
+        $grade->year_id=$request->year_id;
+        $grade->rank=$request->rank;
+        $grade->initial=$request->initial;
+        $grade->level=$request->level;
+        $grade->tag=$request->initial.$request->level;
+        $grade->title_zh=$request->title_zh;
+        $grade->title_en=$request->title_en;
+        $grade->description=$request->description;
+        $grade->version=$request->version;
+        $grade->active=$request->active;
+        $grade->save();
+        return redirect()->back();
     }
 
     /**
@@ -61,7 +73,7 @@ class GradeController extends Controller
      */
     public function show($id)
     {
-        //
+
     }
 
     /**
@@ -109,6 +121,7 @@ class GradeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Grade::destroy($id);
+        return redirect()->back();
     }
 }

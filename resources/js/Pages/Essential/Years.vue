@@ -11,11 +11,10 @@
             <a-table :dataSource="years.data" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
-                        <a :href="'/essential/grades?yearId='+record.id">Grades</a>
-                        <a :href="'/essential/klasses?yearId='+record.id">Classes</a>
-                        <a-button @click="editRecord(index)">Edit</a-button>
-                        <a-button @click="deleteRecord(record.id)">Delete</a-button>
-                        <a-button :href="'year/subjects/'+record.id">Subject template</a-button>
+                        <ButtonLink :href="'/essential/grades?yearId='+record.id" :type="'Link'">Grades</ButtonLink>
+                        <ButtonLink :href="'/essential/klasses?yearId='+record.id" :type="'Link'">Classes</ButtonLink>
+                        <ButtonLink @click="editRecord(record)" >Edit</ButtonLink>
+                        <ButtonLink @click="deleteRecord(record.id)" >Delete</ButtonLink>
                     </template>
                     <template v-else-if="column.dataIndex=='grade_group'">
                         <a-tag v-for="item in record[column.dataIndex]" 
@@ -144,6 +143,7 @@
 
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
+import ButtonLink from '@/Components/ButtonLink.vue';
 import { defineComponent, reactive } from 'vue';
 import dayjs from 'dayjs';
 // import utc from 'dayjs/plugin/utc';
@@ -154,6 +154,7 @@ import dayjs from 'dayjs';
 export default {
     components: {
         AdminLayout,
+        ButtonLink,
     },
     props: ['years','param','errors'],
     data() {

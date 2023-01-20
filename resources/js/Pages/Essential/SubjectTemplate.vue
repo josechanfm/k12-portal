@@ -42,8 +42,11 @@
                 <a-form-item label="科目名稱 (英文)" name="title_en">
                     <a-input v-model:value="modal.data.title_en" />
                 </a-form-item>
-                <a-form-item label="分類" name="type" hidden>
-                    <a-input v-model:value="modal.data.type" />
+                <a-form-item label="分類" name="type">
+                    <a-radio-group v-model:value="modal.data.type" button-style="solid">
+                        <a-radio-button v-for="st in subjectTypes" :value="st.value">{{ st.label }}</a-radio-button>
+                    </a-radio-group>
+
                 </a-form-item>
                 <a-form-item label="專業方向" name="stream">
                     <a-radio-group v-model:value="modal.data.stream" button-style="solid">
@@ -61,7 +64,7 @@
                 <a-form-item label="簡介" name="description">
                     <a-textarea v-model:value="modal.data.description" placeholder="textarea with clear icon" allow-clear />
                 </a-form-item>
-                <a-form-item label="版本" name="type">
+                <a-form-item label="版本" name="version">
                     <a-input-number v-model:value="modal.data.version" />
                 </a-form-item>
                 <a-form-item label="有效" name="active">
@@ -87,7 +90,7 @@ export default {
     components: {
         AdminLayout,
     },
-    props: ['subjects'],
+    props: ['subjects','subjectTypes'],
     data() {
         return {
             modal: {
@@ -102,33 +105,31 @@ export default {
                     title: 'Code',
                     dataIndex: 'code',
                     key: 'code',
-                },
-                {
+                },{
                     title: 'Title Zh',
                     dataIndex: 'title_zh',
                     key: 'title_zh',
-                },
-                {
+                },{
                     title: 'Stream',
                     dataIndex: 'stream',
                     key: 'stream',
-                },
-                {
+                },{
                     title: 'Elective',
                     dataIndex: 'elective',
                     key: 'elective',
-                },
-                {
+                },{
+                    title: 'Type',
+                    dataIndex: 'type',
+                    key: 'type',
+                },{
                     title: 'Active',
                     dataIndex: 'active',
                     key: 'active',
-                },
-                {
+                },{
                     title: 'Courses',
                     dataIndex: 'courses',
                     key: 'courses',
-                },
-                {
+                },{
                     title: 'Operation',
                     dataIndex: 'operation',
                     key: 'operation',
@@ -142,6 +143,9 @@ export default {
                     required:true,
                 },
                 title_en:{
+                    required:true,
+                },
+                type:{
                     required:true,
                 },
                 stream:{
@@ -180,6 +184,7 @@ export default {
     methods: {
         onClickCreate(record){
             this.modal.data={};
+            this.modal.data.type=this.subjectTypes[0].value;
             this.modal.data.stream='LIB';
             this.modal.data.elective='COP';
             this.modal.title="Edit Subject";

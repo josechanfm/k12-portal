@@ -24,6 +24,7 @@ return new class extends Migration
             $table->date('end')->nullable();
             $table->boolean('active')->default(true);
             $table->timestamps();
+            $table->unique('code');
         });
     }
 

@@ -25,10 +25,10 @@ class KlassController extends Controller
         if($request->gid){
             $grade=Grade::with('year')->find($request->gid);
         }else{
-            $grade=Grade::with('year')->where('year_id',Year::currentYear()->id)->first();
+            $grade=Grade::with('year')->whereBelongsTo(Year::currentYear())->first();
         }
         $grades=Grade::where('year_id',$grade->year_id)->get();
-        $klasses=Klass::whereBelongsTo($grade)->get();
+        $klasses=Klass::with('courses')->whereBelongsTo($grade)->get();
         return Inertia::render('Essential/Klasses',[
             'klasses'=>$klasses,
             'grade'=>$grade,

@@ -28,7 +28,8 @@
   <script>
   import { defineComponent, ref } from 'vue';
   import { MenuFoldOutlined, MenuUnfoldOutlined, PieChartOutlined, MailOutlined } from '@ant-design/icons-vue'; // you can rewrite it to a single file component, if not, you should config vue alias to vue/dist/vue.esm-bundler.js
-  
+  import { Link } from '@inertiajs/inertia-vue3';
+
   const SubMenu = {
     name: 'SubMenu',
     props: {
@@ -47,9 +48,9 @@
               <template #icon>
                 <PieChartOutlined />
               </template>
-                <a :href="item.url">
+                <Link :href="item.url">
                   {{ item.title }}
-                </a>
+                </Link>
             </a-menu-item>
           </template>
           <template v-else>
@@ -61,6 +62,7 @@
     components: {
       PieChartOutlined,
       MailOutlined,
+      Link
     },
   };
   const list = [{
@@ -68,20 +70,20 @@
     title: 'Essentials',
     children: [{
       key: '1.1',
+      title: 'Subject Template',
+      url:'/essential/subjectTemplate',
+    },{
+      key: '1.2',
       title: 'Years',
       url:'/essential/years',
     },{
-      key: '1.2',
+      key: '1.3',
       title: 'Grades',
       url:'/essential/grades',
     },{
-      key: '1.3',
+      key: '1.4',
       title: 'Class',
       url:'/essential/klasses',
-    },{
-      key: '1.4',
-      title: 'Subjects',
-      url:'/essential/subjects',
     }],
   },{
     key: '2',

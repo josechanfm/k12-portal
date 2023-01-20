@@ -51,7 +51,7 @@ class YearController extends Controller
     public function store(Request $request)
     {
         Validator::make($request->all(), [
-            'abbr' => ['required'],
+            'code' => ['required'],
             'title' => ['required'],
             'period'=> ['required'],
             'kklass'=> ['required'],
@@ -63,7 +63,7 @@ class YearController extends Controller
         ])->validate();
 
         $year=new Year;
-        $year->abbr = $request->input('abbr');
+        $year->code = $request->input('code');
         $year->title = $request->input('title');
         $year->start = date('Y-m-d', strtotime($request->input('period')[0]));
         $year->end = date('Y-m-d', strtotime($request->input('period')[1]));
@@ -77,12 +77,13 @@ class YearController extends Controller
         $pgrade=$request->input('pgrade');
         $sklass=$request->input('sklass');
         $sgrade=$request->input('sgrade');
-        $level=1;
+        $rank=1;
         $letters=['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','W','X','Y','Z'];
         for($i=1;$i<=$kgrade;$i++){
             $grade=new Grade;
             $grade->year_id=$yearId;
-            $grade->level=$level++;
+            $grade->rank=$rank++;
+            $grade->level=$i;
             $grade->initial='P';
             $grade->tag=$grade->initial.($i);
             $grade->active=1;
@@ -92,7 +93,7 @@ class YearController extends Controller
                 $klass=new Klass;
                 $klass->grade_id=$gradeId;
                 $klass->letter=$letters[$j-1];
-                $klass->tag==$letters[$j];
+                $klass->tag=$grade->tag.$letters[$j-1];
                 $klass->save();
             }
         }
@@ -100,7 +101,8 @@ class YearController extends Controller
         for($i=1;$i<=$pgrade;$i++){
             $grade=new Grade;
             $grade->year_id=$yearId;
-            $grade->level=$level++;
+            $grade->rank=$rank++;
+            $grade->level=$i;
             $grade->initial='P';
             $grade->tag=$grade->initial.($i);
             $grade->active=1;
@@ -110,14 +112,15 @@ class YearController extends Controller
                 $klass=new Klass;
                 $klass->grade_id=$gradeId;
                 $klass->letter=$letters[$j-1];
-                $klass->tag==$letters[$j];
+                $klass->tag=$grade->tag.$letters[$j-1];
                 $klass->save();
             }
         }
         for($i=1;$i<=$sgrade;$i++){
             $grade=new Grade;   
             $grade->year_id=$yearId;
-            $grade->level=$level++;
+            $grade->rank=$rank++;
+            $grade->level=$i;
             $grade->initial='S';
             $grade->tag=$grade->initial.($i);
             $grade->active=1;
@@ -127,7 +130,7 @@ class YearController extends Controller
                 $klass=new Klass;
                 $klass->grade_id=$gradeId;
                 $klass->letter=$letters[$j-1];
-                $klass->tag==$letters[$j];
+                $klass->tag=$grade->tag.$letters[$j-1];
                 $klass->save();
             }
         }
@@ -153,7 +156,7 @@ class YearController extends Controller
         if($request->has('id')){
             $year=Year::find($request->input('id'));
             $year->herit = $request->input('herit') ?? 0;
-            $year->abbr = $request->input('abbr');
+            $year->code = $request->input('code');
             $year->title = $request->input('title');
             $year->start = date('Y-m-d', strtotime($request->input('period')[0]));
             $year->end = date('Y-m-d', strtotime($request->input('period')[1]));

@@ -15,15 +15,15 @@
         <a-table :dataSource="grades" :columns="columns">
             <template #bodyCell="{column, text, record, index}">
                 <template v-if="column.dataIndex=='operation'">
-                    <Link :href="'subjects?gid='+record.id" method="get" as="button" type="button">Subjects</Link>
-                    <Link :href="'klasses?gid='+record.id" method="get" as="button" type="button">Classes</Link>
-                    <a-button @click="editRecord(record)">Edit</a-button>
-                    <a-button @click="deleteRecord(record.id)">Delete</a-button>
+                    <ButtonLink :href="'gradeSubjects?gid='+record.id" :type="'Link'">Subject</ButtonLink>
+                    <ButtonLink :href="'klasses?gid='+record.id" :type="'Link'">Classes</ButtonLink>
+                    <ButtonLink @click="editRecord(record)" :style="'Edit'">Edit</ButtonLink>
+                    <ButtonLink @click="deleteRecord(record)" :style="'Delete'">Delete</ButtonLink>
                 </template>
                 <template v-if="column.dataIndex=='subjects'">
                     <a-popover :title="'Subjects for '+record.tag">
                         <template #content>
-                            <p v-for="subject in record.subjects">{{ subject.code }}{{ subject.title_zh }}</p>
+                            <p v-for="subject in record.subjects">{{ subject.code }}-{{ subject.title_zh }}</p>
                         </template>
                         <a>{{ record.subjects.length }}</a>
                     </a-popover>
@@ -36,6 +36,7 @@
 
             <!-- Modal Start-->
             <a-modal v-model:visible="modal.isOpen"  :title="modal.title" width="60%" >
+                {{ modal.data }}
                 <a-form
                     ref="modalRef"
                     :model="modal.data"
@@ -106,12 +107,13 @@
 
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
-import { Link } from '@inertiajs/inertia-vue3';
+import ButtonLink from '@/Components/ButtonLink.vue';
+
 
 export default {
     components: {
         AdminLayout,
-        Link
+        ButtonLink,
     },
     props: ['year','grades'],
     data() {
@@ -175,18 +177,28 @@ export default {
     mounted() {
     },
     methods: {
+        createRecord(){
+            this.modal.data={}
+            this.modal.data.year_id=this.year.id;
+            this.modal.isOpen = true;
+            this.modal.mode='CREATE';
+        },
         editRecord(record){
             this.modal.data={...record}
             this.modal.isOpen = true;
             this.modal.mode='EDIT';
             console.log(record);
         },
-        createRecord(){
-            this.modal.data={}
-            this.modal.year_id=this.year.id;
-            this.modal.isOpen = true;
-            this.modal.mode='CREATE';
-        },
+        deleteRecord(record){
+            this.$inertia.delete('/essential/grades/'+record.id,{
+                onSuccess:(page)=>{
+                    console.log(record.id+" deleted.");
+                },
+                onError:(error)=>{
+                    console.log(error);
+                }
+            });
+        },  
         updateRecord(){
             this.$refs.modalRef.validateFields().then(()=>{
                 // this.modal.data._method = 'PATCH';
@@ -204,8 +216,16 @@ export default {
         },
         storeRecord(){
             this.$refs.modalRef.validateFields().then(()=>{
-                console.log(this.modal.data);
-                this.modal.isOpen=false;
+                console.log(this.modal.data)
+                this.$inertia.post('/essential/grades/', this.modal.data,{
+                    onSuccess:(page)=>{
+                        console.log(page);
+                        this.modal.isOpen=false;
+                    },
+                    onError:(error)=>{
+                        console.log(error);
+                    }
+                });
             }).catch(err => {
                 console.log(err);
             })

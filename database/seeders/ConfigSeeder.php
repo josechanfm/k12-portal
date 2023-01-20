@@ -39,5 +39,9 @@ class ConfigSeeder extends Seeder
             'key'=>'score_columns',
             'value' =>'[{"REG":"平時分"},{"TST":"測驗分"},{"CLS":"課堂表現"},{"EXM":"考試分"}]'
         ]);
+        DB::table('configs')->insert([
+            'key'=>'subject_types',
+            'value' =>'[{"value":"SUB","label":"學科"},{"value":"ATT","label":"生活習慣和態度"},{"value":"RPAL","label":"獎懲遲缺"},{"value":"LES","label":"餘暇活動"},{"value":"OVA","label":"總體評分"}]'
+        ]);
     }
 }

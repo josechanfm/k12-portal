@@ -19,9 +19,9 @@ return new class extends Migration
             $table->string('code');
             $table->string('title_zh');
             $table->string('title_en')->nullable();
-            $table->string('type')->nullable();
-            $table->string('stream',3)->nullable();
-            $table->tinyInteger('elective');
+            $table->string('type',6)->nullable();
+            $table->string('stream',6)->nullable();
+            $table->string('elective',6)->nullable();
             $table->string('score_column')->nullable();
             $table->text('description')->nullable();
             $table->bigInteger('subject_id')->nullable();

@@ -52,7 +52,7 @@ class SubjectController extends Controller
         $fields=[];
         $records=[];
         foreach($subjectTemplates as $st){
-            $fields['grade_id']=1;
+            $fields['grade_id']=$request->grade_id;
             $fields['code']=$st->code;
             $fields['title_zh']=$st->title_zh;
             $fields['title_en']=$st->title_en;
@@ -60,6 +60,7 @@ class SubjectController extends Controller
             $fields['stream']=$st->stream;
             $fields['elective']=$st->elective;
             $fields['active']=true;
+            $fields['subject_template_id']=$st->id;
             $records[]=$fields;
         }
         Subject::upsert(
@@ -151,6 +152,7 @@ class SubjectController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Subject::destroy($id);
+        return redirect()->back();
     }
 }

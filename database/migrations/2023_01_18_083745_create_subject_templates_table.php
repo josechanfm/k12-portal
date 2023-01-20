@@ -15,13 +15,12 @@ return new class extends Migration
     {
         Schema::create('subject_templates', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('year_id');
             $table->string('code');
             $table->string('title_zh')->nullable();
             $table->string('title_en')->nullable();
-            $table->string('type',3)->nullable();
-            $table->string('stream',3)->nullable();
-            $table->string('elective',4);
+            $table->string('type',6)->nullable();
+            $table->string('stream',6)->nullable();
+            $table->string('elective',6)->nullable();
             $table->text('description')->nullable();
             $table->boolean('active');
             $table->timestamps();

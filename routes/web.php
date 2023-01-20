@@ -95,7 +95,7 @@ Route::prefix('essential')->group(function(){
     Route::resource('/subjectTemplate',App\Http\Controllers\Essential\SubjectTemplateController::class);
     Route::resource('/grades',App\Http\Controllers\Essential\GradeController::class);
     Route::resource('/klasses',App\Http\Controllers\Essential\KlassController::class);
-    Route::resource('/subjects',App\Http\Controllers\Essential\SubjectController::class);
+    Route::resource('/gradeSubjects',App\Http\Controllers\Essential\SubjectController::class);
     Route::resource('/users',App\Http\Controllers\Essential\UserController::class);
     Route::resource('/roles',App\Http\Controllers\Essential\RoleController::class);
 });

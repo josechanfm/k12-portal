@@ -8,7 +8,7 @@
         <a-typography-title :level="3">年級: {{ grade.tag }}</a-typography-title>
         <a-typography-title :level="3">年級全稱: {{ grade.title_zh }}</a-typography-title>
         <button @click="onClickCreate()"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Create Subject template</button>
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Create Subject from template</button>
             <a-table :dataSource="subjects" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
@@ -74,6 +74,7 @@
                 </a-form-item>
             </a-form>
         <template #footer>
+            <a-checkbox v-if="modal.mode=='CREATE'" class="float-left" v-model:checked="selectAll" @change="onChangeSelectAll">SelectAll</a-checkbox>
             <a-button key="back" @click="modalCancel">Return</a-button>
             <a-button v-if="modal.mode=='EDIT'" key="Update" type="primary" @click="updateRecord()">Update</a-button>
             <a-button v-if="modal.mode=='CREATE'"  key="Store" type="primary" @click="storeRecord()">Create</a-button>
@@ -102,6 +103,7 @@ export default {
                 data:{}
             },
             selectedSubjects:[],
+            selectAll:false,
             dataSource:[],
             columns:[
                 {
@@ -186,11 +188,6 @@ export default {
     methods: {
         onClickCreate(record){
             this.selectedSubjects=this.subjects.map(subject=>subject.code);
-            // console.log(this.selectedSubjects);
-            // this.modal.data={};
-            // this.modal.data.grade_id=this.grade.id;
-            // this.modal.data.stream='LIB';
-            // this.modal.data.elective='COP';
             this.modal.title="Edit Subject";
             this.modal.mode='CREATE';
             this.modal.isOpen = true;
@@ -202,34 +199,22 @@ export default {
             this.modal.isOpen = true;
         },
         storeRecord(){
-            console.log(this.selectedSubjects);
-            this.$inertia.post('/essential/subjects/', {selectedSubjects:this.selectedSubjects},{
+            this.$inertia.post('/essential/gradeSubjects/', {
+                selectedSubjects:this.selectedSubjects,
+                grade_id:this.grade.id
+            },{
                 onSuccess:(page)=>{
-                    console.log(page);
+                    //console.log(page);
                     this.modal.isOpen=false;
                 },
                 onError:(err)=>{
                     console.log(err);
                 }
             });
-
-            // this.$refs.modalRef.validateFields().then(()=>{
-            //     this.$inertia.post('/essential/subjects/', this.modal.data,{
-            //         onSuccess:(page)=>{
-            //             console.log(page);
-            //             this.modal.isOpen=false;
-            //         },
-            //         onError:(err)=>{
-            //             console.log(err);
-            //         }
-            //     });
-            // }).catch(err => {
-            //     console.log(err);
-            // });
         },
         updateRecord(){
             this.$refs.modalRef.validateFields().then(()=>{
-                this.$inertia.put('/essential/subjects/' + this.modal.data.id, this.modal.data,{
+                this.$inertia.put('/essential/gradeSubjects/' + this.modal.data.id, this.modal.data,{
                     onSuccess:(page)=>{
                         console.log(page);
                         this.modal.isOpen=false;
@@ -245,7 +230,7 @@ export default {
         },
         onClickDelete(recordId){
             if (!confirm('Are you sure want to remove?')) return;
-            this.$inertia.delete('/essential/subjects/' + recordId,{
+            this.$inertia.delete('/essential/gradeSubjects/' + recordId,{
                 onSuccess: (page)=>{
                     console.log(page);
                 },
@@ -253,11 +238,17 @@ export default {
                     console.log(error);
                 }
             });
-            this.ChangeModalMode('Close');
         },
         modalCancel(){
             this.modal.data={}
             this.modal.isOpen=false
+        },
+        onChangeSelectAll(){
+            if(this.selectAll){
+                this.selectedSubjects=this.selectedSubjects=this.subjectTemplates.map(subject=>subject.code);
+            }else{
+                this.selectedSubjects=[];
+            }
         },
         onFinishFailed(errorInfo){
             console.log('errorInfo: '+errorInfo);

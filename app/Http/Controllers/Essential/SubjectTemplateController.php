@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Essential;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Config;
 use App\Models\SubjectTemplate;
 use Illuminate\Support\Facades\Validator;
 
@@ -19,7 +20,8 @@ class SubjectTemplateController extends Controller
     {
         $subjects=SubjectTemplate::all();
         return Inertia::render('Essential/SubjectTemplate',[
-            'subjects'=>$subjects
+            'subjects'=>$subjects,
+            'subjectTypes'=>json_decode(Config::where('key','subject_types')->first()->value)
         ]);
     }
 
