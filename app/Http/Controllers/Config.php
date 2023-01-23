@@ -1,15 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Essential;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-use App\Models\User;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 
-class UserController extends Controller
+class Config extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,17 +13,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        // $user=User::find(1);
-        // $user->assignRole('Master');
-        $users=User::with('roles')->with('permissions')->get();
-        $roles=Role::all();
-        $permissions=Permission::all();
-
-        return Inertia::render('Essential/Users',[
-            'users' => $users,
-            'roles'=>$roles,
-            'permissions'=>$permissions
-        ]);
+        //
     }
 
     /**

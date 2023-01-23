@@ -16,12 +16,13 @@ return new class extends Migration
         Schema::create('score_columns', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('term_id');
-            $table->bigInteger('course_id');
+            $table->bigInteger('course_id')->on('courses')->onDelete('restrict')->onUpdate('cascade');
             $table->integer('sequence')->nullable();
             $table->string('name');
             $table->string('type')->nullable();
             $table->string('scheme')->nullable();
             $table->string('description')->nullable();
+            $table->boolean('for_transcript')->default(false);
             $table->timestamps();
         });
     }

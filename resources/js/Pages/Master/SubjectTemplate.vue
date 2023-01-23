@@ -46,7 +46,6 @@
                     <a-radio-group v-model:value="modal.data.type" button-style="solid">
                         <a-radio-button v-for="st in subjectTypes" :value="st.value">{{ st.label }}</a-radio-button>
                     </a-radio-group>
-
                 </a-form-item>
                 <a-form-item label="專業方向" name="stream">
                     <a-radio-group v-model:value="modal.data.stream" button-style="solid">
@@ -70,6 +69,15 @@
                 <a-form-item label="有效" name="active">
                     <a-switch v-model:checked="modal.data.active" :checkedValue="1" :uncheckedValue="0"/>
                 </a-form-item>
+                <a-form-item label="學年階段" name="grades">
+                    <a-select
+                        ref="select"
+                        mode="multiple"
+                        v-model:value="modal.data.grades"
+                        :options="gradeCategories"
+                    />
+                </a-form-item>
+                {{ gradeCategories }}
             </a-form>
         <template #footer>
             <a-button key="back" @click="modalCancel">Return</a-button>
@@ -90,7 +98,7 @@ export default {
     components: {
         AdminLayout,
     },
-    props: ['subjects','subjectTypes'],
+    props: ['gradeCategories','subjects','subjectTypes'],
     data() {
         return {
             modal: {
@@ -193,13 +201,18 @@ export default {
         },
         onClickEdit(record){
             this.modal.data={...record};
+            if(this.modal.data.grades==''){
+                this.modal.data.grades=[];
+            }else{
+                this.modal.data.grades=JSON.parse(this.modal.data.grades);
+            }
             this.modal.title="Edit Subject";
             this.modal.mode='EDIT';
             this.modal.isOpen = true;
         },
         storeRecord(){
             this.$refs.modalRef.validateFields().then(()=>{
-                this.$inertia.post('/essential/subjectTemplate/', this.modal.data,{
+                this.$inertia.post('/master/subjectTemplate/', this.modal.data,{
                     onSuccess:(page)=>{
                         console.log(page);
                         this.modal.isOpen=false;
@@ -214,7 +227,7 @@ export default {
         },
         updateRecord(){
             this.$refs.modalRef.validateFields().then(()=>{
-                this.$inertia.put('/essential/subjectTemplate/' + this.modal.data.id, this.modal.data,{
+                this.$inertia.put('/master/subjectTemplate/' + this.modal.data.id, this.modal.data,{
                     onSuccess:(page)=>{
                         console.log(page);
                         this.modal.isOpen=false;
@@ -230,7 +243,7 @@ export default {
         },
         onClickDelete(recordId){
             if (!confirm('Are you sure want to remove?')) return;
-            this.$inertia.delete('/essential/subjects/' + recordId,{
+            this.$inertia.delete('/master/subjects/' + recordId,{
                 onSuccess: (page)=>{
                     console.log(page);
                 },

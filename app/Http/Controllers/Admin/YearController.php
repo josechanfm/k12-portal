@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Essential;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -21,10 +21,10 @@ class YearController extends Controller
      */
     public function index()
     {
-        $data = Year::withCount('grades')->paginate(5);
+        $years = Year::withCount('grades')->get();
         $param=json_decode(Config::where('key','year_creation')->first()->value);
-        return Inertia::render('Essential/Years',[
-            'years'=>$data,
+        return Inertia::render('Admin/Years',[
+            'years'=>$years,
             'param'=>$param
         ]);
         //return response()->json($data);
@@ -180,7 +180,7 @@ class YearController extends Controller
         if($payment){
             $payment->delete();
             return redirect()->back()
-                ->with('message', 'Blog Delete Successfully');
+                ->with('message', 'Year Delete Successfully');
 
         }
     }
@@ -188,18 +188,6 @@ class YearController extends Controller
         $data=Klass::where('year_id',$yearId)->get();
         return Inertia::render('Admin/Year_klasses',[
             'klasses'=>$data,
-        ]);
-    }
-    public function subjects($yearId){
-        $year=Year::find($yearId);
-        $subjects=Subject::where('active',1)->get();
-        $klasses=Klass::select('id as value','acronym as label')->where('year_id',$yearId)->get();
-        $config=json_decode(Config::where('key','grades')->first()->value,true);
-        return Inertia::render('Admin/Year_subjects',[
-            'year'=>$year,
-            'subjects'=>$subjects,
-            'klasses'=>$klasses,
-            'config'=>$config
         ]);
     }
 }

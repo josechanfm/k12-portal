@@ -1,36 +1,44 @@
 <?php
 
-namespace App\Http\Controllers\Essential;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
-use App\Models\User;
+use App\Models\Year;
+use App\Models\Subject;
+use App\Models\Klass;
+use App\Models\Config;
 
-class RoleController extends Controller
+class YearPlanController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        // $permission=Permission::find(1);
-        // $role=Role::find(1);
-        // $role->givePermissionTo($permission);
-        $role=Role::find(1);
-        $user=User::find(1);
-        $user->assignRole($role);
-
-
-        $roles=Role::all();
-        return Inertia::render('Essential/Roles',[
-            'roles'=>$roles
+        if(!$request->yearId){
+            return redirect('/admin');
+        }
+        $yearId=$request->yearId;
+        $year=Year::find($yearId);
+        $subjects=Subject::where('active',1)->get();
+        $klassOptions=Klass::select('id as value','acronym as label')->where('year_id',$yearId)->get();
+        $klasses=Klass::where('year_id',$yearId)->get();
+        $config=json_decode(Config::where('key','grades')->first()->value,true);
+        $grades=json_decode(Config::where('key','grades')->first()->value,true);
+        $klassesSubjects=Klass::where('year_id',$yearId)->with('subjects')->get();
+        return Inertia::render('Admin/Dashboard',[
+            'year'=>$year,
+            'subjects'=>$subjects,
+            'klasses'=>$klasses,
+            'klassOptions'=>$klassOptions,
+            'config'=>$config,
+            'grades'=>$grades,
+            'klassesSubjects'=>$klassesSubjects
         ]);
-
     }
 
     /**
@@ -40,7 +48,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Admin/Dashboard');
     }
 
     /**

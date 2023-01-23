@@ -15,8 +15,7 @@ return new class extends Migration
     {
         Schema::create('klasses', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('grade_id')->on('grades')->onDelete('restrict');
-            $table->bigInteger('head_id')->on('teachers')->onDelete('restrict')->nullable();
+            $table->bigInteger('grade_id')->on('grades')->onDelete('restrict')->onUpdate('cascade');
             $table->char('letter',5)->nullable();
             $table->char('tag',5)->nullable();
             $table->string('byname')->nullable();

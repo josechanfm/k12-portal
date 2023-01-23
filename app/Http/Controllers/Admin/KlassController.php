@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Essential;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Discipline;
@@ -29,7 +29,7 @@ class KlassController extends Controller
         }
         $grades=Grade::where('year_id',$grade->year_id)->get();
         $klasses=Klass::with('courses')->whereBelongsTo($grade)->get();
-        return Inertia::render('Essential/Klasses',[
+        return Inertia::render('Admin/Klasses',[
             'klasses'=>$klasses,
             'grade'=>$grade,
             'grades'=>$grades,

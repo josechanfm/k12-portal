@@ -21,7 +21,9 @@ return new class extends Migration
             $table->string('type',6)->nullable();
             $table->string('stream',6)->nullable();
             $table->string('elective',6)->nullable();
+            $table->string('grades')->default("[]");
             $table->text('description')->nullable();
+            $table->string('version');
             $table->boolean('active');
             $table->timestamps();
         });

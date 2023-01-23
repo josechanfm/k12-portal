@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('courses', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('klass_id');
+            $table->bigInteger('klass_id')->on('courses')->onDelete('restrict')->onUpdate('cascade');
             $table->string('code');
             $table->string('title_zh');
             $table->string('title_en')->nullable();

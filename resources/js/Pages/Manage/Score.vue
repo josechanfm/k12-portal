@@ -2,7 +2,7 @@
     <AdminLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Score for {{ course.klass.tag }} {{ course.title_zh }}
+                 {{ course.klass.tag }} {{ course.title_zh }}科 學分管理
                 <br/>
                 <span v-for="teacher in course.teachers">
                     {{ teacher.name_zh }} 
@@ -11,15 +11,20 @@
                 </span>
             </h2>
         </template>
-        <a-button type="primary" @click="onClickAddScoreColumn">Score</a-button>
+        <a-button type="primary" @click="onClickAddScoreColumn">新增學分欄</a-button>
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <a-table :dataSource="score_columns" :columns="columns" >
                         <template #bodyCell="{ column, text, record, index }">
                             <template v-if="column.dataIndex == 'operation'">
-                                <a-button @click="onClickEditScoreColumn(record)">Edit</a-button>
-                                <a-button @click="onClickDeleteScoreColumn(record.id)">Delete</a-button>
+                                <span v-if="record.for_transcript">
+                                    成積表欄
+                                </span>
+                                <span v-else>
+                                    <a-button @click="onClickEditScoreColumn(record)">修改</a-button>
+                                    <a-button @click="onClickDeleteScoreColumn(record.id)">刪除</a-button>
+                                </span>
                             </template>
                             <template v-else>
                                 {{ record[column.dataIndex]}}
@@ -33,10 +38,10 @@
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <a-button type="primary" @click="saveScores">Save</a-button>
+                    <a-button type="primary" @click="saveScores">更新並保存</a-button>
                     <table id="scoreTable" ref="scoreTable">
                         <tr>
-                            <th>Name</th>
+                            <th>學生姓名</th>
                             <td v-for="column in score_columns">{{ column.name }}</td>
                         </tr>
                         <tr v-for="(score, key) in scores">
@@ -111,19 +116,19 @@ export default {
             scores:{},
             columns: [
                 {
-                    title: 'Term',
+                    title: '學段',
                     dataIndex: 'term_id',
                 },{
-                    title: 'Sore Name',
+                    title: '學分欄名稱',
                     dataIndex: 'name',
                 },{
-                    title: 'Type',
+                    title: '分類',
                     dataIndex: 'type',
                 },{
-                    title: 'Schema',
+                    title: '計算方式',
                     dataIndex: 'schema',
                 },{
-                    title: 'Operation',
+                    title: '操作',
                     dataIndex: 'operation',
                 }
             ]

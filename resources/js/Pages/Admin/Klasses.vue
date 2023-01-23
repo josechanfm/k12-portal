@@ -2,7 +2,7 @@
     <AdminLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                All Klasses
+                學年階段之班別
             </h2>
         </template>
         <a-typography-title :level="4">學年:{{ grade.year.code }}</a-typography-title>
@@ -10,11 +10,11 @@
         <ButtonLink v-for="g in grades" :href="'klasses?gid='+g.id" :style="'Add'" :type="'Link'">{{ g.tag }}</ButtonLink>
         <br>
         <button @click="createRecord()"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Create Class</button>
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">新增班別</button>
             <a-table :dataSource="klasses" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
-                        <a-button @click="editRecord(record)">Edit</a-button>
+                        <ButtonLink @click="editRecord(record)" :style="'Edit'">修改</ButtonLink>
                     </template>
                     <template v-else-if="column.dataIndex=='courses'">
                         <a-popover :title="'Courses for '+record.tag">
@@ -35,7 +35,6 @@
         <a-modal v-model:visible="modal.isOpen" 
             :title="modal.title" width="60%" 
         >
-        {{ klass_letters }}
         <a-form
             ref="modalRef"
             :model="modal.data"
@@ -46,20 +45,20 @@
             :rules="rules"
             :validate-messages="validateMessages"
         >
-            <a-form-item label="Grade" name="grade" >
+            <a-form-item label="年級代號" name="grade" >
                 {{ grade.tag }}
             </a-form-item>
-            <a-form-item label="Letter" name="letter">
+            <a-form-item label="班別號" name="letter">
                 <a-select
                     v-model:value="modal.data.letter"
                     style="width: 100%"
-                    placeholder="Select Item..."
+                    placeholder="請選擇..."
                     max-tag-count="responsive"
                     :options="klass_letters"
                 ></a-select>
 
             </a-form-item>
-            <a-form-item label="Room" name="room">
+            <a-form-item label="教室編號" name="room">
                 <a-input v-model:value="modal.data.room" />
             </a-form-item>
         </a-form>
@@ -75,15 +74,12 @@
 
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
-import { defineComponent, reactive } from 'vue';
-import { Link } from '@inertiajs/inertia-vue3';
 import ButtonLink from '@/Components/ButtonLink.vue';
 
 export default {
     components: {
         AdminLayout,
         ButtonLink,
-        Link
     },
     props: ['grades','grade','klasses','klass_letters'],
     data() {
@@ -98,19 +94,19 @@ export default {
             dataSource:[],
             columns:[
                 {
-                    title: 'Tag',
+                    title: '班別代號',
                     dataIndex: 'tag',
                     key: 'tag',
                 },{
-                    title: 'Room',
+                    title: '教室編號',
                     dataIndex: 'room',
                     key: 'room',
                 },{
-                    title: 'Courses',
+                    title: '科目數目',
                     dataIndex: 'courses',
                     key: 'courses',
                 },{
-                    title: 'Operation',
+                    title: '操作',
                     dataIndex: 'operation',
                     key: 'operation',
                 },
@@ -163,7 +159,7 @@ export default {
         },
         storeRecord(){
             this.$refs.modalRef.validateFields().then(()=>{
-                this.$inertia.post('/essential/klasses/', this.modal.data,{
+                this.$inertia.post('/admin/klasses/', this.modal.data,{
                     onSuccess:(page)=>{
                         this.modal.isOpen=false;
                         console.log(page);
@@ -178,7 +174,7 @@ export default {
         },
         updateRecord(){
             this.$refs.modalRef.validateFields().then(()=>{
-                this.$inertia.put('/essential/klasses/' + this.modal.data.id, this.modal.data,{
+                this.$inertia.put('/admin/klasses/' + this.modal.data.id, this.modal.data,{
                     onSuccess:(page)=>{
                         this.modal.isOpen=false;
                     },

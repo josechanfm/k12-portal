@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('grades', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('year_id');
+            $table->bigInteger('year_id')->on('years')->onDelete('restrict')->onUpdate('cascade');
             $table->integer('rank');
             $table->char('initial',2);
             $table->integer('level');            
@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('byname',5)->nullable();
             $table->string('title_zh')->nullable();
             $table->string('title_en')->nullable();
+            $table->integer('klass_num')->default(0);
             $table->text('description')->nullable();
             $table->integer('version')->nullable();
             $table->boolean('active')->default(true);

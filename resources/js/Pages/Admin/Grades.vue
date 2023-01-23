@@ -2,7 +2,7 @@
     <AdminLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Grades in the year
+                學年級別
             </h2>
         </template>
         <a-typography-title :level="4">學年代號: {{ year.code }}</a-typography-title>
@@ -10,23 +10,19 @@
         <a-typography-title :level="4">學年開始: {{ year.start }}</a-typography-title>
         <a-typography-title :level="4">學年結束: {{ year.end }}</a-typography-title>
         <button @click="createRecord()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">
-            Create grade in the year
+            新增學年級別
         </button>
         <a-table :dataSource="grades" :columns="columns">
             <template #bodyCell="{column, text, record, index}">
                 <template v-if="column.dataIndex=='operation'">
-                    <ButtonLink :href="'gradeSubjects?gid='+record.id" :type="'Link'">Subject</ButtonLink>
-                    <ButtonLink :href="'klasses?gid='+record.id" :type="'Link'">Classes</ButtonLink>
-                    <ButtonLink @click="editRecord(record)" :style="'Edit'">Edit</ButtonLink>
-                    <ButtonLink @click="deleteRecord(record)" :style="'Delete'">Delete</ButtonLink>
+                    <ButtonLink :href="'gradeSubjects?gid='+record.id" :type="'Link'">學科</ButtonLink>
+                    <ButtonLink :href="'klasses?gid='+record.id" :type="'Link'">班別</ButtonLink>
+                    <ButtonLink @click="editRecord(record)" :style="'Edit'">修改</ButtonLink>
+                    <ButtonLink @click="deleteRecord(record)" :style="'Delete'">刪除</ButtonLink>
                 </template>
-                <template v-if="column.dataIndex=='subjects'">
-                    <a-popover :title="'Subjects for '+record.tag">
-                        <template #content>
-                            <p v-for="subject in record.subjects">{{ subject.code }}-{{ subject.title_zh }}</p>
-                        </template>
-                        <a>{{ record.subjects.length }}</a>
-                    </a-popover>
+                <template v-if="column.dataIndex=='active'">
+                    <check-square-outlined v-if="text=='1'" :style="{color:'green'}"/>
+                    <stop-outlined v-else :style="{color:'red'}"/>
                 </template>
                 <template v-else>
                     {{record[column.dataIndex]}}
@@ -36,7 +32,6 @@
 
             <!-- Modal Start-->
             <a-modal v-model:visible="modal.isOpen"  :title="modal.title" width="60%" >
-                {{ modal.data }}
                 <a-form
                     ref="modalRef"
                     :model="modal.data"
@@ -46,51 +41,54 @@
                     :label-col="{ span: 8 }"
                     :wrapper-col="{ span: 16 }"
                 >
-                    <a-form-item label="Rank" name="rank" >
+                    <a-form-item label="學習年" name="rank" >
                         <a-select
                             v-model:value="modal.data.rank"
                             style="width: 100%"
-                            placeholder="Select Item..."
+                            placeholder="請選擇..."
                             max-tag-count="responsive"
                             :options="[...Array(12)].map((_, i) => ({ value: (i + 1) }))"
                             disable="true"
                         ></a-select>
                     </a-form-item>
-                    <a-form-item label="Initial" name="initial">
+                    <a-form-item label="學年階段" name="initial">
                         <a-select
                             v-model:value="modal.data.initial"
                             style="width: 100%"
-                            placeholder="Select Item..."
+                            placeholder="請選擇..."
                             max-tag-count="responsive"
-                            :options="[{value:'K',label:'幼稚園'},{value:'P',label:'小學'},{value:'S',label:'中學'}]"
+                            :options="gradeCategories"
                         ></a-select>
                     </a-form-item>
-                    <a-form-item label="Level" name="level" >
+                    <a-form-item label="學年階段年級" name="level" >
                         <a-select
                             v-model:value="modal.data.level"
                             style="width: 100%"
-                            placeholder="Select Item..."
+                            placeholder="請選擇..."
                             max-tag-count="responsive"
                             :options="[...Array(6)].map((_, i) => ({ value: (i + 1) }))"
                             disable="true"
                         ></a-select>
                     </a-form-item>
-                    <a-form-item label="Tag" name="tag">
+                    <a-form-item label="年級代號" name="tag">
                         {{ modal.data.initial }}{{ modal.data.level }}
                     </a-form-item>
-                    <a-form-item label="Title zh" name="title_zh">
+                    <a-form-item label="中文名稱" name="title_zh">
                         <a-input v-model:value="modal.data.title_zh" />
                     </a-form-item>
-                    <a-form-item label="Title en" name="title_en">
+                    <a-form-item label="英文名稱" name="title_en">
                         <a-input v-model:value="modal.data.title_en" />
                     </a-form-item>
-                    <a-form-item label="Version" name="version">
+                    <a-form-item label="建立班別數" name="klass_num">
+                        <a-input-number v-model:value="modal.data.klass_num" />
+                    </a-form-item>
+                    <a-form-item label="版本" name="version">
                         <a-input v-model:value="modal.data.version" />
                     </a-form-item>
-                    <a-form-item label="Active" name="active">
+                    <a-form-item label="有效" name="active">
                         <a-switch v-model:checked="modal.data.active" :checkedValue="1" :unCheckedValue="0"/>
                     </a-form-item>
-                    <a-form-item label="Description" name="description">
+                    <a-form-item label="簡介" name="description">
                         <a-textarea v-model:value="modal.data.description" />
                     </a-form-item>
                 </a-form>
@@ -108,20 +106,23 @@
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
+import {CheckSquareOutlined, StopOutlined} from '@ant-design/icons-vue';
 
 
 export default {
     components: {
         AdminLayout,
         ButtonLink,
+        CheckSquareOutlined,
+        StopOutlined
     },
-    props: ['year','grades'],
+    props: ['year','grades','gradeCategories'],
     data() {
         return {
             modal: {
                 mode:null,
                 isOpen: false,
-                title:'Klasses',
+                title:'建立學年級別',
                 data:{}
             },
             rules:{
@@ -147,28 +148,28 @@ export default {
             },
             columns:[
                 {
-                    title: 'Level',
-                    dataIndex: 'level',
+                    title: '學習年',
+                    dataIndex: 'rank',
                 },{
-                    title: 'Initial',
+                    title: '學年階段',
                     dataIndex: 'initial',
                 },{
-                    title: 'Tag',
+                    title: '學年階段年級',
+                    dataIndex: 'level',
+                },{
+                    title: '年級代號',
                     dataIndex: 'tag',
                 },{
-                    title: 'Title Zh',
+                    title: '中文名稱',
                     dataIndex: 'title_zh',
                 },{
-                    title: 'Subjects',
-                    dataIndex: 'subjects',
-                },{
-                    title: 'Version',
+                    title: '版本',
                     dataIndex: 'version',
                 },{
-                    title: 'Active',
-                    dataIndex: 'version',
+                    title: '有效',
+                    dataIndex: 'active',
                 },{
-                    title: 'Operation',
+                    title: '操作',
                     dataIndex: 'operation',
                 }
             ]
@@ -180,29 +181,22 @@ export default {
         createRecord(){
             this.modal.data={}
             this.modal.data.year_id=this.year.id;
+            this.modal.data.klass_num=0;
             this.modal.isOpen = true;
             this.modal.mode='CREATE';
+            this.modal.title='建立學年級別';
         },
         editRecord(record){
             this.modal.data={...record}
             this.modal.isOpen = true;
             this.modal.mode='EDIT';
+            this.modal.title='修改學年級別'
             console.log(record);
         },
-        deleteRecord(record){
-            this.$inertia.delete('/essential/grades/'+record.id,{
-                onSuccess:(page)=>{
-                    console.log(record.id+" deleted.");
-                },
-                onError:(error)=>{
-                    console.log(error);
-                }
-            });
-        },  
         updateRecord(){
             this.$refs.modalRef.validateFields().then(()=>{
                 // this.modal.data._method = 'PATCH';
-                this.$inertia.put('/essential/grades/' + this.modal.data.id, this.modal.data,{
+                this.$inertia.put('/admin/grades/' + this.modal.data.id, this.modal.data,{
                     onSuccess:(page)=>{
                         this.modal.isOpen=false;
                     },
@@ -216,8 +210,7 @@ export default {
         },
         storeRecord(){
             this.$refs.modalRef.validateFields().then(()=>{
-                console.log(this.modal.data)
-                this.$inertia.post('/essential/grades/', this.modal.data,{
+                this.$inertia.post('/admin/grades/', this.modal.data,{
                     onSuccess:(page)=>{
                         console.log(page);
                         this.modal.isOpen=false;
@@ -230,6 +223,18 @@ export default {
                 console.log(err);
             })
         },
+        deleteRecord(record){
+            if (!confirm('是否確定刪除?')) return;
+            this.$inertia.delete('/admin/grades/'+record.id,{
+                onSuccess:(page)=>{
+                    console.log(record.id+" deleted.");
+                },
+                onError:(error)=>{
+                    alert(error.message);
+                    console.log(error);
+                }
+            });
+        },  
     },
 }
 </script>

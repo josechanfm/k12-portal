@@ -8,11 +8,11 @@
         <button @click="createRecord()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">
             Create New School Year
         </button>
-            <a-table :dataSource="years.data" :columns="columns">
+            <a-table :dataSource="years" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
-                        <ButtonLink :href="'/essential/grades?yearId='+record.id" :type="'Link'">Grades</ButtonLink>
-                        <ButtonLink :href="'/essential/klasses?yearId='+record.id" :type="'Link'">Classes</ButtonLink>
+                        <ButtonLink :href="'/admin/grades?yearId='+record.id" :type="'Link'">Grades</ButtonLink>
+                        <ButtonLink :href="'/admin/klasses?yearId='+record.id" :type="'Link'">Classes</ButtonLink>
                         <ButtonLink @click="editRecord(record)" >Edit</ButtonLink>
                         <ButtonLink @click="deleteRecord(record.id)" >Delete</ButtonLink>
                     </template>
@@ -27,11 +27,11 @@
             </a-table>
 
         <!-- Modal Start-->
-        <a-modal v-model:visible="modalVisible" :title="modalTitle" width="60%" @update="updateRecord(modalForm)" @onCancel="closeModal()">
-        <a-form
+        <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="60%" @update="updateRecord(modalForm)" @onCancel="closeModal()">
+            <a-form
             ref="modalRef"
-            :model="modalForm"
-            name="supplier"
+            :model="modal.data"
+            name="year"
             :label-col="{ span: 8 }"
             :wrapper-col="{ span: 16 }"
             autocomplete="off"
@@ -41,20 +41,20 @@
             @finish="onFinish"
             @onFinishFailed="onFinishFailed"
         >
-            <a-input type="hidden" v-model:value="modalForm.id"/>
+            <a-input type="hidden" v-model:value="modal.data.id"/>
             <a-form-item label="code" name="code">
-                <a-input v-model:value="modalForm.code" style="width: 100px"/>
+                <a-input v-model:value="modal.data.code" style="width: 100px"/>
             </a-form-item>
             <a-form-item label="Title" name="Title">
-                <a-input v-model:value="modalForm.title" />
+                <a-input v-model:value="modal.data.title" />
             </a-form-item>
             <a-form-item label="period" name="Period">
-                <a-range-picker v-model:value="modalForm.period" />
+                <a-range-picker v-model:value="modal.data.period" />
             </a-form-item>
             
-            <div v-if="modalMode=='Create'">
+            <div v-if="modal.mode=='CREATE'">
                 <a-form-item label="Description" name="description">
-                    <a-textarea v-model:value="modalForm.description" />
+                    <a-textarea v-model:value="modal.data.description" />
                 </a-form-item>
 
                 <a-divider orientation="left">Kindergarten</a-divider>
@@ -63,7 +63,7 @@
                     <a-col :span="8">
                         <a-form-item label="K Klass" name="kklass">
                             <a-select
-                            v-model:value="modalForm.kklass"
+                            v-model:value="modal.data.kklass"
                             :options="kklassOptions"
                             style="width: 80px"
                             />
@@ -72,7 +72,7 @@
                     <a-col :span="8">
                         <a-form-item label="K Grade" name="kgrade">
                             <a-select
-                            v-model:value="modalForm.kgrade"
+                            v-model:value="modal.data.kgrade"
                             :options="kgradeOptions"
                             style="width: 80px"
                             />
@@ -85,7 +85,7 @@
                     <a-col :span="8">
                         <a-form-item label="P Klass" name="pklass">
                             <a-select
-                            v-model:value="modalForm.pklass"
+                            v-model:value="modal.data.pklass"
                             :options="pklassOptions"
                             style="width: 80px"
                             />
@@ -94,7 +94,7 @@
                     <a-col :span="8">
                         <a-form-item label="P Grade" name="pgrade">
                             <a-select
-                            v-model:value="modalForm.pgrade"
+                            v-model:value="modal.data.pgrade"
                             :options="pgradeOptions"
                             style="width: 80px"
                             />
@@ -107,7 +107,7 @@
                     <a-col :span="8">
                         <a-form-item label="S Klass" name="sklass">
                             <a-select
-                            v-model:value="modalForm.sklass"
+                            v-model:value="modal.data.sklass"
                             :options="sklassOptions"
                             style="width: 80px"
                             />
@@ -116,7 +116,7 @@
                     <a-col :span="8">
                         <a-form-item label="S Grade" name="sgrade">
                             <a-select
-                            v-model:value="modalForm.sgrade"
+                            v-model:value="modal.data.sgrade"
                             :options="sgradeOptions"
                             style="width: 80px"
                             />
@@ -132,8 +132,8 @@
 
         </a-form>
         <template #footer>
-            <a-button v-if="modalMode=='Edit'" key="Update" type="primary" :loading="loading" @click="updateRecord(modalForm)">Update</a-button>
-            <a-button v-if="modalMode=='Create'"  key="Store" type="primary" :loading="loading" @click="storeRecord(modalForm)">Add</a-button>
+            <a-button v-if="modal.mode=='EDIT'" key="Update" type="primary" :loading="loading" @click="updateRecord(modalForm)">Update</a-button>
+            <a-button v-if="modal.mode=='CREATE'"  key="Store" type="primary" :loading="loading" @click="storeRecord(modalForm)">Add</a-button>
         </template>
     </a-modal>    
     <!-- Modal End-->
@@ -156,23 +156,19 @@ export default {
         AdminLayout,
         ButtonLink,
     },
-    props: ['years','param','errors'],
+    props: ['years','param'],
     data() {
         return {
             kgrade:0,
             kklass:0,
-            paymentList: [],
-            editMode: false,
-            isOpen: false,
-            form: {
-                title: null,
-            },
-            modalVisible:false,
-            modalTitle:'School Year Creation',
-            modalForm:{},
             dataSource:[],
             dateFormat:'YYYY-MM-DD',
-            loading:false,
+            modal:{
+                mode:null,
+                isOpen:false,
+                data:{},
+                title:'Years'
+            },
             columns:[
                 {
                     title: 'Code',
@@ -313,61 +309,43 @@ export default {
         this.sklassOptions=Array(this.param.sklass+1).fill().map((_, i) => {return {value:i, label:i++}});
     },
     methods: {
-        ChangeModalMode(mode){
-            if(mode=='Create'){
-                this.modalMode=mode;
-                this.modalTitle='School Year Creation';
-                this.modalVisible=true;
-            }else if(mode=='Edit'){
-                this.modalMode=mode;
-                this.modalTitle='School Year Editing';
-                this.modalVisible=true;
-            }else{
-                this.modalMode='Close';
-                this.modalTitle='Modal Mode undefined';
-                this.modalVisible=false;
-            }
-            this.$refs.modalRef!==undefined?this.$refs.modalRef.resetFields():'';
-        },
         createRecord(){
             this.modalForm={};
-            this.modalForm.period=[dayjs('2022/09/01', this.dateFormat), dayjs('2023/07/01', this.dateFormat)];
-            this.modalForm.kklass=this.param.kklassDefault;
-            this.modalForm.kgrade=this.param.kgradeDefault;
-            this.modalForm.pklass=this.param.pklassDefault;
-            this.modalForm.pgrade=this.param.pgradeDefault;
-            this.modalForm.sklass=this.param.sklassDefault;
-            this.modalForm.sgrade=this.param.sgradeDefault;
-            this.ChangeModalMode('Create');
+            this.modal.data.period=[dayjs('2022/09/01', this.dateFormat), dayjs('2023/07/01', this.dateFormat)];
+            this.modal.data.kklass=this.param.kklassDefault;
+            this.modal.data.kgrade=this.param.kgradeDefault;
+            this.modal.data.pklass=this.param.pklassDefault;
+            this.modal.data.pgrade=this.param.pgradeDefault;
+            this.modal.data.sklass=this.param.sklassDefault;
+            this.modal.data.sgrade=this.param.sgradeDefault;
+            this.modal.mode="CREATE";
+            this.modal.isOpen=true
+            this.modal.title="Create Year"
         },
-        storeRecord(data){
+        editRecord(record){
+            this.modal.data={...record}
+            this.modal.data.period=[dayjs(this.modal.data.start, this.dateFormat), dayjs(this.modal.data.end, this.dateFormat)]
+            this.modal.mode="EDIT";
+            this.modal.isOpen=true
+            this.modal.title="Edit Year"
+        },
+        storeRecord(record){
             this.$refs.modalRef.validateFields().then(()=>{
-                this.loading=true;
-                this.$inertia.post('/essential/years/', data,{
+                this.$inertia.post('/admin/years/', record,{
                     onSuccess:(page)=>{
-                        this.ChangeModalMode('Close');
+                        console.log(page);
                     },
                     onError:(err)=>{
                         console.log(err);
                     }
                 });
-                this.loading=false;
             }).catch(err => {
                 console.log(err);
             });
         },
-        editRecord(index){
-            console.log(index);
-            this.modalForm={...this.years.data[index]};
-            this.modalForm.period=[dayjs(this.modalForm.start, this.dateFormat), dayjs(this.modalForm.end, this.dateFormat)];
-            this.currentId=index;
-            this.ChangeModalMode('Edit');
-        },
         updateRecord(data){
             this.$refs.modalRef.validateFields().then(()=>{
-                this.loading=true;
-                data._method = 'PATCH';
-                this.$inertia.post('/essential/years/' + data.id, data,{
+                this.$inertia.put('/admin/years/' + data.id, data,{
                     onSuccess:(page)=>{
                         this.modalVisible=false;
                         this.ChangeModalMode('Close');
@@ -383,9 +361,8 @@ export default {
            
         },
         deleteRecord(recordId){
-            console.log(recordId);
             if (!confirm('Are you sure want to remove?')) return;
-            this.$inertia.delete('/essential/years/' + recordId,{
+            this.$inertia.delete('/admin/years/' + recordId,{
                 onSuccess: (page)=>{
                     console.log(page);
                 },

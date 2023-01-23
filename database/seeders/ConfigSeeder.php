@@ -36,6 +36,10 @@ class ConfigSeeder extends Seeder
         //     'value' => 1,
         // ]);
         DB::table('configs')->insert([
+            'key'=>'klass_letters',
+            'value'=>'[{"value":"A","label":"A"},{"value":"B","label":"B"},{"value":"C","label":"C"},{"value":"D","label":"D"},{"value":"E","label":"E"},{"value":"F","label":"F"}]'
+        ]);
+        DB::table('configs')->insert([
             'key'=>'score_columns',
             'value' =>'[{"REG":"平時分"},{"TST":"測驗分"},{"CLS":"課堂表現"},{"EXM":"考試分"}]'
         ]);

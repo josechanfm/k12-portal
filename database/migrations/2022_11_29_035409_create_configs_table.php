@@ -17,7 +17,9 @@ return new class extends Migration
             $table->id();
             $table->string('key');
             $table->text('value');
+            $table->text('remark');
             $table->timestamps();
+            $table->unique(['key']);
         });
     }
 

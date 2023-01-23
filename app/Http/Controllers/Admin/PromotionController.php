@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Essential;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -43,7 +43,7 @@ class PromotionController extends Controller
         // echo $year;
         // echo $nextYear;
         //***** Check if any of the varible not completed  jump to the error page******/
-        return Inertia::render('Essential/Dashboard',[
+        return Inertia::render('Admin/Dashboard',[
             'year'=>$year,
             'grades'=>$grades,
             'nextYear'=>$nextYear,

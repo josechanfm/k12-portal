@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Essential;
+namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -18,9 +18,9 @@ class SubjectTemplateController extends Controller
      */
     public function index()
     {
-        $subjects=SubjectTemplate::all();
-        return Inertia::render('Essential/SubjectTemplate',[
-            'subjects'=>$subjects,
+        return Inertia::render('Master/SubjectTemplate',[
+            'gradeCategories'=>json_decode(Config::where('key','grade_categories')->first()->value),
+            'subjects'=>SubjectTemplate::all(),
             'subjectTypes'=>json_decode(Config::where('key','subject_types')->first()->value)
         ]);
     }
@@ -55,6 +55,7 @@ class SubjectTemplateController extends Controller
         $subject->stream=$request->stream;
         $subject->elective=$request->elective;
         $subject->description=$request->description;
+        $subject->grades=$request->grades;
         $subject->version=$request->version;
         $subject->active=$request->active;
         $subject->save();
@@ -103,6 +104,7 @@ class SubjectTemplateController extends Controller
             $subject->stream=$request->stream;
             $subject->elective=$request->elective;
             $subject->description=$request->description;
+            $subject->grades=$request->grades;
             $subject->version=$request->version;
             $subject->active=$request->active;
             $subject->save();

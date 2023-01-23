@@ -2,6 +2,7 @@
     <div>
       <a-button v-can="'add'">Add</a-button>
       <a-button v-role="'admin'">Is admin</a-button>
+      <a-button v-role="'master'">Is master</a-button>
       <a-menu
         v-model:openKeys="openKeys"
         v-model:selectedKeys="selectedKeys"
@@ -66,56 +67,64 @@
     },
   };
   const list = [{
-    key: '1',
-    title: 'Essentials',
+    key: '0',
+    title: '系統管理',
     children: [{
-      key: '1.1',
-      title: 'Subject Template',
-      url:'/essential/subjectTemplate',
+      key: '0.1',
+      title: '全校學科總表',
+      url:'/master/subjectTemplate',
     },{
+      key: '0.2',
+      title: '成積表欄位',
+      url:'/master/transcriptTemplate',
+    },{
+      key: '0.3',
+      title: '系統參數',
+      url:'/master/configs',
+    },{
+      key: '0.4',
+      title: '角色及權限',
+      url:'/master/RolePermission',
+    }],
+  },{
+    key: '1',
+    title: '行政管理',
+    children: [{
       key: '1.2',
-      title: 'Years',
-      url:'/essential/years',
+      title: '學年',
+      url:'/admin/years',
     },{
       key: '1.3',
-      title: 'Grades',
-      url:'/essential/grades',
+      title: '年級',
+      url:'/admin/grades',
     },{
       key: '1.4',
-      title: 'Class',
-      url:'/essential/klasses',
+      title: '班別',
+      url:'/admin/klasses',
     }],
   },{
     key: '2',
-    title: 'Manage',
+    title: '班級管理',
     children: [{
       key: '2.1',
-      title: 'Grade',
+      title: '年級班別',
       url:'/manage/grades',
     },{
       key: '2.2',
-      title: 'Teacher',
+      title: '教師',
       url:'/manage/teacher',
     },{
       key: '2.3',
-      title: 'Promotion',
+      title: '升班預處理',
       url:'/promote',
     }],
   },{
     key: '3',
-    title: 'Teacher',
+    title: '教師',
     children: [{
       key: '3.1',
-      title: 'Teaching',
+      title: '任教',
       url:'/manage/teaching',
-    },{
-      key: '3.2',
-      title: 'Teacher',
-      url:'/manage/teacher',
-    },{
-      key: '3.3',
-      title: 'Promotion',
-      url:'/promote',
     }],
   },{
     key: '4',
@@ -148,7 +157,7 @@
         list,
         collapsed,
         toggleCollapsed,
-        selectedKeys: ref(['1']),
+        selectedKeys: ref(['2']),
         openKeys: ref(['2']),
       };
     },

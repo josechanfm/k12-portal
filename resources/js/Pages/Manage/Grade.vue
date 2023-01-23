@@ -9,37 +9,28 @@
         <a-typography-title :level="4">學年全稱: {{ year.title }}</a-typography-title>
         <a-typography-title :level="4">學年開始: {{ year.start }}</a-typography-title>
         <a-typography-title :level="4">學年結束: {{ year.end }}</a-typography-title>
+        <a-typography-title :level="4">當前年級號別: {{ selectedKlass.tag }}</a-typography-title>
         <a-tabs v-model:activeKey="activeKey">
-            <a-tab-pane key="grade" tab="Grade">
+            <a-tab-pane key="grade" tab="年級">
                 <table width="100%">
                     <thead>
                         <tr>
-                            <th class="text-left">Level</th>
-                            <th class="text-left">Initial</th>
-                            <th class="text-left">Tag</th>
-                            <th class="text-left">Titile Zh</th>
-                            <th class="text-left">Version</th>
-                            <th class="text-left">Active</th>
-                            <th class="text-left">Students</th>
-                            <th class="text-left">Courses</th>
+                            <th class="text-left">年級代號</th>
+                            <th class="text-left">年級名稱</th>
+                            <th class="text-left">班別代號</th>
+                            <th class="text-left">班別學生數目</th>
+                            <th class="text-left">科目</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="(grade, gradeKey) in grades" :grade_id="grade.id">
-                            <td class="text-left">{{ grade.level }}</td>
-                            <td class="text-left">{{ grade.initial }}</td>
                             <td class="text-left">{{ grade.tag }}</td>
                             <td class="text-left">{{ grade.title_zh }}</td>
-                            <td class="text-left">{{ grade.version }}</td>
-                            <td class="text-left">{{ grade.active }}</td>
                             <td class="text-left">
                                 <ul>
                                     <li v-for="(klass, klassKey) in grade.klasses" :klass_id="klass.id">
-                                        <span @click="selectKlass(klass.id)">
+                                        <span @click="selectKlass(klass,'student')">
                                             {{ grade.tag }}{{ klass.letter }}
-                                            ({{ klass.student_count }})
-                                            <team-outlined :style="{ fontSize: '24px' }" />
-
                                         </span>
                                     </li>
                                 </ul>
@@ -47,7 +38,19 @@
                             <td class="text-left">
                                 <ul>
                                     <li v-for="(klass, klassKey) in grade.klasses" :klass_id="klass.id">
-                                        <span @click="selectCourse(klass.id)">Courses</span>
+                                        <span @click="selectKlass(klass,'student')">
+                                            {{ klass.student_count }}
+
+                                        </span>
+                                    </li>
+                                </ul>
+                            </td>
+                            <td class="text-left">
+                                <ul>
+                                    <li v-for="klass in grade.klasses" :klass_id="klass.id">
+                                        <span @click="selectKlass(klass,'course')">
+                                            Courses
+                                        </span>
                                     </li>
                                 </ul>
                             </td>
@@ -55,21 +58,21 @@
                     </tbody>
                 </table>
             </a-tab-pane>
-            <a-tab-pane key="course" tab="Courses " :disabled="courses.length<=0">
+            <a-tab-pane key="course" :tab="'科目列表 ('+selectedKlass.tag+')'" :disabled="courses.length<=0">
                 <table width="100%">
                     <thead>
                         <tr>
-                            <th class="text-left">Abbr</th>
-                            <th class="text-left">Title</th>
-                            <th class="text-left">Stream</th>
-                            <th class="text-left">Teacher</th>
-                            <th class="text-left">Head Teacher</th>
-                            <th class="text-left">Score</th>
+                            <th class="text-left">科目</th>
+                            <th class="text-left">科目名稱</th>
+                            <th class="text-left">專業方向</th>
+                            <th class="text-left">教師</th>
+                            <th class="text-left">班主任</th>
+                            <th class="text-left">學分</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="course in courses" :course_id="course.id">
-                            <td class="text-left">{{ course.abbr }}</td>
+                            <td class="text-left">{{ course.code }}</td>
                             <td class="text-left">{{ course.title_zh }}</td>
                             <td class="text-left">{{ course.stream }}</td>
                             <td class="text-left">
@@ -85,19 +88,19 @@
                                 </template>
                             </td>
                             <td class="text-left">
-                                <Link :href="'score?cid='+course.id" method="get" as="button" type="button">Score</Link>
+                                <Link :href="'score?cid='+course.id" method="get" as="button" type="button">學分</Link>
                             </td>
                         </tr>
                     </tbody>
                 </table>
 
             </a-tab-pane>
-            <a-tab-pane key="student" tab="Students" :disabled="students.length<=0">
+            <a-tab-pane key="student" :tab="'學生列表 ('+selectedKlass.tag+')'" :disabled="students.length<=0">
                 <table width="100%">
                     <thead>
                         <tr>
-                            <th class="text-left">Name</th>
-                            <th class="text-left">Gender</th>
+                            <th class="text-left">學生姓名</th>
+                            <th class="text-left">性別</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -132,23 +135,29 @@ export default {
             activeKey:'grade',
             courses:[],
             students:[],
+            selectedKlass:{
+                tag:"--"
+            }
         }
     },
     methods: {
-        selectKlass(klassId){   
-            axios.get('/manage/students/'+klassId)
+        selectKlass(klass,activeKey){   
+            this.selectedKlass=klass;
+            axios.get('/manage/students/'+klass.id)
                 .then(response=>{
                     this.students = response.data;
-                    this.courses = [];
-                    this.activeKey='student';
+                    //this.courses = [];
                 });
+            this.selectCourse(klass);
+            this.activeKey=activeKey;
+            //this.activeKey='student';
         },
-        selectCourse(klassId){
-            axios.get('/manage/courses/'+klassId)
+        selectCourse(klass){
+            this.selectedKlass=klass;
+            axios.get('/manage/courses/'+klass.id)
                 .then(response=>{
                     this.courses = response.data;
-                    this.students = [];
-                    this.activeKey='course';
+                    //this.students = [];
                 });
         }
     },

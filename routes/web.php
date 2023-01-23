@@ -7,11 +7,11 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\PaymentSpaController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\CourseController;
-// use App\Http\Controllers\Essential\KlassController;
-// use App\Http\Controllers\Essential\YearController;
-// use App\Http\Controllers\Essential\GradeController;
-// use App\Http\Controllers\Essential\YearPlanController;
-use App\Http\Controllers\Essential\PromotionController;
+// use App\Http\Controllers\Admin\KlassController;
+// use App\Http\Controllers\Admin\YearController;
+// use App\Http\Controllers\Admin\GradeController;
+// use App\Http\Controllers\Admin\YearPlanController;
+use App\Http\Controllers\Admin\PromotionController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -57,6 +57,23 @@ Route::get('/test',function(){
 Route::resource('/payments',PaymentSpaController::class);
 Route::resource('/subjects',SubjectController::class);
 Route::resource('/courses',CourseController::class);
+
+Route::prefix('master')->group(function(){
+    Route::resource('/subjectTemplate',App\Http\Controllers\Master\SubjectTemplateController::class);
+    Route::resource('/configs',App\Http\Controllers\Master\ConfigController::class);
+    Route::resource('/transcriptTemplate',App\Http\Controllers\Master\TranscriptTemplateController::class);
+});
+
+Route::prefix('admin')->group(function(){
+    Route::resource('/',App\Http\Controllers\Admin\YearPlanController::class);
+    Route::resource('/years',App\Http\Controllers\Admin\YearController::class);
+    Route::resource('/grades',App\Http\Controllers\Admin\GradeController::class);
+    Route::resource('/klasses',App\Http\Controllers\Admin\KlassController::class);
+    Route::resource('/gradeSubjects',App\Http\Controllers\Admin\SubjectController::class);
+    Route::resource('/users',App\Http\Controllers\Admin\UserController::class);
+    Route::resource('/roles',App\Http\Controllers\Admin\RoleController::class);
+});
+
 Route::prefix('manage/')->group(function(){
     Route::resource('/',App\Http\Controllers\Manage\DashboardController::class);
     Route::resource('/grades',App\Http\Controllers\Manage\GradeController::class);
@@ -80,32 +97,13 @@ Route::prefix('teacher/')->group(function(){
     Route::resource('/',App\Http\Controllers\Teacher\DashboardController::class);
 });
 
-//Route::get('/year/klass/disciplines/{klassId}',[KlassController::class,'disciplines']);
-//Route::get('/year/klasses/{yearId}',[YearController::class,'year']);
-//Route::get('/year/subjects/{yearId}',[YearController::class,'subjects']);
-
-// Route::resource('/promotion',PromotionController::class);
-// Route::get('/promotion/klass/{klassId}',[PromotionController::class,'klass']);
-// Route::get('/promotion/grade/{gradeId}',[PromotionController::class,'grade']);
-//Route::get('/promotion/data/{gradesklassId}',[PromotionController::class,'data']);
-
-Route::prefix('essential')->group(function(){
-    Route::resource('/dashboard',App\Http\Controllers\Essential\YearPlanController::class);
-    Route::resource('/years',App\Http\Controllers\Essential\YearController::class);
-    Route::resource('/subjectTemplate',App\Http\Controllers\Essential\SubjectTemplateController::class);
-    Route::resource('/grades',App\Http\Controllers\Essential\GradeController::class);
-    Route::resource('/klasses',App\Http\Controllers\Essential\KlassController::class);
-    Route::resource('/gradeSubjects',App\Http\Controllers\Essential\SubjectController::class);
-    Route::resource('/users',App\Http\Controllers\Essential\UserController::class);
-    Route::resource('/roles',App\Http\Controllers\Essential\RoleController::class);
-});
 
 Route::prefix('promote')->group(function(){
-    Route::resource('/',App\Http\Controllers\Essential\PromotionController::class);
-    Route::get('getStudents/{klassId}',[App\Http\Controllers\Essential\PromotionController::class,'getStudents']);
-    Route::get('getPromotedStudents/{klassId}',[App\Http\Controllers\Essential\PromotionController::class,'getPromotedStudents']);
-    Route::post('updateStudents',[App\Http\Controllers\Essential\PromotionController::class,'updateStudents']);
-    Route::get('data/{yearId}',[App\Http\Controllers\Essential\PromotionController::class, 'data']);
+    Route::resource('/',App\Http\Controllers\Admin\PromotionController::class);
+    Route::get('getStudents/{klassId}',[App\Http\Controllers\Admin\PromotionController::class,'getStudents']);
+    Route::get('getPromotedStudents/{klassId}',[App\Http\Controllers\Admin\PromotionController::class,'getPromotedStudents']);
+    Route::post('updateStudents',[App\Http\Controllers\Admin\PromotionController::class,'updateStudents']);
+    Route::get('data/{yearId}',[App\Http\Controllers\Admin\PromotionController::class, 'data']);
 });
 
 

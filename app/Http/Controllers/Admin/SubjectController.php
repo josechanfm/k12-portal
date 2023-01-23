@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Essential;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -22,7 +22,7 @@ class SubjectController extends Controller
         $grade=Grade::find($request->gid);
         $subjects=Subject::whereBelongsTo($grade)->get();
         $subjectTemplates=SubjectTemplate::where('active',1)->orderBy('type')->orderBy('stream')->get();
-        return Inertia::render('Essential/Subject',[
+        return Inertia::render('Admin/Subject',[
             'grade'=>$grade,
             'subjects'=>$subjects,
             'subjectTemplates'=>$subjectTemplates

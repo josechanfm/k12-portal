@@ -10,16 +10,16 @@ class Klass extends Model
     use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
     use HasFactory;
-    protected $fillable=['grade_id','head_id','initial','tag','room'];
+    protected $fillable=['grade_id','initial','tag','room'];
     
     // public function subjects(){
     //     return $this->belongsToMany(Subject::class);
     // }
    
-    protected $appends= ['student_count','promoted_count','year_abbr'];
+    protected $appends= ['student_count','promoted_count','year_code'];
     
-    public function getYearAbbrAttribute(){
-        return Grade::find($this->grade_id)->year->abbr;
+    public function getYearCodeAttribute(){
+        return Grade::find($this->grade_id)->year->code;
     }
 
     public function getStudentCountAttribute(){

@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Essential;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Year;
 use App\Models\Grade;
+use App\Models\Klass;
 use App\Models\Config;
 
 class GradeController extends Controller
@@ -26,9 +27,10 @@ class GradeController extends Controller
         }
 
         $grades = Grade::with('subjects')->whereBelongsTo($year)->orderBy('rank')->get();
-        return Inertia::render('Essential/Grades',[
+        return Inertia::render('Admin/Grades',[
             'year'=>$year,
             'grades'=>$grades,
+            'gradeCategories'=>json_decode(Config::where('key','grade_categories')->first()->value)
         ]);
     }
 
@@ -73,7 +75,16 @@ class GradeController extends Controller
      */
     public function show($id)
     {
-
+        $grade=Grade::find($id);
+        $klasses=Klass::whereBelongsTo(Grade::find($id))->get();
+        echo json_encode($grade);
+        echo json_encode($klasses);
+        echo $klasses->count();
+        if($klasses->count()>0){
+            echo 'true';
+        }else{
+            echo 'false';
+        };
     }
 
     /**
@@ -121,7 +132,11 @@ class GradeController extends Controller
      */
     public function destroy($id)
     {
-        Grade::destroy($id);
-        return redirect()->back();
+        if(Klass::whereBelongsTo(Grade::find($id))->get()->count()>0){
+            return redirect()->back()->withErrors(['message'=>'Could not delete, foreign key used in Klass table.']);
+        }else{
+            //Grade::destroy($id);
+            return redirect()->back();    
+        }
     }
 }
