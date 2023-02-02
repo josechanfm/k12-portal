@@ -16,7 +16,7 @@ class ConfigSeeder extends Seeder
     public function run()
     {
         DB::table('configs')->insert([
-            'key' => 'grades',
+            'key' => 'grade_categories',
             'value' => '[{"value":"P1","label":"P1"},{"value":"P2","label":"P2"},{"value":"P3","label":"P3"}]',
         ]);
         DB::table('configs')->insert([

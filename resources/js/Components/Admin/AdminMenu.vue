@@ -1,7 +1,7 @@
 <template>
-    <div>
+    <div id="main_menu">
       <a-button v-can="'add'">Add</a-button>
-      <a-button v-role="'admin'">Is admin</a-button>
+      <a-button v-role="'admin'" >Is admin</a-button>
       <a-button v-role="'master'">Is master</a-button>
       <a-menu
         v-model:openKeys="openKeys"
@@ -10,6 +10,7 @@
         theme="dark"
         :inline-collapsed="collapsed"
       >
+
         <template v-for="item in list" :key="item.key">
           <template v-if="!item.children">
             <a-menu-item :key="item.key">
@@ -84,7 +85,7 @@
     },{
       key: '0.4',
       title: '角色及權限',
-      url:'/master/RolePermission',
+      url:'/master/roles',
     }],
   },{
     key: '1',

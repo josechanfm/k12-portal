@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -27,7 +27,7 @@ class RoleController extends Controller
 
 
         $roles=Role::all();
-        return Inertia::render('Admin/Roles',[
+        return Inertia::render('Master/Roles',[
             'roles'=>$roles
         ]);
 

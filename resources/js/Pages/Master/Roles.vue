@@ -2,11 +2,11 @@
     <AdminLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Grades in the year
+                Roles
             </h2>
         </template>
         <button @click="createRecord()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">
-            Create grade in the year
+            Create Role
         </button>
         {{ roles }}
         <a-table :dataSource="roles" :columns="columns">

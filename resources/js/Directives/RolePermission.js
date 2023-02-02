@@ -8,14 +8,14 @@ const hasPermission = (permission) => {
 function checkPermission(el, binding) {
     const { value } = binding
     if (!hasPermission(value)) {
-        el.parentNode && el.parentNode.removeChild(el)
+        el.style.display = 'none';
+        //el.parentNode && el.parentNode.removeChild(el)
     }
 }
 
 const hasRole = (role) => {
     const roles = usePage().props.value.currentUserRoles
 
-    console.log('hasRoles()', roles)
     return roles.includes(role)
 }
 
@@ -23,7 +23,8 @@ const hasRole = (role) => {
 function checkRole(el, binding) {
     const { value } = binding
     if (!hasRole(value)) {
-        el.parentNode && el.parentNode.removeChild(el)
+        el.style.display = 'none';
+        //el.parentNode && el.parentNode.removeChild(el)
     }
 }
 

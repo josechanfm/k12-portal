@@ -23,6 +23,6 @@ class Teacher extends Model
         return $this->belongsTo(Staff::class);
     }
     public function courses(){
-        return $this->belongsToMany(Course::class);
+        return $this->belongsToMany(Course::class,'course_teachers');
     }
 }

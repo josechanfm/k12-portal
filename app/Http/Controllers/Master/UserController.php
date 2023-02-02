@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -24,7 +24,7 @@ class UserController extends Controller
         $roles=Role::all();
         $permissions=Permission::all();
 
-        return Inertia::render('Admin/Users',[
+        return Inertia::render('Master/Users',[
             'users' => $users,
             'roles'=>$roles,
             'permissions'=>$permissions
