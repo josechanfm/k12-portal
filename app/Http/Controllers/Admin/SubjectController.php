@@ -59,6 +59,7 @@ class SubjectController extends Controller
             $fields['type']=$st->type;
             $fields['stream']=$st->stream;
             $fields['elective']=$st->elective;
+            $fields['score_template_batch']=$st->score_template_batch;
             $fields['active']=true;
             $fields['subject_template_id']=$st->id;
             $records[]=$fields;
@@ -66,7 +67,7 @@ class SubjectController extends Controller
         Subject::upsert(
             $records,
             ['grade_id','code'],
-            ['title_zh','title_en','type','stream','elective','active']
+            ['title_zh','title_en','type','stream','elective','score_template_batch','active']
         );
         Subject::whereNotIn('code',$selectedSubjects)->where('grade_id',1)->delete();
         return redirect()->back();

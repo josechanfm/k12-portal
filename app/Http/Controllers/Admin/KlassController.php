@@ -12,6 +12,8 @@ use App\Models\Year;
 use App\Models\Grade;
 use App\Models\Disciplines;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Course;
+use App\Models\ScoreTemplate;
 
 class KlassController extends Controller
 {
@@ -22,6 +24,16 @@ class KlassController extends Controller
      */
     public function index(Request $request)
     {
+        // $klass=Klass::find(62);
+        // $courses=Course::whereBelongsTo($klass)->get();
+        // foreach($courses as $course){
+        //     $socreBatches=ScoreTemplate::where('batch',$course->score_template_batch)->get();
+        //     echo json_encode($socreBatches);
+        //     echo '<hr>';
+    
+        // }
+        // return true;
+
         if($request->gid){
             $grade=Grade::with('year')->find($request->gid);
         }else{

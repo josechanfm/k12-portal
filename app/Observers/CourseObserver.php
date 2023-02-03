@@ -20,8 +20,8 @@ class CourseObserver
             $score_column = new ScoreColumn;
             $score_column->course_id=$course->id;
             $score_column->term_id=1;
-            $score_column->name='活動名稱';
             $score_column->type=$course->type;
+            $score_column->name='活動名稱';
             $score_column->save();
             $score_column = new ScoreColumn;
             $score_column->course_id=$course->id;

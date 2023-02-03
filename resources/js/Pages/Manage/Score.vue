@@ -11,6 +11,7 @@
                 </span>
             </h2>
         </template>
+        <a-button :href="'grades?kid='+course.klass_id">Back</a-button>
         <a-button type="primary" @click="onClickAddScoreColumn">新增學分欄</a-button>
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">

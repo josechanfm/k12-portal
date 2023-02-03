@@ -4,12 +4,9 @@ namespace App\Http\Controllers\Manage;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-use App\Models\Course;
-use App\Models\Score;
-use App\Models\ScoreColumn;
+use App\Models\Klass;
 
-class ScoreController extends Controller
+class RplaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,16 +15,9 @@ class ScoreController extends Controller
      */
     public function index(Request $request)
     {
-        $cid=$request->cid;
-        $scoreColumns=ScoreColumn::with('course')->where('course_id',$cid)->orderByRaw('-sequence DESC')->get();
-        $studentsScores=Course::students_scores($cid);
-        $course=Course::with('klass')->with('teachers')->find($cid);
-
-        return Inertia::render('Manage/Score',[
-            'course'=>$course,
-            'score_columns'=>$scoreColumns,
-            'students_scores'=>$studentsScores
-        ]);
+        $kid=$request->kid;
+        $klass=Klass::with('students')->find($kid);
+        echo json_encode($klass);
     }
 
     /**
@@ -80,20 +70,9 @@ class ScoreController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        $data=$request->all();
-        foreach( $data as $i=>$d){
-            if($d['point']==''){
-                unset($data[$i]);
-            }
-        }
-        Score::upsert(
-            $data,
-            ['klass_student_id','score_column_id'],
-            ['point']
-        );
-        return $data;
+        //
     }
 
     /**
@@ -106,5 +85,4 @@ class ScoreController extends Controller
     {
         //
     }
-
 }

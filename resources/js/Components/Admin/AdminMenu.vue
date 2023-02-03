@@ -158,8 +158,8 @@
         list,
         collapsed,
         toggleCollapsed,
-        selectedKeys: ref(['2']),
-        openKeys: ref(['2']),
+        selectedKeys: ref(['']),
+        openKeys: ref(['']),
       };
     },
   

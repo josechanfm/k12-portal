@@ -6,6 +6,7 @@ use App\Models\Klass;
 use App\Models\Subject;
 use App\Models\Course;
 use App\Models\ScoreColumn;
+use App\Models\ScoreTemplate;
 
 class KlassObserver
 {
@@ -28,6 +29,7 @@ class KlassObserver
             $fields['type']=$subject->type;
             $fields['stream']=$subject->stream;
             $fields['elective']=$subject->elective;
+            $fields['score_template_batch']=$subject->score_template_batch;
             $fields['subject_id']=$subject->id;
             $fields['active']=true;
             $data[]=$fields;
@@ -37,8 +39,24 @@ class KlassObserver
             ['klass_id','code'],
             ['title_zh','title_en','type','stream','elective','subject_id','active']
         );
+
         $courses=Course::whereBelongsTo($klass)->get();
         foreach($courses as $course){
+            $socreBatches=ScoreTemplate::where('batch',$course->score_template_batch)->get();
+            foreach($socreBatches as $score){
+                $score_column = new ScoreColumn;
+                $score_column->course_id=$course->id;
+                $score_column->type=$course->type;
+                $score_column->term_id=$score->term_id;
+                $score_column->name=$score->name;
+                $score_column->sequence=$score->sequence;
+                $score_column->scheme=$score->scheme;
+                $score_column->description=$score->description;
+                $score_column->for_transcript=$score->for_transcript;
+                $score_column->save();
+            }
+        }
+/*            
             if($course->code=='LES'){
                 $score_column = new ScoreColumn;
                 $score_column->course_id=$course->id;
@@ -290,6 +308,7 @@ class KlassObserver
                 $score_column->for_transcript=true;
                 $score_column->save();
             }
+*/            
             // "H1":"衣服鞋襪整齊清潔。"
             // "H2":"常剪指甲。"
             // "H3":"懂得使用手帕或紙巾。"
@@ -308,7 +327,6 @@ class KlassObserver
             // "S3":"樂於助人。"
             // "S4":"會和別人分享及輪候。"
             // "S5":"誠實坦白肯認錯。"
-        }
     }
 
     /**

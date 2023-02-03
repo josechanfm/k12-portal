@@ -91,6 +91,7 @@ Route::prefix('manage/')->group(function(){
     Route::get('teaching',[App\Http\Controllers\Manage\TeacherController::class,'teaching']);
     Route::resource('/teacher',App\Http\Controllers\Manage\TeacherController::class);
     Route::resource('/student',App\Http\Controllers\Manage\StudentController::class);
+    Route::resource('/rpla',App\Http\Controllers\Manage\RplaController::class);
 });
 
 Route::prefix('teacher/')->group(function(){

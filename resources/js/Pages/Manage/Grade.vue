@@ -114,7 +114,9 @@
             </a-tab-pane>
         </a-tabs>
 
-        <p></p>
+        <h2 id="section2">Section 2</h2>
+        <p>adsfadsfadsf</p>
+
 
     </AdminLayout>
 
@@ -124,6 +126,7 @@
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { TeamOutlined } from '@ant-design/icons-vue';
 import { Link } from '@inertiajs/inertia-vue3';
+
 
 export default {
     components: {
@@ -140,6 +143,17 @@ export default {
             }
         }
     },
+    mounted(){
+        const urlParams=new URLSearchParams(window.location.search);
+        const klassId=urlParams.get('kid');
+        this.grades.map(grade=>{
+            grade.klasses.map(klass=>{
+                if(klass.id==klassId){
+                    this.selectKlass(klass,'course')
+                }
+            });
+        });
+    }, 
     methods: {
         selectKlass(klass,activeKey){   
             this.selectedKlass=klass;

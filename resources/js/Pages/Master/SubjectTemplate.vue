@@ -84,8 +84,8 @@
             <a-button v-if="modal.mode=='EDIT'" key="Update" type="primary" @click="updateRecord()">Update</a-button>
             <a-button v-if="modal.mode=='CREATE'"  key="Store" type="primary" @click="storeRecord()">Create</a-button>
         </template>
-    </a-modal>    
-    <!-- Modal End-->
+        </a-modal>    
+        <!-- Modal End-->
     </AdminLayout>
 
 </template>

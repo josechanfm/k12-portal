@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('point')->nullable();
             $table->string('remark')->nullable();
             $table->timestamps();
+            $table->unique(['klass_student_id','score_column_id'],'student_score');
         });
     }
 
