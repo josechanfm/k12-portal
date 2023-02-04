@@ -24,6 +24,9 @@
             <sub-menu :key="item.key" :menu-info="item" />
           </template>
         </template>
+        <a-menu-item>
+          <a @click.prevent='logout'>Logout</a>
+        </a-menu-item>
       </a-menu>
     </div>
   </template>
@@ -31,6 +34,7 @@
   import { defineComponent, ref } from 'vue';
   import { MenuFoldOutlined, MenuUnfoldOutlined, PieChartOutlined, MailOutlined } from '@ant-design/icons-vue'; // you can rewrite it to a single file component, if not, you should config vue alias to vue/dist/vue.esm-bundler.js
   import { Link } from '@inertiajs/inertia-vue3';
+  import { Inertia } from '@inertiajs/inertia';
 
   const SubMenu = {
     name: 'SubMenu',
@@ -158,8 +162,14 @@
         list,
         collapsed,
         toggleCollapsed,
+<<<<<<< Updated upstream
         selectedKeys: ref(['']),
         openKeys: ref(['']),
+=======
+        selectedKeys: ref(['2']),
+        openKeys: ref(['2']),
+        logout() { Inertia.post(route('logout'))}
+>>>>>>> Stashed changes
       };
     },
   

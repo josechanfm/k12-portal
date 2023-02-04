@@ -1,44 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-use App\Models\Year;
-use App\Models\Subject;
-use App\Models\Klass;
-use App\Models\Config;
 
-class YearPlanController extends Controller
+class RolePermissionController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        if(!$request->yearId){
-            return redirect('/admin');
-        }
-        $yearId=$request->yearId;
-        $year=Year::find($yearId);
-        $subjects=Subject::where('active',1)->get();
-        $klassOptions=Klass::select('id as value','tag')->where('year_id',$yearId)->get();
-        $klasses=Klass::where('year_id',$yearId)->get();
-        $config=json_decode(Config::where('key','grades')->first()->value,true);
-        $grades=json_decode(Config::where('key','grades')->first()->value,true);
-        $klassesSubjects=Klass::where('year_id',$yearId)->with('subjects')->get();
-        return Inertia::render('Admin/Dashboard',[
-            'year'=>$year,
-            'subjects'=>$subjects,
-            'klasses'=>$klasses,
-            'klassOptions'=>$klassOptions,
-            'config'=>$config,
-            'grades'=>$grades,
-            'klassesSubjects'=>$klassesSubjects
-        ]);
+        //
     }
 
     /**
@@ -48,7 +24,7 @@ class YearPlanController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Admin/Dashboard');
+        //
     }
 
     /**

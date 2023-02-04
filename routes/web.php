@@ -38,16 +38,17 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
+
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
-    Route::get('/admin',function(){
-        return Inertia::render('Admin/Panel');
-    })->name('admin');
-    Route::get('/settings',function(){
-        return Inertia::render('Admin/Settings');
-    })->name('settings');
-    Route::resource('/supplier',SupplierController::class);
+    Route::prefix('master')->group(function(){
+        Route::resource('/subjectTemplate',App\Http\Controllers\Master\SubjectTemplateController::class);
+        Route::resource('/configs',App\Http\Controllers\Master\ConfigController::class);
+        Route::resource('/transcriptTemplate',App\Http\Controllers\Master\TranscriptTemplateController::class);
+        Route::resource('/users',App\Http\Controllers\Master\UserController::class);
+    });
+    
 });
 
 Route::get('/test',function(){
@@ -58,6 +59,7 @@ Route::resource('/payments',PaymentSpaController::class);
 Route::resource('/subjects',SubjectController::class);
 Route::resource('/courses',CourseController::class);
 
+<<<<<<< Updated upstream
 Route::prefix('master')->group(function(){
     Route::resource('/subjectTemplate',App\Http\Controllers\Master\SubjectTemplateController::class);
     Route::resource('/configs',App\Http\Controllers\Master\ConfigController::class);
@@ -65,9 +67,11 @@ Route::prefix('master')->group(function(){
     Route::resource('/roles',App\Http\Controllers\Master\RoleController::class);
     Route::resource('/users',App\Http\Controllers\Master\UserController::class);
 });
+=======
+>>>>>>> Stashed changes
 
 Route::prefix('admin')->group(function(){
-    Route::resource('/',App\Http\Controllers\Admin\YearPlanController::class);
+    Route::resource('/',App\Http\Controllers\Admin\DashboardController::class);
     Route::resource('/years',App\Http\Controllers\Admin\YearController::class);
     Route::resource('/grades',App\Http\Controllers\Admin\GradeController::class);
     Route::resource('/klasses',App\Http\Controllers\Admin\KlassController::class);
