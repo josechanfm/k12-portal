@@ -5,16 +5,10 @@ namespace App\Http\Controllers\Master;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-<<<<<<< Updated upstream
-use App\Models\User;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
-=======
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Models\User;
 
->>>>>>> Stashed changes
 
 class UserController extends Controller
 {
@@ -25,9 +19,7 @@ class UserController extends Controller
      */
     public function index()
     {
-<<<<<<< Updated upstream
-        // $user=User::find(1);
-        // $user->assignRole('Master');
+
         $users=User::with('roles')->with('permissions')->get();
         $roles=Role::all();
         $permissions=Permission::all();
@@ -36,15 +28,6 @@ class UserController extends Controller
             'users' => $users,
             'roles'=>$roles,
             'permissions'=>$permissions
-=======
-        // $roles=Role::all()->pluck('name');
-        // echo json_encode($roles);
-        // return true;
-        return Inertia::render('Master/User',[
-            'users'=>User::with('roles')->get(),
-            'roles'=>Role::all()->pluck('name'),
-            'permission'=>Permission::all()
->>>>>>> Stashed changes
         ]);
     }
 

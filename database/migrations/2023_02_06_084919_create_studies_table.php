@@ -13,15 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('score_templates', function (Blueprint $table) {
+        Schema::create('studies', function (Blueprint $table) {
             $table->id();
-            $table->string('batch')->nullable();
-            $table->string('type',6);
-            $table->bigInteger('term_id');
-            $table->string('name');
-            $table->integer('sequence')->nullable();
-            $table->string('scheme')->nullable();
-            $table->boolean('for_transcript')->default(false);
+            $table->integer('version');
+            $table->string('title_zh');
+            $table->string('title_en');
+            $table->string('stream');
+            $table->string('grade');
+            $table->string('description')->nullable();
+            $table->string('active');
             $table->timestamps();
         });
     }
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('score_templates');
+        Schema::dropIfExists('studies');
     }
 };

@@ -5,20 +5,26 @@ namespace App\Http\Controllers\Master;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\TranscriptTemplate;
+use App\Models\Study;
+use App\Models\Subject;
+use App\Models\Config;
 use Illuminate\Support\Facades\Validator;
 
-class TranscriptTemplateController extends Controller
+class SubjectController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('Master/TranscriptTemplate',[
-            'transcripts'=>TranscriptTemplate::all(),
+        $study=Study::with('subjects')->find($request->studyId);
+        echo json_encode($study);
+        return;
+        return Inertia::render('Master/Subject',[
+            'study'=>$study,
+            'subjects'=>$subjects
         ]);
     }
 
@@ -74,20 +80,7 @@ class TranscriptTemplateController extends Controller
      */
     public function update(Request $request, $id)
     {
-        Validator::make($request->all(), [
-            'category' => ['required'],
-            'field_name' => ['required'],
-            'title_zh' => ['required'],
-        ])->validate();
-        if($request->has('id')){
-            $transcript=TranscriptTemplate::find($id);
-            $transcript->category=$request->category;
-            $transcript->field_name=$request->field_name;
-            $transcript->title_zh=$request->title_zh;
-            $transcript->save();
-        }
-        return redirect()->back();
-        
+        //
     }
 
     /**

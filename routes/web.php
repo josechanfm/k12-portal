@@ -59,16 +59,15 @@ Route::resource('/payments',PaymentSpaController::class);
 Route::resource('/subjects',SubjectController::class);
 Route::resource('/courses',CourseController::class);
 
-<<<<<<< Updated upstream
 Route::prefix('master')->group(function(){
+    Route::resource('/studies',App\Http\Controllers\Master\StudyController::class);
+    Route::resource('/study/subjects',App\Http\Controllers\Master\SubjectController::class);
     Route::resource('/subjectTemplate',App\Http\Controllers\Master\SubjectTemplateController::class);
     Route::resource('/configs',App\Http\Controllers\Master\ConfigController::class);
     Route::resource('/transcriptTemplate',App\Http\Controllers\Master\TranscriptTemplateController::class);
     Route::resource('/roles',App\Http\Controllers\Master\RoleController::class);
     Route::resource('/users',App\Http\Controllers\Master\UserController::class);
 });
-=======
->>>>>>> Stashed changes
 
 Route::prefix('admin')->group(function(){
     Route::resource('/',App\Http\Controllers\Admin\DashboardController::class);

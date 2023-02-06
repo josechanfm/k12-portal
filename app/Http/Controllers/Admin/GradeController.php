@@ -30,7 +30,7 @@ class GradeController extends Controller
         return Inertia::render('Admin/Grades',[
             'year'=>$year,
             'grades'=>$grades,
-            'gradeCategories'=>json_decode(Config::where('key','grade_categories')->first()->value)
+            'gradeCategories'=>json_decode(Config::where('key','grade_categories')->first()->value),
         ]);
     }
 

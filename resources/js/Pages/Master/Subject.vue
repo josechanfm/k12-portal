@@ -2,12 +2,12 @@
     <AdminLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                成績表項目列表
+                總科目列表
             </h2>
         </template>
         <button @click="onClickCreate()"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Create Transcript template</button>
-            <a-table :dataSource="transcripts" :columns="columns">
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Create Subject template</button>
+            <a-table :dataSource="subjects" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
                         <a-button @click="onClickEdit(record)">Edit</a-button>
@@ -28,34 +28,46 @@
         <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="60%" @update="updateRecord()" @onCancel="closeModal()">
             <a-form
                 :model="modal.data"
-                name="Transcript"
+                name="Subject"
                 ref="modalRef"
                 :rules="rules"
                 :validate-messages="validateMessages"
             >
-                <a-form-item label="Category" name="category">
-                    <a-input v-model:value="modal.data.category" />
+                <a-form-item label="版本" name="version">
+                    <a-input-number v-model:value="modal.data.version" />
                 </a-form-item>
-                <a-form-item label="Field Name" name="field_name">
-                    <a-input v-model:value="modal.data.field_name" />
-                </a-form-item>
-                <a-form-item label="Title Zh" name="title_zh">
+                <a-form-item label="名稱 (中文)" name="title_zh">
                     <a-input v-model:value="modal.data.title_zh" />
                 </a-form-item>
-                <a-form-item label="Title En" name="title_en">
+                <a-form-item label="名稱 (英文)" name="title_en">
                     <a-input v-model:value="modal.data.title_en" />
                 </a-form-item>
-                <a-form-item label="備註" name="remark">
-                    <a-textarea v-model:value="modal.data.remark" placeholder="textarea with clear icon" allow-clear />
+                <a-form-item label="專業方向" name="stream">
+                    <a-radio-group v-model:value="modal.data.stream" button-style="solid">
+                        <a-radio-button v-for="ss in studyStreams" :value="ss.value">{{ ss.label }}</a-radio-button>
+                    </a-radio-group>
                 </a-form-item>
-\            </a-form>
+                <a-form-item label="簡介" name="description">
+                    <a-textarea v-model:value="modal.data.description" placeholder="textarea with clear icon" allow-clear />
+                </a-form-item>
+                <a-form-item label="有效" name="active">
+                    <a-switch v-model:checked="modal.data.active" :checkedValue="1" :uncheckedValue="0"/>
+                </a-form-item>
+                <a-form-item label="學年階段" name="grade">
+                    <a-select
+                        ref="select"
+                        v-model:value="modal.data.grade"
+                        :options="gradeCategories"
+                    />
+                </a-form-item>
+            </a-form>
         <template #footer>
             <a-button key="back" @click="modalCancel">Return</a-button>
             <a-button v-if="modal.mode=='EDIT'" key="Update" type="primary" @click="updateRecord()">Update</a-button>
             <a-button v-if="modal.mode=='CREATE'"  key="Store" type="primary" @click="storeRecord()">Create</a-button>
         </template>
-    </a-modal>    
-    <!-- Modal End-->
+        </a-modal>    
+        <!-- Modal End-->
     </AdminLayout>
 
 </template>
@@ -68,41 +80,53 @@ export default {
     components: {
         AdminLayout,
     },
-    props: ['transcripts'],
+    props: ['study','subjects'],
     data() {
         return {
             modal: {
                 mode:null,
                 isOpen: false,
-                title:'Transcripts',
+                title:'Subjects',
                 data:{}
             },
             dataSource:[],
             columns:[
                 {
-                    title: 'Category',
-                    dataIndex: 'category',
-                },{
-                    title: 'Field Name',
-                    dataIndex: 'field_name',
+                    title: 'Version',
+                    dataIndex: 'version',
                 },{
                     title: 'Title Zh',
                     dataIndex: 'title_zh',
+                },{
+                    title: 'Stream',
+                    dataIndex: 'stream',
+                },{
+                    title: 'grade',
+                    dataIndex: 'grade',
                 },{
                     title: 'Operation',
                     dataIndex: 'operation',
                 },
             ],
             rules:{
-                category:{
-                    required:true,
-                },
-                field_name:{
+                code:{
                     required:true,
                 },
                 title_zh:{
                     required:true,
-                }
+                },
+                title_en:{
+                    required:true,
+                },
+                type:{
+                    required:true,
+                },
+                stream:{
+                    required:true,
+                },
+                eletive:{
+                    required:true,
+                },
             },
             validateMessages:{
                 required: '${label} is required!',
@@ -133,19 +157,19 @@ export default {
     methods: {
         onClickCreate(record){
             this.modal.data={};
-            this.modal.title="Edit Transcript";
+            this.modal.title="Edit Subject";
             this.modal.mode='CREATE';
             this.modal.isOpen = true;
         },
         onClickEdit(record){
             this.modal.data={...record};
-            this.modal.title="Edit Transcript";
+            this.modal.title="Edit Subject";
             this.modal.mode='EDIT';
             this.modal.isOpen = true;
         },
         storeRecord(){
             this.$refs.modalRef.validateFields().then(()=>{
-                this.$inertia.post('/master/transcriptTemplate/', this.modal.data,{
+                this.$inertia.post('/master/studies/', this.modal.data,{
                     onSuccess:(page)=>{
                         console.log(page);
                         this.modal.isOpen=false;
@@ -160,7 +184,7 @@ export default {
         },
         updateRecord(){
             this.$refs.modalRef.validateFields().then(()=>{
-                this.$inertia.put('/master/transcriptTemplate/' + this.modal.data.id, this.modal.data,{
+                this.$inertia.put('/master/studies/' + this.modal.data.id, this.modal.data,{
                     onSuccess:(page)=>{
                         console.log(page);
                         this.modal.isOpen=false;
@@ -176,7 +200,7 @@ export default {
         },
         onClickDelete(recordId){
             if (!confirm('Are you sure want to remove?')) return;
-            this.$inertia.delete('/master/transcripts/' + recordId,{
+            this.$inertia.delete('/master/subjects/' + recordId,{
                 onSuccess: (page)=>{
                     console.log(page);
                 },

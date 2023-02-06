@@ -53,6 +53,7 @@ class SubjectController extends Controller
         $records=[];
         foreach($subjectTemplates as $st){
             $fields['grade_id']=$request->grade_id;
+            $fields['category']=$st->category;
             $fields['code']=$st->code;
             $fields['title_zh']=$st->title_zh;
             $fields['title_en']=$st->title_en;
@@ -87,6 +88,7 @@ class SubjectController extends Controller
         $records=[];
         foreach($subjectTemplates as $st){
             $fields['grade_id']=1;
+            $fields['category']=$st->category;
             $fields['code']=$st->code;
             $fields['title_zh']=$st->title_zh;
             $fields['title_en']=$st->title_en;

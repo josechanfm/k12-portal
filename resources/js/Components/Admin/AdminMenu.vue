@@ -162,14 +162,8 @@
         list,
         collapsed,
         toggleCollapsed,
-<<<<<<< Updated upstream
         selectedKeys: ref(['']),
         openKeys: ref(['']),
-=======
-        selectedKeys: ref(['2']),
-        openKeys: ref(['2']),
-        logout() { Inertia.post(route('logout'))}
->>>>>>> Stashed changes
       };
     },
   

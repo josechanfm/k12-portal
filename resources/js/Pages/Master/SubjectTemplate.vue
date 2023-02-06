@@ -49,9 +49,7 @@
                 </a-form-item>
                 <a-form-item label="專業方向" name="stream">
                     <a-radio-group v-model:value="modal.data.stream" button-style="solid">
-                        <a-radio-button value="LIB">Liberal Studies</a-radio-button>
-                        <a-radio-button value="SCI">Science</a-radio-button>
-                        <a-radio-button value="ART">Liberal Arts</a-radio-button>
+                        <a-radio-button v-for="ss in studyStreams" :value="ss.value">{{ ss.label }}</a-radio-button>
                     </a-radio-group>
                 </a-form-item>
                 <a-form-item label="必修/選修" name="elective">
@@ -77,7 +75,6 @@
                         :options="gradeCategories"
                     />
                 </a-form-item>
-                {{ gradeCategories }}
             </a-form>
         <template #footer>
             <a-button key="back" @click="modalCancel">Return</a-button>
@@ -98,7 +95,7 @@ export default {
     components: {
         AdminLayout,
     },
-    props: ['gradeCategories','subjects','subjectTypes'],
+    props: ['gradeCategories','subjects','subjectTypes','studyStreams'],
     data() {
         return {
             modal: {
@@ -133,10 +130,6 @@ export default {
                     title: 'Active',
                     dataIndex: 'active',
                     key: 'active',
-                },{
-                    title: 'Courses',
-                    dataIndex: 'courses',
-                    key: 'courses',
                 },{
                     title: 'Operation',
                     dataIndex: 'operation',

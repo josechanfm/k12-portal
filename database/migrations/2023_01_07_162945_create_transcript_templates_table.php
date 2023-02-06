@@ -15,12 +15,13 @@ return new class extends Migration
     {
         Schema::create('transcript_templates', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('klass_id')->on('klasses')->onDelete('restrict')->onUpdate('cascade');
             $table->enum('category',['PERSONAL','SUBJECT','ATTITUDE','SUMMARY','GENERAL']);
             $table->string('field_name');
             $table->string('title_zh')->nullable();
             $table->string('title_en')->nullable();
+            $table->string('subject_code')->nullable();
             $table->text('remark')->nullable();
+            $table->integer('version');
             $table->timestamps();
         });
     }

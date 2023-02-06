@@ -54,10 +54,15 @@
                     style="width: 100%"
                     placeholder="請選擇..."
                     max-tag-count="responsive"
-                    :options="klass_letters"
+                    :options="klassLetters"
                 ></a-select>
-
             </a-form-item>
+            <a-form-item label="專業方向" name="stream">
+                <a-radio-group v-model:value="modal.data.stream" button-style="solid">
+                    <a-radio-button v-for="ss in studyStreams" :value="ss.value">{{ ss.label }}</a-radio-button>
+                </a-radio-group>
+            </a-form-item>
+
             <a-form-item label="教室編號" name="room">
                 <a-input v-model:value="modal.data.room" />
             </a-form-item>
@@ -81,7 +86,7 @@ export default {
         AdminLayout,
         ButtonLink,
     },
-    props: ['grades','grade','klasses','klass_letters'],
+    props: ['grades','grade','klasses','klassLetters','studyStreams'],
     data() {
         return {
             gradeSelected:1,
@@ -97,6 +102,10 @@ export default {
                     title: '班別代號',
                     dataIndex: 'tag',
                     key: 'tag',
+                },{
+                    title: '專業方向',
+                    dataIndex: 'stream',
+                    key: 'stream',
                 },{
                     title: '教室編號',
                     dataIndex: 'room',
@@ -200,9 +209,9 @@ export default {
             this.modal.title="Create klasses";
             this.modal.isOpen = true;
             this.klasses.forEach(klass=>{
-                this.klass_letters.forEach((kl,idx)=>{
+                this.klassLetters.forEach((kl,idx)=>{
                     if(klass.letter==kl.value){
-                        this.klass_letters[idx].disabled=true;
+                        this.klassLetters[idx].disabled=true;
                     }
                 })
             })

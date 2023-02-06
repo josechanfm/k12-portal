@@ -5,12 +5,11 @@ namespace App\Http\Controllers\Master;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Study;
 use App\Models\Config;
-use App\Models\SubjectTemplate;
-use App\Models\TranscriptTemplate;
 use Illuminate\Support\Facades\Validator;
 
-class SubjectTemplateController extends Controller
+class StudyController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,11 +18,11 @@ class SubjectTemplateController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Master/SubjectTemplate',[
-            'gradeCategories'=>json_decode(Config::where('key','grade_categories')->first()->value),
-            'subjects'=>SubjectTemplate::all(),
-            'subjectTypes'=>json_decode(Config::where('key','subject_types')->first()->value),
+        $studies=Study::all();
+        return Inertia::render('Master/Study',[
+            'studies'=>$studies,
             'studyStreams'=>json_decode(Config::where('key','study_streams')->first()->value),
+            'gradeCategories'=>json_decode(Config::where('key','grade_categories')->first()->value),
         ]);
     }
 
@@ -46,21 +45,19 @@ class SubjectTemplateController extends Controller
     public function store(Request $request)
     {
         Validator::make($request->all(), [
-            'code' => ['required'],
+            'version' => ['required'],
+            'title_zh' => ['required'],
         ])->validate();
 
-        $subject=new SubjectTemplate;
-        $subject->code=$request->code;
-        $subject->title_zh=$request->title_zh;
-        $subject->title_en=$request->title_en;
-        $subject->type=$request->type;
-        $subject->stream=$request->stream;
-        $subject->elective=$request->elective;
-        $subject->description=$request->description;
-        $subject->grades=$request->grades;
-        $subject->version=$request->version;
-        $subject->active=$request->active;
-        $subject->save();
+        $study=new Study;
+        $study->version=$request->version;
+        $study->title_zh=$request->title_zh;
+        $study->title_en=$request->title_en;
+        $study->stream=$request->stream;
+        $study->description=$request->description;
+        $study->grade=$request->grade;
+        $study->active=$request->active;
+        $study->save();
         return redirect()->back();
     }
 
@@ -72,6 +69,7 @@ class SubjectTemplateController extends Controller
      */
     public function show($id)
     {
+        //
     }
 
     /**
@@ -94,24 +92,7 @@ class SubjectTemplateController extends Controller
      */
     public function update(Request $request, $id)
     {
-        Validator::make($request->all(), [
-            'code' => ['required'],
-        ])->validate();
-        if($request->has('id')){
-            $subject=SubjectTemplate::find($id);
-            $subject->code=$request->code;
-            $subject->title_zh=$request->title_zh;
-            $subject->title_en=$request->title_en;
-            $subject->type=$request->type;
-            $subject->stream=$request->stream;
-            $subject->elective=$request->elective;
-            $subject->description=$request->description;
-            $subject->grades=$request->grades;
-            $subject->version=$request->version;
-            $subject->active=$request->active;
-            $subject->save();
-        }
-        return redirect()->back();
+        //
     }
 
     /**

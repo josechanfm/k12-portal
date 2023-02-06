@@ -24,16 +24,6 @@ class KlassController extends Controller
      */
     public function index(Request $request)
     {
-        // $klass=Klass::find(62);
-        // $courses=Course::whereBelongsTo($klass)->get();
-        // foreach($courses as $course){
-        //     $socreBatches=ScoreTemplate::where('batch',$course->score_template_batch)->get();
-        //     echo json_encode($socreBatches);
-        //     echo '<hr>';
-    
-        // }
-        // return true;
-
         if($request->gid){
             $grade=Grade::with('year')->find($request->gid);
         }else{
@@ -45,7 +35,8 @@ class KlassController extends Controller
             'klasses'=>$klasses,
             'grade'=>$grade,
             'grades'=>$grades,
-            'klass_letters'=>json_decode(Config::where('key','klass_letters')->first()->value)
+            'klassLetters'=>json_decode(Config::where('key','klass_letters')->first()->value),
+            'studyStreams'=>json_decode(Config::where('key','study_streams')->first()->value)
         ]);
     }
 
@@ -74,6 +65,7 @@ class KlassController extends Controller
         $klass=new Klass;
         $klass->grade_id=$request->grade_id;
         $klass->letter=$request->letter;
+        $klass->stream=$request->stream;
         $klass->room=$request->room;
         $klass->tag=Grade::find($request->grade_id)->tag.$request->letter;
         $klass->save();
@@ -121,6 +113,7 @@ class KlassController extends Controller
             $klass=Klass::find($id);
             $klass->grade_id=$request->grade_id;
             $klass->letter=$request->letter;
+            $klass->stream=$request->stream;
             $klass->room=$request->room;
             $klass->tag=Grade::find($request->grade_id)->tag.$request->letter;
             $klass->save();

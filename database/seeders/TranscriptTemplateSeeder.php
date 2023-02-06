@@ -75,7 +75,6 @@ class TranscriptTemplateSeeder extends Seeder
         //'title_zh'=>'學年評定',
         foreach($personal as $key=>$value){
             DB::table('transcript_templates')->insert([
-                'klass_id'=>1,
                 'category'=>'PERSONAL',
                 'field_name'=>$key,
                 'title_zh'=>$value,
@@ -83,41 +82,41 @@ class TranscriptTemplateSeeder extends Seeder
         };
         foreach($subject as $key=>$value){
             DB::table('transcript_templates')->insert([
-                'klass_id'=>1,
                 'category'=>'SUBJECT',
                 'field_name'=>$key,
                 'title_zh'=>$value,
+                'version'=>1,
             ]);
         };
         foreach($attitude as $key=>$value){
             DB::table('transcript_templates')->insert([
-                'klass_id'=>1,
                 'category'=>'ATTITUDE',
                 'field_name'=>$key,
                 'title_zh'=>$value,
+                'version'=>1,
             ]);
         };
         foreach($summary as $key=>$value){
             DB::table('transcript_templates')->insert([
-                'klass_id'=>1,
                 'category'=>'SUMMARY',
                 'field_name'=>$key,
                 'title_zh'=>$value,
+                'version'=>1,
             ]);
         };
         foreach($general as $key=>$value){
             DB::table('transcript_templates')->insert([
-                'klass_id'=>1,
                 'category'=>'GENERAL',
                 'field_name'=>$key,
                 'title_zh'=>$value,
+                'version'=>1,
             ]);
         };
         DB::table('transcript_templates')->insert([
-            'klass_id'=>1,
             'category'=>'GENERAL',
             'field_name'=>'appraisal',
             'title_zh'=>'學年評定',
+            'version'=>1,
         ]);
 
         // 'code'=>'1', 'title_zh'=>'1', 'title_en'=>'PERSONAL', 'type'=> 'name_ch', 'stream'=>'姓名中文'
