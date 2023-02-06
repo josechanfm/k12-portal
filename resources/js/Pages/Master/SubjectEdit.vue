@@ -5,18 +5,16 @@
                 總科目列表
             </h2>
         </template>
-        <a-button :href="'../subjects/'+study.id+'/edit'"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Select Subjects from template</a-button>
-            <a-table :dataSource="study.subjects" :columns="columns">
+            <button @click="saveSelected"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Save Selected</button>
+            <a-table :dataSource="subjects" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
                         <a-button @click="onClickEdit(record)">Edit</a-button>
                         <a-button @click="onClickDelete(record.id)">Delete</a-button>
                     </template>
-                    <template v-else-if="column.dataIndex=='courses'">
-                        <ul>
-                            <li v-for="klass in record['klasses']">Class: {{klass.acronym}}</li>
-                        </ul>
+                    <template v-else-if="column.dataIndex=='selected'">
+                        <a-checkbox v-model:checked="record.selected">Checkbox</a-checkbox>
                     </template>
                     <template v-else>
                         {{record[column.dataIndex]}}
@@ -92,8 +90,8 @@ export default {
             dataSource:[],
             columns:[
                 {
-                    title: 'Version',
-                    dataIndex: 'version',
+                    title: 'Selected',
+                    dataIndex: 'selected',
                 },{
                     title: 'Title Zh',
                     dataIndex: 'title_zh',
@@ -153,6 +151,13 @@ export default {
             }
 
         }
+    },
+    mounted(){
+        this.subjects.map(subject=>{
+            return subject.selected=this.study.subjects.find(ss=>{
+                return subject.id==ss.id
+            })!==undefined;
+        } )
     },
     methods: {
         onClickCreate(record){
@@ -216,6 +221,19 @@ export default {
         },
         onFinishFailed(errorInfo){
             console.log('errorInfo: '+errorInfo);
+        },
+        saveSelected(){
+            const subjects=this.subjects.filter(subject=>{ return subject.selected==true })
+            this.$inertia.put('/master/study/subjects/' + this.study.id, subjects,{
+                onSuccess:(page)=>{
+                    console.log(page);
+                    this.modal.isOpen=false;
+                },
+                onError:(error)=>{
+                    console.log(error);
+                }
+            });
+
         }
     },
 }

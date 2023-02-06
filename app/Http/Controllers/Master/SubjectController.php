@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Study;
 use App\Models\Subject;
+use App\Models\StudySubject;
+use App\Models\SubjectTemplate;
 use App\Models\Config;
 use Illuminate\Support\Facades\Validator;
 
@@ -20,7 +22,9 @@ class SubjectController extends Controller
     public function index(Request $request)
     {
         $study=Study::with('subjects')->find($request->studyId);
+        $subjectTemplates=SubjectTemplate::all();
         echo json_encode($study);
+        echo json_encode($subjectTemplates);
         return;
         return Inertia::render('Master/Subject',[
             'study'=>$study,
@@ -57,7 +61,15 @@ class SubjectController extends Controller
      */
     public function show($id)
     {
-        //
+        $study=Study::with('subjects')->find($id);
+        $subjects=Subject::where('version',1)->get();
+        // echo json_encode($study);
+        // echo json_encode($subjects);
+        // return;
+        return Inertia::render('Master/Subject',[
+            'study'=>$study,
+            'subjects'=>$subjects
+        ]);
     }
 
     /**
@@ -68,7 +80,12 @@ class SubjectController extends Controller
      */
     public function edit($id)
     {
-        //
+        $study=Study::with('subjects')->find($id);
+        $subjects=Subject::where('version',1)->get();
+        return Inertia::render('Master/SubjectEdit',[
+            'study'=>$study,
+            'subjects'=>$subjects
+        ]);
     }
 
     /**
@@ -80,7 +97,15 @@ class SubjectController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $subjects=$request->all();
+        $data=[];
+        foreach($subjects as $subject){
+            $data[]=$subject['id'];
+        }
+        //StudySubject::where('study_id',$id)->whereNotIn($data)->delete();
+        $study=Study::find($id);
+        $study->subjects()->sync($data);
+        return redirect('/master/study/subjects/'.$id);
     }
 
     /**
