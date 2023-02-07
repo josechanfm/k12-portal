@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Tempo de geração: 19-Jan-2023 às 17:21
--- Versão do servidor: 10.3.37-MariaDB-0ubuntu0.20.04.1
--- versão do PHP: 8.1.9
+-- Generation Time: Feb 07, 2023 at 05:48 PM
+-- Server version: 10.3.37-MariaDB-0ubuntu0.20.04.1
+-- PHP Version: 8.1.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,13 +19,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Banco de dados: `k12_aims`
+-- Database: `k12_aims`
 --
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `addresses`
+-- Table structure for table `addresses`
 --
 
 CREATE TABLE `addresses` (
@@ -44,7 +44,7 @@ CREATE TABLE `addresses` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `banks`
+-- Table structure for table `banks`
 --
 
 CREATE TABLE `banks` (
@@ -62,7 +62,7 @@ CREATE TABLE `banks` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `categories`
+-- Table structure for table `categories`
 --
 
 CREATE TABLE `categories` (
@@ -74,34 +74,36 @@ CREATE TABLE `categories` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `configs`
+-- Table structure for table `configs`
 --
 
 CREATE TABLE `configs` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `key` varchar(255) NOT NULL,
   `value` text NOT NULL,
+  `remark` text DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Extraindo dados da tabela `configs`
+-- Dumping data for table `configs`
 --
 
-INSERT INTO `configs` (`id`, `key`, `value`, `created_at`, `updated_at`) VALUES
-(1, 'grades', '[{\"value\":\"P1\",\"label\":\"P1\"},{\"value\":\"P2\",\"label\":\"P2\"},{\"value\":\"P3\",\"label\":\"P3\"}]', NULL, NULL),
-(2, 'student_state', '{\"ACT\": \"Active\",\"RES\": \"Resigned\"}', NULL, NULL),
-(3, 'stream', '{\"ART\":\"Art Stream\",\"SCI\":\"Science Stream}', NULL, NULL),
-(4, 'year_creation', '{ \"kgrade\":3, \"kklass\":3, \"kgradeDefault\":0, \"kklassDefault\":0, \"pgrade\":6, \"pklass\":5, \"pgradeDefault\":6, \"pklassDefault\":4, \"sgrade\":6, \"sklass\":5, \"sgradeDefault\":6, \"sklassDefault\":4 }', NULL, NULL),
-(5, 'score_columns', '[{\"REG\":\"平時分\"},{\"TST\":\"測驗分\"},{\"CLS\":\"課堂表現\"},{\"EXM\":\"考試分\"}]', NULL, NULL),
-(6, 'klass_letters', '[\r\n   {\"value\":\"A\",\"label\":\"A\"},\r\n   {\"value\":\"B\",\"label\":\"B\"},\r\n   {\"value\":\"C\",\"label\":\"C\"},\r\n   {\"value\":\"D\",\"label\":\"D\"},\r\n   {\"value\":\"E\",\"label\":\"E\"},\r\n   {\"value\":\"F\",\"label\":\"F\"}\r\n]', NULL, NULL),
-(7, 'subject_types', '\r\n[{\"value\":\"SUB\",\"label\":\"學科\"},\r\n{\"value\":\"ATT\",\"label\":\"生活習慣和態度\"},\r\n{\"value\":\"RPAL\",\"label\":\"獎懲遲缺\"},\r\n{\"value\":\"LES\",\"label\":\"餘暇活動\"},\r\n{\"value\":\"OVA\",\"label\":\"總體評分\"}]', NULL, NULL);
+INSERT INTO `configs` (`id`, `key`, `value`, `remark`, `created_at`, `updated_at`) VALUES
+(1, 'grade_categories', '[{\"value\":\"K\",\"label\":\"K\"},{\"value\":\"P\",\"label\":\"P\"},{\"value\":\"S\",\"label\":\"S\"}]', NULL, NULL, NULL),
+(2, 'student_state', '{\"ACT\": \"Active\",\"RES\": \"Resigned\"}', NULL, NULL, NULL),
+(3, 'score_template', '{\r\n\"TERM\":[\r\n   {\"value\":\"term1\",\"label\":\"上學期\"},\r\n   {\"value\":\"term2\",\"label\":\"下學期\"}\r\n],\r\n\"COMMENT\":[{\"value\":\"comment\",\"label\":\"描述\"}]\r\n}\r\n', NULL, NULL, NULL),
+(4, 'year_creation', '{ \"kgrade\":3, \"kklass\":3, \"kgradeDefault\":0, \"kklassDefault\":0, \"pgrade\":6, \"pklass\":5, \"pgradeDefault\":6, \"pklassDefault\":4, \"sgrade\":6, \"sklass\":5, \"sgradeDefault\":6, \"sklassDefault\":4 }', NULL, NULL, NULL),
+(5, 'klass_letters', '[{\"value\":\"A\",\"label\":\"A\"},{\"value\":\"B\",\"label\":\"B\"},{\"value\":\"C\",\"label\":\"C\"},{\"value\":\"D\",\"label\":\"D\"},{\"value\":\"E\",\"label\":\"E\"},{\"value\":\"F\",\"label\":\"F\"}]', NULL, NULL, NULL),
+(6, 'score_columns', '[{\"REG\":\"平時分\"},{\"TST\":\"測驗分\"},{\"CLS\":\"課堂表現\"},{\"EXM\":\"考試分\"}]', NULL, NULL, NULL),
+(7, 'subject_types', '[{\"value\":\"SUB\",\"label\":\"學科\"},{\"value\":\"ATT\",\"label\":\"生活習慣和態度\"},{\"value\":\"RPAL\",\"label\":\"獎懲遲缺\"},{\"value\":\"LES\",\"label\":\"餘暇活動\"},{\"value\":\"OVA\",\"label\":\"總體評分\"}]', NULL, NULL, NULL),
+(8, 'study_streams', '[{\"value\":\"ALL\",\"label\":\"全科\"},{\"value\":\"ART\",\"label\":\"文科\"},{\"value\":\"SCI\",\"label\":\"理科\"},{\"value\":\"AAS\",\"label\":\"文理科\"}]', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `courses`
+-- Table structure for table `courses`
 --
 
 CREATE TABLE `courses` (
@@ -110,67 +112,89 @@ CREATE TABLE `courses` (
   `code` varchar(255) NOT NULL,
   `title_zh` varchar(255) NOT NULL,
   `title_en` varchar(255) DEFAULT NULL,
-  `type` varchar(255) DEFAULT NULL,
-  `stream` varchar(3) DEFAULT NULL,
-  `elective` varchar(3) NOT NULL,
+  `type` varchar(6) DEFAULT NULL,
+  `stream` varchar(6) DEFAULT NULL,
+  `elective` varchar(6) DEFAULT NULL,
   `score_column` varchar(255) DEFAULT NULL,
   `description` text DEFAULT NULL,
   `subject_id` bigint(20) DEFAULT NULL,
-  `active` tinyint(1) NOT NULL,
+  `score_column_template` varchar(255) DEFAULT NULL,
+  `active` tinyint(4) NOT NULL,
   `socre_scheme` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Extraindo dados da tabela `courses`
+-- Dumping data for table `courses`
 --
 
-INSERT INTO `courses` (`id`, `klass_id`, `code`, `title_zh`, `title_en`, `type`, `stream`, `elective`, `score_column`, `description`, `subject_id`, `active`, `socre_scheme`, `created_at`, `updated_at`) VALUES
-(1, 1, 'CHN', '中文', 'Chinese', 'SUB', 'ART', '0', NULL, NULL, 1, 1, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(2, 1, 'ENG', '英文', 'English', 'SUB', 'ART', '0', NULL, NULL, 2, 1, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(3, 1, 'MAT', '數學', 'Mathematic', 'SUB', 'SCI', '0', NULL, NULL, 3, 1, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(5, 1, 'GEN', '常識', 'General', 'SUB', 'ART', '1', NULL, NULL, 5, 1, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(6, 1, 'ATT', '生活習慣和態度', 'Habit and Attitude', 'ATT', 'GEN', '0', NULL, NULL, 1, 1, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(7, 2, 'ENG', '英文', 'English', NULL, 'ART', '0', NULL, NULL, 2, 1, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(8, 2, 'MAT', '數學', 'Mathematic', NULL, 'SCI', '0', NULL, NULL, 3, 1, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(9, 2, 'PHY', '物理', 'Physics', NULL, 'SCI', '1', NULL, NULL, 4, 1, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(10, 2, 'GEN', '常識', 'General', NULL, 'ART', '1', NULL, NULL, 5, 1, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(23, 67, 'REL', '宗教', 'Relegion', 'SUB', 'LIB', 'COP', NULL, NULL, 1, 1, NULL, '2023-01-19 00:38:21', '2023-01-19 00:38:21'),
-(24, 67, 'PHY', '體能', 'Physic', 'SUB', 'LIB', 'COP', NULL, NULL, 2, 1, NULL, '2023-01-19 00:38:21', '2023-01-19 00:38:21'),
-(25, 67, 'CLT', '語文', 'Chinese Literature', 'SUB', 'LIB', 'COP', NULL, NULL, 7, 1, NULL, '2023-01-19 00:38:21', '2023-01-19 00:38:21'),
-(26, 67, 'STY', '故事', 'Stry', 'SUB', 'LIB', 'COP', NULL, NULL, 8, 1, NULL, '2023-01-19 00:38:21', '2023-01-19 00:38:21'),
-(27, 67, 'CWR', '中寫', 'Chinse_writting', 'SUB', 'LIB', 'COP', NULL, NULL, 9, 1, NULL, '2023-01-19 00:38:21', '2023-01-19 00:38:21'),
-(28, 67, 'EWR', '英寫', 'English Writing', 'SUB', 'LIB', 'COP', NULL, NULL, 10, 1, NULL, '2023-01-19 00:38:21', '2023-01-19 00:38:21'),
-(29, 67, 'OCS', '常識', 'Ordinary Common Sense', 'SUB', 'LIB', 'COP', NULL, NULL, 11, 1, NULL, '2023-01-19 00:38:21', '2023-01-19 00:38:21'),
-(30, 67, 'NUM', '識數', 'Numeracy', 'SUB', 'LIB', 'COP', NULL, NULL, 12, 1, NULL, '2023-01-19 00:38:21', '2023-01-19 00:38:21'),
-(31, 67, 'COM', '電腦', 'Computer', 'SUB', 'LIB', 'COP', NULL, NULL, 13, 1, NULL, '2023-01-19 00:38:21', '2023-01-19 00:38:21'),
-(32, 67, 'PLA', 'Playgroup', '唱遊', 'SUB', 'LIB', 'COP', NULL, NULL, 14, 1, NULL, '2023-01-19 00:38:21', '2023-01-19 00:38:21'),
-(33, 67, 'ART', '美勞', 'Art Craft', 'SUB', 'LIB', 'COP', NULL, NULL, 15, 1, NULL, '2023-01-19 00:38:21', '2023-01-19 00:38:21'),
-(34, 67, 'ATT', '生活習慣和態度', 'Habits and Attitudes', 'SUB', 'LIB', 'COP', NULL, NULL, 16, 1, NULL, '2023-01-19 00:38:21', '2023-01-19 00:38:21'),
-(35, 67, 'RPLA', '獎懲遲缺', 'Reword Punishment  Late and Absent', 'SUB', 'LIB', 'COP', NULL, NULL, 17, 1, NULL, '2023-01-19 00:38:21', '2023-01-19 00:38:21'),
-(36, 67, 'LES', '餘暇活動', 'Leisure Activies', 'SUB', 'LIB', 'COP', NULL, NULL, 18, 1, NULL, '2023-01-19 00:38:21', '2023-01-19 00:38:21'),
-(37, 67, 'OVA', '總體評分', 'Overall Score', 'SUB', 'LIB', 'COP', NULL, NULL, 19, 1, NULL, '2023-01-19 00:38:21', '2023-01-19 00:38:21'),
-(38, 68, 'ART', '美勞', 'Art Craft', 'SUB', 'LIB', 'COP', NULL, NULL, 32, 1, NULL, '2023-01-19 01:19:18', '2023-01-19 01:19:18'),
-(39, 68, 'ATT', '生活習慣和態度', 'Habits and Attitudes', 'SUB', 'LIB', 'COP', NULL, NULL, 33, 1, NULL, '2023-01-19 01:19:18', '2023-01-19 01:19:18'),
-(40, 68, 'CLT', '語文', 'Chinese Literature', 'SUB', 'LIB', 'COP', NULL, NULL, 24, 1, NULL, '2023-01-19 01:19:18', '2023-01-19 01:19:18'),
-(41, 68, 'COM', '電腦', 'Computer', 'SUB', 'LIB', 'COP', NULL, NULL, 30, 1, NULL, '2023-01-19 01:19:18', '2023-01-19 01:19:18'),
-(42, 68, 'CWR', '中寫', 'Chinse_writting', 'SUB', 'LIB', 'COP', NULL, NULL, 26, 1, NULL, '2023-01-19 01:19:18', '2023-01-19 01:19:18'),
-(43, 68, 'EWR', '英寫', 'English Writing', 'SUB', 'LIB', 'COP', NULL, NULL, 27, 1, NULL, '2023-01-19 01:19:18', '2023-01-19 01:19:18'),
-(44, 68, 'LES', '餘暇活動', 'Leisure Activies', 'SUB', 'LIB', 'COP', NULL, NULL, 35, 1, NULL, '2023-01-19 01:19:18', '2023-01-19 01:19:18'),
-(45, 68, 'NUM', '識數', 'Numeracy', 'SUB', 'LIB', 'COP', NULL, NULL, 29, 1, NULL, '2023-01-19 01:19:18', '2023-01-19 01:19:18'),
-(46, 68, 'OCS', '常識', 'Ordinary Common Sense', 'SUB', 'LIB', 'COP', NULL, NULL, 28, 1, NULL, '2023-01-19 01:19:18', '2023-01-19 01:19:18'),
-(47, 68, 'OVA', '總體評分', 'Overall Score', 'SUB', 'LIB', 'COP', NULL, NULL, 36, 1, NULL, '2023-01-19 01:19:18', '2023-01-19 01:19:18'),
-(48, 68, 'PHY', '體能', 'Physic', 'SUB', 'LIB', 'COP', NULL, NULL, 23, 1, NULL, '2023-01-19 01:19:18', '2023-01-19 01:19:18'),
-(49, 68, 'PLA', 'Playgroup', '唱遊', 'SUB', 'LIB', 'COP', NULL, NULL, 31, 1, NULL, '2023-01-19 01:19:18', '2023-01-19 01:19:18'),
-(50, 68, 'REL', '宗教', 'Relegion', 'SUB', 'LIB', 'COP', NULL, NULL, 22, 1, NULL, '2023-01-19 01:19:18', '2023-01-19 01:19:18'),
-(51, 68, 'RPLA', '獎懲遲缺', 'Reword Punishment  Late and Absent', 'SUB', 'LIB', 'COP', NULL, NULL, 34, 1, NULL, '2023-01-19 01:19:18', '2023-01-19 01:19:18'),
-(52, 68, 'STY', '故事', 'Stry', 'SUB', 'LIB', 'COP', NULL, NULL, 25, 1, NULL, '2023-01-19 01:19:18', '2023-01-19 01:19:18');
+INSERT INTO `courses` (`id`, `klass_id`, `code`, `title_zh`, `title_en`, `type`, `stream`, `elective`, `score_column`, `description`, `subject_id`, `score_column_template`, `active`, `socre_scheme`, `created_at`, `updated_at`) VALUES
+(1, 1, 'CHN', '中文', 'Chinese', NULL, 'ART', '0', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(2, 1, 'ENG', '英文', 'English', NULL, 'ART', '0', NULL, NULL, 2, 'TERMS', 1, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(3, 1, 'MAT', '數學', 'Mathematic', NULL, 'SCI', '0', NULL, NULL, 3, 'TERMS', 1, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(4, 1, 'PHY', '物理', 'Physics', NULL, 'SCI', '1', NULL, NULL, 4, 'TERMS', 1, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(5, 1, 'GEN', '常識', 'General', NULL, 'ART', '1', NULL, NULL, 5, 'TERMS', 1, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(6, 2, 'CHN', '中文', 'Chinese', NULL, 'ART', '0', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(7, 2, 'ENG', '英文', 'English', NULL, 'ART', '0', NULL, NULL, 2, 'TERMS', 1, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(8, 2, 'MAT', '數學', 'Mathematic', NULL, 'SCI', '0', NULL, NULL, 3, 'TERMS', 1, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(9, 2, 'PHY', '物理', 'Physics', NULL, 'SCI', '1', NULL, NULL, 4, 'TERMS', 1, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(10, 2, 'GEN', '常識', 'General', NULL, 'ART', '1', NULL, NULL, 5, 'TERMS', 1, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(11, 63, 'CHN', '中文', 'Chinese', '', 'ART', '0', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-05 17:01:21', '2023-02-05 17:01:21'),
+(12, 63, 'ENG', '英文', 'English', '', 'ART', '0', NULL, NULL, 2, 'TERMS', 1, NULL, '2023-02-05 17:01:21', '2023-02-05 17:01:21'),
+(13, 63, 'MAT', '數學', 'Mathematic', '', 'SCI', '0', NULL, NULL, 3, 'TERMS', 1, NULL, '2023-02-05 17:01:21', '2023-02-05 17:01:21'),
+(14, 63, 'PHY', '物理', 'Physics', '', 'SCI', '1', NULL, NULL, 4, 'TERMS', 1, NULL, '2023-02-05 17:01:21', '2023-02-05 17:01:21'),
+(15, 63, 'GEN', '常識', 'General', '', 'ART', '1', NULL, NULL, 5, 'TERMS', 1, NULL, '2023-02-05 17:01:21', '2023-02-05 17:01:21'),
+(16, 64, 'CHN', '中文', 'Chinese', '', 'ART', '0', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-05 17:03:12', '2023-02-05 17:03:12'),
+(17, 64, 'ENG', '英文', 'English', '', 'ART', '0', NULL, NULL, 2, 'TERMS', 1, NULL, '2023-02-05 17:03:12', '2023-02-05 17:03:12'),
+(18, 64, 'MAT', '數學', 'Mathematic', '', 'SCI', '0', NULL, NULL, 3, 'TERMS', 1, NULL, '2023-02-05 17:03:12', '2023-02-05 17:03:12'),
+(19, 64, 'PHY', '物理', 'Physics', '', 'SCI', '1', NULL, NULL, 4, 'TERMS', 1, NULL, '2023-02-05 17:03:12', '2023-02-05 17:03:12'),
+(20, 64, 'GEN', '常識', 'General', '', 'ART', '1', NULL, NULL, 5, 'TERMS', 1, NULL, '2023-02-05 17:03:12', '2023-02-05 17:03:12'),
+(21, 65, 'REL', '宗教', 'Relegion', 'SUB', 'AAS', 'COP', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(22, 65, 'PHY', '體能', 'Physic', 'SUB', 'LIB', 'COP', NULL, NULL, 2, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(23, 65, 'CLT', '語文', 'Chinese Literature', 'SUB', 'LIB', 'COP', NULL, NULL, 3, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(24, 65, 'STY', '故事', 'Stry', 'SUB', 'LIB', 'COP', NULL, NULL, 4, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(25, 65, 'CWR', '中寫', 'Chinse_writting', 'SUB', 'LIB', 'COP', NULL, NULL, 5, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(26, 65, 'ELT', '英文', 'English Literature', 'SUB', 'LIB', 'COP', NULL, NULL, 6, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(27, 65, 'EWR', '英寫', 'English Writing', 'SUB', 'LIB', 'COP', NULL, NULL, 7, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(28, 65, 'OCS', '常識', 'Ordinary Common Sense', 'SUB', 'LIB', 'COP', NULL, NULL, 8, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(29, 65, 'NUM', '識數', 'Numeracy', 'SUB', 'LIB', 'COP', NULL, NULL, 9, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(30, 65, 'COM', '電腦', 'Computer', 'SUB', 'LIB', 'COP', NULL, NULL, 10, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(31, 65, 'PLA', '唱遊', 'Playgroup', 'SUB', 'LIB', 'COP', NULL, NULL, 11, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(32, 65, 'ART', '美勞', 'Art Craft', 'SUB', 'LIB', 'COP', NULL, NULL, 12, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(33, 65, 'health_1', '衣服鞋襪整齊清潔', NULL, NULL, NULL, NULL, NULL, NULL, 13, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(34, 65, 'health_2', '常剪指甲', NULL, NULL, NULL, NULL, NULL, NULL, 14, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(35, 65, 'health_3', '懂得使用手帕或紙巾', NULL, NULL, NULL, NULL, NULL, NULL, 15, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(36, 65, 'health_4', '不把手指雜物放進口裡', NULL, NULL, NULL, NULL, NULL, NULL, 16, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(37, 65, 'health_5', '能把癈物投入廢紙箱內', NULL, NULL, NULL, NULL, NULL, NULL, 17, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(38, 65, 'behaviour_1', '守秩序不喧嚷', NULL, NULL, NULL, NULL, NULL, NULL, 18, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(39, 65, 'behaviour_2', '留心聽講', NULL, NULL, NULL, NULL, NULL, NULL, 19, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(40, 65, 'behaviour_3', '坐立行走姿勢正確', NULL, NULL, NULL, NULL, NULL, NULL, 20, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(41, 65, 'behaviour_4', '離開坐位把物件桌椅整理好', NULL, NULL, NULL, NULL, NULL, NULL, 21, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(42, 65, 'behaviour_5', '愛護公物用後放回原處', NULL, NULL, NULL, NULL, NULL, NULL, 22, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(43, 65, 'behaviour_6', '遵守校規', NULL, NULL, NULL, NULL, NULL, NULL, 23, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(44, 65, 'social_1', '守時', NULL, NULL, NULL, NULL, NULL, NULL, 24, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(45, 65, 'social_2', '尊敬師長,友愛和睦', NULL, NULL, NULL, NULL, NULL, NULL, 25, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(46, 65, 'social_3', '樂於助人', NULL, NULL, NULL, NULL, NULL, NULL, 26, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(47, 65, 'social_4', '會和別人分享及輪侯', NULL, NULL, NULL, NULL, NULL, NULL, 27, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(48, 65, 'social_5', '誠實坦白肯認錯', NULL, NULL, NULL, NULL, NULL, NULL, 28, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(49, 65, 'total_score', '總分', NULL, NULL, NULL, NULL, NULL, NULL, 29, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(50, 65, 'average_score', '平均分', NULL, NULL, NULL, NULL, NULL, NULL, 30, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(51, 65, 'class_size', '全班人數', NULL, NULL, NULL, NULL, NULL, NULL, 31, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(52, 65, 'ranking', '考列名次', NULL, NULL, NULL, NULL, NULL, NULL, 32, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(53, 65, 'late', '遲到次數', NULL, NULL, NULL, NULL, NULL, NULL, 33, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(54, 65, 'absent', '缺席節數', NULL, NULL, NULL, NULL, NULL, NULL, 34, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(55, 65, 'comment', '評語', NULL, NULL, NULL, NULL, NULL, NULL, 35, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(56, 65, 'reward_punishment', '奬懲記錄', NULL, NULL, NULL, NULL, NULL, NULL, 36, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(57, 65, 'leisure_name', '餘暇活動名稱', NULL, NULL, NULL, NULL, NULL, NULL, 37, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(58, 65, 'leisure_performance', '餘暇活動表現', NULL, NULL, NULL, NULL, NULL, NULL, 38, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(59, 65, 'remark', '備註', NULL, NULL, NULL, NULL, NULL, NULL, 39, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(60, 65, 'appraisal', '學年評定', NULL, NULL, NULL, NULL, NULL, NULL, 40, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45');
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `course_scores`
+-- Table structure for table `course_scores`
 --
 
 CREATE TABLE `course_scores` (
@@ -188,7 +212,7 @@ CREATE TABLE `course_scores` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `course_teachers`
+-- Table structure for table `course_teachers`
 --
 
 CREATE TABLE `course_teachers` (
@@ -200,26 +224,10 @@ CREATE TABLE `course_teachers` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Extraindo dados da tabela `course_teachers`
---
-
-INSERT INTO `course_teachers` (`id`, `course_id`, `teacher_id`, `is_head`, `created_at`, `updated_at`) VALUES
-(1, 1, 11, 0, NULL, NULL),
-(2, 2, 12, 0, NULL, NULL),
-(3, 1, 13, 1, NULL, NULL),
-(4, 4, 14, 0, NULL, NULL),
-(5, 5, 15, 0, NULL, NULL),
-(6, 6, 13, 0, NULL, NULL),
-(7, 7, 17, 0, NULL, NULL),
-(8, 8, 18, 0, NULL, NULL),
-(9, 9, 19, 0, NULL, NULL),
-(10, 10, 11, 0, NULL, NULL);
-
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `disciplines`
+-- Table structure for table `disciplines`
 --
 
 CREATE TABLE `disciplines` (
@@ -233,7 +241,7 @@ CREATE TABLE `disciplines` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `failed_jobs`
+-- Table structure for table `failed_jobs`
 --
 
 CREATE TABLE `failed_jobs` (
@@ -249,7 +257,7 @@ CREATE TABLE `failed_jobs` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `gardians`
+-- Table structure for table `gardians`
 --
 
 CREATE TABLE `gardians` (
@@ -265,58 +273,61 @@ CREATE TABLE `gardians` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `grades`
+-- Table structure for table `grades`
 --
 
 CREATE TABLE `grades` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `year_id` bigint(20) NOT NULL,
   `rank` int(11) NOT NULL,
-  `initial` char(1) NOT NULL,
+  `initial` char(2) NOT NULL,
   `level` int(11) NOT NULL,
   `tag` varchar(5) DEFAULT NULL,
+  `byname` varchar(5) DEFAULT NULL,
   `title_zh` varchar(255) DEFAULT NULL,
   `title_en` varchar(255) DEFAULT NULL,
+  `klass_num` int(11) NOT NULL DEFAULT 0,
   `description` text DEFAULT NULL,
-  `version` varchar(255) NOT NULL DEFAULT '0',
-  `active` tinyint(1) NOT NULL,
+  `version` int(11) DEFAULT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Extraindo dados da tabela `grades`
+-- Dumping data for table `grades`
 --
 
-INSERT INTO `grades` (`id`, `year_id`, `rank`, `initial`, `level`, `tag`, `title_zh`, `title_en`, `description`, `version`, `active`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 'P', 1, 'P1', 'title_zh', NULL, '111', '1', 1, NULL, '2023-01-18 18:45:07'),
-(2, 1, 2, 'P', 2, 'P2', NULL, NULL, NULL, '1', 1, NULL, NULL),
-(3, 1, 3, 'P', 3, 'P3', NULL, NULL, NULL, '1', 1, NULL, NULL),
-(4, 1, 4, 'P', 4, 'P4', NULL, NULL, '1', '1', 1, NULL, '2023-01-18 20:44:33'),
-(7, 1, 7, 'S', 1, 'S1', NULL, NULL, NULL, '1', 1, NULL, NULL),
-(8, 1, 8, 'S', 2, 'S2', NULL, NULL, NULL, '1', 1, NULL, NULL),
-(9, 1, 9, 'S', 3, 'S3', NULL, NULL, NULL, '1', 1, NULL, NULL),
-(10, 1, 10, 'S', 4, 'S4', NULL, NULL, NULL, '1', 1, NULL, NULL),
-(11, 1, 11, 'S', 5, 'S5', NULL, NULL, NULL, '1', 1, NULL, NULL),
-(12, 1, 12, 'S', 6, 'S6', NULL, NULL, NULL, '1', 1, NULL, NULL),
-(13, 2, 1, 'P', 1, 'P1', NULL, NULL, NULL, '1', 1, NULL, NULL),
-(14, 2, 2, 'P', 2, 'P2', NULL, NULL, NULL, '1', 1, NULL, NULL),
-(15, 2, 3, 'P', 3, 'P3', NULL, NULL, NULL, '1', 1, NULL, NULL),
-(16, 2, 4, 'P', 4, 'P4', NULL, NULL, NULL, '1', 1, NULL, NULL),
-(17, 2, 5, 'P', 5, 'P5', NULL, NULL, NULL, '1', 1, NULL, NULL),
-(18, 2, 6, 'P', 6, 'P6', NULL, NULL, NULL, '1', 1, NULL, NULL),
-(19, 2, 7, 'S', 1, 'S1', NULL, NULL, NULL, '1', 1, NULL, NULL),
-(20, 2, 8, 'S', 2, 'S2', NULL, NULL, NULL, '1', 1, NULL, NULL),
-(21, 2, 9, 'S', 3, 'S3', NULL, NULL, NULL, '1', 1, NULL, NULL),
-(22, 2, 10, 'S', 4, 'S4', NULL, NULL, NULL, '1', 1, NULL, NULL),
-(23, 2, 11, 'S', 5, 'S5', NULL, NULL, NULL, '1', 1, NULL, NULL),
-(24, 2, 12, 'S', 6, 'S6', NULL, NULL, NULL, '1', 1, NULL, NULL),
-(25, 1, 5, 'P', 5, 'P5', '小五', '4', '4', '4', 1, '2023-01-18 22:57:53', '2023-01-18 22:57:53');
+INSERT INTO `grades` (`id`, `year_id`, `rank`, `initial`, `level`, `tag`, `byname`, `title_zh`, `title_en`, `klass_num`, `description`, `version`, `active`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 'P', 1, 'P1', NULL, NULL, NULL, 0, NULL, 1, 1, NULL, NULL),
+(2, 1, 2, 'P', 2, 'P2', NULL, NULL, NULL, 0, NULL, 1, 1, NULL, NULL),
+(3, 1, 3, 'P', 3, 'P3', NULL, NULL, NULL, 0, NULL, 1, 1, NULL, NULL),
+(4, 1, 4, 'P', 4, 'P4', NULL, NULL, NULL, 0, NULL, 1, 1, NULL, NULL),
+(5, 1, 5, 'P', 5, 'P5', NULL, NULL, NULL, 0, NULL, 1, 1, NULL, NULL),
+(6, 1, 6, 'P', 6, 'P6', NULL, NULL, NULL, 0, NULL, 1, 1, NULL, NULL),
+(7, 1, 7, 'S', 1, 'S1', NULL, NULL, NULL, 0, NULL, 1, 1, NULL, NULL),
+(8, 1, 8, 'S', 2, 'S2', NULL, NULL, NULL, 0, NULL, 1, 1, NULL, NULL),
+(9, 1, 9, 'S', 3, 'S3', NULL, NULL, NULL, 0, NULL, 1, 1, NULL, NULL),
+(10, 1, 10, 'S', 4, 'S4', NULL, NULL, NULL, 0, NULL, 1, 1, NULL, NULL),
+(11, 1, 11, 'S', 5, 'S5', NULL, NULL, NULL, 0, NULL, 1, 1, NULL, NULL),
+(12, 1, 12, 'S', 6, 'S6', NULL, NULL, NULL, 0, NULL, 1, 1, NULL, NULL),
+(13, 2, 1, 'P', 1, 'P1', NULL, NULL, NULL, 0, NULL, 1, 1, NULL, NULL),
+(14, 2, 2, 'P', 2, 'P2', NULL, NULL, NULL, 0, NULL, 1, 1, NULL, NULL),
+(15, 2, 3, 'P', 3, 'P3', NULL, NULL, NULL, 0, NULL, 1, 1, NULL, NULL),
+(16, 2, 4, 'P', 4, 'P4', NULL, NULL, NULL, 0, NULL, 1, 1, NULL, NULL),
+(17, 2, 5, 'P', 5, 'P5', NULL, NULL, NULL, 0, NULL, 1, 1, NULL, NULL),
+(18, 2, 6, 'P', 6, 'P6', NULL, NULL, NULL, 0, NULL, 1, 1, NULL, NULL),
+(19, 2, 7, 'S', 1, 'S1', NULL, NULL, NULL, 0, NULL, 1, 1, NULL, NULL),
+(20, 2, 8, 'S', 2, 'S2', NULL, NULL, NULL, 0, NULL, 1, 1, NULL, NULL),
+(21, 2, 9, 'S', 3, 'S3', NULL, NULL, NULL, 0, NULL, 1, 1, NULL, NULL),
+(22, 2, 10, 'S', 4, 'S4', NULL, NULL, NULL, 0, NULL, 1, 1, NULL, NULL),
+(23, 2, 11, 'S', 5, 'S5', NULL, NULL, NULL, 0, NULL, 1, 1, NULL, NULL),
+(24, 2, 12, 'S', 6, 'S6', NULL, NULL, NULL, 0, NULL, 1, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `guardians`
+-- Table structure for table `guardians`
 --
 
 CREATE TABLE `guardians` (
@@ -340,7 +351,7 @@ CREATE TABLE `guardians` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `healthcares`
+-- Table structure for table `healthcares`
 --
 
 CREATE TABLE `healthcares` (
@@ -364,7 +375,7 @@ CREATE TABLE `healthcares` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `identity_documents`
+-- Table structure for table `identity_documents`
 --
 
 CREATE TABLE `identity_documents` (
@@ -384,7 +395,7 @@ CREATE TABLE `identity_documents` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `klasses`
+-- Table structure for table `klasses`
 --
 
 CREATE TABLE `klasses` (
@@ -392,89 +403,92 @@ CREATE TABLE `klasses` (
   `grade_id` bigint(20) NOT NULL,
   `letter` char(5) DEFAULT NULL,
   `tag` char(5) DEFAULT NULL,
+  `byname` varchar(255) DEFAULT NULL,
+  `stream` varchar(5) NOT NULL,
   `room` varchar(255) DEFAULT NULL,
+  `study_id` bigint(20) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Extraindo dados da tabela `klasses`
+-- Dumping data for table `klasses`
 --
 
-INSERT INTO `klasses` (`id`, `grade_id`, `letter`, `tag`, `room`, `created_at`, `updated_at`) VALUES
-(1, 1, 'A', 'P1A', '2', NULL, '2023-01-18 01:48:22'),
-(2, 1, 'B', 'P1B', NULL, NULL, NULL),
-(3, 1, 'C', 'P1C', NULL, NULL, NULL),
-(4, 1, 'D', 'P1D', NULL, NULL, NULL),
-(5, 1, 'E', 'P1E', NULL, NULL, NULL),
-(6, 2, 'A', 'P2A', NULL, NULL, NULL),
-(7, 2, 'B', 'P2B', NULL, NULL, NULL),
-(8, 2, 'C', 'P2C', NULL, NULL, NULL),
-(9, 2, 'D', 'P2D', NULL, NULL, NULL),
-(10, 2, 'E', 'P2E', NULL, NULL, NULL),
-(11, 3, 'A', 'P3A', NULL, NULL, NULL),
-(12, 3, 'B', 'P3B', NULL, NULL, NULL),
-(13, 3, 'C', 'P3C', NULL, NULL, NULL),
-(14, 3, 'D', 'P3D', NULL, NULL, NULL),
-(15, 3, 'E', 'P3E', NULL, NULL, NULL),
-(16, 4, 'A', 'P4A', NULL, NULL, NULL),
-(17, 4, 'B', 'P4B', NULL, NULL, NULL),
-(18, 4, 'C', 'P4C', NULL, NULL, NULL),
-(19, 4, 'D', 'P4D', NULL, NULL, NULL),
-(20, 4, 'E', 'P4E', NULL, NULL, NULL),
-(21, 5, 'A', 'P5A', NULL, NULL, NULL),
-(22, 5, 'B', 'P5B', NULL, NULL, NULL),
-(23, 5, 'C', 'P5C', NULL, NULL, NULL),
-(24, 5, 'D', 'P5D', NULL, NULL, NULL),
-(25, 5, 'E', 'P5E', NULL, NULL, NULL),
-(26, 6, 'A', 'P6A', NULL, NULL, NULL),
-(27, 6, 'B', 'P6B', NULL, NULL, NULL),
-(28, 6, 'C', 'P6C', NULL, NULL, NULL),
-(29, 6, 'D', 'P6D', NULL, NULL, NULL),
-(30, 6, 'E', 'P6E', NULL, NULL, NULL),
-(31, 7, 'A', 'S1A', NULL, NULL, NULL),
-(32, 7, 'B', 'S1B', NULL, NULL, NULL),
-(33, 7, 'C', 'S1C', NULL, NULL, NULL),
-(34, 7, 'D', 'S1D', NULL, NULL, NULL),
-(35, 7, 'E', 'S1E', NULL, NULL, NULL),
-(36, 8, 'A', 'S2A', NULL, NULL, NULL),
-(37, 8, 'B', 'S2B', NULL, NULL, NULL),
-(38, 8, 'C', 'S2C', NULL, NULL, NULL),
-(39, 8, 'D', 'S2D', NULL, NULL, NULL),
-(40, 8, 'E', 'S2E', NULL, NULL, NULL),
-(41, 9, 'A', 'S3A', NULL, NULL, NULL),
-(42, 9, 'B', 'S3B', NULL, NULL, NULL),
-(43, 9, 'C', 'S3C', NULL, NULL, NULL),
-(44, 9, 'D', 'S3D', NULL, NULL, NULL),
-(45, 9, 'E', 'S3E', NULL, NULL, NULL),
-(46, 10, 'A', 'S4A', NULL, NULL, NULL),
-(47, 10, 'B', 'S4B', NULL, NULL, NULL),
-(48, 10, 'C', 'S4C', NULL, NULL, NULL),
-(49, 10, 'D', 'S4D', NULL, NULL, NULL),
-(50, 10, 'E', 'S4E', NULL, NULL, NULL),
-(51, 11, 'A', 'S5A', NULL, NULL, NULL),
-(52, 11, 'B', 'S5B', NULL, NULL, NULL),
-(53, 11, 'C', 'S5C', NULL, NULL, NULL),
-(54, 11, 'D', 'S5D', NULL, NULL, NULL),
-(55, 11, 'E', 'S5E', NULL, NULL, NULL),
-(56, 12, 'A', 'S6A', NULL, NULL, NULL),
-(57, 12, 'B', 'S6B', NULL, NULL, NULL),
-(58, 12, 'C', 'S6C', NULL, NULL, NULL),
-(59, 12, 'D', 'S6D', NULL, NULL, NULL),
-(60, 12, 'E', 'S6E', NULL, NULL, NULL),
-(67, 1, 'F', 'P1F', NULL, '2023-01-19 00:38:21', '2023-01-19 00:38:21'),
-(68, 2, 'F', 'P2F', NULL, '2023-01-19 01:19:18', '2023-01-19 01:19:18');
+INSERT INTO `klasses` (`id`, `grade_id`, `letter`, `tag`, `byname`, `stream`, `room`, `study_id`, `created_at`, `updated_at`) VALUES
+(1, 1, 'A', 'P1A', NULL, 'AAS', NULL, 1, NULL, '2023-02-05 22:48:04'),
+(2, 1, 'B', 'P1B', NULL, 'SCI', NULL, 1, NULL, '2023-02-05 22:48:37'),
+(3, 1, 'C', 'P1C', NULL, '', NULL, 1, NULL, NULL),
+(4, 1, 'D', 'P1D', NULL, '', NULL, 1, NULL, NULL),
+(5, 1, 'E', 'P1E', NULL, '', NULL, 1, NULL, NULL),
+(6, 2, 'A', 'P2A', NULL, '', NULL, 1, NULL, NULL),
+(7, 2, 'B', 'P2B', NULL, '', NULL, 1, NULL, NULL),
+(8, 2, 'C', 'P2C', NULL, '', NULL, 1, NULL, NULL),
+(9, 2, 'D', 'P2D', NULL, '', NULL, 1, NULL, NULL),
+(10, 2, 'E', 'P2E', NULL, '', NULL, 1, NULL, NULL),
+(11, 3, 'A', 'P3A', NULL, '', NULL, 1, NULL, NULL),
+(12, 3, 'B', 'P3B', NULL, '', NULL, 1, NULL, NULL),
+(13, 3, 'C', 'P3C', NULL, '', NULL, 1, NULL, NULL),
+(14, 3, 'D', 'P3D', NULL, '', NULL, 1, NULL, NULL),
+(15, 3, 'E', 'P3E', NULL, '', NULL, 1, NULL, NULL),
+(16, 4, 'A', 'P4A', NULL, '', NULL, 1, NULL, NULL),
+(17, 4, 'B', 'P4B', NULL, '', NULL, 1, NULL, NULL),
+(18, 4, 'C', 'P4C', NULL, '', NULL, 1, NULL, NULL),
+(19, 4, 'D', 'P4D', NULL, '', NULL, 1, NULL, NULL),
+(20, 4, 'E', 'P4E', NULL, '', NULL, 1, NULL, NULL),
+(21, 5, 'A', 'P5A', NULL, '', NULL, 1, NULL, NULL),
+(22, 5, 'B', 'P5B', NULL, '', NULL, 1, NULL, NULL),
+(23, 5, 'C', 'P5C', NULL, '', NULL, 1, NULL, NULL),
+(24, 5, 'D', 'P5D', NULL, '', NULL, 1, NULL, NULL),
+(25, 5, 'E', 'P5E', NULL, '', NULL, 1, NULL, NULL),
+(26, 6, 'A', 'P6A', NULL, '', NULL, 1, NULL, NULL),
+(27, 6, 'B', 'P6B', NULL, '', NULL, 1, NULL, NULL),
+(28, 6, 'C', 'P6C', NULL, '', NULL, 1, NULL, NULL),
+(29, 6, 'D', 'P6D', NULL, '', NULL, 1, NULL, NULL),
+(30, 6, 'E', 'P6E', NULL, '', NULL, 1, NULL, NULL),
+(31, 7, 'A', 'S1A', NULL, '', NULL, 2, NULL, NULL),
+(32, 7, 'B', 'S1B', NULL, '', NULL, 2, NULL, NULL),
+(33, 7, 'C', 'S1C', NULL, '', NULL, 2, NULL, NULL),
+(34, 7, 'D', 'S1D', NULL, '', NULL, 2, NULL, NULL),
+(35, 7, 'E', 'S1E', NULL, '', NULL, 2, NULL, NULL),
+(36, 8, 'A', 'S2A', NULL, '', NULL, 2, NULL, NULL),
+(37, 8, 'B', 'S2B', NULL, '', NULL, 2, NULL, NULL),
+(38, 8, 'C', 'S2C', NULL, '', NULL, 2, NULL, NULL),
+(39, 8, 'D', 'S2D', NULL, '', NULL, 2, NULL, NULL),
+(40, 8, 'E', 'S2E', NULL, '', NULL, 2, NULL, NULL),
+(41, 9, 'A', 'S3A', NULL, '', NULL, 2, NULL, NULL),
+(42, 9, 'B', 'S3B', NULL, '', NULL, 2, NULL, NULL),
+(43, 9, 'C', 'S3C', NULL, '', NULL, 2, NULL, NULL),
+(44, 9, 'D', 'S3D', NULL, '', NULL, 2, NULL, NULL),
+(45, 9, 'E', 'S3E', NULL, '', NULL, 2, NULL, NULL),
+(46, 10, 'A', 'S4A', NULL, '', NULL, 2, NULL, NULL),
+(47, 10, 'B', 'S4B', NULL, '', NULL, 2, NULL, NULL),
+(48, 10, 'C', 'S4C', NULL, '', NULL, 2, NULL, NULL),
+(49, 10, 'D', 'S4D', NULL, '', NULL, 2, NULL, NULL),
+(50, 10, 'E', 'S4E', NULL, '', NULL, 2, NULL, NULL),
+(51, 11, 'A', 'S5A', NULL, '', NULL, 2, NULL, NULL),
+(52, 11, 'B', 'S5B', NULL, '', NULL, 2, NULL, NULL),
+(53, 11, 'C', 'S5C', NULL, '', NULL, 2, NULL, NULL),
+(54, 11, 'D', 'S5D', NULL, '', NULL, 2, NULL, NULL),
+(55, 11, 'E', 'S5E', NULL, '', NULL, 2, NULL, NULL),
+(56, 12, 'A', 'S6A', NULL, 'AAS', NULL, 2, NULL, '2023-02-06 20:05:19'),
+(57, 12, 'B', 'S6B', NULL, 'AAS', NULL, 2, NULL, '2023-02-06 20:04:06'),
+(58, 12, 'C', 'S6C', NULL, '', NULL, 2, NULL, NULL),
+(59, 12, 'D', 'S6D', NULL, '', NULL, 2, NULL, NULL),
+(60, 12, 'E', 'S6E', NULL, '', NULL, 2, NULL, NULL),
+(64, 1, 'F', 'P1F', NULL, '', '123', 2, '2023-02-05 17:03:12', '2023-02-05 17:03:12'),
+(65, 2, 'F', 'P2F', NULL, 'AAS', NULL, 1, '2023-02-06 20:51:45', '2023-02-06 20:51:45');
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `klass_students`
+-- Table structure for table `klass_students`
 --
 
 CREATE TABLE `klass_students` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `klass_id` bigint(20) NOT NULL DEFAULT 0,
-  `student_id` bigint(20) NOT NULL DEFAULT 0,
+  `klass_id` bigint(20) NOT NULL,
+  `student_id` bigint(20) NOT NULL,
   `student_number` int(11) NOT NULL DEFAULT 0,
   `state` char(3) NOT NULL DEFAULT 'ACT',
   `stream` char(3) NOT NULL DEFAULT 'ART',
@@ -486,7 +500,7 @@ CREATE TABLE `klass_students` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Extraindo dados da tabela `klass_students`
+-- Dumping data for table `klass_students`
 --
 
 INSERT INTO `klass_students` (`id`, `klass_id`, `student_id`, `student_number`, `state`, `stream`, `promote`, `promote_to`, `score_scheme`, `created_at`, `updated_at`) VALUES
@@ -1755,7 +1769,7 @@ INSERT INTO `klass_students` (`id`, `klass_id`, `student_id`, `student_number`, 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `locations`
+-- Table structure for table `locations`
 --
 
 CREATE TABLE `locations` (
@@ -1767,7 +1781,7 @@ CREATE TABLE `locations` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `migrations`
+-- Table structure for table `migrations`
 --
 
 CREATE TABLE `migrations` (
@@ -1777,7 +1791,7 @@ CREATE TABLE `migrations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Extraindo dados da tabela `migrations`
+-- Dumping data for table `migrations`
 --
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
@@ -1794,6 +1808,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (11, '2022_10_25_101531_create_categories_table', 1),
 (12, '2022_10_25_101544_create_locations_table', 1),
 (13, '2022_11_24_064103_create_years_table', 1),
+(14, '2022_11_25_025230_create_subjects_table', 1),
 (15, '2022_11_25_025324_create_courses_table', 1),
 (16, '2022_11_25_025738_create_klasses_table', 1),
 (17, '2022_11_25_031010_create_staff_table', 1),
@@ -1805,32 +1820,29 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (23, '2022_11_30_090054_create_scores_table', 1),
 (24, '2022_12_01_075920_create_grades_table', 1),
 (25, '2022_12_02_011550_create_klass_students_table', 1),
+(26, '2022_12_09_071744_create_teachers_table', 1),
 (27, '2022_12_12_141100_create_course_scores_table', 1),
 (28, '2023_01_07_152244_create_transcripts_table', 1),
 (29, '2023_01_07_162945_create_transcript_templates_table', 1),
 (30, '2023_01_09_033255_create_score_columns_table', 1),
-(32, '2023_01_11_064535_create_permission_tables', 3),
-(33, '2023_01_11_023007_create_course_teacher_table', 4),
-(34, '2023_01_14_024917_create_addresses_table', 4),
-(35, '2023_01_14_133306_create_identity_documents_table', 5),
-(36, '2023_01_14_141228_create_banks_table', 5),
-(37, '2023_01_14_142338_create_student_details_table', 5),
-(38, '2023_01_14_150126_create_parentals_table', 5),
-(39, '2023_01_14_151709_create_guardians_table', 5),
-(40, '2023_01_14_161817_create_healthcares_table', 5),
-(41, '2022_12_09_071744_create_teachers_table', 6),
-(42, '2023_01_16_081153_create_klass_teachers_table', 7),
-(43, '2023_01_11_023007_create_course_teachers_table', 8),
-(44, '2023_01_18_082948_create_garde_subjects_table', 9),
-(45, '2023_01_18_083107_create_grade_subjects_table', 10),
-(46, '2023_01_18_083745_create_subject_templates_table', 1),
-(47, '2023_01_19_025347_create_grade_subjects_table', 11),
-(49, '2022_11_25_025230_create_subjects_table', 12);
+(31, '2023_01_11_023007_create_course_teachers_table', 1),
+(32, '2023_01_11_064535_create_permission_tables', 1),
+(33, '2023_01_14_024917_create_addresses_table', 1),
+(34, '2023_01_14_133306_create_identity_documents_table', 1),
+(35, '2023_01_14_141228_create_banks_table', 1),
+(36, '2023_01_14_142338_create_student_details_table', 1),
+(37, '2023_01_14_150126_create_parentals_table', 1),
+(38, '2023_01_14_151709_create_guardians_table', 1),
+(39, '2023_01_14_161817_create_healthcares_table', 1),
+(40, '2023_01_18_083745_create_subject_templates_table', 1),
+(41, '2023_02_03_013106_create_score_templates_table', 1),
+(42, '2023_02_06_084919_create_studies_table', 2),
+(43, '2023_02_06_084931_create_study_subjects_table', 2);
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `model_has_permissions`
+-- Table structure for table `model_has_permissions`
 --
 
 CREATE TABLE `model_has_permissions` (
@@ -1842,7 +1854,7 @@ CREATE TABLE `model_has_permissions` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `model_has_roles`
+-- Table structure for table `model_has_roles`
 --
 
 CREATE TABLE `model_has_roles` (
@@ -1852,16 +1864,17 @@ CREATE TABLE `model_has_roles` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Extraindo dados da tabela `model_has_roles`
+-- Dumping data for table `model_has_roles`
 --
 
 INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
-(1, 'App\\Models\\User', 1);
+(1, 'App\\Models\\User', 1),
+(2, 'App\\Models\\User', 2);
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `parentals`
+-- Table structure for table `parentals`
 --
 
 CREATE TABLE `parentals` (
@@ -1884,7 +1897,7 @@ CREATE TABLE `parentals` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `password_resets`
+-- Table structure for table `password_resets`
 --
 
 CREATE TABLE `password_resets` (
@@ -1896,7 +1909,7 @@ CREATE TABLE `password_resets` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `permissions`
+-- Table structure for table `permissions`
 --
 
 CREATE TABLE `permissions` (
@@ -1907,17 +1920,10 @@ CREATE TABLE `permissions` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Extraindo dados da tabela `permissions`
---
-
-INSERT INTO `permissions` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
-(1, 'Account Management', 'web', '2023-01-10 22:55:08', '2023-01-10 22:55:08');
-
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `personal_access_tokens`
+-- Table structure for table `personal_access_tokens`
 --
 
 CREATE TABLE `personal_access_tokens` (
@@ -1936,7 +1942,7 @@ CREATE TABLE `personal_access_tokens` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `roles`
+-- Table structure for table `roles`
 --
 
 CREATE TABLE `roles` (
@@ -1948,16 +1954,17 @@ CREATE TABLE `roles` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Extraindo dados da tabela `roles`
+-- Dumping data for table `roles`
 --
 
 INSERT INTO `roles` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
-(1, 'master', 'web', '2023-01-10 22:50:01', '2023-01-10 22:50:01');
+(1, 'master', 'web', '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(2, 'admin', 'web', '2023-02-03 01:27:29', '2023-02-03 01:27:29');
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `role_has_permissions`
+-- Table structure for table `role_has_permissions`
 --
 
 CREATE TABLE `role_has_permissions` (
@@ -1965,17 +1972,10 @@ CREATE TABLE `role_has_permissions` (
   `role_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Extraindo dados da tabela `role_has_permissions`
---
-
-INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
-(1, 1);
-
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `scores`
+-- Table structure for table `scores`
 --
 
 CREATE TABLE `scores` (
@@ -1989,235 +1989,130 @@ CREATE TABLE `scores` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Extraindo dados da tabela `scores`
+-- Dumping data for table `scores`
 --
 
 INSERT INTO `scores` (`id`, `klass_student_id`, `score_column_id`, `point`, `remark`, `created_at`, `updated_at`) VALUES
-(1, 3, 1, '100', NULL, NULL, NULL),
-(2, 5, 1, '80', NULL, NULL, NULL),
-(3, 3, 2, '90', NULL, NULL, NULL),
-(4, 1, 14, '1', NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(5, 1, 15, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(6, 2, 14, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(7, 2, 15, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(8, 3, 14, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(9, 3, 15, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(10, 3, 1, '100', NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(11, 3, 2, '90', NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(12, 4, 14, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(13, 4, 15, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(14, 5, 14, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(15, 5, 15, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(16, 5, 1, '80', NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(17, 6, 14, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(18, 6, 15, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(19, 7, 14, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(20, 7, 15, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(21, 8, 14, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(22, 8, 15, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(23, 9, 14, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(24, 9, 15, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(25, 10, 14, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(26, 10, 15, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(27, 11, 14, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(28, 11, 15, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(29, 12, 14, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(30, 12, 15, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(31, 13, 14, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(32, 13, 15, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(33, 14, 14, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(34, 14, 15, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(35, 15, 14, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(36, 15, 15, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(37, 16, 14, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(38, 16, 15, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(39, 17, 14, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(40, 17, 15, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(41, 18, 14, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(42, 18, 15, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(43, 19, 14, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(44, 19, 15, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(45, 20, 14, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(46, 20, 15, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(47, 21, 14, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(48, 21, 15, NULL, NULL, '2023-01-16 17:30:07', '2023-01-16 17:30:07'),
-(49, 1, 14, '1', NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(50, 1, 15, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(51, 2, 14, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(52, 2, 15, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(53, 3, 14, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(54, 3, 15, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(55, 3, 1, '100', NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(56, 3, 2, '90', NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(57, 4, 14, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(58, 4, 15, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(59, 5, 14, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(60, 5, 15, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(61, 5, 1, '80', NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(62, 6, 14, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(63, 6, 15, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(64, 7, 14, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(65, 7, 15, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(66, 8, 14, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(67, 8, 15, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(68, 9, 14, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(69, 9, 15, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(70, 10, 14, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(71, 10, 15, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(72, 11, 14, '1', NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(73, 11, 15, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(74, 12, 14, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(75, 12, 15, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(76, 13, 14, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(77, 13, 15, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(78, 14, 14, '1', NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(79, 14, 15, '1', NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(80, 15, 14, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(81, 15, 15, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(82, 16, 14, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(83, 16, 15, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(84, 17, 14, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(85, 17, 15, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(86, 18, 14, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(87, 18, 15, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(88, 19, 14, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(89, 19, 15, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(90, 20, 14, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(91, 20, 15, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(92, 21, 14, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(93, 21, 15, NULL, NULL, '2023-01-16 17:30:18', '2023-01-16 17:30:18'),
-(94, 1, 11, 'A', NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(95, 1, 12, 'A', NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(96, 1, 14, '1', NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(97, 1, 15, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(98, 2, 11, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(99, 2, 12, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(100, 2, 14, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(101, 2, 15, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(102, 3, 11, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(103, 3, 12, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(104, 3, 1, '100', NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(105, 3, 2, '90', NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(106, 3, 14, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(107, 3, 15, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(108, 4, 11, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(109, 4, 12, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(110, 4, 14, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(111, 4, 15, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(112, 5, 11, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(113, 5, 12, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(114, 5, 1, '80', NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(115, 5, 14, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(116, 5, 15, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(117, 6, 11, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(118, 6, 12, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(119, 6, 14, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(120, 6, 15, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(121, 7, 11, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(122, 7, 12, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(123, 7, 14, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(124, 7, 15, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(125, 8, 11, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(126, 8, 12, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(127, 8, 14, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(128, 8, 15, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(129, 9, 11, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(130, 9, 12, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(131, 9, 14, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(132, 9, 15, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(133, 10, 11, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(134, 10, 12, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(135, 10, 14, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(136, 10, 15, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(137, 11, 11, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(138, 11, 12, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(139, 11, 14, '1', NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(140, 11, 15, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(141, 12, 11, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(142, 12, 12, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(143, 12, 14, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(144, 12, 15, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(145, 13, 11, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(146, 13, 12, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(147, 13, 14, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(148, 13, 15, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(149, 14, 11, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(150, 14, 12, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(151, 14, 14, '1', NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(152, 14, 15, '1', NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(153, 15, 11, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(154, 15, 12, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(155, 15, 14, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(156, 15, 15, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(157, 16, 11, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(158, 16, 12, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(159, 16, 14, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(160, 16, 15, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(161, 17, 11, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(162, 17, 12, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(163, 17, 14, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(164, 17, 15, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(165, 18, 11, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(166, 18, 12, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(167, 18, 14, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(168, 18, 15, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(169, 19, 11, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(170, 19, 12, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(171, 19, 14, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(172, 19, 15, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(173, 20, 11, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(174, 20, 12, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(175, 20, 14, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(176, 20, 15, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(177, 21, 11, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(178, 21, 12, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(179, 21, 14, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20'),
-(180, 21, 15, NULL, NULL, '2023-01-16 18:00:20', '2023-01-16 18:00:20');
+(1, 3, 1, '100', NULL, NULL, '2023-02-03 01:34:23'),
+(2, 5, 1, '80', NULL, NULL, '2023-02-03 01:34:23'),
+(3, 3, 2, '90', NULL, NULL, '2023-02-03 01:34:23'),
+(4, 1, 21, '1', NULL, '2023-02-03 01:28:45', '2023-02-03 01:34:23'),
+(256, 1, 22, '2', NULL, '2023-02-03 01:30:42', '2023-02-03 01:34:23'),
+(392, 1, 23, '3', NULL, '2023-02-03 01:34:23', '2023-02-03 01:34:23');
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `score_columns`
+-- Table structure for table `score_columns`
 --
 
 CREATE TABLE `score_columns` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `course_id` bigint(20) NOT NULL,
   `term_id` bigint(20) NOT NULL,
+  `course_id` bigint(20) NOT NULL,
   `sequence` int(11) DEFAULT NULL,
   `name` varchar(255) NOT NULL,
-  `type` varchar(4) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
   `scheme` varchar(255) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
+  `for_transcript` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Extraindo dados da tabela `score_columns`
+-- Dumping data for table `score_columns`
 --
 
-INSERT INTO `score_columns` (`id`, `course_id`, `term_id`, `sequence`, `name`, `type`, `scheme`, `description`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 1, '上學期', 'SUB', NULL, NULL, NULL, '2023-01-16 02:21:30'),
-(2, 1, 2, 2, '下學期', 'SUB', NULL, NULL, NULL, '2023-01-16 02:21:39'),
-(3, 1, 1, 3, '整潔', 'ATT', NULL, NULL, NULL, '2023-01-16 01:39:36'),
-(4, 1, 2, 4, '整潔', 'ATT', NULL, NULL, NULL, '2023-01-16 01:39:51'),
-(5, 3, 1, NULL, '上學期1', NULL, NULL, NULL, '2023-01-15 20:01:54', '2023-01-15 20:11:24'),
-(6, 3, 2, NULL, '下學期2', NULL, NULL, NULL, '2023-01-15 20:11:35', '2023-01-15 20:11:35'),
-(7, 4, 1, NULL, '上學期3', NULL, NULL, NULL, '2023-01-15 20:12:33', '2023-01-15 20:12:33'),
-(8, 4, 2, NULL, '下學期4', NULL, NULL, NULL, '2023-01-15 20:12:45', '2023-01-15 20:12:45'),
-(9, 5, 1, NULL, '上學期5', NULL, NULL, NULL, '2023-01-15 20:12:59', '2023-01-15 20:12:59'),
-(10, 5, 2, NULL, '下學期6', NULL, NULL, NULL, '2023-01-15 20:13:09', '2023-01-15 20:13:09'),
-(11, 6, 1, NULL, '整潔1', 'ATT', NULL, NULL, '2023-01-15 20:13:18', '2023-01-15 20:13:18'),
-(12, 6, 2, NULL, '整潔2', 'ATT', NULL, NULL, '2023-01-15 20:13:27', '2023-01-15 20:13:27'),
-(13, 7, 1, NULL, '上學期9', NULL, NULL, NULL, '2023-01-15 20:13:37', '2023-01-15 20:13:37'),
-(14, 2, 1, NULL, '上學期10', 'SUB', NULL, NULL, '2023-01-16 17:24:48', '2023-01-16 17:24:48'),
-(15, 2, 2, NULL, '下學期11', 'SUB', NULL, NULL, '2023-01-16 17:27:53', '2023-01-16 17:27:53');
+INSERT INTO `score_columns` (`id`, `term_id`, `course_id`, `sequence`, `name`, `type`, `scheme`, `description`, `for_transcript`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, NULL, '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(2, 2, 1, NULL, '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(3, 1, 2, NULL, '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(4, 2, 2, NULL, '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(5, 1, 3, NULL, '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(6, 2, 3, NULL, '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(7, 1, 4, NULL, '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(8, 2, 4, NULL, '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(9, 1, 5, NULL, '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(10, 2, 5, NULL, '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(11, 1, 6, NULL, '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(12, 2, 6, NULL, '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(13, 1, 7, NULL, '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(14, 2, 7, NULL, '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(15, 1, 8, NULL, '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(16, 2, 8, NULL, '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(17, 1, 9, NULL, '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(18, 2, 9, NULL, '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(19, 1, 10, NULL, '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(20, 2, 10, NULL, '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(21, 1, 1, 1, 'Test1', NULL, NULL, NULL, 0, NULL, NULL),
+(22, 1, 1, 2, 'Exam', NULL, NULL, NULL, 0, NULL, NULL),
+(23, 2, 1, 3, 'Test2', NULL, NULL, NULL, 0, NULL, NULL),
+(24, 2, 1, 4, 'Exam', NULL, NULL, NULL, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `sessions`
+-- Table structure for table `score_templates`
+--
+
+CREATE TABLE `score_templates` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `batch` varchar(255) DEFAULT NULL,
+  `type` varchar(6) NOT NULL,
+  `term_id` bigint(20) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `sequence` int(11) DEFAULT NULL,
+  `scheme` varchar(255) DEFAULT NULL,
+  `for_transcript` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `score_templates`
+--
+
+INSERT INTO `score_templates` (`id`, `batch`, `type`, `term_id`, `name`, `sequence`, `scheme`, `for_transcript`, `created_at`, `updated_at`) VALUES
+(1, 'SUBJECT', 'SUB', 1, '上學期', 1, NULL, 1, NULL, NULL),
+(2, 'SUBJECT', 'SUB', 2, '上學期', 2, NULL, 1, NULL, NULL),
+(3, 'ATTITUDE', 'ATT', 1, '衣服鞋襪整齊清潔', 1, NULL, 1, NULL, NULL),
+(4, 'ATTITUDE', 'ATT', 1, '常剪指甲', 2, NULL, 1, NULL, NULL),
+(5, 'ATTITUDE', 'ATT', 1, '懂得使用手帕或紙巾', 3, NULL, 1, NULL, NULL),
+(6, 'ATTITUDE', 'ATT', 1, '不把手指雜物放進口裡', 4, NULL, 1, NULL, NULL),
+(7, 'ATTITUDE', 'ATT', 1, '能把癈物投入廢紙箱內', 5, NULL, 1, NULL, NULL),
+(8, 'ATTITUDE', 'ATT', 1, '守秩序不喧嚷', 6, NULL, 1, NULL, NULL),
+(9, 'ATTITUDE', 'ATT', 1, '留心聽講', 7, NULL, 1, NULL, NULL),
+(10, 'ATTITUDE', 'ATT', 1, '坐立行走姿勢正確', 8, NULL, 1, NULL, NULL),
+(11, 'ATTITUDE', 'ATT', 1, '離開坐位把物件桌椅整理好', 9, NULL, 1, NULL, NULL),
+(12, 'ATTITUDE', 'ATT', 1, '愛護公物用後放回原處', 10, NULL, 1, NULL, NULL),
+(13, 'ATTITUDE', 'ATT', 1, '遵守校規', 11, NULL, 1, NULL, NULL),
+(14, 'ATTITUDE', 'ATT', 1, '守時', 12, NULL, 1, NULL, NULL),
+(15, 'ATTITUDE', 'ATT', 1, '尊敬師長,友愛和睦', 13, NULL, 1, NULL, NULL),
+(16, 'ATTITUDE', 'ATT', 1, '樂於助人', 14, NULL, 1, NULL, NULL),
+(17, 'ATTITUDE', 'ATT', 1, '會和別人分享及輪侯', 15, NULL, 1, NULL, NULL),
+(18, 'ATTITUDE', 'ATT', 1, '誠實坦白肯認錯', 16, NULL, 1, NULL, NULL),
+(19, 'ATTITUDE', 'ATT', 2, '衣服鞋襪整齊清潔', 1, NULL, 1, NULL, NULL),
+(20, 'ATTITUDE', 'ATT', 2, '常剪指甲', 2, NULL, 1, NULL, NULL),
+(21, 'ATTITUDE', 'ATT', 2, '懂得使用手帕或紙巾', 3, NULL, 1, NULL, NULL),
+(22, 'ATTITUDE', 'ATT', 2, '不把手指雜物放進口裡', 4, NULL, 1, NULL, NULL),
+(23, 'ATTITUDE', 'ATT', 2, '能把癈物投入廢紙箱內', 5, NULL, 1, NULL, NULL),
+(24, 'ATTITUDE', 'ATT', 2, '守秩序不喧嚷', 6, NULL, 1, NULL, NULL),
+(25, 'ATTITUDE', 'ATT', 2, '留心聽講', 7, NULL, 1, NULL, NULL),
+(26, 'ATTITUDE', 'ATT', 2, '坐立行走姿勢正確', 8, NULL, 1, NULL, NULL),
+(27, 'ATTITUDE', 'ATT', 2, '離開坐位把物件桌椅整理好', 9, NULL, 1, NULL, NULL),
+(28, 'ATTITUDE', 'ATT', 2, '愛護公物用後放回原處', 10, NULL, 1, NULL, NULL),
+(29, 'ATTITUDE', 'ATT', 2, '遵守校規', 11, NULL, 1, NULL, NULL),
+(30, 'ATTITUDE', 'ATT', 2, '守時', 12, NULL, 1, NULL, NULL),
+(31, 'ATTITUDE', 'ATT', 2, '尊敬師長,友愛和睦', 13, NULL, 1, NULL, NULL),
+(32, 'ATTITUDE', 'ATT', 2, '樂於助人', 14, NULL, 1, NULL, NULL),
+(33, 'ATTITUDE', 'ATT', 2, '會和別人分享及輪侯', 15, NULL, 1, NULL, NULL),
+(34, 'ATTITUDE', 'ATT', 2, '誠實坦白肯認錯', 16, NULL, 1, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sessions`
 --
 
 CREATE TABLE `sessions` (
@@ -2230,21 +2125,21 @@ CREATE TABLE `sessions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Extraindo dados da tabela `sessions`
+-- Dumping data for table `sessions`
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('07Tn5YfjeedAeIt1CStblAISWpDd6kiyWGHVWk86', 1, '127.0.0.1', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoidU9aUjNZcjI4eENXOWpwQ3lsalpIVE1FdXgycVdHSDRhdHBoNW1VSiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzg6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9lc3NlbnRpYWwvZ3JhZGVzIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTtzOjIxOiJwYXNzd29yZF9oYXNoX3NhbmN0dW0iO3M6NjA6IiQyeSQxMCRtRld1LlUxc2UxR3ljSnhiazhEbGRPR2JPY1RGcDJWT1Zpb20zLzNzNDBuT2NyYlVOSFo1MiI7fQ==', 1674120009);
+('AAsekhonWmFQAgIqfjRnKUcbrYpzKUfQ28iyk92E', 2, '127.0.0.1', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiMndyYTF2RnEzVURBUklHOU9FRnl5NzEyQ214TkpBQTVLbVpibms1YSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NTY6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9tYXN0ZXIvc3R1ZHkvc3ViamVjdHMvYW50ZC5jc3MubWFwIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MjtzOjIxOiJwYXNzd29yZF9oYXNoX3NhbmN0dW0iO3M6NjA6IiQyeSQxMCRUYW5QSTV2emhENTI1MVp6b2toOHcub0dBc1ZTNktRbkpjdnFyTWhtbGUyYnh6ZkJQblFicSI7fQ==', 1675763089);
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `staff`
+-- Table structure for table `staff`
 --
 
 CREATE TABLE `staff` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `code` varchar(255) NOT NULL,
+  `code` varchar(255) DEFAULT NULL,
   `name_zh` varchar(255) NOT NULL,
   `name_fn` varchar(255) DEFAULT NULL,
   `gender` char(255) NOT NULL,
@@ -2256,1138 +2151,1157 @@ CREATE TABLE `staff` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Extraindo dados da tabela `staff`
+-- Dumping data for table `staff`
 --
 
 INSERT INTO `staff` (`id`, `code`, `name_zh`, `name_fn`, `gender`, `dob`, `mobile`, `sector`, `created_at`, `updated_at`) VALUES
-(1, '001', '游承', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(2, '002', '燕嘉樺', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(3, '003', '景靜詩', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(4, '004', '關雅淑', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(5, '005', '鄭家佩', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(6, '006', '佘欣', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(7, '007', '別詩慧', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(8, '008', '陰美', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(9, '009', '嚴穎', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(10, '010', '佘淑馨', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(11, '011', '張慧', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(12, '012', '顏伶', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(13, '013', '元庭萍', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(14, '014', '邰雅儀', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(15, '015', '郗君', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(16, '016', '通冠君', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(17, '017', '嚴文依', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(18, '018', '尹文佩', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(19, '019', '公華', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(20, '020', '緱娟萱', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(21, '021', '張冠', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(22, '022', '南宮安琪', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(23, '023', '昝婷', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(24, '024', '韋宗瑋', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(25, '025', '黎如', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(26, '026', '衛婉', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(27, '027', '房柏', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(28, '028', '燕建', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(29, '029', '牟思', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(30, '030', '郝軒', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(31, '031', '滑瑋志', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(32, '032', '融宏傑', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(33, '033', '柏庭', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(34, '034', '督貞穎', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(35, '035', '郜瑜蓉', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(36, '036', '鬱靜嘉', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(37, '037', '宗政婷慧', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(38, '038', '從霖宜', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(39, '039', '路宗', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(40, '040', '舒君', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(41, '041', '莘淑冠', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(42, '042', '鄧美嘉', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(43, '043', '容瑜珊', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(44, '044', '饒慧', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(45, '045', '龍華萍', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(46, '046', '滿涵', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(47, '047', '翟翰', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(48, '048', '晉涵', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(49, '049', '壽思銘', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(50, '050', '藺安', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(51, '051', '閻涵', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(52, '052', '糜家', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(53, '053', '毛瑜', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(54, '054', '牟樺庭', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(55, '055', '牟家廷', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(56, '056', '咸美思', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(57, '057', '蓋欣', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(58, '058', '秋霖賢', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(59, '059', '左雯', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(60, '060', '宰惠貞', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(61, '061', '湯家華', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(62, '062', '殳嘉', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(63, '063', '岳蓉', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(64, '064', '陽華心', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(65, '065', '臧彥建', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(66, '066', '鬱建美', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(67, '067', '包淑怡', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(68, '068', '孔廷華', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(69, '069', '微生安', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(70, '070', '法宏君', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(71, '071', '甯思', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(72, '072', '伍霖', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(73, '073', '鄢美芬', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(74, '074', '劉婉琬', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(75, '075', '王君', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(76, '076', '浦君', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(77, '077', '拓跋哲', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(78, '078', '居珊', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(79, '079', '衛穎安', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(80, '080', '莘思庭', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(81, '081', '姚依', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(82, '082', '有文偉', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(83, '083', '軒轅惠萍', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(84, '084', '孟霖佳', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(85, '085', '連宗', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(86, '086', '單于心心', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(87, '087', '季安', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(88, '088', '莘穎', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(89, '089', '邵婉雅', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(90, '090', '壤駟俊宗', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(91, '091', '閭丘美建', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(92, '092', '吳華宏', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(93, '093', '步宜宗', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(94, '094', '廖冠', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(95, '095', '古文佳', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(96, '096', '詹萱華', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(97, '097', '趙威', NULL, 'F', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(98, '098', '子車承', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(99, '099', '竇穎', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00'),
-(100, '100', '阮美文', NULL, 'M', NULL, NULL, NULL, '2023-01-10 18:15:00', '2023-01-10 18:15:00');
+(1, NULL, '丁娟庭', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(2, NULL, '洪樺', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(3, NULL, '后雯淑', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(4, NULL, '第五瑜', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(5, NULL, '樂冠', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(6, NULL, '蓋偉', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(7, NULL, '紀君', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(8, NULL, '蒼銘', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(9, NULL, '海鈺', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(10, NULL, '萬傑佳', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(11, NULL, '尉遲賢', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(12, NULL, '督佩蓉', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(13, NULL, '喻慧', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(14, NULL, '諸詩宜', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(15, NULL, '甘芳佳', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(16, NULL, '司空思信', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(17, NULL, '郜婉萱', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(18, NULL, '鬱瑋', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(19, NULL, '璩郁', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(20, NULL, '融詩瑋', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(21, NULL, '鄂娟', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(22, NULL, '房華怡', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(23, NULL, '伍庭宏', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(24, NULL, '呂翰', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(25, NULL, '茅詩', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(26, NULL, '段干詩信', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(27, NULL, '繆宏冠', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(28, NULL, '翟嘉', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(29, NULL, '凌樺俊', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(30, NULL, '哈冠琪', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(31, NULL, '東方儀', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(32, NULL, '慎慧', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(33, NULL, '仰哲承', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(34, NULL, '閆宗心', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(35, NULL, '章萍', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(36, NULL, '公冶家信', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(37, NULL, '沈琪怡', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(38, NULL, '榮穎鈺', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(39, NULL, '濮陽筱琬', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(40, NULL, '平承', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(41, NULL, '郤華建', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(42, NULL, '邊信', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(43, NULL, '郤賢', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(44, NULL, '竺玲', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(45, NULL, '東門華鈺', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(46, NULL, '東方筑蓉', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(47, NULL, '公羊翰', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(48, NULL, '烏志嘉', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(49, NULL, '雍瑋', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(50, NULL, '艾柏', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(51, NULL, '孔家琬', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(52, NULL, '藍慧涵', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(53, NULL, '鄢儀玲', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(54, NULL, '姬琬欣', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(55, NULL, '乜筑慧', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(56, NULL, '慕怡佳', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(57, NULL, '巢佩貞', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(58, NULL, '軒轅琪怡', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(59, NULL, '拓跋哲', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(60, NULL, '任如穎', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(61, NULL, '秋如', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(62, NULL, '隗穎銘', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(63, NULL, '堵穎琪', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(64, NULL, '扈心', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(65, NULL, '沙美霖', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(66, NULL, '凌傑', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(67, NULL, '米心', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(68, NULL, '談佳', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(69, NULL, '佘美', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(70, NULL, '赫連詩安', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(71, NULL, '應宜貞', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(72, NULL, '桑冠', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(73, NULL, '鞠怡', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(74, NULL, '厙建庭', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(75, NULL, '幸宇', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(76, NULL, '宮志心', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(77, NULL, '竇美筱', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(78, NULL, '申軒', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(79, NULL, '姜思', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(80, NULL, '皮雅惠', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(81, NULL, '夔翰豪', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(82, NULL, '郗貞', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(83, NULL, '雙如芳', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(84, NULL, '趙賢軒', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(85, NULL, '充琪', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(86, NULL, '安軒', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(87, NULL, '懷萍珊', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(88, NULL, '陶涵', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(89, NULL, '焦心冠', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(90, NULL, '伯華', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(91, NULL, '臧哲', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(92, NULL, '余詩宇', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(93, NULL, '段干君', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(94, NULL, '衛萱琪', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(95, NULL, '榮承冠', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(96, NULL, '孫庭思', NULL, 'M', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(97, NULL, '干穎', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(98, NULL, '韶蓉筱', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(99, NULL, '暨穎', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(100, NULL, '呼延美軒', NULL, 'F', NULL, NULL, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29');
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `students`
+-- Table structure for table `students`
 --
 
 CREATE TABLE `students` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `name_zh` varchar(255) NOT NULL,
-  `name_fn` varchar(255) NOT NULL,
+  `name_fn` varchar(255) DEFAULT NULL,
+  `name_display` varchar(255) DEFAULT NULL,
   `gender` char(1) NOT NULL,
   `dob` date DEFAULT NULL,
+  `pob` varchar(255) DEFAULT NULL,
+  `start_letter` varchar(255) DEFAULT NULL,
+  `start_grade` varchar(255) DEFAULT NULL,
+  `sic` varchar(255) DEFAULT NULL,
+  `phone` varchar(255) DEFAULT NULL,
+  `dsej_num` varchar(255) DEFAULT NULL,
+  `medical_num` varchar(255) DEFAULT NULL,
+  `entry_date` date DEFAULT NULL,
+  `past_school_name` varchar(255) DEFAULT NULL,
+  `religion` varchar(255) DEFAULT NULL,
+  `phone_sms` varchar(255) DEFAULT NULL,
+  `phone_home` varchar(255) DEFAULT NULL,
+  `carer` varchar(255) DEFAULT NULL,
+  `parent` text DEFAULT NULL,
+  `garidan` text DEFAULT NULL,
+  `liaison` text DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Extraindo dados da tabela `students`
+-- Dumping data for table `students`
 --
 
-INSERT INTO `students` (`id`, `name_zh`, `name_fn`, `gender`, `dob`, `created_at`, `updated_at`) VALUES
-(1, '第五庭家', '銘樺', 'F', '2003-05-30', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(2, '軒轅信軒', '詩家', 'M', '2011-06-29', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(3, '酆瑋銘', '心家', 'F', '2011-10-17', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(4, '路瑋宜', '珊', 'M', '2015-02-09', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(5, '車柏', '佳承', 'F', '2005-06-14', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(6, '汝安賢', '萍靜', 'F', '2010-10-04', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(7, '盛建', '志', 'F', '2004-09-24', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(8, '于銘志', '美佳', 'F', '2013-08-31', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(9, '龐玲蓉', '佳筱', 'F', '2009-08-04', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(10, '商志', '豪志', 'M', '2002-04-16', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(11, '燕銘', '庭', 'F', '2011-09-01', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(12, '墨建', '君華', 'F', '2014-11-24', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(13, '伍承', '承宇', 'M', '2004-03-31', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(14, '裘思娟', '翰', 'F', '2006-02-09', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(15, '宋宏廷', '安思', 'F', '2014-11-01', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(16, '樂正芬蓉', '冠', 'M', '2005-10-08', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(17, '于傑冠', '廷豪', 'F', '2004-10-21', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(18, '史偉廷', '欣珊', 'M', '2011-03-06', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(19, '谷雅瑜', '偉傑', 'M', '2010-06-18', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(20, '別玲安', '承', 'F', '2013-06-22', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(21, '祿哲', '瑋信', 'M', '2003-06-20', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(22, '甄心欣', '雅', 'F', '2000-11-16', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(23, '岳雅淑', '穎伶', 'F', '2008-10-18', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(24, '周宜雅', '冠翰', 'M', '2013-01-09', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(25, '蔚偉柏', '哲思', 'F', '2011-07-31', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(26, '孔雅冠', '欣', 'F', '2005-05-09', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(27, '裴美', '雅', 'M', '2001-10-17', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(28, '黃宇哲', '如儀', 'M', '2004-06-11', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(29, '甘穎', '銘文', 'M', '2002-04-02', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(30, '簡惠', '哲', 'M', '2001-02-21', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(31, '黎柏', '依佳', 'F', '2003-01-26', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(32, '晏思信', '儀怡', 'F', '2008-11-10', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(33, '尹婷', '雅', 'F', '2000-09-16', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(34, '井建安', '華宇', 'F', '2000-09-08', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(35, '危霖', '瑜蓉', 'F', '2003-06-13', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(36, '齊芬', '玲琪', 'F', '2004-10-11', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(37, '查威', '文', 'M', '2011-03-28', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(38, '謝宜', '安', 'F', '2003-04-19', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(39, '彭宏', '承', 'F', '2009-12-02', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(40, '郗威翰', '依涵', 'M', '2008-07-21', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(41, '江珊芳', '蓉', 'F', '2013-04-01', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(42, '屠安', '貞依', 'M', '2005-10-11', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(43, '邰志宗', '詩', 'F', '2008-07-21', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(44, '牟琬', '娟文', 'M', '2012-10-13', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(45, '干依伶', '俊傑', 'M', '2004-07-01', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(46, '隗樺宇', '柏', 'F', '2014-02-23', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(47, '幸佳', '冠', 'M', '2011-05-09', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(48, '卓心', '芬貞', 'F', '2009-02-04', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(49, '家威豪', '琪玲', 'M', '2011-12-04', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(50, '蔡依', '娟', 'F', '2004-11-06', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(51, '沃心樺', '文鈺', 'M', '2004-01-17', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(52, '胥威', '冠宜', 'M', '2005-04-21', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(53, '東方婷佳', '彥', 'M', '2007-04-08', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(54, '干萍郁', '心婷', 'F', '2007-05-12', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(55, '西門偉', '慧', 'F', '2010-09-16', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(56, '韓志文', '庭', 'M', '2002-10-10', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(57, '扶思安', '婷馨', 'M', '2009-11-30', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(58, '裴萍芬', '志華', 'F', '2004-09-20', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(59, '全家', '傑', 'F', '2011-05-05', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(60, '毛依', '雅', 'F', '2008-05-19', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(61, '弘筑嘉', '美瑋', 'F', '2005-08-10', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(62, '甄依', '庭', 'M', '2009-02-10', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(63, '年威彥', '心華', 'M', '2010-11-02', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(64, '奚信傑', '琪', 'F', '2013-08-13', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(65, '宮瑋', '惠伶', 'F', '2013-12-03', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(66, '費心', '怡', 'M', '2003-11-29', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(67, '廣如萱', '詩', 'M', '2006-01-26', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(68, '阮宏翰', '涵文', 'F', '2012-10-16', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(69, '牛哲俊', '貞', 'M', '2007-07-01', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(70, '桓萍如', '華佳', 'M', '2012-08-06', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(71, '俞淑', '琪萱', 'M', '2015-02-02', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(72, '別穎瑋', '志', 'M', '2012-08-07', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(73, '万俟萍', '安建', 'M', '2012-11-14', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(74, '司徒思', '柏', 'F', '2003-04-13', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(75, '馬廷威', '瑋', 'F', '2006-07-11', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(76, '空思', '華', 'M', '2006-08-09', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(77, '宇文如', '冠樺', 'M', '2007-12-28', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(78, '王軒宏', '淑', 'M', '2003-10-05', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(79, '荀依', '伶', 'F', '2008-01-25', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(80, '步詩', '心', 'M', '2007-12-18', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(81, '空筱', '君', 'M', '2001-04-27', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(82, '黨娟家', '雅', 'M', '2008-01-02', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(83, '湯玲欣', '芬思', 'F', '2012-02-12', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(84, '欒宜', '婉佩', 'M', '2013-10-31', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(85, '石怡涵', '宜', 'M', '2008-11-05', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(86, '梅淑', '萍', 'F', '2006-09-17', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(87, '羿軒君', '嘉', 'F', '2012-10-07', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(88, '鈕欣', '樺', 'F', '2011-05-26', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(89, '籍哲', '佳', 'M', '2011-08-15', '2023-01-10 18:14:57', '2023-01-10 18:14:57'),
-(90, '戴宜芳', '慧', 'M', '2004-01-21', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(91, '弘美心', '豪建', 'M', '2003-02-09', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(92, '詹庭柏', '賢', 'M', '2005-07-26', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(93, '祝心宏', '樺宏', 'F', '2008-01-22', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(94, '令狐心', '庭穎', 'F', '2001-11-03', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(95, '太叔銘', '安雅', 'F', '2009-12-30', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(96, '史如', '美偉', 'F', '2011-03-13', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(97, '鄭玲美', '君', 'M', '2009-11-29', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(98, '岳慧雅', '安瑋', 'F', '2004-03-12', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(99, '伯芳', '豪', 'F', '2010-09-20', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(100, '夾谷華', '詩', 'M', '2006-07-17', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(101, '申哲', '佳彥', 'F', '2011-04-28', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(102, '項穎君', '柏', 'F', '2006-11-13', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(103, '仉娟詩', '承', 'F', '2013-12-17', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(104, '相思', '嘉琬', 'F', '2011-03-15', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(105, '壤駟心', '安', 'F', '2004-04-11', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(106, '酈雯琪', '志俊', 'M', '2008-09-29', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(107, '蒙廷家', '庭', 'M', '2001-11-02', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(108, '鳳華', '哲', 'M', '2002-08-31', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(109, '榮翰', '柏', 'F', '2005-04-30', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(110, '全萍娟', '彥傑', 'M', '2009-09-25', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(111, '麴郁婉', '俊', 'M', '2013-12-10', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(112, '相宇', '思', 'F', '2004-01-05', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(113, '龍冠宇', '郁芳', 'F', '2009-05-06', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(114, '梁丘安婉', '琬', 'F', '2003-01-25', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(115, '弘穎穎', '樺豪', 'M', '2014-09-07', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(116, '宇文芳', '翰詩', 'F', '2008-02-19', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(117, '虞宇', '芳', 'M', '2007-09-16', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(118, '羿文婉', '華', 'F', '2011-07-14', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(119, '夔樺', '玲', 'M', '2010-12-10', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(120, '冷佩', '馨', 'M', '2012-12-18', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(121, '濮銘宏', '雯', 'M', '2008-02-18', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(122, '司徒豪', '安', 'F', '2003-01-14', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(123, '別嘉', '佩', 'M', '2014-08-08', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(124, '辛柏', '雯萱', 'F', '2006-06-10', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(125, '濮美', '君家', 'M', '2012-08-07', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(126, '晏詩', '銘君', 'F', '2011-11-02', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(127, '芮婷', '宇宏', 'M', '2001-04-11', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(128, '閔美', '建文', 'F', '2011-12-31', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(129, '陰哲思', '君萱', 'F', '2008-02-29', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(130, '明美安', '威', 'M', '2009-11-04', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(131, '盧君廷', '淑', 'F', '2008-06-05', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(132, '海娟', '俊', 'F', '2010-11-30', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(133, '班怡', '美', 'F', '2012-11-01', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(134, '歐陽銘家', '文怡', 'M', '2012-10-21', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(135, '公冶靜穎', '家承', 'M', '2010-02-19', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(136, '鄧安', '翰冠', 'F', '2001-01-25', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(137, '史雅冠', '琬', 'F', '2006-01-20', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(138, '危嘉君', '淑瑜', 'M', '2007-06-20', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(139, '耿冠', '華', 'F', '2012-05-18', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(140, '鄭慧', '慧', 'M', '2014-01-01', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(141, '姬華霖', '美欣', 'F', '2002-03-17', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(142, '欒娟儀', '軒宗', 'M', '2007-11-11', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(143, '段干華', '詩廷', 'F', '2004-04-02', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(144, '索文', '家', 'M', '2014-06-29', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(145, '欒信', '郁心', 'M', '2015-08-06', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(146, '益承', '安庭', 'M', '2007-01-04', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(147, '晏穎蓉', '依', 'M', '2010-05-12', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(148, '胥華怡', '豪承', 'F', '2003-08-17', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(149, '祁伶', '瑋', 'M', '2004-09-03', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(150, '吳華豪', '心萍', 'M', '2004-09-18', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(151, '鮮于宜傑', '文', 'M', '2002-10-01', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(152, '聶冠', '嘉', 'F', '2007-10-08', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(153, '柯志', '冠蓉', 'M', '2003-12-23', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(154, '蒼宏承', '依', 'M', '2014-06-29', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(155, '臧霖', '家家', 'F', '2008-08-01', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(156, '單于思瑋', '雯詩', 'F', '2015-03-24', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(157, '韓安偉', '思', 'F', '2011-12-18', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(158, '祿心', '瑋', 'F', '2013-07-25', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(159, '封宇詩', '傑庭', 'F', '2002-10-16', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(160, '祁婉美', '惠', 'M', '2014-04-01', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(161, '井依', '宜', 'F', '2005-03-17', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(162, '蔡馨', '雅', 'M', '2010-01-08', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(163, '東方軒安', '銘傑', 'F', '2006-05-16', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(164, '支俊君', '軒', 'F', '2009-01-23', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(165, '巫傑', '彥', 'M', '2011-06-25', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(166, '應佳', '文', 'M', '2009-08-02', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(167, '幸郁思', '承志', 'F', '2004-07-23', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(168, '壤駟靜', '哲', 'F', '2010-03-07', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(169, '壽霖', '軒', 'F', '2006-05-06', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(170, '桓家珊', '鈺', 'M', '2005-02-06', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(171, '甘冠穎', '彥', 'F', '2007-01-23', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(172, '婁宗', '哲', 'M', '2013-03-29', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(173, '季安', '俊', 'M', '2002-09-03', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(174, '于佳', '伶心', 'F', '2001-05-11', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(175, '張佳', '筑', 'F', '2001-07-30', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(176, '匡穎俊', '宜', 'F', '2013-11-19', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(177, '支庭思', '銘宏', 'M', '2005-09-13', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(178, '袁美', '庭', 'F', '2012-01-03', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(179, '湯威', '安', 'M', '2002-11-25', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(180, '富賢', '思家', 'M', '2005-10-20', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(181, '萬樺君', '翰', 'M', '2009-02-03', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(182, '巢涵琬', '冠', 'M', '2004-11-16', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(183, '經琬如', '庭廷', 'M', '2001-11-30', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(184, '榮霖', '俊', 'M', '2001-07-24', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(185, '穆怡', '宜', 'F', '2011-12-23', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(186, '雲心宗', '慧', 'M', '2006-12-07', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(187, '倪樺安', '廷翰', 'F', '2003-08-26', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(188, '蔣承華', '美', 'F', '2006-03-30', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(189, '咸宇宗', '俊信', 'F', '2002-01-24', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(190, '農宜柏', '慧', 'M', '2010-01-23', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(191, '顏嘉穎', '安樺', 'F', '2007-01-15', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(192, '簡豪安', '穎婷', 'F', '2015-06-14', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(193, '湛宇美', '賢冠', 'M', '2014-01-18', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(194, '祁宗文', '志威', 'M', '2001-03-25', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(195, '井萍穎', '文詩', 'M', '2014-07-29', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(196, '黎琪穎', '宜', 'F', '2002-08-16', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(197, '白雯', '萍', 'F', '2005-03-31', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(198, '崔靜思', '霖心', 'F', '2000-10-10', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(199, '束怡', '思', 'M', '2003-12-16', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(200, '裴柏霖', '冠', 'M', '2015-02-01', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(201, '喻佳', '文家', 'M', '2012-08-30', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(202, '弓庭', '心賢', 'F', '2009-10-22', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(203, '全穎信', '琬思', 'M', '2002-10-31', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(204, '安華宗', '琪', 'F', '2009-03-13', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(205, '單于儀', '家安', 'F', '2005-05-13', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(206, '酆彥建', '鈺', 'F', '2001-05-28', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(207, '陸萱', '文', 'F', '2015-03-12', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(208, '方蓉', '宗偉', 'M', '2005-05-27', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(209, '駱宗', '廷', 'F', '2008-02-08', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(210, '甘淑', '筑', 'F', '2004-03-02', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(211, '東美廷', '宇', 'M', '2002-06-17', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(212, '樊萍', '美', 'F', '2009-04-26', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(213, '黃信軒', '嘉', 'F', '2007-07-09', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(214, '桂文', '庭樺', 'M', '2002-02-17', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(215, '聞人俊', '彥宗', 'F', '2013-02-19', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(216, '赫連芳', '如欣', 'F', '2011-04-16', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(217, '溫蓉慧', '宇嘉', 'M', '2010-01-17', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(218, '石銘軒', '廷', 'F', '2001-07-19', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(219, '郝如', '軒', 'F', '2002-02-27', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(220, '晏琬華', '穎', 'F', '2011-09-17', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(221, '公良伶', '冠', 'M', '2001-10-11', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(222, '甄詩安', '宜', 'M', '2007-11-22', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(223, '懷瑜如', '珊', 'F', '2000-09-08', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(224, '仲穎涵', '涵婉', 'F', '2003-12-31', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(225, '楚筑', '俊君', 'M', '2011-10-30', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(226, '呼延穎', '安', 'M', '2007-02-07', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(227, '晉信傑', '承', 'M', '2011-10-21', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(228, '楊穎銘', '霖', 'M', '2003-09-29', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(229, '欒樺', '威', 'F', '2008-05-14', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(230, '璩威', '賢', 'F', '2012-06-18', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(231, '闞宏翰', '馨', 'F', '2012-01-23', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(232, '殷俊銘', '家安', 'M', '2007-04-05', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(233, '饒翰', '佳佳', 'M', '2007-11-18', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(234, '卜詩', '芬', 'M', '2011-01-11', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(235, '宋芳', '家賢', 'M', '2001-03-12', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(236, '成家', '芳萍', 'F', '2012-12-19', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(237, '何淑儀', '婉', 'F', '2008-08-25', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(238, '卞佩芳', '馨', 'M', '2003-07-23', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(239, '鍾佳', '傑穎', 'M', '2004-02-03', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(240, '梁穎', '樺佳', 'M', '2012-01-03', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(241, '夏侯宏', '婉', 'F', '2006-04-02', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(242, '翁詩家', '萱婉', 'F', '2008-03-18', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(243, '靳萍涵', '庭', 'M', '2008-06-13', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(244, '甘銘思', '思', 'M', '2006-04-30', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(245, '全志', '雅雯', 'M', '2013-12-25', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(246, '祁文', '娟', 'F', '2007-02-26', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(247, '安郁', '豪', 'F', '2002-04-16', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(248, '司馬如', '涵玲', 'M', '2013-04-14', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(249, '干佳宇', '宜', 'M', '2005-08-24', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(250, '靳嘉嘉', '威', 'F', '2008-07-18', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(251, '簡宏', '華志', 'M', '2010-07-31', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(252, '融馨文', '伶萍', 'M', '2004-10-07', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(253, '虞冠', '穎', 'F', '2007-06-29', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(254, '仲美', '雯', 'M', '2015-01-10', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(255, '汲佳', '心佳', 'F', '2013-06-13', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(256, '祁樺', '心玲', 'F', '2002-06-23', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(257, '長孫佳', '婷', 'F', '2008-09-24', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(258, '宇文賢', '彥', 'M', '2009-12-27', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(259, '郭華', '建信', 'F', '2011-02-21', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(260, '上官嘉', '哲', 'F', '2014-05-21', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(261, '顧婷', '偉', 'F', '2001-08-29', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(262, '梁穎', '涵', 'M', '2011-02-10', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(263, '薊宜華', '萱華', 'M', '2014-05-15', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(264, '鍾美', '樺', 'F', '2008-09-11', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(265, '巢翰', '嘉威', 'M', '2015-07-24', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(266, '瞿婷萍', '娟', 'F', '2012-09-06', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(267, '仲淑芬', '賢', 'M', '2011-02-08', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(268, '郜蓉', '美豪', 'F', '2012-01-16', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(269, '江筑家', '琬怡', 'F', '2011-03-25', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(270, '王惠', '信', 'M', '2006-04-06', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(271, '衡娟', '君', 'F', '2008-01-20', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(272, '相伶嘉', '瑋宏', 'F', '2014-11-23', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(273, '車廷哲', '娟', 'F', '2007-02-23', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(274, '微生君', '佩', 'F', '2012-08-04', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(275, '后靜穎', '涵', 'M', '2009-11-23', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(276, '董芳嘉', '志', 'M', '2002-02-18', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(277, '左彥嘉', '貞', 'M', '2008-11-26', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(278, '南宮雅', '美', 'M', '2004-09-06', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(279, '巫如心', '萍', 'F', '2001-06-18', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(280, '薛庭', '佩穎', 'F', '2010-10-16', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(281, '竇安芬', '珊芳', 'F', '2012-01-19', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(282, '尤佳伶', '美威', 'M', '2009-02-15', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(283, '訾文思', '華', 'M', '2008-01-26', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(284, '柯佳婷', '儀婷', 'M', '2003-07-15', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(285, '荀思心', '翰', 'M', '2012-09-28', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(286, '東柏廷', '傑', 'M', '2004-01-17', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(287, '闞安心', '思惠', 'M', '2007-07-10', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(288, '冀霖宇', '承', 'F', '2002-03-06', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(289, '曾思樺', '賢', 'F', '2006-11-25', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(290, '烏嘉', '郁惠', 'M', '2003-02-11', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(291, '繆哲', '靜美', 'M', '2012-09-23', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(292, '姚君蓉', '傑', 'F', '2004-12-26', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(293, '魚廷', '淑', 'M', '2014-11-04', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(294, '相筑儀', '瑜家', 'M', '2015-02-01', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(295, '幸依', '淑', 'M', '2012-12-31', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(296, '竺宇宇', '承銘', 'F', '2010-11-22', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(297, '戎家文', '文', 'F', '2014-04-25', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(298, '言家', '威華', 'F', '2012-05-28', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(299, '郝豪宇', '華宜', 'M', '2004-03-24', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(300, '夏侯庭哲', '宗', 'M', '2014-10-04', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(301, '相佳', '筱', 'M', '2014-03-06', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(302, '令狐依萱', '家', 'M', '2013-12-12', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(303, '司徒筱華', '嘉', 'F', '2012-01-18', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(304, '樊建', '偉', 'M', '2004-11-10', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(305, '羅心', '雅伶', 'F', '2014-10-05', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(306, '郜伶芳', '志', 'M', '2005-05-31', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(307, '郎文安', '芳玲', 'M', '2007-03-15', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(308, '鄔冠', '怡', 'M', '2010-10-08', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(309, '羅霖', '惠', 'F', '2004-07-31', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(310, '羊舌婉', '瑋彥', 'M', '2013-06-18', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(311, '龐賢', '俊詩', 'M', '2014-05-10', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(312, '壤駟婉如', '宇俊', 'F', '2014-04-18', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(313, '邢娟', '傑', 'M', '2013-10-08', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(314, '慕容筱依', '婷', 'M', '2007-12-01', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(315, '倪依', '穎', 'F', '2005-09-02', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(316, '姚穎佳', '華樺', 'M', '2009-12-02', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(317, '太叔婉穎', '廷', 'F', '2010-05-17', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(318, '左丘怡', '軒', 'F', '2004-03-06', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(319, '全芳', '柏建', 'F', '2014-04-10', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(320, '厙霖承', '君樺', 'M', '2011-08-22', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(321, '鮑穎', '文心', 'F', '2008-04-09', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(322, '夏侯承宗', '郁', 'M', '2012-09-13', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(323, '閆嘉', '文芬', 'F', '2008-09-07', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(324, '聞人靜華', '佳', 'F', '2012-10-10', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(325, '嚴依', '賢賢', 'F', '2012-06-02', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(326, '融琬', '宗宏', 'M', '2012-11-23', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(327, '褚佳華', '依佳', 'M', '2012-06-03', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(328, '空宜', '家安', 'F', '2010-02-20', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(329, '褚彥樺', '儀', 'F', '2005-07-11', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(330, '隗貞蓉', '欣惠', 'F', '2010-09-23', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(331, '韓柏庭', '偉', 'M', '2008-05-25', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(332, '任婉郁', '芬', 'F', '2011-04-07', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(333, '麻婷', '怡', 'F', '2013-03-27', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(334, '祿翰安', '冠', 'F', '2013-10-12', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(335, '諸葛貞雯', '鈺儀', 'F', '2012-06-29', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(336, '晉哲', '美信', 'F', '2008-08-23', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(337, '伍娟婉', '心', 'M', '2009-02-01', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(338, '閆霖俊', '華詩', 'M', '2015-01-06', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(339, '狄琪華', '淑儀', 'M', '2011-09-19', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(340, '拓跋軒建', '宇安', 'M', '2005-01-18', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(341, '龔霖佳', '信詩', 'F', '2001-11-24', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(342, '弘宜', '俊心', 'M', '2003-04-26', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(343, '弘萍玲', '嘉宇', 'F', '2013-01-28', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(344, '乜雅', '承瑋', 'F', '2010-05-12', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(345, '莫美雯', '宏思', 'F', '2008-07-11', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(346, '莘豪', '思家', 'F', '2012-11-11', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(347, '呂鈺美', '嘉芬', 'F', '2010-07-07', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(348, '桑貞鈺', '宜華', 'M', '2006-12-28', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(349, '井庭', '婷淑', 'F', '2007-12-26', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(350, '計佳', '華', 'M', '2014-11-10', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(351, '舒俊', '心', 'F', '2007-11-08', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(352, '牧豪', '靜琪', 'M', '2013-05-18', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(353, '牛庭安', '芬琪', 'F', '2014-12-06', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(354, '夏侯思', '文華', 'F', '2006-02-24', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(355, '田鈺', '家', 'M', '2002-07-13', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(356, '冀芬', '傑彥', 'F', '2008-02-13', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(357, '孟志', '宜靜', 'F', '2015-08-21', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(358, '龐安', '心', 'F', '2010-08-09', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(359, '荀筱筑', '文豪', 'M', '2011-09-19', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(360, '慎依', '華', 'F', '2014-06-25', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(361, '水豪', '涵', 'M', '2010-08-09', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(362, '紅華萱', '貞鈺', 'F', '2003-11-20', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(363, '蘇心偉', '嘉君', 'M', '2007-12-27', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(364, '越翰', '彥豪', 'F', '2010-05-23', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(365, '童豪宏', '嘉穎', 'F', '2014-07-26', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(366, '郭詩靜', '宜郁', 'M', '2013-01-17', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(367, '龐佳冠', '賢', 'M', '2001-10-22', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(368, '鄒傑', '傑家', 'M', '2007-08-29', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(369, '宋雯琬', '安靜', 'F', '2012-12-18', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(370, '公羊怡欣', '芳嘉', 'F', '2007-07-29', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(371, '冀淑萱', '佳欣', 'F', '2012-10-22', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(372, '微生彥', '思心', 'F', '2014-01-08', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(373, '閆穎', '瑜', 'M', '2012-10-20', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(374, '梁郁靜', '婉', 'F', '2002-11-26', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(375, '雷佳', '玲佩', 'F', '2015-07-13', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(376, '公西宇佳', '佳', 'F', '2008-03-26', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(377, '湯華', '芳怡', 'M', '2005-10-17', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(378, '壤駟雯', '華志', 'F', '2009-09-12', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(379, '竺志銘', '宜', 'M', '2003-10-06', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(380, '單瑜伶', '貞芳', 'M', '2012-07-24', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(381, '薄郁', '傑', 'F', '2012-05-21', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(382, '段詩穎', '琪琬', 'M', '2002-09-12', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(383, '秋柏嘉', '慧', 'M', '2005-10-04', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(384, '宗政嘉', '如', 'M', '2007-01-21', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(385, '辛家思', '詩', 'F', '2012-06-23', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(386, '充宇', '蓉', 'F', '2012-02-24', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(387, '笪婉瑜', '彥', 'M', '2015-08-21', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(388, '乜傑偉', '美', 'F', '2015-08-29', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(389, '益俊', '威', 'M', '2009-12-08', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(390, '洪怡', '宜', 'M', '2009-09-17', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(391, '利豪偉', '涵', 'F', '2000-12-18', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(392, '宗宜彥', '萱家', 'M', '2005-02-25', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(393, '包樺', '宏翰', 'F', '2008-01-21', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(394, '姜翰宜', '依雯', 'F', '2013-12-01', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(395, '宣威霖', '玲依', 'F', '2002-08-10', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(396, '卜心', '宗威', 'M', '2008-01-26', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(397, '戎穎', '佩佩', 'M', '2001-08-23', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(398, '涂建安', '穎如', 'M', '2011-01-20', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(399, '褚信', '慧雯', 'F', '2002-11-18', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(400, '西門銘', '宜', 'F', '2004-04-16', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(401, '吉傑', '庭君', 'M', '2002-02-12', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(402, '于瑋', '依思', 'M', '2004-09-26', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(403, '宰父筱冠', '嘉', 'M', '2007-05-18', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(404, '東郭心', '威銘', 'M', '2001-05-25', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(405, '秋傑', '冠', 'M', '2005-07-01', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(406, '戈郁淑', '君美', 'M', '2002-11-06', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(407, '凌穎', '美美', 'F', '2010-07-12', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(408, '苗傑佳', '庭', 'M', '2013-05-12', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(409, '郝嘉瑋', '怡詩', 'M', '2010-07-05', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(410, '佴思', '霖安', 'M', '2006-11-10', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(411, '暴詩華', '傑', 'M', '2009-08-07', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(412, '山芳', '彥豪', 'M', '2012-03-13', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(413, '黨賢宇', '芬', 'F', '2004-11-08', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(414, '尤美', '依雅', 'M', '2002-10-08', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(415, '唐心翰', '君宜', 'M', '2002-10-16', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(416, '劉廷', '彥心', 'M', '2005-12-08', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(417, '孫佩', '冠', 'M', '2007-11-08', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(418, '魚冠心', '彥', 'M', '2012-03-14', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(419, '甘賢華', '思承', 'M', '2013-01-14', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(420, '卓瑋冠', '威軒', 'F', '2008-11-25', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(421, '鈕心', '信華', 'M', '2006-11-10', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(422, '江宗建', '瑋', 'M', '2008-06-29', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(423, '時志', '芳', 'F', '2004-11-10', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(424, '東珊庭', '宜', 'F', '2006-07-03', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(425, '逯鈺筱', '詩偉', 'F', '2007-02-25', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(426, '權馨宜', '涵', 'M', '2007-02-14', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(427, '雲佳', '穎霖', 'M', '2012-05-26', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(428, '慕容宜', '思', 'F', '2013-01-04', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(429, '欽宗', '美心', 'F', '2011-09-09', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(430, '許娟', '美', 'M', '2006-11-26', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(431, '璩華', '涵', 'F', '2001-11-16', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(432, '柴庭瑋', '佳', 'F', '2013-04-19', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(433, '印郁', '雯', 'F', '2005-03-22', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(434, '陰宇', '瑜宜', 'F', '2006-03-19', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(435, '周宇軒', '家思', 'F', '2003-11-18', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(436, '水華', '珊', 'F', '2001-12-07', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(437, '連筱', '慧', 'F', '2007-01-17', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(438, '慕建翰', '詩宜', 'F', '2013-11-04', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(439, '呼延鈺', '賢', 'F', '2008-04-15', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(440, '豐芳', '廷', 'M', '2008-07-14', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(441, '東方豪', '淑', 'F', '2005-03-31', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(442, '佘貞', '佳俊', 'M', '2005-03-24', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(443, '宣家傑', '琬婉', 'F', '2002-07-12', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(444, '時詩宗', '志志', 'F', '2009-12-10', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(445, '程君', '樺翰', 'F', '2004-02-01', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(446, '尤廷美', '雅', 'F', '2009-07-20', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(447, '浦淑', '瑜', 'M', '2012-08-05', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(448, '萬如', '嘉', 'F', '2013-07-17', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(449, '年家鈺', '哲建', 'F', '2013-07-19', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(450, '殳儀瑜', '廷', 'M', '2003-01-29', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(451, '蕭信', '思', 'M', '2004-05-05', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(452, '顧安婷', '哲霖', 'M', '2014-04-12', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(453, '沙穎', '琪玲', 'M', '2003-12-10', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(454, '牛心', '俊承', 'F', '2008-07-29', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(455, '宮嘉', '文', 'M', '2010-01-31', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(456, '閻霖', '家怡', 'F', '2014-01-03', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(457, '富惠', '豪家', 'M', '2000-12-14', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(458, '南宮嘉', '哲賢', 'M', '2003-03-13', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(459, '鍾離嘉', '芬雅', 'M', '2008-02-09', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(460, '相心', '傑', 'F', '2004-03-08', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(461, '羊舌穎', '志', 'F', '2014-12-04', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(462, '鈕貞', '家', 'M', '2002-03-01', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(463, '伍文', '華賢', 'M', '2009-11-15', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(464, '墨儀', '賢', 'F', '2001-10-04', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(465, '范廷', '彥廷', 'M', '2013-05-09', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(466, '賴霖', '美君', 'M', '2002-04-13', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(467, '慕冠偉', '郁', 'M', '2011-07-21', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(468, '笪郁', '廷俊', 'M', '2002-07-17', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(469, '柳嘉霖', '芬', 'F', '2006-11-27', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(470, '申屠惠', '雯貞', 'F', '2001-04-20', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(471, '邊翰', '思彥', 'F', '2013-04-29', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(472, '芮穎銘', '庭承', 'M', '2001-03-13', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(473, '阮蓉穎', '文', 'M', '2000-12-17', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(474, '蓬萍鈺', '慧', 'M', '2014-01-06', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(475, '祝志', '承廷', 'F', '2006-11-10', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(476, '聞人賢', '娟玲', 'M', '2009-06-03', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(477, '危佳', '筑', 'M', '2009-12-06', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(478, '魚依', '穎偉', 'M', '2014-05-07', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(479, '牧思', '安', 'M', '2010-09-13', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(480, '儲瑜思', '詩', 'F', '2009-02-19', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(481, '毋庭宜', '家', 'M', '2008-09-26', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(482, '督宏佳', '雯', 'F', '2002-05-02', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(483, '沙穎華', '蓉', 'F', '2012-04-28', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(484, '弓慧娟', '家萍', 'F', '2004-03-12', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(485, '殳玲筑', '儀淑', 'M', '2011-10-02', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(486, '管君蓉', '志華', 'F', '2004-06-08', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(487, '班美筑', '偉', 'F', '2013-10-13', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(488, '終玲', '思', 'M', '2007-05-18', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(489, '郗美', '安安', 'F', '2011-06-07', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(490, '水宜', '軒柏', 'M', '2011-06-20', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(491, '商庭', '宇', 'M', '2012-06-18', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(492, '公羊賢', '偉承', 'F', '2011-07-08', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(493, '司珊思', '傑', 'F', '2004-06-15', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(494, '葛心', '佩', 'F', '2012-05-13', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(495, '左丘威', '美', 'M', '2006-05-19', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(496, '章華佳', '佳', 'M', '2004-10-04', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(497, '韶欣鈺', '娟欣', 'F', '2012-11-13', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(498, '韶賢', '婉', 'M', '2010-04-05', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(499, '芮志庭', '建冠', 'F', '2000-12-25', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(500, '空俊文', '華依', 'M', '2011-10-13', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(501, '祿穎', '宗', 'M', '2000-12-09', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(502, '宦豪君', '宗', 'F', '2003-12-19', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(503, '干華玲', '承', 'M', '2001-03-18', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(504, '沃靜淑', '賢安', 'F', '2006-04-13', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(505, '方翰宏', '佩', 'M', '2005-09-19', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(506, '花華', '萱琪', 'M', '2005-08-12', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(507, '顏郁佳', '嘉信', 'F', '2003-03-26', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(508, '蒯樺', '思', 'F', '2005-11-29', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(509, '須家', '柏', 'M', '2009-06-06', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(510, '牧玲雅', '庭靜', 'M', '2004-04-22', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(511, '陰信', '偉安', 'F', '2004-12-15', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(512, '凌思嘉', '志', 'F', '2007-11-03', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(513, '符俊', '娟筱', 'M', '2001-10-06', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(514, '東方庭', '翰', 'F', '2002-05-15', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(515, '閻芳思', '怡欣', 'M', '2004-07-25', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(516, '法庭', '筑', 'M', '2012-03-12', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(517, '昝琬', '穎', 'M', '2004-03-11', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(518, '宮佳宗', '霖', 'M', '2006-11-11', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(519, '藍穎信', '庭彥', 'M', '2012-03-16', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(520, '晁珊', '瑋安', 'M', '2006-03-24', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(521, '祖涵', '文', 'M', '2011-05-30', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(522, '牟筱玲', '庭宇', 'M', '2008-11-18', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(523, '東儀惠', '如儀', 'M', '2005-10-27', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(524, '芮威宏', '文君', 'M', '2011-05-12', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(525, '連柏偉', '華霖', 'M', '2002-05-22', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(526, '冉庭娟', '慧', 'F', '2007-10-14', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(527, '鞏威', '俊', 'F', '2008-03-17', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(528, '楊雯冠', '琪依', 'M', '2008-06-06', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(529, '費傑', '佩', 'F', '2015-08-05', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(530, '支宜哲', '華安', 'F', '2012-05-13', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(531, '范欣', '偉', 'F', '2012-07-14', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(532, '邴銘', '嘉', 'M', '2008-08-21', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(533, '柳嘉', '郁郁', 'M', '2012-08-21', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(534, '翁穎雯', '哲賢', 'F', '2012-07-30', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(535, '童娟', '萱淑', 'M', '2012-03-24', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(536, '公冶霖', '瑜馨', 'F', '2002-05-13', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(537, '百里琬', '淑', 'F', '2014-08-23', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(538, '禹慧涵', '冠賢', 'F', '2009-02-13', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(539, '秋涵琬', '美萱', 'M', '2011-12-07', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(540, '陰思建', '華宏', 'M', '2013-01-09', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(541, '宮婉雅', '廷思', 'M', '2011-03-25', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(542, '扈心', '心', 'M', '2011-03-26', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(543, '焦娟', '馨', 'F', '2003-08-18', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(544, '巴瑋傑', '心廷', 'F', '2005-04-07', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(545, '鄧淑', '馨萱', 'F', '2008-01-19', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(546, '舒君華', '琬', 'F', '2012-11-01', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(547, '聶霖廷', '郁', 'M', '2001-02-15', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(548, '史佩', '軒', 'F', '2008-03-26', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(549, '司詩', '瑋', 'F', '2001-05-26', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(550, '闕宏', '志', 'F', '2002-09-09', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(551, '林宏', '宇', 'F', '2001-08-15', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(552, '彭詩怡', '庭', 'M', '2001-02-15', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(553, '喬信', '瑋', 'M', '2007-09-10', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(554, '宦如', '如', 'M', '2013-03-30', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(555, '丁嘉家', '庭詩', 'M', '2013-03-03', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(556, '黎安華', '馨', 'F', '2011-04-19', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(557, '皮美彥', '冠', 'M', '2014-04-04', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(558, '茅賢文', '心雯', 'F', '2002-06-13', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(559, '韓偉', '靜家', 'M', '2003-07-05', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(560, '甘佳伶', '彥華', 'M', '2006-08-02', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(561, '沙賢君', '銘柏', 'F', '2001-05-14', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(562, '徐樺瑋', '佳美', 'F', '2001-03-05', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(563, '蓋惠文', '鈺', 'M', '2006-06-14', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(564, '謝偉彥', '芳', 'M', '2015-03-03', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(565, '季玲家', '筑安', 'F', '2001-12-02', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(566, '杭建', '惠鈺', 'F', '2009-06-30', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(567, '安廷君', '彥翰', 'F', '2009-09-02', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(568, '石佳宇', '偉', 'F', '2000-12-19', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(569, '第五君', '志信', 'M', '2011-11-18', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(570, '晁宏佳', '芬鈺', 'F', '2010-08-08', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(571, '酆柏柏', '安君', 'F', '2013-03-17', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(572, '養賢詩', '承銘', 'M', '2003-06-08', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(573, '澹臺信', '家宜', 'M', '2004-07-15', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(574, '計芬穎', '冠家', 'F', '2003-10-11', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(575, '晏如蓉', '庭蓉', 'F', '2006-01-26', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(576, '樂銘', '美琬', 'F', '2006-07-03', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(577, '鞏鈺', '威承', 'M', '2002-04-14', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(578, '于馨', '偉建', 'F', '2015-04-17', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(579, '魏庭筱', '冠', 'F', '2013-03-29', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(580, '丘穎思', '心柏', 'M', '2014-12-04', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(581, '賞芬', '慧惠', 'M', '2005-03-17', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(582, '雷銘', '俊', 'M', '2013-10-10', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(583, '居霖佳', '華靜', 'M', '2004-01-08', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(584, '譚思', '承信', 'F', '2015-04-04', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(585, '康志志', '華', 'F', '2015-08-30', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(586, '匡琬', '彥', 'F', '2004-05-16', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(587, '孟軒承', '俊', 'M', '2012-02-19', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(588, '淳于志', '蓉琬', 'F', '2002-06-20', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(589, '程承', '君慧', 'M', '2002-08-19', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(590, '亓官涵雅', '琪', 'F', '2014-07-24', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(591, '雙琬', '郁', 'M', '2014-03-03', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(592, '唐庭', '如', 'M', '2010-10-07', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(593, '令狐安', '家', 'F', '2013-07-10', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(594, '卓廷', '樺', 'M', '2014-06-09', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(595, '沙萍靜', '宗詩', 'F', '2006-08-04', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(596, '石銘佳', '家佳', 'F', '2002-04-22', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(597, '庾彥', '鈺靜', 'F', '2014-02-17', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(598, '溫華', '雯貞', 'F', '2005-12-17', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(599, '沈穎賢', '穎華', 'F', '2010-09-02', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(600, '朱美', '賢', 'M', '2014-06-28', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(601, '荊佳', '涵馨', 'M', '2003-05-01', '2023-01-10 18:14:58', '2023-01-10 18:14:58'),
-(602, '賁馨婷', '芬', 'M', '2004-12-29', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(603, '魏心柏', '華', 'M', '2009-06-19', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(604, '游珊欣', '宇庭', 'M', '2009-10-23', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(605, '阮馨', '安娟', 'F', '2009-01-09', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(606, '西門思貞', '樺', 'F', '2015-07-13', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(607, '黨宜蓉', '文', 'M', '2008-02-09', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(608, '養宇文', '瑋豪', 'F', '2015-06-15', '2023-01-10 18:14:59', '2023-01-10 18:14:59');
-INSERT INTO `students` (`id`, `name_zh`, `name_fn`, `gender`, `dob`, `created_at`, `updated_at`) VALUES
-(609, '封承', '淑玲', 'F', '2003-11-07', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(610, '耿瑋', '詩美', 'M', '2002-02-20', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(611, '封庭', '文', 'F', '2009-06-03', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(612, '夾谷文', '建心', 'M', '2013-05-27', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(613, '程美宗', '雯', 'F', '2015-04-01', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(614, '藍馨', '鈺', 'M', '2002-02-03', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(615, '申蓉', '俊', 'F', '2012-06-03', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(616, '籍伶儀', '怡怡', 'F', '2002-06-01', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(617, '富怡', '萱庭', 'F', '2006-09-15', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(618, '管美華', '婷', 'M', '2002-10-13', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(619, '宰冠穎', '霖', 'M', '2008-11-23', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(620, '趙靜', '哲安', 'M', '2009-06-09', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(621, '單依慧', '思宇', 'M', '2005-01-30', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(622, '鮑玲', '淑', 'M', '2007-01-15', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(623, '干婉', '淑馨', 'F', '2012-01-31', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(624, '華家承', '芬萱', 'F', '2012-12-22', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(625, '儲芳筑', '霖', 'M', '2006-01-13', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(626, '相靜', '柏豪', 'M', '2009-10-03', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(627, '巢宇銘', '宇', 'F', '2011-08-14', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(628, '慎安怡', '宜豪', 'M', '2011-03-04', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(629, '羊華傑', '如', 'F', '2004-03-06', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(630, '司寇信志', '文宜', 'M', '2012-01-28', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(631, '公冶嘉雅', '涵', 'M', '2010-08-28', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(632, '殳詩', '宗', 'M', '2001-06-23', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(633, '朱庭', '蓉蓉', 'F', '2015-05-20', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(634, '班玲靜', '哲文', 'F', '2010-03-26', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(635, '吳冠', '惠', 'F', '2006-03-08', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(636, '隗廷', '思', 'F', '2011-04-13', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(637, '昝哲', '怡雯', 'M', '2014-04-01', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(638, '晉筱雯', '柏承', 'F', '2014-04-28', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(639, '勞君', '軒', 'F', '2002-04-24', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(640, '鈕銘瑋', '嘉宜', 'F', '2009-11-25', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(641, '譚穎怡', '家華', 'F', '2011-08-24', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(642, '那如', '美', 'F', '2009-01-23', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(643, '厲穎儀', '華', 'F', '2014-06-24', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(644, '亓官琬', '安', 'F', '2011-08-12', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(645, '駱惠', '安', 'F', '2007-12-23', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(646, '酈心淑', '萍', 'M', '2004-11-02', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(647, '夏侯琪安', '美', 'M', '2011-01-30', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(648, '公承', '貞惠', 'M', '2015-03-05', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(649, '郭鈺詩', '鈺貞', 'M', '2007-01-29', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(650, '沙鈺', '依', 'M', '2002-11-28', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(651, '廉琬', '芳', 'M', '2015-03-15', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(652, '司徒翰佳', '萍安', 'M', '2010-01-06', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(653, '雲鈺萍', '心', 'M', '2013-06-22', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(654, '文宏庭', '宜豪', 'M', '2009-05-26', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(655, '東家穎', '文', 'M', '2002-12-03', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(656, '干廷傑', '霖', 'M', '2008-12-30', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(657, '聶如', '俊', 'F', '2015-05-02', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(658, '袁琬', '文宗', 'M', '2011-03-31', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(659, '湯威', '庭文', 'M', '2003-02-12', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(660, '祖詩', '華', 'F', '2015-05-21', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(661, '公思靜', '靜', 'M', '2009-10-04', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(662, '公冶建', '建嘉', 'F', '2002-02-27', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(663, '詹賢', '惠', 'M', '2003-06-22', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(664, '常哲賢', '軒', 'F', '2013-08-06', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(665, '呼延琬', '哲', 'M', '2008-10-01', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(666, '宓冠詩', '軒', 'M', '2002-08-06', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(667, '澹臺信', '傑彥', 'F', '2010-06-24', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(668, '賞賢', '俊嘉', 'F', '2004-11-29', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(669, '岑傑宜', '心', 'M', '2002-09-19', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(670, '邴宜伶', '冠', 'M', '2002-07-10', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(671, '鄒豪', '華美', 'F', '2013-08-31', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(672, '巴樺', '傑宜', 'F', '2002-10-17', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(673, '宰安', '庭', 'M', '2002-02-15', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(674, '蔡嘉', '涵', 'F', '2012-03-24', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(675, '牛彥宗', '傑霖', 'F', '2014-12-09', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(676, '張承嘉', '安建', 'M', '2012-09-11', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(677, '席銘君', '涵儀', 'F', '2014-05-25', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(678, '萬文', '珊欣', 'F', '2003-05-08', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(679, '梁筑佩', '心', 'M', '2014-09-30', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(680, '陶宜佩', '思', 'F', '2006-12-02', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(681, '越家', '君思', 'F', '2001-04-13', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(682, '巢銘豪', '偉俊', 'F', '2008-04-27', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(683, '賴穎柏', '庭宇', 'F', '2005-02-25', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(684, '夏華威', '華文', 'F', '2002-12-10', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(685, '冀銘', '筱雯', 'M', '2013-12-28', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(686, '琴志', '偉', 'F', '2006-03-01', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(687, '危柏柏', '萍', 'M', '2014-12-29', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(688, '諸俊柏', '萱', 'M', '2002-11-24', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(689, '儲珊伶', '萍', 'F', '2004-06-24', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(690, '閆馨', '心婉', 'M', '2001-01-25', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(691, '孟嘉信', '淑嘉', 'M', '2002-10-07', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(692, '杜賢廷', '君', 'F', '2012-09-27', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(693, '計心樺', '心', 'F', '2002-08-13', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(694, '廖宜詩', '玲', 'M', '2006-12-11', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(695, '墨樺柏', '宜', 'F', '2014-03-23', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(696, '單于惠', '豪', 'M', '2003-04-02', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(697, '麻淑華', '君', 'M', '2004-11-20', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(698, '豐慧', '穎文', 'F', '2005-12-16', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(699, '和廷', '華', 'M', '2004-01-29', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(700, '宗軒樺', '君', 'M', '2014-06-18', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(701, '洪宗承', '賢穎', 'F', '2004-03-09', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(702, '皇甫筑', '宜怡', 'M', '2003-05-03', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(703, '岳萍', '珊雯', 'M', '2005-12-09', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(704, '澹臺信宗', '華冠', 'M', '2009-03-13', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(705, '晏君銘', '家婷', 'M', '2009-09-11', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(706, '焦哲建', '安君', 'F', '2011-04-29', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(707, '田美', '芬蓉', 'M', '2002-01-19', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(708, '仉琬佳', '翰志', 'M', '2004-06-09', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(709, '帥庭', '雅', 'F', '2003-03-27', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(710, '禹志', '庭', 'M', '2006-10-26', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(711, '劉承', '廷', 'F', '2015-05-12', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(712, '茹貞婉', '婉', 'M', '2003-07-12', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(713, '晉蓉筱', '傑', 'M', '2012-10-20', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(714, '金宇', '佳穎', 'F', '2008-04-16', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(715, '危穎婉', '瑜', 'M', '2005-01-24', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(716, '盛蓉安', '宜', 'M', '2015-07-31', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(717, '蓋儀儀', '君彥', 'M', '2007-07-22', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(718, '屠冠伶', '惠', 'M', '2005-10-14', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(719, '殳銘君', '佩華', 'M', '2014-11-07', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(720, '東惠', '婉珊', 'F', '2015-04-04', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(721, '鞠軒', '涵', 'F', '2011-02-08', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(722, '相芬儀', '軒', 'F', '2007-10-23', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(723, '湛軒家', '淑婷', 'M', '2009-08-13', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(724, '益文美', '承嘉', 'F', '2015-08-30', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(725, '譚信', '詩宏', 'F', '2009-02-07', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(726, '郜筱', '心', 'F', '2008-02-26', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(727, '融鈺萱', '翰偉', 'F', '2012-11-08', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(728, '咸涵', '庭', 'M', '2007-08-31', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(729, '薊華威', '文筱', 'M', '2004-11-14', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(730, '舒美傑', '樺心', 'M', '2006-08-08', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(731, '黃思哲', '雅', 'F', '2003-01-01', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(732, '段嘉', '蓉', 'F', '2015-03-13', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(733, '巫詩', '依', 'M', '2013-07-30', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(734, '米信', '佳', 'M', '2013-12-05', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(735, '楊瑜珊', '宏', 'F', '2011-11-28', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(736, '寇安', '華', 'M', '2015-02-10', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(737, '慕容穎', '芳', 'M', '2014-01-30', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(738, '巫文思', '思', 'M', '2005-06-19', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(739, '季詩賢', '君', 'M', '2005-12-01', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(740, '汪豪', '嘉', 'F', '2008-11-10', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(741, '越琪宜', '娟美', 'M', '2010-02-25', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(742, '上官萱怡', '建宇', 'F', '2003-09-12', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(743, '宗雅', '儀', 'M', '2011-02-14', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(744, '婁穎冠', '銘宇', 'F', '2003-07-14', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(745, '虞筱筑', '宗俊', 'M', '2014-12-05', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(746, '焦美', '豪宗', 'F', '2012-06-30', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(747, '汝君美', '安軒', 'F', '2011-07-18', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(748, '韶嘉', '庭', 'M', '2006-05-29', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(749, '淳于傑豪', '玲芬', 'M', '2004-07-21', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(750, '常君', '婉安', 'M', '2013-06-10', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(751, '莘傑安', '萍', 'M', '2006-10-23', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(752, '易鈺芳', '銘', 'M', '2002-06-20', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(753, '范娟', '安珊', 'M', '2015-06-01', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(754, '段干怡', '翰家', 'F', '2015-03-16', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(755, '俞建', '靜', 'F', '2012-02-05', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(756, '湛穎', '淑', 'M', '2014-10-01', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(757, '婁鈺如', '婷心', 'F', '2002-05-13', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(758, '龐傑銘', '如穎', 'F', '2010-11-13', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(759, '龍馨美', '嘉', 'M', '2006-03-19', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(760, '申宇', '思柏', 'F', '2015-04-06', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(761, '呂思芳', '豪霖', 'F', '2014-05-03', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(762, '茅豪', '雅', 'F', '2006-06-15', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(763, '宓宗樺', '慧靜', 'F', '2013-02-08', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(764, '苗瑜佩', '思', 'F', '2008-04-11', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(765, '海心婉', '瑜宜', 'M', '2011-03-22', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(766, '譙佩', '柏', 'M', '2007-08-07', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(767, '胡惠', '傑安', 'F', '2004-05-16', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(768, '商廷軒', '如華', 'M', '2001-02-17', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(769, '戈華', '偉威', 'F', '2010-04-02', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(770, '佴穎', '俊', 'F', '2006-01-29', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(771, '平哲', '瑋', 'M', '2003-10-18', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(772, '歐陽惠詩', '惠淑', 'F', '2005-09-23', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(773, '申屠樺心', '豪俊', 'M', '2012-05-14', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(774, '勞思', '心', 'M', '2015-01-05', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(775, '璩軒豪', '萍萱', 'F', '2010-07-17', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(776, '蓋思', '承佳', 'M', '2014-10-27', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(777, '鄭文佳', '詩思', 'F', '2012-09-09', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(778, '韋冠', '慧', 'M', '2004-08-07', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(779, '從建', '信', 'M', '2011-01-27', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(780, '宗淑', '怡', 'F', '2006-09-05', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(781, '應宜', '彥', 'M', '2010-06-09', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(782, '長孫筱佩', '威', 'M', '2001-12-19', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(783, '譙建傑', '冠', 'M', '2014-11-23', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(784, '融思安', '軒', 'F', '2002-04-13', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(785, '水柏安', '家', 'M', '2007-02-08', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(786, '司馬宜庭', '豪', 'F', '2005-05-11', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(787, '東門詩', '宜君', 'M', '2011-08-09', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(788, '緱君君', '琪', 'F', '2011-10-16', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(789, '隆詩賢', '君偉', 'M', '2015-03-30', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(790, '宮安', '鈺', 'M', '2006-11-24', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(791, '況筑雯', '美', 'F', '2009-11-30', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(792, '干安', '宏', 'M', '2004-07-17', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(793, '杭建美', '依欣', 'M', '2013-03-10', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(794, '路娟', '威文', 'M', '2009-04-12', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(795, '鮮于彥', '彥', 'F', '2011-05-01', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(796, '潘郁郁', '蓉', 'M', '2009-05-16', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(797, '司寇俊', '涵', 'M', '2002-10-21', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(798, '桑婷', '庭雅', 'M', '2005-02-14', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(799, '滑豪', '偉俊', 'F', '2001-09-18', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(800, '沃思筑', '芳美', 'F', '2005-08-02', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(801, '步郁穎', '家', 'F', '2004-09-28', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(802, '祿傑銘', '美翰', 'F', '2006-03-06', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(803, '席詩', '惠', 'F', '2011-04-01', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(804, '袁宇', '宜', 'F', '2001-09-27', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(805, '尹儀芳', '琪文', 'M', '2003-06-29', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(806, '緱靜', '嘉', 'F', '2002-07-31', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(807, '蒼安怡', '馨', 'F', '2013-01-14', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(808, '琴筱', '華冠', 'M', '2014-11-16', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(809, '靳芬婷', '靜', 'M', '2001-09-16', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(810, '簡哲', '俊', 'M', '2015-07-24', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(811, '蔡宏', '玲嘉', 'F', '2002-10-01', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(812, '郟淑', '哲', 'M', '2010-09-11', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(813, '俞庭惠', '娟', 'F', '2006-01-31', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(814, '夔惠', '詩霖', 'M', '2007-08-23', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(815, '陳穎瑜', '詩', 'M', '2011-08-30', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(816, '邊琪', '佳宏', 'M', '2013-11-09', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(817, '竇伶', '筑', 'F', '2003-01-16', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(818, '裘詩瑋', '冠', 'M', '2004-06-15', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(819, '黃慧依', '文伶', 'F', '2013-01-13', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(820, '弓宜', '建', 'M', '2001-11-22', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(821, '施柏', '雅家', 'F', '2004-02-05', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(822, '韶宏彥', '慧', 'F', '2004-04-03', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(823, '林詩霖', '承宏', 'M', '2003-09-14', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(824, '桑思', '宜賢', 'F', '2002-11-26', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(825, '諸葛安家', '心', 'M', '2002-09-17', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(826, '督嘉', '豪志', 'F', '2010-08-30', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(827, '亢欣怡', '傑安', 'F', '2001-08-07', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(828, '盛文思', '銘', 'M', '2004-04-01', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(829, '郁賢軒', '萍馨', 'M', '2002-08-15', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(830, '帥佳賢', '文', 'F', '2002-02-06', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(831, '緱瑋軒', '霖銘', 'F', '2011-02-27', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(832, '富貞怡', '佳欣', 'F', '2011-02-13', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(833, '姚承', '佩', 'F', '2013-06-20', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(834, '金冠', '詩承', 'F', '2011-09-07', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(835, '單思', '家', 'F', '2013-03-14', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(836, '薊家銘', '貞婷', 'M', '2008-04-26', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(837, '福萍', '詩', 'F', '2008-08-05', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(838, '支翰', '銘', 'M', '2012-01-09', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(839, '苗美', '翰承', 'M', '2011-01-24', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(840, '鍾彥豪', '彥彥', 'M', '2010-12-15', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(841, '逄冠如', '心穎', 'M', '2010-10-31', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(842, '欽威', '瑋豪', 'M', '2008-08-02', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(843, '辛宜', '雅', 'M', '2001-10-27', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(844, '許筑怡', '銘', 'M', '2011-08-24', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(845, '莫嘉玲', '安安', 'F', '2003-12-27', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(846, '舒涵', '彥', 'F', '2004-07-20', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(847, '狄娟筑', '宜', 'M', '2007-12-06', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(848, '濮陽傑穎', '美怡', 'F', '2009-01-29', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(849, '言筱', '宗', 'M', '2002-06-09', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(850, '崔如', '依', 'M', '2004-01-01', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(851, '申屠心', '哲嘉', 'F', '2005-11-24', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(852, '魚文', '霖', 'M', '2002-05-02', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(853, '宗哲', '依', 'F', '2013-04-01', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(854, '單于怡心', '瑜惠', 'M', '2005-08-09', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(855, '熊廷', '宜', 'F', '2014-09-04', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(856, '厲佳', '廷哲', 'M', '2012-01-14', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(857, '麴家', '美傑', 'F', '2006-09-02', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(858, '羊舌樺哲', '蓉安', 'F', '2007-06-23', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(859, '元文', '柏志', 'M', '2000-10-07', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(860, '裴安', '哲翰', 'M', '2013-05-10', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(861, '尤穎', '傑', 'F', '2006-09-12', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(862, '習筱', '娟', 'F', '2010-10-05', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(863, '刁霖', '偉冠', 'M', '2013-07-22', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(864, '全俊', '瑜慧', 'F', '2008-01-06', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(865, '衛宜靜', '佳美', 'F', '2005-09-24', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(866, '符美美', '依', 'M', '2014-08-14', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(867, '司徒淑珊', '文', 'F', '2003-08-04', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(868, '賀軒信', '珊宜', 'M', '2010-10-22', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(869, '周豪', '彥佳', 'M', '2008-09-21', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(870, '鳳芬', '欣', 'M', '2003-07-01', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(871, '洪華志', '嘉君', 'M', '2010-07-18', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(872, '牛雅靜', '君', 'M', '2014-08-26', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(873, '荀萍', '冠', 'M', '2006-04-04', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(874, '竺賢', '佳翰', 'F', '2014-08-22', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(875, '益華柏', '家', 'M', '2013-11-03', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(876, '紅豪', '志', 'M', '2003-11-15', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(877, '冉宗信', '哲瑋', 'F', '2010-05-24', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(878, '雲安嘉', '宇軒', 'F', '2009-01-29', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(879, '鄒思', '賢', 'M', '2011-04-03', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(880, '晉宜萱', '霖', 'F', '2009-11-25', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(881, '伏嘉文', '銘', 'F', '2011-05-04', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(882, '沃馨萱', '軒', 'F', '2004-05-30', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(883, '段干文廷', '宜', 'F', '2002-04-24', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(884, '刁欣', '馨', 'F', '2010-09-01', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(885, '謝宏', '宏俊', 'F', '2007-12-31', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(886, '弘婷佳', '嘉', 'F', '2003-01-02', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(887, '韋賢', '心', 'F', '2006-01-18', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(888, '伏怡瑜', '彥', 'F', '2014-11-26', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(889, '朱文心', '欣', 'M', '2003-01-03', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(890, '申屠穎', '安心', 'F', '2001-08-18', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(891, '燕彥', '美雅', 'M', '2006-10-27', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(892, '燕欣思', '穎', 'M', '2003-01-18', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(893, '楊思伶', '冠涵', 'F', '2009-04-07', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(894, '慎華', '伶', 'F', '2002-10-10', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(895, '宇文筑怡', '彥', 'M', '2003-11-03', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(896, '東郭惠靜', '嘉', 'F', '2003-08-20', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(897, '雍心穎', '廷思', 'M', '2010-04-20', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(898, '阮文', '美', 'M', '2007-09-29', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(899, '賞雅', '傑銘', 'F', '2007-05-18', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(900, '暨美淑', '廷', 'M', '2013-05-18', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(901, '常家庭', '雅', 'F', '2000-12-07', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(902, '莫君', '穎', 'M', '2008-02-15', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(903, '微生珊', '伶', 'F', '2005-04-02', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(904, '許思', '淑', 'F', '2015-06-24', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(905, '莊惠淑', '婷萍', 'F', '2014-12-15', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(906, '蓬涵', '家', 'M', '2007-10-06', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(907, '茅思', '嘉', 'F', '2002-04-12', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(908, '夔冠詩', '琪', 'M', '2013-02-06', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(909, '貝家建', '芳', 'M', '2003-07-13', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(910, '辛美慧', '君嘉', 'F', '2010-03-20', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(911, '秦馨淑', '宜', 'M', '2012-12-10', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(912, '花琪宜', '馨冠', 'F', '2009-05-20', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(913, '扈瑜', '冠偉', 'M', '2014-05-23', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(914, '都俊安', '宗', 'F', '2006-11-08', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(915, '衡芬芳', '伶', 'F', '2011-11-22', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(916, '欽君傑', '庭玲', 'F', '2004-03-05', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(917, '葛宜', '珊佩', 'M', '2009-04-14', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(918, '戎銘', '柏', 'M', '2007-12-25', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(919, '鄭穎琬', '華庭', 'M', '2003-10-12', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(920, '祝文君', '建承', 'M', '2010-10-29', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(921, '梁慧芬', '怡', 'F', '2007-07-13', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(922, '史冠', '筑', 'M', '2013-12-08', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(923, '束冠', '君', 'F', '2013-07-07', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(924, '赫連瑜依', '芳', 'F', '2004-09-30', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(925, '湯靜', '佩鈺', 'F', '2013-08-29', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(926, '韋宜', '豪宇', 'F', '2010-08-13', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(927, '孟儀', '淑', 'F', '2008-08-16', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(928, '廉賢君', '儀琪', 'F', '2006-02-02', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(929, '歸文威', '婷欣', 'F', '2013-11-22', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(930, '包庭家', '瑋', 'M', '2015-04-01', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(931, '庾筱', '銘', 'M', '2011-08-16', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(932, '湯軒哲', '宜', 'F', '2002-02-23', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(933, '農伶', '貞欣', 'F', '2006-06-03', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(934, '樂儀', '華', 'M', '2007-08-04', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(935, '明宇', '宜志', 'F', '2014-12-28', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(936, '墨詩琬', '瑜', 'F', '2007-11-26', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(937, '甯佳信', '君', 'F', '2005-08-07', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(938, '後儀', '嘉', 'M', '2011-08-02', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(939, '幸嘉佳', '霖', 'M', '2007-01-08', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(940, '佴萍', '庭賢', 'M', '2013-12-03', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(941, '方佩華', '文', 'F', '2013-09-26', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(942, '蘇鈺', '君瑋', 'F', '2014-05-03', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(943, '咸欣文', '珊', 'M', '2013-09-22', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(944, '陰萱雅', '蓉珊', 'F', '2012-07-30', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(945, '聶穎冠', '哲', 'F', '2004-11-27', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(946, '勞廷', '婷', 'M', '2012-02-04', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(947, '逯庭', '翰賢', 'M', '2013-09-10', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(948, '申傑', '宜', 'M', '2011-04-24', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(949, '狄佳柏', '心筑', 'F', '2006-07-10', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(950, '卜銘華', '靜', 'M', '2010-05-01', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(951, '連嘉', '靜安', 'M', '2009-05-09', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(952, '愛建', '儀', 'M', '2006-01-25', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(953, '能軒霖', '宇', 'M', '2007-11-07', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(954, '鈄雅家', '琬雅', 'F', '2008-07-04', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(955, '鬱詩華', '庭', 'F', '2002-11-16', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(956, '沈宇信', '心涵', 'F', '2006-03-22', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(957, '倪志', '庭', 'M', '2005-08-27', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(958, '鄢彥華', '華瑜', 'M', '2002-07-01', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(959, '丁娟', '華珊', 'F', '2003-09-19', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(960, '梁丘淑', '偉豪', 'F', '2001-06-30', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(961, '權詩偉', '琪庭', 'M', '2000-09-19', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(962, '酈俊瑋', '芬美', 'F', '2014-01-29', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(963, '黨冠', '宜玲', 'F', '2004-01-11', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(964, '顧美儀', '伶筑', 'F', '2012-12-04', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(965, '駱志威', '軒', 'F', '2009-01-08', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(966, '祝安芳', '嘉', 'M', '2010-11-03', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(967, '宗政偉信', '柏彥', 'M', '2011-03-27', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(968, '微生庭佳', '家佩', 'F', '2010-09-03', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(969, '蓋廷柏', '建安', 'M', '2014-12-31', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(970, '緱心', '涵', 'M', '2001-10-15', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(971, '宗嘉', '信賢', 'M', '2010-11-13', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(972, '江詩賢', '君思', 'M', '2009-03-25', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(973, '公蓉', '婷', 'M', '2006-04-16', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(974, '壽佳', '宏', 'F', '2001-05-03', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(975, '閔翰', '珊琪', 'F', '2003-11-29', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(976, '馬文', '郁', 'M', '2004-05-19', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(977, '曾馨', '穎思', 'M', '2004-03-29', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(978, '朱琬冠', '軒威', 'M', '2009-04-21', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(979, '程華佳', '芳玲', 'F', '2013-11-08', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(980, '別詩', '賢思', 'M', '2011-02-14', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(981, '安琪如', '萍', 'F', '2011-08-18', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(982, '喻冠樺', '穎豪', 'M', '2001-07-02', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(983, '管威', '嘉靜', 'F', '2010-01-11', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(984, '宦芬心', '靜', 'M', '2006-08-16', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(985, '欽家', '心', 'F', '2011-07-03', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(986, '陳娟', '廷心', 'M', '2013-11-08', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(987, '元冠', '哲威', 'F', '2010-05-23', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(988, '霍翰', '欣婷', 'M', '2010-07-16', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(989, '鄧珊華', '庭', 'M', '2001-12-28', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(990, '車惠', '哲', 'F', '2011-12-31', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(991, '裘思華', '欣芳', 'M', '2007-12-04', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(992, '聞人銘信', '宇', 'F', '2014-02-01', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(993, '魯詩樺', '宗思', 'F', '2004-06-16', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(994, '鄒樺宏', '君宜', 'F', '2011-02-18', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(995, '董家宜', '心軒', 'F', '2004-02-09', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(996, '燕貞', '樺', 'M', '2010-08-01', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(997, '冀宗美', '哲', 'F', '2003-10-11', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(998, '蘇庭思', '信', 'F', '2003-07-13', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(999, '郭欣珊', '雯婷', 'M', '2007-08-24', '2023-01-10 18:14:59', '2023-01-10 18:14:59'),
-(1000, '諸葛庭安', '慧瑜', 'F', '2001-07-08', '2023-01-10 18:14:59', '2023-01-10 18:14:59');
+INSERT INTO `students` (`id`, `name_zh`, `name_fn`, `name_display`, `gender`, `dob`, `pob`, `start_letter`, `start_grade`, `sic`, `phone`, `dsej_num`, `medical_num`, `entry_date`, `past_school_name`, `religion`, `phone_sms`, `phone_home`, `carer`, `parent`, `garidan`, `liaison`, `created_at`, `updated_at`) VALUES
+(1, '饒宜威', '宜君', NULL, 'F', '2010-10-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(2, '卜冠', '蓉', NULL, 'F', '2014-10-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(3, '葉蓉庭', '銘', NULL, 'M', '2013-01-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(4, '上官華', '傑詩', NULL, 'M', '2003-01-31', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(5, '曹萍', '娟冠', NULL, 'F', '2012-09-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(6, '利軒翰', '貞', NULL, 'F', '2006-06-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(7, '雙哲', '宜', NULL, 'F', '2003-03-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(8, '柳宜軒', '雯宜', NULL, 'F', '2014-01-31', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(9, '端木霖威', '宏', NULL, 'F', '2006-04-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(10, '熊霖宜', '涵', NULL, 'F', '2002-09-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(11, '賴筑萱', '俊', NULL, 'M', '2008-06-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(12, '柴貞', '威', NULL, 'F', '2009-04-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(13, '成婷靜', '儀依', NULL, 'M', '2013-08-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(14, '卓建宏', '豪樺', NULL, 'M', '2006-08-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(15, '何涵君', '嘉', NULL, 'F', '2001-03-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(16, '邢雅', '哲佳', NULL, 'M', '2004-04-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(17, '紅冠', '如', NULL, 'F', '2011-09-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(18, '周安偉', '穎軒', NULL, 'F', '2012-01-13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(19, '赫連柏霖', '宏冠', NULL, 'F', '2009-10-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(20, '邢威瑋', '儀', NULL, 'F', '2007-09-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(21, '關雯伶', '志美', NULL, 'F', '2004-05-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(22, '廉豪', '樺', NULL, 'F', '2009-10-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(23, '奚筱', '偉安', NULL, 'F', '2005-10-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(24, '養承', '傑威', NULL, 'F', '2015-04-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(25, '倪萍惠', '宜穎', NULL, 'F', '2005-12-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(26, '邊筑', '華', NULL, 'M', '2015-05-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(27, '宰父芬', '穎承', NULL, 'F', '2001-09-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(28, '仲孫傑穎', '芬佳', NULL, 'M', '2002-09-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(29, '榮宗柏', '靜欣', NULL, 'M', '2007-10-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(30, '沈家家', '文', NULL, 'F', '2006-10-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(31, '高鈺', '筱', NULL, 'F', '2014-08-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(32, '烏家樺', '嘉宏', NULL, 'M', '2010-09-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(33, '盛宇詩', '思', NULL, 'M', '2008-05-31', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(34, '太叔怡萍', '雯雅', NULL, 'M', '2015-05-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(35, '司徒翰豪', '惠', NULL, 'F', '2002-02-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(36, '苗翰', '思', NULL, 'F', '2001-12-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(37, '劉美蓉', '安宜', NULL, 'M', '2012-02-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(38, '鄒承', '琪婉', NULL, 'M', '2004-04-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(39, '郟嘉思', '宇', NULL, 'F', '2004-09-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(40, '籍娟', '冠', NULL, 'F', '2013-10-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(41, '晁霖詩', '心', NULL, 'F', '2008-07-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(42, '聞玲', '俊', NULL, 'M', '2007-02-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(43, '馮瑜欣', '翰思', NULL, 'F', '2005-06-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(44, '谷玲穎', '琪瑜', NULL, 'M', '2008-07-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(45, '汲柏安', '筱', NULL, 'F', '2006-09-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(46, '伊宏', '思', NULL, 'M', '2012-10-31', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(47, '程詩宜', '佳', NULL, 'F', '2009-05-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(48, '弓廷哲', '儀', NULL, 'M', '2011-11-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(49, '柏翰廷', '冠心', NULL, 'M', '2007-01-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(50, '陽安', '豪', NULL, 'F', '2008-01-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(51, '東豪', '冠', NULL, 'M', '2014-03-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(52, '東思', '淑', NULL, 'F', '2009-07-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(53, '陽俊', '庭', NULL, 'F', '2000-12-31', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(54, '南宮瑜怡', '怡', NULL, 'M', '2006-07-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(55, '陸君', '欣郁', NULL, 'F', '2006-03-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(56, '蔣冠', '偉', NULL, 'M', '2006-09-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(57, '毛萍珊', '婷', NULL, 'M', '2001-03-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(58, '謝玲', '筑', NULL, 'M', '2014-03-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(59, '褚志文', '安', NULL, 'M', '2012-02-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(60, '霍心', '慧', NULL, 'M', '2011-07-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(61, '蓋志宏', '嘉', NULL, 'M', '2004-07-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(62, '龐郁', '佳郁', NULL, 'M', '2014-04-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(63, '孟美', '偉', NULL, 'F', '2005-04-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(64, '章華', '軒', NULL, 'M', '2005-06-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(65, '淳于家', '美美', NULL, 'F', '2013-12-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(66, '洪雅', '俊', NULL, 'F', '2006-11-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(67, '慕庭', '伶慧', NULL, 'F', '2007-09-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(68, '郟萍華', '琪', NULL, 'M', '2006-08-21', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(69, '甄美郁', '家偉', NULL, 'M', '2010-06-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(70, '甯威嘉', '威', NULL, 'F', '2009-04-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(71, '賈庭信', '豪安', NULL, 'M', '2006-04-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(72, '伍宇', '郁心', NULL, 'M', '2002-05-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(73, '督如', '宏', NULL, 'F', '2014-10-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(74, '梅宏冠', '銘', NULL, 'M', '2001-10-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(75, '沙淑庭', '欣婷', NULL, 'F', '2010-05-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(76, '夏怡', '馨', NULL, 'M', '2009-02-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(77, '陸偉瑋', '家哲', NULL, 'M', '2012-10-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(78, '陰思', '雯', NULL, 'F', '2001-01-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(79, '郁佳佩', '詩', NULL, 'F', '2002-03-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(80, '伊婉', '瑋', NULL, 'M', '2001-06-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(81, '微生思', '文', NULL, 'F', '2004-03-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(82, '暨心琪', '霖軒', NULL, 'M', '2006-03-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(83, '佘翰家', '依雅', NULL, 'M', '2002-06-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(84, '白筑詩', '豪豪', NULL, 'F', '2013-02-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(85, '尹承文', '彥志', NULL, 'F', '2002-09-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(86, '穆娟佳', '伶', NULL, 'M', '2002-09-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(87, '終廷', '筱佩', NULL, 'F', '2008-05-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(88, '夏文', '霖', NULL, 'M', '2007-11-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(89, '海嘉', '如', NULL, 'F', '2009-02-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(90, '勾思霖', '宏', NULL, 'F', '2001-06-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(91, '林雅', '文琪', NULL, 'M', '2015-08-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(92, '能冠', '美', NULL, 'M', '2010-04-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(93, '軒轅琬', '君惠', NULL, 'F', '2011-07-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(94, '牧冠', '如', NULL, 'F', '2007-05-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(95, '公羊如君', '翰承', NULL, 'M', '2007-01-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(96, '彭宇銘', '慧', NULL, 'F', '2007-12-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(97, '倪安', '宜', NULL, 'F', '2001-01-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(98, '福心', '承柏', NULL, 'M', '2004-05-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(99, '羿柏瑋', '翰俊', NULL, 'F', '2002-11-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(100, '藍儀芬', '家翰', NULL, 'M', '2009-12-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(101, '查佳', '詩', NULL, 'F', '2005-04-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(102, '鞏佳', '心雯', NULL, 'F', '2014-03-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(103, '應文', '依', NULL, 'F', '2004-03-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(104, '郎威', '俊', NULL, 'M', '2004-01-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(105, '戚婷', '豪', NULL, 'M', '2004-09-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(106, '濮萱萍', '伶怡', NULL, 'M', '2010-01-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(107, '祝芬', '淑', NULL, 'M', '2002-02-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(108, '司寇雅伶', '蓉', NULL, 'F', '2007-01-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(109, '壽馨筱', '筑', NULL, 'F', '2013-09-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(110, '宰父俊', '君筑', NULL, 'F', '2010-12-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(111, '岳琬琪', '家', NULL, 'M', '2014-02-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(112, '督嘉霖', '伶', NULL, 'F', '2001-06-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(113, '曹婷娟', '玲佩', NULL, 'F', '2010-06-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(114, '郟瑋', '志俊', NULL, 'M', '2005-04-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(115, '龔琪淑', '嘉思', NULL, 'M', '2007-07-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(116, '南宮哲', '蓉依', NULL, 'M', '2011-07-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(117, '邵涵筑', '思信', NULL, 'M', '2011-11-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(118, '牛筑', '靜', NULL, 'M', '2011-04-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(119, '陳華', '承', NULL, 'F', '2008-09-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(120, '晉馨', '伶筑', NULL, 'M', '2002-05-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(121, '卞冠柏', '如', NULL, 'F', '2007-09-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(122, '茹庭', '穎宏', NULL, 'M', '2006-09-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(123, '昝宗', '琪', NULL, 'F', '2008-08-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(124, '關萱佳', '銘', NULL, 'M', '2007-05-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(125, '年樺心', '馨欣', NULL, 'M', '2013-09-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(126, '殷承銘', '俊志', NULL, 'M', '2007-07-31', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(127, '別冠', '美', NULL, 'M', '2015-06-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(128, '鄧哲', '志', NULL, 'M', '2004-12-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(129, '漆雕婷文', '婷依', NULL, 'F', '2009-11-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(130, '郭佩玲', '萱', NULL, 'M', '2013-06-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(131, '白偉樺', '哲', NULL, 'F', '2008-06-13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(132, '烏君思', '樺穎', NULL, 'M', '2013-08-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(133, '鄭文宏', '瑋', NULL, 'F', '2004-05-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(134, '萬思威', '文', NULL, 'F', '2002-08-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(135, '魯慧宜', '宜心', NULL, 'M', '2008-01-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(136, '松銘', '宗', NULL, 'M', '2002-06-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(137, '東信賢', '宗', NULL, 'M', '2008-05-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(138, '季家宏', '伶萍', NULL, 'M', '2005-12-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(139, '伍俊', '佳', NULL, 'F', '2008-06-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(140, '水冠', '芳', NULL, 'F', '2012-06-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(141, '鄒彥詩', '志', NULL, 'F', '2013-06-21', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(142, '奚安佳', '哲家', NULL, 'M', '2015-08-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(143, '郭心萍', '宇', NULL, 'M', '2007-03-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(144, '逯郁', '佳', NULL, 'F', '2004-10-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(145, '相萱', '宜美', NULL, 'F', '2007-05-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(146, '蔣哲彥', '琪', NULL, 'F', '2003-11-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(147, '宣哲思', '柏美', NULL, 'M', '2012-04-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(148, '呂宜信', '鈺欣', NULL, 'M', '2012-01-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(149, '宦芬', '宜軒', NULL, 'F', '2003-05-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(150, '郗伶思', '惠玲', NULL, 'F', '2001-06-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(151, '令狐哲建', '心華', NULL, 'M', '2005-09-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(152, '蔡宇', '文穎', NULL, 'M', '2012-06-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(153, '豐宗佳', '涵婷', NULL, 'F', '2002-07-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(154, '司徒馨', '佩', NULL, 'M', '2014-05-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(155, '鄔宜郁', '銘', NULL, 'F', '2002-07-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(156, '狄佳庭', '怡冠', NULL, 'F', '2001-11-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(157, '林蓉佩', '建銘', NULL, 'F', '2005-01-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(158, '欽軒承', '軒嘉', NULL, 'F', '2001-02-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(159, '蒲宜', '心', NULL, 'M', '2009-01-13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(160, '利華思', '彥', NULL, 'F', '2015-02-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(161, '酈華傑', '安文', NULL, 'F', '2010-12-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(162, '裘哲瑋', '俊君', NULL, 'M', '2012-10-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(163, '符君', '瑋', NULL, 'M', '2002-01-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(164, '平鈺娟', '嘉萱', NULL, 'F', '2014-06-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(165, '仉華', '芳怡', NULL, 'F', '2005-11-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(166, '薊貞婉', '家', NULL, 'F', '2011-05-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(167, '汝如', '芬萱', NULL, 'M', '2009-03-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(168, '甯建俊', '志嘉', NULL, 'M', '2009-10-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(169, '法哲嘉', '馨', NULL, 'M', '2009-09-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(170, '后蓉雯', '芳詩', NULL, 'F', '2006-11-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(171, '亓官穎', '建霖', NULL, 'M', '2015-03-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(172, '顓孫庭', '信君', NULL, 'M', '2003-11-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:25', '2023-02-03 01:27:25'),
+(173, '杭安', '嘉彥', NULL, 'F', '2004-04-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(174, '沈思穎', '偉霖', NULL, 'F', '2003-12-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(175, '費琪涵', '美', NULL, 'M', '2005-07-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(176, '范心', '郁穎', NULL, 'F', '2009-05-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(177, '苗文瑋', '筑玲', NULL, 'F', '2007-02-21', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(178, '堵雅', '哲華', NULL, 'F', '2009-11-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(179, '明嘉', '銘美', NULL, 'M', '2013-08-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(180, '班承', '瑜佳', NULL, 'M', '2003-09-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(181, '寇軒', '廷', NULL, 'F', '2004-05-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(182, '危瑋', '美庭', NULL, 'M', '2012-05-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(183, '空怡娟', '廷', NULL, 'M', '2012-09-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(184, '畢瑋', '宗庭', NULL, 'M', '2013-11-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(185, '欒宗', '娟貞', NULL, 'M', '2007-04-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(186, '璩承', '慧', NULL, 'M', '2010-01-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(187, '盧珊', '蓉', NULL, 'M', '2008-05-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(188, '言瑋佳', '美穎', NULL, 'F', '2007-07-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(189, '蒙嘉', '瑜', NULL, 'F', '2014-07-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(190, '沈安信', '慧', NULL, 'F', '2009-05-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(191, '潘穎宇', '佩', NULL, 'M', '2014-03-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(192, '司空依庭', '郁靜', NULL, 'M', '2013-06-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(193, '宇文傑銘', '宇', NULL, 'F', '2013-01-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(194, '鄭君萍', '傑豪', NULL, 'F', '2004-05-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(195, '戴霖霖', '廷俊', NULL, 'F', '2000-11-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(196, '蒼婷', '銘廷', NULL, 'M', '2006-07-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(197, '璩嘉建', '佳宏', NULL, 'F', '2013-09-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(198, '蓬君哲', '詩美', NULL, 'M', '2009-12-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(199, '戴宜婷', '嘉', NULL, 'F', '2013-11-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(200, '滑彥偉', '華', NULL, 'F', '2005-01-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(201, '羊雯鈺', '慧', NULL, 'M', '2005-08-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(202, '湯筱', '佳俊', NULL, 'M', '2005-05-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(203, '班穎', '雅', NULL, 'F', '2007-12-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(204, '鄒萱涵', '淑儀', NULL, 'M', '2007-10-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(205, '惠偉', '威', NULL, 'F', '2006-12-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(206, '亢文玲', '宏建', NULL, 'F', '2009-08-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(207, '袁庭詩', '庭軒', NULL, 'M', '2007-05-21', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(208, '柏詩心', '威銘', NULL, 'M', '2001-05-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(209, '顧哲', '婉', NULL, 'F', '2005-03-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(210, '顓孫芬', '萍', NULL, 'M', '2006-06-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(211, '祁琬', '宜賢', NULL, 'M', '2005-09-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(212, '張翰', '偉', NULL, 'F', '2015-02-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(213, '盛儀', '惠如', NULL, 'F', '2002-11-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(214, '段干君慧', '哲', NULL, 'F', '2008-09-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(215, '沈靜佳', '家安', NULL, 'F', '2014-08-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(216, '太叔玲', '萱心', NULL, 'F', '2002-09-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(217, '陸華文', '宜', NULL, 'F', '2009-06-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(218, '百里樺思', '芬雯', NULL, 'M', '2010-01-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(219, '鮮于心', '宜婉', NULL, 'M', '2007-07-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(220, '麴思銘', '詩', NULL, 'M', '2008-03-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(221, '卞嘉宗', '萍貞', NULL, 'M', '2015-01-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(222, '藍宏宏', '慧', NULL, 'M', '2001-08-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(223, '酆芳', '傑傑', NULL, 'M', '2001-10-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(224, '逯銘', '惠', NULL, 'M', '2003-10-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(225, '太叔信信', '貞筱', NULL, 'F', '2012-10-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(226, '薄心', '哲霖', NULL, 'M', '2008-01-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(227, '陰鈺', '宗思', NULL, 'M', '2013-12-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(228, '公孫承宇', '雯', NULL, 'F', '2005-10-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(229, '巫琪安', '穎賢', NULL, 'F', '2010-12-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(230, '段干偉安', '慧瑜', NULL, 'M', '2007-10-21', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(231, '閆柏', '銘建', NULL, 'M', '2004-05-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(232, '孫琪君', '庭', NULL, 'F', '2013-06-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(233, '夾谷詩玲', '蓉', NULL, 'M', '2003-01-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(234, '薊靜筱', '穎', NULL, 'M', '2012-02-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(235, '禹欣家', '家', NULL, 'F', '2006-07-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(236, '仲孫霖', '如', NULL, 'M', '2005-12-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(237, '康郁', '儀', NULL, 'M', '2010-03-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(238, '牧冠', '鈺', NULL, 'M', '2014-01-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(239, '水建廷', '靜鈺', NULL, 'M', '2005-09-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(240, '馮嘉佳', '思', NULL, 'F', '2015-05-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(241, '帥宗宏', '銘瑋', NULL, 'M', '2012-05-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(242, '季詩翰', '君', NULL, 'M', '2005-01-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(243, '聞宜', '佳美', NULL, 'M', '2010-07-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(244, '柏銘穎', '安瑋', NULL, 'F', '2006-05-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(245, '韶郁', '建軒', NULL, 'F', '2011-05-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(246, '烏筱玲', '威', NULL, 'M', '2003-03-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(247, '甄穎', '娟婷', NULL, 'M', '2001-01-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(248, '蔚萱', '廷', NULL, 'M', '2012-04-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(249, '聞柏', '宏', NULL, 'F', '2007-01-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(250, '經嘉', '穎', NULL, 'M', '2003-10-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(251, '司文', '思佳', NULL, 'F', '2012-01-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(252, '雍傑哲', '銘心', NULL, 'M', '2004-09-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(253, '麻琬琪', '怡佳', NULL, 'M', '2015-06-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(254, '芮軒冠', '靜華', NULL, 'F', '2007-03-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(255, '容文', '詩思', NULL, 'M', '2012-06-13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(256, '滑穎', '雅佳', NULL, 'F', '2011-10-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(257, '翁婉', '雅芳', NULL, 'M', '2005-12-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(258, '邰君靜', '信瑋', NULL, 'M', '2007-10-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(259, '晉銘志', '安偉', NULL, 'F', '2010-05-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(260, '公冶志俊', '翰', NULL, 'M', '2012-08-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(261, '暨俊', '庭靜', NULL, 'M', '2004-01-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(262, '督家穎', '雯', NULL, 'M', '2007-03-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(263, '顧傑俊', '怡', NULL, 'M', '2008-10-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(264, '通文宇', '婷琪', NULL, 'F', '2014-11-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(265, '匡軒', '俊彥', NULL, 'M', '2002-03-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(266, '鮮于依', '伶', NULL, 'F', '2005-08-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(267, '莊伶', '廷佳', NULL, 'F', '2012-07-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(268, '山嘉', '鈺', NULL, 'M', '2012-10-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(269, '蓋冠雅', '承', NULL, 'M', '2012-12-31', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(270, '盛雯', '信美', NULL, 'M', '2005-09-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26');
+INSERT INTO `students` (`id`, `name_zh`, `name_fn`, `name_display`, `gender`, `dob`, `pob`, `start_letter`, `start_grade`, `sic`, `phone`, `dsej_num`, `medical_num`, `entry_date`, `past_school_name`, `religion`, `phone_sms`, `phone_home`, `carer`, `parent`, `garidan`, `liaison`, `created_at`, `updated_at`) VALUES
+(271, '池俊軒', '雅欣', NULL, 'F', '2001-02-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(272, '鄭怡欣', '哲', NULL, 'M', '2012-08-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(273, '巫思佩', '傑偉', NULL, 'M', '2012-06-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(274, '賞廷安', '婷', NULL, 'M', '2003-08-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(275, '麻偉', '賢彥', NULL, 'M', '2012-11-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(276, '年安俊', '廷', NULL, 'F', '2004-06-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(277, '后家哲', '宏信', NULL, 'M', '2003-11-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(278, '巫慧涵', '琬', NULL, 'F', '2008-05-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(279, '應萱', '冠珊', NULL, 'M', '2015-08-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(280, '施宇君', '雯', NULL, 'F', '2015-05-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(281, '龍銘傑', '俊', NULL, 'M', '2010-12-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(282, '甘欣筱', '冠心', NULL, 'F', '2013-08-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(283, '晉娟儀', '銘偉', NULL, 'M', '2005-05-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(284, '奚偉心', '馨', NULL, 'F', '2004-12-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(285, '寇宏', '思佳', NULL, 'F', '2012-02-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(286, '莊君建', '思', NULL, 'F', '2008-12-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(287, '羿文琪', '文', NULL, 'M', '2010-06-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(288, '蕭芳萱', '宜柏', NULL, 'M', '2011-05-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(289, '陸琬', '瑋詩', NULL, 'M', '2004-09-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(290, '駱伶蓉', '文筑', NULL, 'M', '2013-07-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(291, '司徒依', '廷霖', NULL, 'M', '2003-05-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(292, '貝君', '安宗', NULL, 'M', '2010-04-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(293, '韋軒宗', '銘', NULL, 'F', '2007-02-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(294, '季琬', '庭', NULL, 'M', '2002-02-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(295, '慕哲美', '詩', NULL, 'F', '2007-11-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(296, '欒柏', '瑋賢', NULL, 'M', '2015-01-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(297, '太叔詩嘉', '淑貞', NULL, 'M', '2001-03-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(298, '帥蓉', '如', NULL, 'M', '2009-09-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(299, '仇佳志', '文', NULL, 'F', '2003-06-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(300, '繆芳', '俊', NULL, 'F', '2006-08-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(301, '舒儀安', '翰建', NULL, 'F', '2004-07-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(302, '閻家', '慧筱', NULL, 'F', '2001-02-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(303, '周貞', '芳珊', NULL, 'F', '2002-09-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(304, '邵慧', '偉', NULL, 'M', '2013-06-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(305, '曹霖翰', '筑', NULL, 'F', '2011-07-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(306, '淳于思嘉', '宇銘', NULL, 'M', '2014-04-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(307, '古貞', '筑欣', NULL, 'M', '2002-01-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(308, '尹美靜', '翰', NULL, 'M', '2008-08-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(309, '賴瑋', '萱雯', NULL, 'F', '2009-08-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(310, '徐家', '樺信', NULL, 'F', '2006-12-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(311, '諸華心', '文庭', NULL, 'F', '2001-09-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(312, '蔡思', '佩', NULL, 'M', '2003-05-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(313, '易淑思', '娟穎', NULL, 'F', '2015-03-13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(314, '應馨怡', '筑', NULL, 'M', '2004-07-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(315, '璩美', '樺霖', NULL, 'M', '2003-01-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(316, '戚嘉萱', '柏柏', NULL, 'F', '2011-04-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(317, '邢彥宇', '蓉', NULL, 'F', '2004-03-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(318, '佴庭', '信', NULL, 'F', '2001-06-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(319, '艾文', '傑宏', NULL, 'F', '2004-10-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(320, '宮芳鈺', '宇霖', NULL, 'M', '2005-01-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(321, '倪君', '玲', NULL, 'M', '2007-09-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(322, '龍銘', '涵冠', NULL, 'M', '2012-12-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(323, '於宗', '穎軒', NULL, 'F', '2014-03-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(324, '鮮于君筱', '淑', NULL, 'M', '2000-09-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(325, '荊豪', '傑', NULL, 'F', '2008-04-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(326, '柯馨', '嘉穎', NULL, 'F', '2005-11-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(327, '陳儀馨', '庭哲', NULL, 'F', '2011-08-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(328, '平慧伶', '蓉', NULL, 'F', '2003-09-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(329, '張雅怡', '華琪', NULL, 'M', '2010-04-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(330, '能承彥', '信賢', NULL, 'F', '2006-12-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(331, '查雯', '淑', NULL, 'M', '2003-11-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(332, '屈宏', '佩', NULL, 'F', '2010-04-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(333, '申慧詩', '心佳', NULL, 'M', '2006-09-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(334, '蒯依', '安', NULL, 'M', '2014-05-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(335, '有萱婉', '詩', NULL, 'M', '2012-04-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(336, '那娟', '琬婉', NULL, 'M', '2015-04-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(337, '仲君琪', '宏偉', NULL, 'F', '2013-06-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(338, '夔安萱', '貞佩', NULL, 'M', '2008-12-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(339, '夔詩', '穎', NULL, 'F', '2007-12-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(340, '利翰', '郁萍', NULL, 'F', '2014-09-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(341, '吉芬萱', '芬心', NULL, 'F', '2013-06-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(342, '緱軒', '安蓉', NULL, 'F', '2005-05-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(343, '郎慧', '嘉家', NULL, 'F', '2015-08-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(344, '壤駟琪', '佩', NULL, 'M', '2003-04-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(345, '饒嘉', '家', NULL, 'M', '2013-09-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(346, '福萍', '傑哲', NULL, 'M', '2003-03-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(347, '巫欣芳', '雅', NULL, 'M', '2005-01-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(348, '牧翰宏', '芬', NULL, 'M', '2002-01-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(349, '龔郁美', '嘉佳', NULL, 'F', '2012-08-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(350, '公宜', '玲', NULL, 'F', '2008-05-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(351, '堵筱慧', '冠', NULL, 'F', '2001-06-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(352, '言君', '豪軒', NULL, 'M', '2005-11-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(353, '應詩', '瑋', NULL, 'F', '2002-10-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(354, '姜琪', '惠琬', NULL, 'M', '2015-01-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(355, '曾霖文', '雅怡', NULL, 'M', '2011-09-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(356, '柴美靜', '貞', NULL, 'M', '2011-07-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(357, '厙承', '庭', NULL, 'M', '2013-10-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(358, '凌穎', '芬', NULL, 'M', '2011-12-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(359, '逄詩', '瑋俊', NULL, 'F', '2001-09-13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(360, '舒廷宏', '娟', NULL, 'M', '2010-02-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(361, '安佩', '翰賢', NULL, 'M', '2009-04-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(362, '沈華', '馨娟', NULL, 'F', '2003-09-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(363, '越廷', '珊蓉', NULL, 'F', '2002-07-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(364, '冀君廷', '怡', NULL, 'M', '2004-06-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(365, '卓婷安', '伶萱', NULL, 'M', '2003-08-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(366, '陳筱雯', '冠', NULL, 'F', '2004-05-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(367, '厙宜', '宇', NULL, 'M', '2000-10-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(368, '屈穎', '俊', NULL, 'M', '2007-02-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(369, '有萱君', '如淑', NULL, 'M', '2013-04-13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(370, '麴宇穎', '蓉', NULL, 'F', '2011-11-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(371, '刁柏文', '承', NULL, 'M', '2011-07-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(372, '韓欣琪', '玲貞', NULL, 'F', '2007-08-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(373, '陰彥', '詩芬', NULL, 'F', '2010-08-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(374, '法心', '穎傑', NULL, 'M', '2005-12-21', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(375, '荀伶冠', '君雯', NULL, 'M', '2014-04-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(376, '尚彥', '軒', NULL, 'M', '2002-12-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(377, '虞馨', '冠', NULL, 'F', '2011-09-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(378, '須佩詩', '靜思', NULL, 'F', '2005-07-31', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(379, '盛筱', '佩', NULL, 'F', '2002-10-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(380, '沈馨玲', '文', NULL, 'F', '2007-03-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(381, '司馬華', '怡佩', NULL, 'M', '2001-08-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(382, '庾俊', '美郁', NULL, 'F', '2002-12-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(383, '農心', '惠', NULL, 'M', '2002-05-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(384, '宓依', '思', NULL, 'M', '2007-01-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(385, '況樺', '哲賢', NULL, 'M', '2014-04-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(386, '公良詩', '心', NULL, 'F', '2011-07-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(387, '鈕馨琪', '怡', NULL, 'F', '2015-06-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(388, '翁美文', '俊樺', NULL, 'M', '2015-07-13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(389, '張穎君', '婉', NULL, 'F', '2010-08-21', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(390, '莫翰文', '華', NULL, 'F', '2007-10-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(391, '諸葛佩', '安', NULL, 'M', '2003-07-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(392, '百里筑', '家威', NULL, 'M', '2002-09-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(393, '周彥', '心', NULL, 'F', '2014-10-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(394, '白萱玲', '筑君', NULL, 'F', '2015-03-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(395, '空冠珊', '銘哲', NULL, 'F', '2003-08-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(396, '鬱穎', '信思', NULL, 'F', '2010-06-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(397, '仲孫婷鈺', '冠庭', NULL, 'M', '2008-05-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(398, '甘萱美', '依伶', NULL, 'F', '2014-09-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(399, '歐娟貞', '文', NULL, 'M', '2010-11-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(400, '關庭', '軒', NULL, 'M', '2012-09-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(401, '陶豪翰', '建', NULL, 'M', '2007-07-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(402, '連思', '儀', NULL, 'F', '2002-12-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(403, '楊霖', '詩文', NULL, 'F', '2007-11-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(404, '姬嘉宇', '琬', NULL, 'M', '2007-10-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(405, '紅玲穎', '嘉宜', NULL, 'F', '2006-12-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(406, '戎庭琬', '霖豪', NULL, 'M', '2010-07-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(407, '楚娟琬', '琬思', NULL, 'F', '2013-11-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(408, '魚萱', '儀', NULL, 'F', '2013-01-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(409, '郤萱', '安', NULL, 'F', '2012-05-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(410, '闕蓉', '庭宜', NULL, 'F', '2002-11-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(411, '應淑雯', '威', NULL, 'F', '2005-10-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(412, '靳美彥', '琪美', NULL, 'F', '2002-11-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(413, '姚承', '佩瑜', NULL, 'M', '2009-05-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(414, '穀梁安', '萍珊', NULL, 'F', '2009-03-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(415, '向宗威', '慧穎', NULL, 'M', '2004-05-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(416, '費宏', '淑', NULL, 'F', '2009-02-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(417, '龍霖建', '建家', NULL, 'M', '2003-06-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(418, '屠詩', '志', NULL, 'F', '2010-11-13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(419, '拓跋冠詩', '冠', NULL, 'M', '2006-05-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(420, '於婉', '宗', NULL, 'F', '2014-12-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(421, '徐萍', '雯', NULL, 'F', '2003-10-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(422, '訾柏豪', '婉庭', NULL, 'F', '2007-12-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(423, '百里婉庭', '庭', NULL, 'F', '2005-11-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(424, '家宜', '嘉', NULL, 'F', '2002-11-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(425, '酆雯娟', '伶依', NULL, 'F', '2009-12-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(426, '聶承', '玲', NULL, 'M', '2010-11-21', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(427, '范心', '軒穎', NULL, 'M', '2007-02-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(428, '胡偉', '貞', NULL, 'M', '2011-02-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(429, '宗政雯淑', '霖', NULL, 'F', '2004-06-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(430, '蔚佳庭', '偉', NULL, 'F', '2002-12-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(431, '衡琬', '心', NULL, 'F', '2008-08-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(432, '閭丘穎', '婉', NULL, 'M', '2003-06-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(433, '滑佳傑', '軒', NULL, 'M', '2003-03-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(434, '庾琬君', '志', NULL, 'M', '2001-05-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(435, '夾谷慧婉', '君', NULL, 'M', '2003-02-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(436, '郭建', '安娟', NULL, 'M', '2005-05-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(437, '宗政瑜', '哲', NULL, 'M', '2005-04-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(438, '東方芳美', '雯萍', NULL, 'M', '2014-06-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(439, '鮑安賢', '嘉', NULL, 'F', '2015-02-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(440, '麴美君', '建承', NULL, 'F', '2014-03-21', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(441, '藍建承', '郁詩', NULL, 'M', '2011-06-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(442, '夏萱', '哲樺', NULL, 'F', '2012-10-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(443, '靳承建', '伶穎', NULL, 'M', '2011-08-31', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(444, '養安彥', '鈺慧', NULL, 'M', '2012-10-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(445, '都怡', '庭瑋', NULL, 'M', '2000-11-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(446, '闞哲', '志', NULL, 'M', '2004-11-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(447, '融瑋廷', '君', NULL, 'M', '2012-01-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(448, '茹瑋穎', '貞', NULL, 'F', '2004-03-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(449, '雲娟雯', '思', NULL, 'F', '2013-02-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(450, '宦庭佳', '嘉銘', NULL, 'F', '2004-10-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(451, '何慧心', '君', NULL, 'M', '2007-01-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(452, '茅玲', '馨', NULL, 'M', '2009-10-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(453, '郤琬慧', '娟', NULL, 'M', '2014-01-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(454, '陰冠安', '婉鈺', NULL, 'F', '2009-09-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(455, '歐陽惠', '蓉靜', NULL, 'F', '2015-03-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(456, '茅儀庭', '嘉', NULL, 'F', '2007-08-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(457, '戎穎', '惠伶', NULL, 'F', '2005-03-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(458, '仲孫樺銘', '偉信', NULL, 'F', '2014-01-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(459, '賀郁', '靜', NULL, 'F', '2001-03-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(460, '巴嘉', '婉琪', NULL, 'F', '2004-07-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(461, '柴佳', '建賢', NULL, 'M', '2010-06-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(462, '萬馨雅', '琪', NULL, 'F', '2011-09-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(463, '蔚娟', '雅', NULL, 'F', '2007-11-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(464, '顓孫宗', '樺', NULL, 'F', '2012-11-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(465, '談淑芳', '傑豪', NULL, 'M', '2010-06-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(466, '勞信', '芬貞', NULL, 'F', '2001-10-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(467, '郟萍婉', '雅家', NULL, 'F', '2004-07-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(468, '公孫君心', '琪', NULL, 'F', '2003-09-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(469, '蒲詩安', '佩家', NULL, 'F', '2010-09-21', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(470, '洪詩', '婷蓉', NULL, 'F', '2004-10-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(471, '逄筑', '冠', NULL, 'M', '2001-04-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(472, '崔心', '建', NULL, 'F', '2007-12-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(473, '樂正俊', '慧嘉', NULL, 'F', '2015-06-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(474, '仲芬伶', '嘉詩', NULL, 'F', '2013-08-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(475, '禹如玲', '安', NULL, 'F', '2010-07-21', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(476, '趙靜珊', '詩萍', NULL, 'M', '2013-10-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(477, '井慧儀', '宜', NULL, 'M', '2006-05-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(478, '竺家柏', '嘉', NULL, 'M', '2008-04-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(479, '暴霖彥', '信俊', NULL, 'F', '2005-06-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(480, '哈軒銘', '嘉', NULL, 'F', '2000-10-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(481, '車淑', '鈺文', NULL, 'M', '2003-09-21', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(482, '楚心冠', '雅靜', NULL, 'F', '2001-02-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(483, '杜美', '翰', NULL, 'F', '2002-11-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(484, '亓官庭安', '銘', NULL, 'F', '2012-08-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(485, '榮廷', '萱靜', NULL, 'M', '2005-03-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(486, '厲鈺芳', '佳穎', NULL, 'F', '2004-03-13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(487, '歐儀玲', '婉', NULL, 'F', '2002-10-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(488, '聶芬瑜', '偉', NULL, 'F', '2009-01-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(489, '游信', '貞', NULL, 'M', '2005-08-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(490, '司寇筱萱', '翰', NULL, 'F', '2002-02-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(491, '國偉哲', '樺', NULL, 'M', '2002-12-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(492, '牧承', '安翰', NULL, 'M', '2010-01-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(493, '雲文筱', '偉宏', NULL, 'F', '2011-09-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(494, '子車柏', '儀娟', NULL, 'F', '2008-06-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(495, '邢文', '思彥', NULL, 'F', '2009-07-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(496, '孟玲', '志君', NULL, 'M', '2015-01-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(497, '聞人佩', '淑如', NULL, 'M', '2010-12-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(498, '宿萱心', '思', NULL, 'M', '2006-09-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(499, '韶心筑', '文珊', NULL, 'M', '2008-07-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(500, '經如', '文美', NULL, 'F', '2005-12-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(501, '漆雕萍', '蓉如', NULL, 'F', '2009-05-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(502, '璩銘豪', '志傑', NULL, 'F', '2014-12-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(503, '皇甫庭', '庭詩', NULL, 'F', '2005-10-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(504, '芮文佳', '思涵', NULL, 'M', '2001-02-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(505, '黨霖', '文宗', NULL, 'F', '2004-11-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(506, '和伶', '穎', NULL, 'M', '2010-04-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(507, '酈佩', '建樺', NULL, 'M', '2010-07-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(508, '司空彥', '冠彥', NULL, 'F', '2001-08-13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(509, '廣君', '君美', NULL, 'F', '2008-04-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(510, '余家', '佳芳', NULL, 'F', '2009-07-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(511, '巢琬筑', '玲', NULL, 'M', '2013-01-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(512, '麻美賢', '淑', NULL, 'M', '2013-01-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(513, '傅玲', '哲豪', NULL, 'F', '2005-09-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(514, '弘宇', '貞', NULL, 'M', '2013-08-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(515, '廣雅', '郁', NULL, 'M', '2010-03-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(516, '楊詩', '樺', NULL, 'F', '2005-01-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(517, '費文傑', '庭', NULL, 'M', '2008-09-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(518, '巫馬琬瑜', '依', NULL, 'F', '2004-07-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(519, '于詩', '靜雅', NULL, 'M', '2015-05-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(520, '姬伶心', '瑋', NULL, 'F', '2007-03-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(521, '項怡伶', '郁', NULL, 'M', '2013-11-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(522, '戴嘉', '美', NULL, 'F', '2008-02-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(523, '仲鈺', '家', NULL, 'M', '2008-05-13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(524, '壤駟華', '宗威', NULL, 'F', '2009-01-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(525, '步翰', '琪', NULL, 'F', '2011-08-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(526, '逄美傑', '宏', NULL, 'M', '2010-03-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(527, '姬銘君', '家家', NULL, 'M', '2007-10-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(528, '支郁華', '雯', NULL, 'M', '2013-06-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(529, '梁丘庭', '賢銘', NULL, 'F', '2001-07-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(530, '公西偉庭', '穎', NULL, 'M', '2007-06-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(531, '東君', '詩冠', NULL, 'M', '2011-09-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(532, '尹承', '詩宗', NULL, 'M', '2013-02-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(533, '夾谷怡鈺', '鈺', NULL, 'M', '2011-03-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(534, '顏郁', '佳', NULL, 'M', '2006-10-13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(535, '聞信', '佳鈺', NULL, 'M', '2005-12-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(536, '閆承賢', '筱馨', NULL, 'M', '2004-03-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(537, '柴馨', '伶筑', NULL, 'M', '2012-04-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(538, '楚銘', '婷', NULL, 'M', '2004-12-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(539, '季心', '涵靜', NULL, 'F', '2004-02-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26');
+INSERT INTO `students` (`id`, `name_zh`, `name_fn`, `name_display`, `gender`, `dob`, `pob`, `start_letter`, `start_grade`, `sic`, `phone`, `dsej_num`, `medical_num`, `entry_date`, `past_school_name`, `religion`, `phone_sms`, `phone_home`, `carer`, `parent`, `garidan`, `liaison`, `created_at`, `updated_at`) VALUES
+(540, '程佳', '君', NULL, 'F', '2006-12-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(541, '楚雯佳', '鈺', NULL, 'M', '2011-11-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(542, '章佳', '琬芬', NULL, 'M', '2013-09-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(543, '宦華', '瑜', NULL, 'F', '2007-01-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(544, '方傑', '思華', NULL, 'F', '2013-04-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(545, '欽珊', '偉美', NULL, 'F', '2007-10-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(546, '樊心', '欣', NULL, 'F', '2006-09-21', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(547, '高芬淑', '婉', NULL, 'M', '2006-10-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(548, '豐銘柏', '穎華', NULL, 'M', '2000-12-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(549, '許美', '萱', NULL, 'M', '2012-10-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(550, '支俊安', '承庭', NULL, 'F', '2011-09-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(551, '皇甫華', '筑', NULL, 'F', '2004-07-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(552, '茹柏宇', '賢志', NULL, 'F', '2013-08-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(553, '終慧珊', '安文', NULL, 'F', '2008-12-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(554, '閻娟萱', '嘉美', NULL, 'F', '2014-08-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(555, '連霖華', '馨玲', NULL, 'F', '2013-08-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(556, '廉佩', '靜嘉', NULL, 'F', '2012-10-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(557, '鈕文', '威', NULL, 'M', '2008-09-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(558, '龔思', '瑋', NULL, 'M', '2010-05-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(559, '欽瑋', '庭嘉', NULL, 'F', '2015-06-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(560, '段俊', '心廷', NULL, 'M', '2013-05-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(561, '武詩', '萍', NULL, 'F', '2004-04-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(562, '狄志信', '珊', NULL, 'F', '2007-06-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(563, '緱思俊', '佳伶', NULL, 'M', '2015-07-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(564, '馮筱', '哲', NULL, 'M', '2008-03-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(565, '何宇冠', '庭詩', NULL, 'M', '2010-11-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(566, '梁淑芳', '貞依', NULL, 'M', '2012-09-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(567, '楊宗', '儀君', NULL, 'M', '2015-07-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(568, '強依宜', '君', NULL, 'M', '2013-11-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(569, '嚴瑋', '豪思', NULL, 'F', '2010-05-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(570, '湯君', '鈺', NULL, 'M', '2009-10-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(571, '奚儀', '翰', NULL, 'F', '2013-09-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(572, '萬儀', '儀郁', NULL, 'F', '2009-08-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(573, '濮陽承柏', '宗', NULL, 'M', '2006-05-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(574, '顓孫慧', '賢柏', NULL, 'M', '2003-01-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(575, '侯郁依', '慧', NULL, 'F', '2001-05-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(576, '匡廷冠', '嘉宏', NULL, 'M', '2001-01-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(577, '符文', '建家', NULL, 'F', '2012-03-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(578, '司家', '家', NULL, 'M', '2005-08-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(579, '孫儀穎', '婷', NULL, 'M', '2012-03-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(580, '雙信', '郁宜', NULL, 'M', '2012-07-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(581, '宓欣', '欣', NULL, 'M', '2004-02-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(582, '宗政靜庭', '文筱', NULL, 'M', '2008-03-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(583, '簡宜貞', '豪', NULL, 'M', '2007-05-31', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(584, '荀宇', '玲華', NULL, 'M', '2010-10-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(585, '段宏', '庭', NULL, 'M', '2011-03-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(586, '拓跋美', '美', NULL, 'M', '2009-05-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(587, '駱軒', '宜', NULL, 'F', '2011-03-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(588, '米庭瑋', '淑', NULL, 'F', '2010-10-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(589, '太叔宏穎', '蓉佳', NULL, 'F', '2010-12-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(590, '胥翰', '庭惠', NULL, 'M', '2005-02-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(591, '長孫宗文', '淑', NULL, 'F', '2010-01-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(592, '尉遲宇文', '文', NULL, 'M', '2009-08-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(593, '公羊文', '思', NULL, 'M', '2007-03-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(594, '祝樺', '軒', NULL, 'M', '2001-01-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(595, '公西慧宜', '婉如', NULL, 'M', '2002-08-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(596, '法心', '偉', NULL, 'M', '2004-11-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(597, '趙彥威', '傑文', NULL, 'F', '2007-09-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(598, '濮陽嘉柏', '家', NULL, 'F', '2009-12-31', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(599, '闞霖', '慧', NULL, 'F', '2007-11-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(600, '冀怡', '家志', NULL, 'M', '2012-10-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(601, '康穎銘', '美賢', NULL, 'M', '2013-02-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(602, '徐瑋', '貞淑', NULL, 'M', '2005-04-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(603, '佟宗霖', '庭', NULL, 'F', '2011-05-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(604, '佟穎婉', '依', NULL, 'F', '2011-02-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(605, '邊銘', '筱', NULL, 'M', '2008-03-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(606, '韓佳廷', '文', NULL, 'M', '2014-11-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(607, '年貞', '佳哲', NULL, 'F', '2011-12-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(608, '白依如', '美柏', NULL, 'F', '2014-08-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(609, '吉文', '穎穎', NULL, 'F', '2009-03-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(610, '第五宇建', '宜娟', NULL, 'F', '2001-05-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(611, '柴君哲', '瑜芬', NULL, 'F', '2006-06-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(612, '顏佳', '宗', NULL, 'F', '2009-10-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(613, '愛美建', '貞華', NULL, 'M', '2003-07-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(614, '席婷', '婷', NULL, 'M', '2005-01-31', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(615, '佘穎', '欣華', NULL, 'M', '2006-07-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(616, '步珊婉', '芬怡', NULL, 'F', '2004-06-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(617, '查宜庭', '琪', NULL, 'F', '2008-06-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(618, '鄢芬', '嘉', NULL, 'M', '2007-07-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(619, '法廷宇', '佳', NULL, 'F', '2006-01-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(620, '仇雯鈺', '淑庭', NULL, 'F', '2005-12-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(621, '令狐傑', '嘉', NULL, 'M', '2008-03-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(622, '庾郁', '華', NULL, 'M', '2008-01-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(623, '查信宏', '賢', NULL, 'M', '2011-09-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(624, '俞廷', '嘉', NULL, 'F', '2013-09-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(625, '孔俊銘', '如文', NULL, 'M', '2014-04-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(626, '汲瑜', '冠芳', NULL, 'M', '2007-05-21', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(627, '麴如嘉', '宏', NULL, 'M', '2010-07-13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(628, '單詩', '涵', NULL, 'M', '2003-01-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(629, '仉柏', '佳', NULL, 'F', '2011-03-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(630, '邢賢', '雅安', NULL, 'F', '2015-02-21', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(631, '秋詩', '賢', NULL, 'M', '2010-02-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(632, '巴筑美', '郁', NULL, 'F', '2006-02-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(633, '藍廷', '家', NULL, 'F', '2006-07-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(634, '溫婷', '軒', NULL, 'F', '2001-10-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(635, '端木安', '冠佳', NULL, 'M', '2014-04-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(636, '蕭雅雯', '宇庭', NULL, 'M', '2009-11-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(637, '蕭美', '鈺', NULL, 'M', '2004-07-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(638, '澹臺承', '建信', NULL, 'M', '2007-05-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(639, '井如', '珊佩', NULL, 'M', '2014-10-21', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(640, '水萱', '惠', NULL, 'F', '2004-01-21', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(641, '慕容建瑋', '美', NULL, 'M', '2012-06-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(642, '勾瑜筱', '宏傑', NULL, 'M', '2003-02-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(643, '舒志心', '柏', NULL, 'M', '2003-09-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(644, '狄惠心', '嘉翰', NULL, 'M', '2011-10-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(645, '那琬佩', '雅', NULL, 'M', '2003-12-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(646, '涂詩華', '美珊', NULL, 'F', '2006-06-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(647, '衛樺賢', '華承', NULL, 'M', '2014-09-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(648, '太叔貞', '霖', NULL, 'M', '2003-03-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(649, '商承文', '思', NULL, 'F', '2013-08-13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(650, '申傑', '玲蓉', NULL, 'F', '2011-03-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(651, '齊冠', '嘉涵', NULL, 'F', '2012-04-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(652, '庾銘', '君', NULL, 'F', '2014-06-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(653, '井安宗', '瑜', NULL, 'F', '2006-06-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(654, '吉涵', '玲萱', NULL, 'M', '2011-02-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(655, '笪安郁', '珊', NULL, 'F', '2004-03-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(656, '冷承承', '依', NULL, 'M', '2008-08-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(657, '雙琬萱', '翰樺', NULL, 'F', '2000-10-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(658, '伏家', '傑思', NULL, 'F', '2011-01-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(659, '謝霖', '美廷', NULL, 'F', '2002-09-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(660, '駱銘美', '嘉', NULL, 'M', '2003-07-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(661, '宿柏', '宇宗', NULL, 'M', '2002-04-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(662, '辛佩', '冠', NULL, 'F', '2009-07-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(663, '子車安', '翰', NULL, 'M', '2011-02-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(664, '牛思', '婷芬', NULL, 'M', '2011-06-21', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(665, '殷軒', '信', NULL, 'F', '2012-11-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(666, '戎瑜', '欣', NULL, 'F', '2014-03-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(667, '凌詩君', '涵伶', NULL, 'F', '2005-03-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(668, '充婷慧', '儀雅', NULL, 'M', '2003-04-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(669, '董惠', '萱', NULL, 'F', '2006-03-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(670, '曾豪豪', '信', NULL, 'M', '2002-07-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(671, '駱霖安', '宜霖', NULL, 'F', '2006-05-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(672, '穆冠廷', '珊', NULL, 'F', '2013-06-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(673, '咸翰宇', '冠偉', NULL, 'M', '2014-04-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(674, '淳于美', '鈺嘉', NULL, 'M', '2013-01-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(675, '夏芬', '儀如', NULL, 'F', '2010-06-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(676, '駱柏俊', '穎雯', NULL, 'M', '2010-09-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(677, '終萱雯', '宜', NULL, 'F', '2014-02-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(678, '奚家貞', '萱', NULL, 'F', '2003-07-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(679, '湛華靜', '庭穎', NULL, 'M', '2008-09-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(680, '梁華宗', '婉思', NULL, 'M', '2003-11-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(681, '索建', '娟婉', NULL, 'F', '2010-02-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(682, '桂筑', '靜', NULL, 'F', '2009-11-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(683, '公冶思', '穎', NULL, 'M', '2012-04-13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(684, '安穎', '君', NULL, 'M', '2004-04-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(685, '殳欣筱', '欣庭', NULL, 'F', '2005-11-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(686, '申屠威銘', '銘', NULL, 'M', '2008-12-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(687, '雙如瑜', '家', NULL, 'M', '2011-01-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(688, '甯家美', '嘉嘉', NULL, 'F', '2011-04-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(689, '闕安銘', '蓉郁', NULL, 'F', '2013-07-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(690, '衡馨嘉', '思冠', NULL, 'M', '2002-10-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(691, '伯美', '文彥', NULL, 'F', '2000-10-21', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(692, '宰父庭', '宜心', NULL, 'F', '2006-08-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(693, '步儀華', '怡珊', NULL, 'M', '2010-11-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(694, '東門美家', '穎', NULL, 'M', '2012-03-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(695, '傅霖廷', '琬', NULL, 'M', '2006-01-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(696, '譙琪', '信霖', NULL, 'F', '2006-02-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(697, '郝傑威', '俊', NULL, 'F', '2015-01-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(698, '禹宏', '豪宜', NULL, 'F', '2001-11-13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(699, '段干柏', '家', NULL, 'F', '2006-05-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(700, '戴佩', '庭', NULL, 'M', '2012-09-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(701, '藍佳', '婷', NULL, 'M', '2005-12-31', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(702, '滕瑋', '宇', NULL, 'M', '2006-01-31', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(703, '馬鈺雅', '志俊', NULL, 'F', '2010-07-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(704, '危欣芳', '筱婉', NULL, 'F', '2013-08-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(705, '和志哲', '筑', NULL, 'M', '2005-10-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(706, '嵇文穎', '俊柏', NULL, 'F', '2005-01-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(707, '翁豪', '玲貞', NULL, 'F', '2012-05-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(708, '孫軒', '依', NULL, 'M', '2001-01-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(709, '褚珊君', '欣', NULL, 'F', '2012-10-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(710, '劉君華', '志', NULL, 'F', '2011-03-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(711, '貢心', '建', NULL, 'M', '2008-03-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(712, '岑美佳', '鈺', NULL, 'F', '2007-11-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(713, '黃琪欣', '佩安', NULL, 'F', '2007-09-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(714, '柳廷豪', '建', NULL, 'F', '2013-03-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(715, '毛思', '嘉君', NULL, 'F', '2004-04-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(716, '游威', '宗', NULL, 'F', '2007-05-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(717, '段軒', '彥俊', NULL, 'F', '2014-05-31', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(718, '喻賢文', '威', NULL, 'M', '2012-10-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(719, '呂翰承', '佳貞', NULL, 'M', '2001-02-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(720, '東門安', '銘彥', NULL, 'F', '2010-10-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(721, '扶冠', '萱琬', NULL, 'M', '2003-12-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(722, '宦筱慧', '銘君', NULL, 'F', '2005-11-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(723, '厲文翰', '筑心', NULL, 'F', '2004-06-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(724, '史信宏', '芬筱', NULL, 'F', '2012-02-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(725, '上官珊', '穎君', NULL, 'M', '2002-09-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(726, '汲華', '淑馨', NULL, 'F', '2004-12-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(727, '蓬冠', '廷心', NULL, 'M', '2012-01-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(728, '佴霖威', '穎威', NULL, 'F', '2008-10-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(729, '婁賢建', '芳', NULL, 'M', '2009-10-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(730, '宗美心', '宏俊', NULL, 'F', '2006-04-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(731, '百里儀依', '雅庭', NULL, 'F', '2003-12-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(732, '辛樺華', '珊萍', NULL, 'M', '2009-11-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(733, '魯馨', '哲', NULL, 'M', '2004-12-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(734, '通婷', '宜', NULL, 'M', '2014-12-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(735, '顓孫慧琪', '樺', NULL, 'F', '2006-10-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(736, '都豪', '欣', NULL, 'F', '2010-08-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(737, '翟如', '萱萱', NULL, 'F', '2008-06-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(738, '李冠芳', '偉', NULL, 'M', '2004-07-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(739, '穀梁貞儀', '郁', NULL, 'M', '2013-05-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(740, '萬珊郁', '冠', NULL, 'M', '2003-10-31', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(741, '龔鈺淑', '芬儀', NULL, 'F', '2013-09-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(742, '隗宗賢', '冠', NULL, 'F', '2014-11-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(743, '匡君', '建華', NULL, 'M', '2009-07-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(744, '能庭', '慧涵', NULL, 'M', '2003-12-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(745, '萬柏軒', '傑', NULL, 'M', '2007-04-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(746, '喬雯庭', '如慧', NULL, 'F', '2008-04-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(747, '羊霖', '淑', NULL, 'F', '2009-10-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(748, '施安', '俊', NULL, 'M', '2002-06-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(749, '愛宗', '穎涵', NULL, 'F', '2010-11-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(750, '賁婷嘉', '建', NULL, 'F', '2007-11-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(751, '厲郁', '宇', NULL, 'F', '2004-09-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(752, '奚志', '佩芬', NULL, 'F', '2006-07-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(753, '利賢宏', '郁', NULL, 'F', '2002-12-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(754, '水嘉嘉', '淑婉', NULL, 'F', '2001-10-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(755, '瞿怡雯', '俊', NULL, 'M', '2014-11-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(756, '金穎', '心廷', NULL, 'M', '2002-05-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(757, '邴柏', '佳', NULL, 'F', '2005-05-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(758, '師豪', '宏廷', NULL, 'F', '2001-08-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(759, '平庭美', '筑', NULL, 'F', '2005-02-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(760, '敖賢嘉', '華', NULL, 'F', '2010-05-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(761, '梁丘志', '君婉', NULL, 'F', '2011-09-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(762, '晉華', '佩', NULL, 'M', '2015-03-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(763, '璩萍', '瑋哲', NULL, 'M', '2004-04-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(764, '秋萍美', '宗', NULL, 'M', '2010-08-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(765, '經美穎', '賢承', NULL, 'M', '2008-06-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(766, '儲萱惠', '廷美', NULL, 'M', '2006-07-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(767, '丘思華', '安嘉', NULL, 'F', '2011-01-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(768, '譚蓉淑', '承', NULL, 'F', '2000-10-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(769, '尉遲文', '萍', NULL, 'F', '2003-10-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:26', '2023-02-03 01:27:26'),
+(770, '璩穎', '美婉', NULL, 'M', '2001-04-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(771, '干美豪', '儀', NULL, 'M', '2012-03-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(772, '章靜美', '冠穎', NULL, 'F', '2004-02-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(773, '言宗文', '思志', NULL, 'F', '2010-07-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(774, '乜軒', '穎', NULL, 'F', '2012-12-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(775, '宗軒軒', '哲俊', NULL, 'F', '2006-02-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(776, '師宜建', '蓉琪', NULL, 'M', '2008-12-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(777, '郤冠冠', '依鈺', NULL, 'F', '2001-06-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(778, '閆樺翰', '雅貞', NULL, 'M', '2002-12-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(779, '巢瑋翰', '詩', NULL, 'M', '2010-07-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(780, '第五宇', '宜宏', NULL, 'M', '2010-10-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(781, '閻庭銘', '萍', NULL, 'M', '2001-06-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(782, '韋樺霖', '淑筱', NULL, 'F', '2004-09-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(783, '司空佳', '靜瑜', NULL, 'F', '2006-08-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(784, '陶安華', '佳雯', NULL, 'M', '2000-12-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(785, '禹宏冠', '淑怡', NULL, 'F', '2008-02-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(786, '甄宇', '庭君', NULL, 'M', '2012-06-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(787, '阮建', '穎賢', NULL, 'F', '2000-10-13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(788, '端木伶雅', '怡', NULL, 'F', '2008-09-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(789, '干銘宗', '琬', NULL, 'M', '2005-01-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(790, '鄂華', '思', NULL, 'F', '2015-04-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(791, '白安彥', '冠', NULL, 'M', '2012-01-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(792, '督志', '宗', NULL, 'M', '2008-03-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(793, '靳佩', '偉宇', NULL, 'F', '2002-01-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(794, '黃筑', '文', NULL, 'F', '2014-12-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(795, '郭宗', '美志', NULL, 'F', '2008-01-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(796, '郗伶', '心', NULL, 'M', '2005-10-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(797, '耿傑', '庭宗', NULL, 'M', '2007-11-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(798, '闕依', '華', NULL, 'M', '2010-09-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(799, '衛文廷', '君', NULL, 'M', '2014-07-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(800, '柯瑋豪', '信', NULL, 'M', '2001-02-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(801, '亢宜', '霖美', NULL, 'M', '2001-10-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(802, '艾樺', '婷伶', NULL, 'F', '2008-02-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(803, '班思琬', '宗', NULL, 'M', '2006-03-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(804, '師柏', '心霖', NULL, 'F', '2015-03-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(805, '伍瑜婉', '安', NULL, 'F', '2002-01-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(806, '柴欣', '佳', NULL, 'M', '2000-11-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(807, '貢馨君', '豪', NULL, 'M', '2012-10-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(808, '李如', '思哲', NULL, 'M', '2015-03-21', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27');
+INSERT INTO `students` (`id`, `name_zh`, `name_fn`, `name_display`, `gender`, `dob`, `pob`, `start_letter`, `start_grade`, `sic`, `phone`, `dsej_num`, `medical_num`, `entry_date`, `past_school_name`, `religion`, `phone_sms`, `phone_home`, `carer`, `parent`, `garidan`, `liaison`, `created_at`, `updated_at`) VALUES
+(809, '璩佩琪', '安', NULL, 'M', '2008-09-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(810, '聞穎宏', '婉雯', NULL, 'M', '2002-01-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(811, '西門美欣', '伶安', NULL, 'F', '2011-03-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(812, '丁樺威', '家思', NULL, 'M', '2008-11-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(813, '逄俊', '如', NULL, 'F', '2014-03-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(814, '湛庭馨', '偉', NULL, 'M', '2015-01-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(815, '蒼琪佳', '雯', NULL, 'F', '2012-07-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(816, '成詩', '安宇', NULL, 'M', '2005-10-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(817, '糜承志', '詩玲', NULL, 'F', '2007-05-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(818, '向靜', '俊偉', NULL, 'M', '2008-12-31', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(819, '束靜', '蓉', NULL, 'F', '2012-03-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(820, '黎筑', '承宏', NULL, 'M', '2004-10-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(821, '鮑文琬', '嘉欣', NULL, 'M', '2013-01-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(822, '蔚筑', '宇詩', NULL, 'M', '2007-11-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(823, '祁涵', '穎', NULL, 'M', '2006-09-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(824, '東瑜', '慧', NULL, 'M', '2010-11-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(825, '牛銘', '筱', NULL, 'F', '2002-01-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(826, '商雯宜', '琪', NULL, 'M', '2003-08-21', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(827, '禹庭偉', '筱芳', NULL, 'M', '2001-11-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(828, '申屠承', '心冠', NULL, 'M', '2005-08-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(829, '黎萍', '瑋', NULL, 'M', '2008-04-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(830, '晏宏美', '芳美', NULL, 'M', '2004-10-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(831, '杭鈺', '芳佩', NULL, 'M', '2014-03-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(832, '山文思', '哲志', NULL, 'M', '2013-02-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(833, '童傑柏', '鈺', NULL, 'M', '2004-11-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(834, '帥琬怡', '心', NULL, 'F', '2011-01-31', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(835, '閭丘偉嘉', '君', NULL, 'M', '2009-06-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(836, '漆雕俊', '萱如', NULL, 'F', '2005-12-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(837, '支傑佳', '冠', NULL, 'F', '2011-08-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(838, '祖冠', '佳', NULL, 'M', '2013-05-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(839, '閆嘉', '玲', NULL, 'F', '2009-04-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(840, '郝靜靜', '柏', NULL, 'F', '2002-12-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(841, '荀霖', '家心', NULL, 'M', '2006-10-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(842, '洪安華', '樺信', NULL, 'F', '2005-05-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(843, '郗慧', '惠', NULL, 'F', '2014-11-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(844, '闕哲詩', '廷嘉', NULL, 'M', '2003-01-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(845, '昝玲依', '欣', NULL, 'F', '2015-06-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(846, '咸宜', '佳偉', NULL, 'M', '2002-02-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(847, '巢君筑', '娟冠', NULL, 'F', '2011-08-21', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(848, '舒美', '穎冠', NULL, 'M', '2011-01-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(849, '竺伶怡', '萱', NULL, 'M', '2007-01-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(850, '祖儀', '廷', NULL, 'M', '2009-05-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(851, '史家', '柏冠', NULL, 'F', '2004-12-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(852, '邊君佳', '庭', NULL, 'M', '2004-02-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(853, '柏琪', '翰偉', NULL, 'M', '2010-05-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(854, '車翰宜', '雅琪', NULL, 'F', '2013-09-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(855, '壤駟娟芳', '華', NULL, 'F', '2003-03-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(856, '芮郁蓉', '庭軒', NULL, 'F', '2009-03-13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(857, '福宇家', '威嘉', NULL, 'M', '2015-08-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(858, '宮慧', '志', NULL, 'F', '2012-10-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(859, '歐琪', '芳', NULL, 'M', '2006-10-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(860, '戎豪', '柏翰', NULL, 'F', '2002-09-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(861, '郝偉', '志賢', NULL, 'M', '2013-07-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(862, '熊娟珊', '嘉雯', NULL, 'M', '2013-12-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(863, '盧廷', '如佳', NULL, 'M', '2002-05-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(864, '養宏美', '廷', NULL, 'F', '2010-01-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(865, '闞君', '慧君', NULL, 'F', '2003-10-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(866, '鬱華婷', '思', NULL, 'F', '2014-07-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(867, '滿伶雯', '霖', NULL, 'M', '2003-08-21', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(868, '賞惠', '廷', NULL, 'F', '2009-04-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(869, '琴俊偉', '安玲', NULL, 'M', '2009-09-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(870, '步靜欣', '涵', NULL, 'F', '2014-12-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(871, '於宜柏', '筱', NULL, 'M', '2013-12-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(872, '柴雯瑜', '樺', NULL, 'M', '2011-01-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(873, '梁丘穎雯', '豪華', NULL, 'M', '2012-10-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(874, '康佳信', '文冠', NULL, 'F', '2008-02-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(875, '夏傑', '宜庭', NULL, 'F', '2001-02-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(876, '向蓉琬', '華', NULL, 'F', '2009-09-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(877, '闕娟君', '穎嘉', NULL, 'F', '2012-09-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(878, '呼延傑', '文淑', NULL, 'F', '2005-05-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(879, '經嘉', '安', NULL, 'M', '2003-04-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(880, '谷樺', '豪傑', NULL, 'M', '2005-01-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(881, '壽筑', '冠心', NULL, 'F', '2009-05-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(882, '陽志', '彥', NULL, 'M', '2008-02-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(883, '羊詩', '依嘉', NULL, 'M', '2011-02-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(884, '衡萱', '華', NULL, 'F', '2015-07-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(885, '朱哲瑋', '芳鈺', NULL, 'F', '2004-08-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(886, '糜君萱', '欣馨', NULL, 'M', '2015-06-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(887, '姬筑嘉', '哲', NULL, 'M', '2006-10-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(888, '邴萱心', '欣萱', NULL, 'F', '2001-03-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(889, '岑宗', '宏', NULL, 'F', '2001-01-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(890, '婁彥文', '慧', NULL, 'F', '2004-05-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(891, '督宏宜', '建心', NULL, 'F', '2013-03-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(892, '史君柏', '賢', NULL, 'F', '2012-01-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(893, '馬傑', '詩宗', NULL, 'M', '2015-01-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(894, '況安', '翰', NULL, 'F', '2003-12-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(895, '田筱萍', '詩', NULL, 'F', '2015-03-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(896, '符芳雅', '銘宏', NULL, 'M', '2014-08-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(897, '宦彥承', '樺承', NULL, 'M', '2008-04-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(898, '應傑', '婷', NULL, 'M', '2009-09-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(899, '聞人芬', '惠', NULL, 'F', '2000-09-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(900, '仲孫宏', '俊', NULL, 'F', '2008-04-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(901, '養佳', '琬', NULL, 'M', '2003-06-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(902, '甄心', '建', NULL, 'F', '2002-10-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(903, '閔珊', '柏', NULL, 'M', '2004-06-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(904, '褚樺', '彥', NULL, 'F', '2008-01-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(905, '福豪', '華', NULL, 'F', '2002-04-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(906, '汪琬', '雅冠', NULL, 'F', '2001-07-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(907, '梁丘心', '冠', NULL, 'M', '2013-04-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(908, '晁宜', '宇', NULL, 'F', '2014-01-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(909, '甯琬', '瑋', NULL, 'M', '2014-05-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(910, '沙佳', '家翰', NULL, 'M', '2002-06-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(911, '督冠', '安', NULL, 'M', '2008-07-31', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(912, '鮑心', '芬嘉', NULL, 'M', '2009-02-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(913, '宇文建', '彥銘', NULL, 'F', '2002-12-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(914, '晁琬欣', '佳郁', NULL, 'M', '2014-05-31', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(915, '連家', '宏', NULL, 'M', '2007-10-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(916, '酈安', '偉傑', NULL, 'M', '2005-08-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(917, '富庭嘉', '琬雯', NULL, 'M', '2007-09-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(918, '于華靜', '蓉', NULL, 'M', '2013-01-13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(919, '賁思宜', '傑霖', NULL, 'M', '2004-03-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(920, '賁文', '信', NULL, 'F', '2015-04-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(921, '熊宜', '玲', NULL, 'M', '2006-02-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(922, '程宜', '淑怡', NULL, 'F', '2004-11-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(923, '文家宗', '家嘉', NULL, 'F', '2010-06-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(924, '婁依', '郁佩', NULL, 'F', '2001-11-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(925, '仇穎', '賢哲', NULL, 'F', '2010-09-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(926, '袁霖', '庭', NULL, 'M', '2002-11-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(927, '貢心安', '婉', NULL, 'F', '2010-05-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(928, '黃家珊', '萱', NULL, 'F', '2007-06-03', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(929, '雙穎', '筑婷', NULL, 'F', '2008-12-13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(930, '羅鈺思', '承', NULL, 'M', '2001-05-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(931, '印豪建', '詩', NULL, 'M', '2009-08-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(932, '公西軒軒', '庭', NULL, 'F', '2009-04-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(933, '韋銘翰', '欣芳', NULL, 'F', '2012-04-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(934, '東方承瑋', '詩彥', NULL, 'M', '2005-04-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(935, '年心依', '宇宜', NULL, 'M', '2005-07-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(936, '赫連俊偉', '惠涵', NULL, 'F', '2001-01-05', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(937, '長孫豪', '如', NULL, 'F', '2009-05-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(938, '江霖家', '萍怡', NULL, 'F', '2015-06-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(939, '井家', '琬蓉', NULL, 'M', '2009-03-06', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(940, '万俟萍', '嘉', NULL, 'M', '2013-01-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(941, '封志', '華', NULL, 'F', '2015-06-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(942, '勞哲瑋', '淑穎', NULL, 'F', '2007-05-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(943, '祿威', '偉', NULL, 'F', '2007-04-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(944, '戚雯如', '俊信', NULL, 'M', '2000-10-13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(945, '咸馨', '庭', NULL, 'F', '2002-01-17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(946, '關依', '珊家', NULL, 'M', '2011-08-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(947, '滕雯', '庭', NULL, 'M', '2010-04-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(948, '甄萍', '宜心', NULL, 'M', '2010-03-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(949, '齊依安', '貞萍', NULL, 'M', '2001-09-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(950, '查豪', '思', NULL, 'F', '2008-01-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(951, '祁俊銘', '如', NULL, 'M', '2005-08-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(952, '燕穎惠', '俊柏', NULL, 'F', '2011-11-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(953, '鈕思', '安嘉', NULL, 'F', '2010-11-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(954, '邴華家', '如', NULL, 'M', '2015-08-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(955, '喻淑筱', '婷', NULL, 'M', '2013-12-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(956, '康庭佳', '筱瑜', NULL, 'M', '2013-07-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(957, '巫婉', '偉', NULL, 'F', '2012-08-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(958, '商心', '柏', NULL, 'M', '2009-04-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(959, '胡華', '冠芬', NULL, 'F', '2003-04-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(960, '愛霖', '傑承', NULL, 'F', '2002-09-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(961, '全馨', '娟', NULL, 'M', '2010-03-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(962, '印柏', '君', NULL, 'M', '2001-03-31', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(963, '韶冠', '儀文', NULL, 'F', '2008-06-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(964, '干靜芳', '涵美', NULL, 'M', '2014-05-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(965, '糜哲建', '偉', NULL, 'M', '2009-12-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(966, '鄭心淑', '蓉', NULL, 'M', '2000-10-28', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(967, '巫豪', '郁', NULL, 'M', '2011-01-15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(968, '褚雯華', '宗穎', NULL, 'M', '2007-09-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(969, '談依', '怡琬', NULL, 'F', '2011-05-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(970, '賞柏', '慧如', NULL, 'F', '2002-09-25', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(971, '傅偉', '詩', NULL, 'F', '2001-07-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(972, '西門佳', '惠郁', NULL, 'F', '2012-03-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(973, '季宏思', '婷慧', NULL, 'M', '2007-12-07', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(974, '曹美美', '惠如', NULL, 'F', '2007-03-18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(975, '向冠', '庭心', NULL, 'M', '2008-06-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(976, '夔穎賢', '慧', NULL, 'F', '2003-03-23', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(977, '程穎', '佳宇', NULL, 'M', '2015-01-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(978, '黃建', '思筱', NULL, 'F', '2015-08-24', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(979, '郗冠宜', '宜豪', NULL, 'F', '2003-10-20', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(980, '上官宇柏', '宜君', NULL, 'M', '2013-03-08', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(981, '郗樺', '雅', NULL, 'F', '2006-10-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(982, '吉樺', '婷', NULL, 'F', '2015-08-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(983, '戴威', '婷珊', NULL, 'M', '2012-12-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(984, '尹貞嘉', '宏', NULL, 'F', '2004-06-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(985, '亓官庭宜', '靜琬', NULL, 'M', '2006-10-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(986, '宣詩', '冠', NULL, 'F', '2010-07-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(987, '懷怡', '慧欣', NULL, 'M', '2014-11-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(988, '廣哲', '美', NULL, 'M', '2000-12-26', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(989, '蔚心', '賢威', NULL, 'F', '2013-06-04', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(990, '陳玲', '美', NULL, 'F', '2006-03-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(991, '俞宗', '安', NULL, 'M', '2010-12-30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(992, '鬱婷宜', '宜宗', NULL, 'M', '2003-05-19', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(993, '濮銘', '華', NULL, 'F', '2014-07-02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(994, '童雯佩', '庭', NULL, 'M', '2015-04-29', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(995, '牛霖美', '嘉', NULL, 'M', '2004-12-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(996, '閭丘美', '鈺', NULL, 'F', '2001-01-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(997, '佘貞', '庭', NULL, 'M', '2015-04-22', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(998, '奚宇', '怡', NULL, 'F', '2002-06-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(999, '項怡筱', '瑜冠', NULL, 'F', '2004-07-16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27'),
+(1000, '鍾離傑', '穎詩', NULL, 'F', '2007-08-27', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:27', '2023-02-03 01:27:27');
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `student_details`
+-- Table structure for table `student_details`
 --
 
 CREATE TABLE `student_details` (
@@ -3409,7 +3323,7 @@ CREATE TABLE `student_details` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `student_gardians`
+-- Table structure for table `student_gardians`
 --
 
 CREATE TABLE `student_gardians` (
@@ -3424,12 +3338,141 @@ CREATE TABLE `student_gardians` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `subjects`
+-- Table structure for table `studies`
+--
+
+CREATE TABLE `studies` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `version` int(11) NOT NULL,
+  `title_zh` varchar(255) NOT NULL,
+  `title_en` varchar(255) NOT NULL,
+  `stream` varchar(255) NOT NULL,
+  `grade` varchar(255) NOT NULL,
+  `active` tinyint(1) NOT NULL,
+  `description` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `studies`
+--
+
+INSERT INTO `studies` (`id`, `version`, `title_zh`, `title_en`, `stream`, `grade`, `active`, `description`, `created_at`, `updated_at`) VALUES
+(1, 1, '小學全科', '小學全科', 'ALL', 'P', 1, NULL, '2023-02-06 01:27:17', '2023-02-06 18:51:32'),
+(2, 1, '初中文科', '初中文科', 'ART', 'S', 1, NULL, '2023-02-06 17:50:56', '2023-02-06 17:50:56'),
+(3, 1, '高中理科', '高中理科', 'ALL', 'S', 1, NULL, '2023-02-06 17:51:20', '2023-02-06 17:51:20');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `study_subject`
+--
+
+CREATE TABLE `study_subject` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `study_id` bigint(20) NOT NULL,
+  `subject_id` bigint(20) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `study_subject`
+--
+
+INSERT INTO `study_subject` (`id`, `study_id`, `subject_id`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, NULL, NULL),
+(2, 1, 2, NULL, NULL),
+(3, 1, 3, NULL, NULL),
+(4, 1, 4, NULL, NULL),
+(5, 1, 5, NULL, NULL),
+(6, 1, 6, NULL, NULL),
+(7, 1, 7, NULL, NULL),
+(8, 1, 8, NULL, NULL),
+(9, 1, 9, NULL, NULL),
+(10, 1, 10, NULL, NULL),
+(11, 1, 11, NULL, NULL),
+(12, 1, 12, NULL, NULL),
+(13, 1, 13, NULL, NULL),
+(14, 1, 14, NULL, NULL),
+(15, 1, 15, NULL, NULL),
+(16, 1, 16, NULL, NULL),
+(17, 1, 17, NULL, NULL),
+(18, 1, 18, NULL, NULL),
+(19, 1, 19, NULL, NULL),
+(20, 1, 20, NULL, NULL),
+(21, 1, 21, NULL, NULL),
+(22, 1, 22, NULL, NULL),
+(23, 1, 23, NULL, NULL),
+(24, 1, 24, NULL, NULL),
+(25, 1, 25, NULL, NULL),
+(26, 1, 26, NULL, NULL),
+(27, 1, 27, NULL, NULL),
+(28, 1, 28, NULL, NULL),
+(29, 1, 29, NULL, NULL),
+(30, 1, 30, NULL, NULL),
+(31, 1, 31, NULL, NULL),
+(32, 1, 32, NULL, NULL),
+(33, 1, 33, NULL, NULL),
+(34, 1, 34, NULL, NULL),
+(35, 1, 35, NULL, NULL),
+(36, 1, 36, NULL, NULL),
+(37, 1, 37, NULL, NULL),
+(38, 1, 38, NULL, NULL),
+(39, 1, 39, NULL, NULL),
+(40, 1, 40, NULL, NULL),
+(41, 2, 1, NULL, NULL),
+(42, 2, 2, NULL, NULL),
+(43, 2, 3, NULL, NULL),
+(44, 2, 4, NULL, NULL),
+(45, 2, 5, NULL, NULL),
+(46, 2, 6, NULL, NULL),
+(47, 2, 7, NULL, NULL),
+(48, 2, 8, NULL, NULL),
+(49, 2, 9, NULL, NULL),
+(50, 2, 10, NULL, NULL),
+(51, 2, 11, NULL, NULL),
+(52, 2, 12, NULL, NULL),
+(53, 2, 13, NULL, NULL),
+(54, 2, 14, NULL, NULL),
+(55, 2, 15, NULL, NULL),
+(56, 2, 16, NULL, NULL),
+(57, 2, 17, NULL, NULL),
+(58, 2, 18, NULL, NULL),
+(59, 2, 19, NULL, NULL),
+(60, 2, 20, NULL, NULL),
+(61, 2, 21, NULL, NULL),
+(62, 2, 22, NULL, NULL),
+(63, 2, 23, NULL, NULL),
+(64, 2, 24, NULL, NULL),
+(65, 2, 25, NULL, NULL),
+(66, 2, 26, NULL, NULL),
+(67, 2, 27, NULL, NULL),
+(68, 2, 28, NULL, NULL),
+(69, 2, 29, NULL, NULL),
+(70, 2, 30, NULL, NULL),
+(71, 2, 31, NULL, NULL),
+(72, 2, 32, NULL, NULL),
+(73, 2, 33, NULL, NULL),
+(74, 2, 34, NULL, NULL),
+(75, 2, 35, NULL, NULL),
+(76, 2, 36, NULL, NULL),
+(77, 2, 37, NULL, NULL),
+(78, 2, 38, NULL, NULL),
+(79, 2, 39, NULL, NULL),
+(80, 2, 40, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `subjects`
 --
 
 CREATE TABLE `subjects` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `grade_id` bigint(20) NOT NULL,
+  `category` varchar(255) NOT NULL,
   `code` varchar(255) NOT NULL,
   `title_zh` varchar(255) DEFAULT NULL,
   `title_en` varchar(255) DEFAULT NULL,
@@ -3439,228 +3482,132 @@ CREATE TABLE `subjects` (
   `description` text DEFAULT NULL,
   `active` tinyint(1) NOT NULL,
   `subject_template_id` bigint(20) DEFAULT NULL,
+  `score_column_template` varchar(255) DEFAULT NULL,
+  `version` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Extraindo dados da tabela `subjects`
+-- Dumping data for table `subjects`
 --
 
-INSERT INTO `subjects` (`id`, `grade_id`, `code`, `title_zh`, `title_en`, `type`, `stream`, `elective`, `description`, `active`, `subject_template_id`, `created_at`, `updated_at`) VALUES
-(1, 1, 'REL', '宗教', 'Relegion', 'SUB', 'LIB', 'COP', NULL, 1, 1, '2023-01-19 00:36:09', '2023-01-19 00:36:59'),
-(2, 1, 'PHY', '體能', 'Physic', 'SUB', 'LIB', 'COP', NULL, 1, 2, '2023-01-19 00:36:09', '2023-01-19 00:36:59'),
-(7, 1, 'CLT', '語文', 'Chinese Literature', 'SUB', 'LIB', 'COP', NULL, 1, 3, '2023-01-19 00:36:59', '2023-01-19 00:36:59'),
-(8, 1, 'STY', '故事', 'Stry', 'SUB', 'LIB', 'COP', NULL, 1, 4, '2023-01-19 00:36:59', '2023-01-19 00:36:59'),
-(9, 1, 'CWR', '中寫', 'Chinse_writting', 'SUB', 'LIB', 'COP', NULL, 1, 5, '2023-01-19 00:36:59', '2023-01-19 00:36:59'),
-(10, 1, 'EWR', '英寫', 'English Writing', 'SUB', 'LIB', 'COP', NULL, 1, 7, '2023-01-19 00:36:59', '2023-01-19 00:36:59'),
-(11, 1, 'OCS', '常識', 'Ordinary Common Sense', 'SUB', 'LIB', 'COP', NULL, 1, 8, '2023-01-19 00:36:59', '2023-01-19 00:36:59'),
-(12, 1, 'NUM', '識數', 'Numeracy', 'SUB', 'LIB', 'COP', NULL, 1, 9, '2023-01-19 00:36:59', '2023-01-19 00:36:59'),
-(13, 1, 'COM', '電腦', 'Computer', 'SUB', 'LIB', 'COP', NULL, 1, 10, '2023-01-19 00:36:59', '2023-01-19 00:36:59'),
-(14, 1, 'PLA', 'Playgroup', '唱遊', 'SUB', 'LIB', 'COP', NULL, 1, 11, '2023-01-19 00:36:59', '2023-01-19 00:36:59'),
-(15, 1, 'ART', '美勞', 'Art Craft', 'SUB', 'LIB', 'COP', NULL, 1, 12, '2023-01-19 00:36:59', '2023-01-19 00:36:59'),
-(16, 1, 'ATT', '生活習慣和態度', 'Habits and Attitudes', 'SUB', 'LIB', 'COP', NULL, 1, 13, '2023-01-19 00:36:59', '2023-01-19 00:36:59'),
-(17, 1, 'RPLA', '獎懲遲缺', 'Reword Punishment  Late and Absent', 'SUB', 'LIB', 'COP', NULL, 1, 14, '2023-01-19 00:36:59', '2023-01-19 00:36:59'),
-(18, 1, 'LES', '餘暇活動', 'Leisure Activies', 'SUB', 'LIB', 'COP', NULL, 1, 15, '2023-01-19 00:36:59', '2023-01-19 00:36:59'),
-(19, 1, 'OVA', '總體評分', 'Overall Score', 'SUB', 'LIB', 'COP', NULL, 1, 16, '2023-01-19 00:36:59', '2023-01-19 00:36:59'),
-(22, 2, 'REL', '宗教', 'Relegion', 'SUB', 'LIB', 'COP', NULL, 1, 1, '2023-01-19 00:55:09', '2023-01-19 00:55:09'),
-(23, 2, 'PHY', '體能', 'Physic', 'SUB', 'LIB', 'COP', NULL, 1, 2, '2023-01-19 00:55:09', '2023-01-19 00:55:09'),
-(24, 2, 'CLT', '語文', 'Chinese Literature', 'SUB', 'LIB', 'COP', NULL, 1, 3, '2023-01-19 00:55:09', '2023-01-19 00:55:09'),
-(25, 2, 'STY', '故事', 'Stry', 'SUB', 'LIB', 'COP', NULL, 1, 4, '2023-01-19 00:55:09', '2023-01-19 00:55:09'),
-(26, 2, 'CWR', '中寫', 'Chinse_writting', 'SUB', 'LIB', 'COP', NULL, 1, 5, '2023-01-19 00:55:09', '2023-01-19 00:55:09'),
-(27, 2, 'EWR', '英寫', 'English Writing', 'SUB', 'LIB', 'COP', NULL, 1, 7, '2023-01-19 00:55:09', '2023-01-19 00:55:09'),
-(28, 2, 'OCS', '常識', 'Ordinary Common Sense', 'SUB', 'LIB', 'COP', NULL, 1, 8, '2023-01-19 00:55:09', '2023-01-19 00:55:09'),
-(29, 2, 'NUM', '識數', 'Numeracy', 'SUB', 'LIB', 'COP', NULL, 1, 9, '2023-01-19 00:55:09', '2023-01-19 00:55:09'),
-(30, 2, 'COM', '電腦', 'Computer', 'SUB', 'LIB', 'COP', NULL, 1, 10, '2023-01-19 00:55:09', '2023-01-19 00:55:09'),
-(31, 2, 'PLA', 'Playgroup', '唱遊', 'SUB', 'LIB', 'COP', NULL, 1, 11, '2023-01-19 00:55:09', '2023-01-19 00:55:09'),
-(32, 2, 'ART', '美勞', 'Art Craft', 'SUB', 'LIB', 'COP', NULL, 1, 12, '2023-01-19 00:55:09', '2023-01-19 00:55:09'),
-(33, 2, 'ATT', '生活習慣和態度', 'Habits and Attitudes', 'SUB', 'LIB', 'COP', NULL, 1, 13, '2023-01-19 00:55:09', '2023-01-19 00:55:09'),
-(34, 2, 'RPLA', '獎懲遲缺', 'Reword Punishment  Late and Absent', 'SUB', 'LIB', 'COP', NULL, 1, 14, '2023-01-19 00:55:09', '2023-01-19 00:55:09'),
-(35, 2, 'LES', '餘暇活動', 'Leisure Activies', 'SUB', 'LIB', 'COP', NULL, 1, 15, '2023-01-19 00:55:09', '2023-01-19 00:55:09'),
-(36, 2, 'OVA', '總體評分', 'Overall Score', 'SUB', 'LIB', 'COP', NULL, 1, 16, '2023-01-19 00:55:09', '2023-01-19 00:55:09'),
-(37, 3, 'REL', '宗教', 'Relegion', 'SUB', 'LIB', 'COP', NULL, 1, 1, '2023-01-19 00:55:40', '2023-01-19 00:55:40'),
-(38, 3, 'PHY', '體能', 'Physic', 'SUB', 'LIB', 'COP', NULL, 1, 2, '2023-01-19 00:55:40', '2023-01-19 00:55:40'),
-(39, 3, 'CLT', '語文', 'Chinese Literature', 'SUB', 'LIB', 'COP', NULL, 1, 3, '2023-01-19 00:55:40', '2023-01-19 00:55:40'),
-(40, 3, 'STY', '故事', 'Stry', 'SUB', 'LIB', 'COP', NULL, 1, 4, '2023-01-19 00:55:40', '2023-01-19 00:55:40'),
-(41, 3, 'CWR', '中寫', 'Chinse_writting', 'SUB', 'LIB', 'COP', NULL, 1, 5, '2023-01-19 00:55:40', '2023-01-19 00:55:40'),
-(42, 3, 'EWR', '英寫', 'English Writing', 'SUB', 'LIB', 'COP', NULL, 1, 7, '2023-01-19 00:55:40', '2023-01-19 00:55:40'),
-(43, 3, 'OCS', '常識', 'Ordinary Common Sense', 'SUB', 'LIB', 'COP', NULL, 1, 8, '2023-01-19 00:55:40', '2023-01-19 00:55:40'),
-(44, 3, 'NUM', '識數', 'Numeracy', 'SUB', 'LIB', 'COP', NULL, 1, 9, '2023-01-19 00:55:40', '2023-01-19 00:55:40'),
-(45, 3, 'COM', '電腦', 'Computer', 'SUB', 'LIB', 'COP', NULL, 1, 10, '2023-01-19 00:55:40', '2023-01-19 00:55:40'),
-(46, 3, 'PLA', 'Playgroup', '唱遊', 'SUB', 'LIB', 'COP', NULL, 1, 11, '2023-01-19 00:55:40', '2023-01-19 00:55:40'),
-(47, 3, 'ART', '美勞', 'Art Craft', 'SUB', 'LIB', 'COP', NULL, 1, 12, '2023-01-19 00:55:40', '2023-01-19 00:55:40'),
-(48, 3, 'ATT', '生活習慣和態度', 'Habits and Attitudes', 'SUB', 'LIB', 'COP', NULL, 1, 13, '2023-01-19 00:55:40', '2023-01-19 00:55:40'),
-(49, 3, 'RPLA', '獎懲遲缺', 'Reword Punishment  Late and Absent', 'SUB', 'LIB', 'COP', NULL, 1, 14, '2023-01-19 00:55:40', '2023-01-19 00:55:40'),
-(50, 3, 'LES', '餘暇活動', 'Leisure Activies', 'SUB', 'LIB', 'COP', NULL, 1, 15, '2023-01-19 00:55:40', '2023-01-19 00:55:40'),
-(51, 3, 'OVA', '總體評分', 'Overall Score', 'SUB', 'LIB', 'COP', NULL, 1, 16, '2023-01-19 00:55:40', '2023-01-19 00:55:40'),
-(52, 25, 'REL', '宗教', 'Relegion', 'SUB', 'LIB', 'COP', NULL, 1, 1, '2023-01-19 00:55:50', '2023-01-19 00:55:50'),
-(53, 25, 'PHY', '體能', 'Physic', 'SUB', 'LIB', 'COP', NULL, 1, 2, '2023-01-19 00:55:50', '2023-01-19 00:55:50'),
-(54, 25, 'CLT', '語文', 'Chinese Literature', 'SUB', 'LIB', 'COP', NULL, 1, 3, '2023-01-19 00:55:50', '2023-01-19 00:55:50'),
-(55, 25, 'STY', '故事', 'Stry', 'SUB', 'LIB', 'COP', NULL, 1, 4, '2023-01-19 00:55:50', '2023-01-19 00:55:50'),
-(56, 25, 'CWR', '中寫', 'Chinse_writting', 'SUB', 'LIB', 'COP', NULL, 1, 5, '2023-01-19 00:55:50', '2023-01-19 00:55:50'),
-(57, 25, 'EWR', '英寫', 'English Writing', 'SUB', 'LIB', 'COP', NULL, 1, 7, '2023-01-19 00:55:50', '2023-01-19 00:55:50'),
-(58, 25, 'OCS', '常識', 'Ordinary Common Sense', 'SUB', 'LIB', 'COP', NULL, 1, 8, '2023-01-19 00:55:50', '2023-01-19 00:55:50'),
-(59, 25, 'NUM', '識數', 'Numeracy', 'SUB', 'LIB', 'COP', NULL, 1, 9, '2023-01-19 00:55:50', '2023-01-19 00:55:50'),
-(60, 25, 'COM', '電腦', 'Computer', 'SUB', 'LIB', 'COP', NULL, 1, 10, '2023-01-19 00:55:50', '2023-01-19 00:55:50'),
-(61, 25, 'PLA', 'Playgroup', '唱遊', 'SUB', 'LIB', 'COP', NULL, 1, 11, '2023-01-19 00:55:50', '2023-01-19 00:55:50'),
-(62, 25, 'ART', '美勞', 'Art Craft', 'SUB', 'LIB', 'COP', NULL, 1, 12, '2023-01-19 00:55:50', '2023-01-19 00:55:50'),
-(63, 25, 'ATT', '生活習慣和態度', 'Habits and Attitudes', 'SUB', 'LIB', 'COP', NULL, 1, 13, '2023-01-19 00:55:50', '2023-01-19 00:55:50'),
-(64, 25, 'RPLA', '獎懲遲缺', 'Reword Punishment  Late and Absent', 'SUB', 'LIB', 'COP', NULL, 1, 14, '2023-01-19 00:55:50', '2023-01-19 00:55:50'),
-(65, 25, 'LES', '餘暇活動', 'Leisure Activies', 'SUB', 'LIB', 'COP', NULL, 1, 15, '2023-01-19 00:55:50', '2023-01-19 00:55:50'),
-(66, 25, 'OVA', '總體評分', 'Overall Score', 'SUB', 'LIB', 'COP', NULL, 1, 16, '2023-01-19 00:55:50', '2023-01-19 00:55:50'),
-(67, 7, 'REL', '宗教', 'Relegion', 'SUB', 'LIB', 'COP', NULL, 1, 1, '2023-01-19 00:55:58', '2023-01-19 00:55:58'),
-(68, 7, 'PHY', '體能', 'Physic', 'SUB', 'LIB', 'COP', NULL, 1, 2, '2023-01-19 00:55:58', '2023-01-19 00:55:58'),
-(69, 7, 'CLT', '語文', 'Chinese Literature', 'SUB', 'LIB', 'COP', NULL, 1, 3, '2023-01-19 00:55:58', '2023-01-19 00:55:58'),
-(70, 7, 'STY', '故事', 'Stry', 'SUB', 'LIB', 'COP', NULL, 1, 4, '2023-01-19 00:55:58', '2023-01-19 00:55:58'),
-(71, 7, 'CWR', '中寫', 'Chinse_writting', 'SUB', 'LIB', 'COP', NULL, 1, 5, '2023-01-19 00:55:58', '2023-01-19 00:55:58'),
-(72, 7, 'EWR', '英寫', 'English Writing', 'SUB', 'LIB', 'COP', NULL, 1, 7, '2023-01-19 00:55:58', '2023-01-19 00:55:58'),
-(73, 7, 'OCS', '常識', 'Ordinary Common Sense', 'SUB', 'LIB', 'COP', NULL, 1, 8, '2023-01-19 00:55:58', '2023-01-19 00:55:58'),
-(74, 7, 'NUM', '識數', 'Numeracy', 'SUB', 'LIB', 'COP', NULL, 1, 9, '2023-01-19 00:55:58', '2023-01-19 00:55:58'),
-(75, 7, 'COM', '電腦', 'Computer', 'SUB', 'LIB', 'COP', NULL, 1, 10, '2023-01-19 00:55:58', '2023-01-19 00:55:58'),
-(76, 7, 'PLA', 'Playgroup', '唱遊', 'SUB', 'LIB', 'COP', NULL, 1, 11, '2023-01-19 00:55:58', '2023-01-19 00:55:58'),
-(77, 7, 'ART', '美勞', 'Art Craft', 'SUB', 'LIB', 'COP', NULL, 1, 12, '2023-01-19 00:55:58', '2023-01-19 00:55:58'),
-(78, 7, 'ATT', '生活習慣和態度', 'Habits and Attitudes', 'SUB', 'LIB', 'COP', NULL, 1, 13, '2023-01-19 00:55:58', '2023-01-19 00:55:58'),
-(79, 7, 'RPLA', '獎懲遲缺', 'Reword Punishment  Late and Absent', 'SUB', 'LIB', 'COP', NULL, 1, 14, '2023-01-19 00:55:58', '2023-01-19 00:55:58'),
-(80, 7, 'LES', '餘暇活動', 'Leisure Activies', 'SUB', 'LIB', 'COP', NULL, 1, 15, '2023-01-19 00:55:58', '2023-01-19 00:55:58'),
-(81, 7, 'OVA', '總體評分', 'Overall Score', 'SUB', 'LIB', 'COP', NULL, 1, 16, '2023-01-19 00:55:58', '2023-01-19 00:55:58'),
-(82, 8, 'REL', '宗教', 'Relegion', 'SUB', 'LIB', 'COP', NULL, 1, 1, '2023-01-19 00:56:08', '2023-01-19 00:56:08'),
-(83, 8, 'PHY', '體能', 'Physic', 'SUB', 'LIB', 'COP', NULL, 1, 2, '2023-01-19 00:56:08', '2023-01-19 00:56:08'),
-(84, 8, 'CLT', '語文', 'Chinese Literature', 'SUB', 'LIB', 'COP', NULL, 1, 3, '2023-01-19 00:56:08', '2023-01-19 00:56:08'),
-(85, 8, 'STY', '故事', 'Stry', 'SUB', 'LIB', 'COP', NULL, 1, 4, '2023-01-19 00:56:08', '2023-01-19 00:56:08'),
-(86, 8, 'CWR', '中寫', 'Chinse_writting', 'SUB', 'LIB', 'COP', NULL, 1, 5, '2023-01-19 00:56:08', '2023-01-19 00:56:08'),
-(87, 8, 'EWR', '英寫', 'English Writing', 'SUB', 'LIB', 'COP', NULL, 1, 7, '2023-01-19 00:56:08', '2023-01-19 00:56:08'),
-(88, 8, 'OCS', '常識', 'Ordinary Common Sense', 'SUB', 'LIB', 'COP', NULL, 1, 8, '2023-01-19 00:56:08', '2023-01-19 00:56:08'),
-(89, 8, 'NUM', '識數', 'Numeracy', 'SUB', 'LIB', 'COP', NULL, 1, 9, '2023-01-19 00:56:08', '2023-01-19 00:56:08'),
-(90, 8, 'COM', '電腦', 'Computer', 'SUB', 'LIB', 'COP', NULL, 1, 10, '2023-01-19 00:56:08', '2023-01-19 00:56:08'),
-(91, 8, 'PLA', 'Playgroup', '唱遊', 'SUB', 'LIB', 'COP', NULL, 1, 11, '2023-01-19 00:56:08', '2023-01-19 00:56:08'),
-(92, 8, 'ART', '美勞', 'Art Craft', 'SUB', 'LIB', 'COP', NULL, 1, 12, '2023-01-19 00:56:08', '2023-01-19 00:56:08'),
-(93, 8, 'ATT', '生活習慣和態度', 'Habits and Attitudes', 'SUB', 'LIB', 'COP', NULL, 1, 13, '2023-01-19 00:56:08', '2023-01-19 00:56:08'),
-(94, 8, 'RPLA', '獎懲遲缺', 'Reword Punishment  Late and Absent', 'SUB', 'LIB', 'COP', NULL, 1, 14, '2023-01-19 00:56:08', '2023-01-19 00:56:08'),
-(95, 8, 'LES', '餘暇活動', 'Leisure Activies', 'SUB', 'LIB', 'COP', NULL, 1, 15, '2023-01-19 00:56:08', '2023-01-19 00:56:08'),
-(96, 8, 'OVA', '總體評分', 'Overall Score', 'SUB', 'LIB', 'COP', NULL, 1, 16, '2023-01-19 00:56:08', '2023-01-19 00:56:08'),
-(97, 4, 'REL', '宗教', 'Relegion', 'SUB', 'LIB', 'COP', NULL, 1, 1, '2023-01-19 00:56:25', '2023-01-19 00:56:25'),
-(98, 4, 'PHY', '體能', 'Physic', 'SUB', 'LIB', 'COP', NULL, 1, 2, '2023-01-19 00:56:25', '2023-01-19 00:56:25'),
-(99, 4, 'CLT', '語文', 'Chinese Literature', 'SUB', 'LIB', 'COP', NULL, 1, 3, '2023-01-19 00:56:25', '2023-01-19 00:56:25'),
-(100, 4, 'STY', '故事', 'Stry', 'SUB', 'LIB', 'COP', NULL, 1, 4, '2023-01-19 00:56:25', '2023-01-19 00:56:25'),
-(101, 4, 'CWR', '中寫', 'Chinse_writting', 'SUB', 'LIB', 'COP', NULL, 1, 5, '2023-01-19 00:56:25', '2023-01-19 00:56:25'),
-(102, 4, 'EWR', '英寫', 'English Writing', 'SUB', 'LIB', 'COP', NULL, 1, 7, '2023-01-19 00:56:25', '2023-01-19 00:56:25'),
-(103, 4, 'OCS', '常識', 'Ordinary Common Sense', 'SUB', 'LIB', 'COP', NULL, 1, 8, '2023-01-19 00:56:25', '2023-01-19 00:56:25'),
-(104, 4, 'NUM', '識數', 'Numeracy', 'SUB', 'LIB', 'COP', NULL, 1, 9, '2023-01-19 00:56:25', '2023-01-19 00:56:25'),
-(105, 4, 'COM', '電腦', 'Computer', 'SUB', 'LIB', 'COP', NULL, 1, 10, '2023-01-19 00:56:25', '2023-01-19 00:56:25'),
-(106, 4, 'PLA', 'Playgroup', '唱遊', 'SUB', 'LIB', 'COP', NULL, 1, 11, '2023-01-19 00:56:25', '2023-01-19 00:56:25'),
-(107, 4, 'ART', '美勞', 'Art Craft', 'SUB', 'LIB', 'COP', NULL, 1, 12, '2023-01-19 00:56:25', '2023-01-19 00:56:25'),
-(108, 4, 'ATT', '生活習慣和態度', 'Habits and Attitudes', 'SUB', 'LIB', 'COP', NULL, 1, 13, '2023-01-19 00:56:25', '2023-01-19 00:56:25'),
-(109, 4, 'RPLA', '獎懲遲缺', 'Reword Punishment  Late and Absent', 'SUB', 'LIB', 'COP', NULL, 1, 14, '2023-01-19 00:56:25', '2023-01-19 00:56:25'),
-(110, 4, 'LES', '餘暇活動', 'Leisure Activies', 'SUB', 'LIB', 'COP', NULL, 1, 15, '2023-01-19 00:56:25', '2023-01-19 00:56:25'),
-(111, 4, 'OVA', '總體評分', 'Overall Score', 'SUB', 'LIB', 'COP', NULL, 1, 16, '2023-01-19 00:56:25', '2023-01-19 00:56:25'),
-(112, 9, 'REL', '宗教', 'Relegion', 'SUB', 'LIB', 'COP', NULL, 1, 1, '2023-01-19 00:56:37', '2023-01-19 00:56:37'),
-(113, 9, 'PHY', '體能', 'Physic', 'SUB', 'LIB', 'COP', NULL, 1, 2, '2023-01-19 00:56:37', '2023-01-19 00:56:37'),
-(114, 9, 'CLT', '語文', 'Chinese Literature', 'SUB', 'LIB', 'COP', NULL, 1, 3, '2023-01-19 00:56:37', '2023-01-19 00:56:37'),
-(115, 9, 'STY', '故事', 'Stry', 'SUB', 'LIB', 'COP', NULL, 1, 4, '2023-01-19 00:56:37', '2023-01-19 00:56:37'),
-(116, 9, 'CWR', '中寫', 'Chinse_writting', 'SUB', 'LIB', 'COP', NULL, 1, 5, '2023-01-19 00:56:37', '2023-01-19 00:56:37'),
-(117, 9, 'EWR', '英寫', 'English Writing', 'SUB', 'LIB', 'COP', NULL, 1, 7, '2023-01-19 00:56:37', '2023-01-19 00:56:37'),
-(118, 9, 'OCS', '常識', 'Ordinary Common Sense', 'SUB', 'LIB', 'COP', NULL, 1, 8, '2023-01-19 00:56:37', '2023-01-19 00:56:37'),
-(119, 9, 'NUM', '識數', 'Numeracy', 'SUB', 'LIB', 'COP', NULL, 1, 9, '2023-01-19 00:56:37', '2023-01-19 00:56:37'),
-(120, 9, 'COM', '電腦', 'Computer', 'SUB', 'LIB', 'COP', NULL, 1, 10, '2023-01-19 00:56:37', '2023-01-19 00:56:37'),
-(121, 9, 'PLA', 'Playgroup', '唱遊', 'SUB', 'LIB', 'COP', NULL, 1, 11, '2023-01-19 00:56:37', '2023-01-19 00:56:37'),
-(122, 9, 'ART', '美勞', 'Art Craft', 'SUB', 'LIB', 'COP', NULL, 1, 12, '2023-01-19 00:56:37', '2023-01-19 00:56:37'),
-(123, 9, 'ATT', '生活習慣和態度', 'Habits and Attitudes', 'SUB', 'LIB', 'COP', NULL, 1, 13, '2023-01-19 00:56:37', '2023-01-19 00:56:37'),
-(124, 9, 'RPLA', '獎懲遲缺', 'Reword Punishment  Late and Absent', 'SUB', 'LIB', 'COP', NULL, 1, 14, '2023-01-19 00:56:37', '2023-01-19 00:56:37'),
-(125, 9, 'LES', '餘暇活動', 'Leisure Activies', 'SUB', 'LIB', 'COP', NULL, 1, 15, '2023-01-19 00:56:37', '2023-01-19 00:56:37'),
-(126, 9, 'OVA', '總體評分', 'Overall Score', 'SUB', 'LIB', 'COP', NULL, 1, 16, '2023-01-19 00:56:37', '2023-01-19 00:56:37'),
-(127, 10, 'REL', '宗教', 'Relegion', 'SUB', 'LIB', 'COP', NULL, 1, 1, '2023-01-19 00:56:46', '2023-01-19 00:56:46'),
-(128, 10, 'PHY', '體能', 'Physic', 'SUB', 'LIB', 'COP', NULL, 1, 2, '2023-01-19 00:56:46', '2023-01-19 00:56:46'),
-(129, 10, 'CLT', '語文', 'Chinese Literature', 'SUB', 'LIB', 'COP', NULL, 1, 3, '2023-01-19 00:56:46', '2023-01-19 00:56:46'),
-(130, 10, 'STY', '故事', 'Stry', 'SUB', 'LIB', 'COP', NULL, 1, 4, '2023-01-19 00:56:46', '2023-01-19 00:56:46'),
-(131, 10, 'CWR', '中寫', 'Chinse_writting', 'SUB', 'LIB', 'COP', NULL, 1, 5, '2023-01-19 00:56:46', '2023-01-19 00:56:46'),
-(132, 10, 'EWR', '英寫', 'English Writing', 'SUB', 'LIB', 'COP', NULL, 1, 7, '2023-01-19 00:56:46', '2023-01-19 00:56:46'),
-(133, 10, 'OCS', '常識', 'Ordinary Common Sense', 'SUB', 'LIB', 'COP', NULL, 1, 8, '2023-01-19 00:56:46', '2023-01-19 00:56:46'),
-(134, 10, 'NUM', '識數', 'Numeracy', 'SUB', 'LIB', 'COP', NULL, 1, 9, '2023-01-19 00:56:46', '2023-01-19 00:56:46'),
-(135, 10, 'COM', '電腦', 'Computer', 'SUB', 'LIB', 'COP', NULL, 1, 10, '2023-01-19 00:56:46', '2023-01-19 00:56:46'),
-(136, 10, 'PLA', 'Playgroup', '唱遊', 'SUB', 'LIB', 'COP', NULL, 1, 11, '2023-01-19 00:56:46', '2023-01-19 00:56:46'),
-(137, 10, 'ART', '美勞', 'Art Craft', 'SUB', 'LIB', 'COP', NULL, 1, 12, '2023-01-19 00:56:46', '2023-01-19 00:56:46'),
-(138, 10, 'ATT', '生活習慣和態度', 'Habits and Attitudes', 'SUB', 'LIB', 'COP', NULL, 1, 13, '2023-01-19 00:56:46', '2023-01-19 00:56:46'),
-(139, 10, 'RPLA', '獎懲遲缺', 'Reword Punishment  Late and Absent', 'SUB', 'LIB', 'COP', NULL, 1, 14, '2023-01-19 00:56:46', '2023-01-19 00:56:46'),
-(140, 10, 'LES', '餘暇活動', 'Leisure Activies', 'SUB', 'LIB', 'COP', NULL, 1, 15, '2023-01-19 00:56:46', '2023-01-19 00:56:46'),
-(141, 10, 'OVA', '總體評分', 'Overall Score', 'SUB', 'LIB', 'COP', NULL, 1, 16, '2023-01-19 00:56:46', '2023-01-19 00:56:46'),
-(142, 11, 'REL', '宗教', 'Relegion', 'SUB', 'LIB', 'COP', NULL, 1, 1, '2023-01-19 00:56:55', '2023-01-19 00:56:55'),
-(143, 11, 'PHY', '體能', 'Physic', 'SUB', 'LIB', 'COP', NULL, 1, 2, '2023-01-19 00:56:55', '2023-01-19 00:56:55'),
-(144, 11, 'CLT', '語文', 'Chinese Literature', 'SUB', 'LIB', 'COP', NULL, 1, 3, '2023-01-19 00:56:55', '2023-01-19 00:56:55'),
-(145, 11, 'STY', '故事', 'Stry', 'SUB', 'LIB', 'COP', NULL, 1, 4, '2023-01-19 00:56:55', '2023-01-19 00:56:55'),
-(146, 11, 'CWR', '中寫', 'Chinse_writting', 'SUB', 'LIB', 'COP', NULL, 1, 5, '2023-01-19 00:56:55', '2023-01-19 00:56:55'),
-(147, 11, 'EWR', '英寫', 'English Writing', 'SUB', 'LIB', 'COP', NULL, 1, 7, '2023-01-19 00:56:55', '2023-01-19 00:56:55'),
-(148, 11, 'OCS', '常識', 'Ordinary Common Sense', 'SUB', 'LIB', 'COP', NULL, 1, 8, '2023-01-19 00:56:55', '2023-01-19 00:56:55'),
-(149, 11, 'NUM', '識數', 'Numeracy', 'SUB', 'LIB', 'COP', NULL, 1, 9, '2023-01-19 00:56:55', '2023-01-19 00:56:55'),
-(150, 11, 'COM', '電腦', 'Computer', 'SUB', 'LIB', 'COP', NULL, 1, 10, '2023-01-19 00:56:55', '2023-01-19 00:56:55'),
-(151, 11, 'PLA', 'Playgroup', '唱遊', 'SUB', 'LIB', 'COP', NULL, 1, 11, '2023-01-19 00:56:55', '2023-01-19 00:56:55'),
-(152, 11, 'ART', '美勞', 'Art Craft', 'SUB', 'LIB', 'COP', NULL, 1, 12, '2023-01-19 00:56:55', '2023-01-19 00:56:55'),
-(153, 11, 'ATT', '生活習慣和態度', 'Habits and Attitudes', 'SUB', 'LIB', 'COP', NULL, 1, 13, '2023-01-19 00:56:55', '2023-01-19 00:56:55'),
-(154, 11, 'RPLA', '獎懲遲缺', 'Reword Punishment  Late and Absent', 'SUB', 'LIB', 'COP', NULL, 1, 14, '2023-01-19 00:56:55', '2023-01-19 00:56:55'),
-(155, 11, 'LES', '餘暇活動', 'Leisure Activies', 'SUB', 'LIB', 'COP', NULL, 1, 15, '2023-01-19 00:56:55', '2023-01-19 00:56:55'),
-(156, 11, 'OVA', '總體評分', 'Overall Score', 'SUB', 'LIB', 'COP', NULL, 1, 16, '2023-01-19 00:56:55', '2023-01-19 00:56:55'),
-(157, 12, 'REL', '宗教', 'Relegion', 'SUB', 'LIB', 'COP', NULL, 1, 1, '2023-01-19 01:18:32', '2023-01-19 01:18:32'),
-(158, 12, 'PHY', '體能', 'Physic', 'SUB', 'LIB', 'COP', NULL, 1, 2, '2023-01-19 01:18:32', '2023-01-19 01:18:32'),
-(159, 12, 'CLT', '語文', 'Chinese Literature', 'SUB', 'LIB', 'COP', NULL, 1, 3, '2023-01-19 01:18:32', '2023-01-19 01:18:32'),
-(160, 12, 'STY', '故事', 'Stry', 'SUB', 'LIB', 'COP', NULL, 1, 4, '2023-01-19 01:18:32', '2023-01-19 01:18:32'),
-(161, 12, 'CWR', '中寫', 'Chinse_writting', 'SUB', 'LIB', 'COP', NULL, 1, 5, '2023-01-19 01:18:32', '2023-01-19 01:18:32'),
-(162, 12, 'EWR', '英寫', 'English Writing', 'SUB', 'LIB', 'COP', NULL, 1, 7, '2023-01-19 01:18:32', '2023-01-19 01:18:32'),
-(163, 12, 'OCS', '常識', 'Ordinary Common Sense', 'SUB', 'LIB', 'COP', NULL, 1, 8, '2023-01-19 01:18:32', '2023-01-19 01:18:32'),
-(164, 12, 'NUM', '識數', 'Numeracy', 'SUB', 'LIB', 'COP', NULL, 1, 9, '2023-01-19 01:18:32', '2023-01-19 01:18:32'),
-(165, 12, 'COM', '電腦', 'Computer', 'SUB', 'LIB', 'COP', NULL, 1, 10, '2023-01-19 01:18:32', '2023-01-19 01:18:32'),
-(166, 12, 'PLA', 'Playgroup', '唱遊', 'SUB', 'LIB', 'COP', NULL, 1, 11, '2023-01-19 01:18:32', '2023-01-19 01:18:32'),
-(167, 12, 'ART', '美勞', 'Art Craft', 'SUB', 'LIB', 'COP', NULL, 1, 12, '2023-01-19 01:18:32', '2023-01-19 01:18:32'),
-(168, 12, 'ATT', '生活習慣和態度', 'Habits and Attitudes', 'SUB', 'LIB', 'COP', NULL, 1, 13, '2023-01-19 01:18:32', '2023-01-19 01:18:32'),
-(169, 12, 'RPLA', '獎懲遲缺', 'Reword Punishment  Late and Absent', 'SUB', 'LIB', 'COP', NULL, 1, 14, '2023-01-19 01:18:32', '2023-01-19 01:18:32'),
-(170, 12, 'LES', '餘暇活動', 'Leisure Activies', 'SUB', 'LIB', 'COP', NULL, 1, 15, '2023-01-19 01:18:32', '2023-01-19 01:18:32'),
-(171, 12, 'OVA', '總體評分', 'Overall Score', 'SUB', 'LIB', 'COP', NULL, 1, 16, '2023-01-19 01:18:32', '2023-01-19 01:18:32');
+INSERT INTO `subjects` (`id`, `grade_id`, `category`, `code`, `title_zh`, `title_en`, `type`, `stream`, `elective`, `description`, `active`, `subject_template_id`, `score_column_template`, `version`, `created_at`, `updated_at`) VALUES
+(1, 1, 'SUBJECT', 'REL', '宗教', 'Relegion', 'SUB', 'LIB', '1', NULL, 1, 1, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(2, 1, 'SUBJECT', 'PHY', '體能', 'Physic', 'SUB', 'LIB', '1', NULL, 1, 2, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(3, 1, 'SUBJECT', 'CLT', '語文', 'Chinese Literature', 'SUB', 'LIB', '1', NULL, 1, 3, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(4, 1, 'SUBJECT', 'STY', '故事', 'Stry', 'SUB', 'LIB', '1', NULL, 1, 4, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(5, 1, 'SUBJECT', 'CWR', '中寫', 'Chinse_writting', 'SUB', 'LIB', '1', NULL, 1, 5, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(6, 1, 'SUBJECT', 'ELT', '英文', 'English Literature', 'SUB', 'LIB', '1', NULL, 1, 6, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(7, 1, 'SUBJECT', 'EWR', '英寫', 'English Writing', 'SUB', 'LIB', '1', NULL, 1, 7, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(8, 1, 'SUBJECT', 'OCS', '常識', 'Ordinary Common Sense', 'SUB', 'LIB', '1', NULL, 1, 8, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(9, 1, 'SUBJECT', 'NUM', '識數', 'Numeracy', 'SUB', 'LIB', '1', NULL, 1, 9, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(10, 1, 'SUBJECT', 'COM', '電腦', 'Computer', 'SUB', 'LIB', '1', NULL, 1, 10, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(11, 1, 'SUBJECT', 'PLA', '唱遊', 'Playgroup', 'SUB', 'LIB', '1', NULL, 1, 11, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(12, 1, 'SUBJECT', 'ART', '美勞', 'Art Craft', 'SUB', 'LIB', '1', NULL, 1, 12, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(13, 1, 'ATTITUDE', 'health_1', '衣服鞋襪整齊清潔', NULL, 'ATT', 'LIB', '1', NULL, 1, 13, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(14, 1, 'ATTITUDE', 'health_2', '常剪指甲', NULL, 'ATT', 'LIB', '1', NULL, 1, 14, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(15, 1, 'ATTITUDE', 'health_3', '懂得使用手帕或紙巾', NULL, 'ATT', 'LIB', '1', NULL, 1, 15, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(16, 1, 'ATTITUDE', 'health_4', '不把手指雜物放進口裡', NULL, 'ATT', 'LIB', '1', NULL, 1, 16, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(17, 1, 'ATTITUDE', 'health_5', '能把癈物投入廢紙箱內', NULL, 'ATT', 'LIB', '1', NULL, 1, 17, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(18, 1, 'ATTITUDE', 'behaviour_1', '守秩序不喧嚷', NULL, 'ATT', 'LIB', '1', NULL, 1, 18, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(19, 1, 'ATTITUDE', 'behaviour_2', '留心聽講', NULL, 'ATT', 'LIB', '1', NULL, 1, 19, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(20, 1, 'ATTITUDE', 'behaviour_3', '坐立行走姿勢正確', NULL, 'ATT', 'LIB', '1', NULL, 1, 20, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(21, 1, 'ATTITUDE', 'behaviour_4', '離開坐位把物件桌椅整理好', NULL, 'ATT', 'LIB', '1', NULL, 1, 21, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(22, 1, 'ATTITUDE', 'behaviour_5', '愛護公物用後放回原處', NULL, 'ATT', 'LIB', '1', NULL, 1, 22, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(23, 1, 'ATTITUDE', 'behaviour_6', '遵守校規', NULL, 'ATT', 'LIB', '1', NULL, 1, 23, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(24, 1, 'ATTITUDE', 'social_1', '守時', NULL, 'ATT', 'LIB', '1', NULL, 1, 24, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(25, 1, 'ATTITUDE', 'social_2', '尊敬師長,友愛和睦', NULL, 'ATT', 'LIB', '1', NULL, 1, 25, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(26, 1, 'ATTITUDE', 'social_3', '樂於助人', NULL, 'ATT', 'LIB', '1', NULL, 1, 26, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(27, 1, 'ATTITUDE', 'social_4', '會和別人分享及輪侯', NULL, 'ATT', 'LIB', '1', NULL, 1, 27, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(28, 1, 'ATTITUDE', 'social_5', '誠實坦白肯認錯', NULL, 'ATT', 'LIB', '1', NULL, 1, 28, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(29, 1, 'SUMMARY', 'total_score', '總分', NULL, 'SUM', 'LIB', '1', NULL, 1, 29, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(30, 1, 'SUMMARY', 'average_score', '平均分', NULL, 'SUM', 'LIB', '1', NULL, 1, 30, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(31, 1, 'SUMMARY', 'class_size', '全班人數', NULL, 'SUM', 'LIB', '1', NULL, 1, 31, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(32, 1, 'SUMMARY', 'ranking', '考列名次', NULL, 'SUM', 'LIB', '1', NULL, 1, 32, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(33, 1, 'SUMMARY', 'late', '遲到次數', NULL, 'SUM', 'LIB', '1', NULL, 1, 33, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(34, 1, 'SUMMARY', 'absent', '缺席節數', NULL, 'SUM', 'LIB', '1', NULL, 1, 34, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(35, 1, 'GENERAL', 'comment', '評語', NULL, 'GEN', 'LIB', '1', NULL, 1, 35, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(36, 1, 'GENERAL', 'reward_punishment', '奬懲記錄', NULL, 'GEN', 'LIB', '1', NULL, 1, 36, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(37, 1, 'GENERAL', 'leisure_name', '餘暇活動名稱', NULL, 'GEN', 'LIB', '1', NULL, 1, 37, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(38, 1, 'GENERAL', 'leisure_performance', '餘暇活動表現', NULL, 'GEN', 'LIB', '1', NULL, 1, 38, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(39, 1, 'GENERAL', 'remark', '備註', NULL, 'GEN', 'LIB', '1', NULL, 1, 39, 'COMMENT', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
+(40, 1, 'GENERAL', 'appraisal', '學年評定', NULL, 'GEN', 'LIB', '1', NULL, 1, 40, 'COMMENT', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18');
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `subject_templates`
+-- Table structure for table `subject_templates`
 --
 
 CREATE TABLE `subject_templates` (
   `id` bigint(20) UNSIGNED NOT NULL,
+  `category` varchar(255) DEFAULT NULL,
   `code` varchar(255) NOT NULL,
   `title_zh` varchar(255) DEFAULT NULL,
   `title_en` varchar(255) DEFAULT NULL,
-  `type` varchar(3) DEFAULT NULL,
-  `stream` varchar(3) DEFAULT NULL,
-  `elective` varchar(3) DEFAULT NULL,
+  `type` varchar(6) DEFAULT NULL,
+  `stream` varchar(6) DEFAULT NULL,
+  `elective` varchar(6) DEFAULT NULL,
+  `grades` varchar(255) NOT NULL DEFAULT '[]',
   `description` text DEFAULT NULL,
-  `active` tinyint(1) DEFAULT NULL,
-  `version` varchar(255) DEFAULT NULL,
+  `score_template_batch` varchar(255) DEFAULT NULL,
+  `version` varchar(255) NOT NULL,
+  `active` tinyint(1) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Extraindo dados da tabela `subject_templates`
+-- Dumping data for table `subject_templates`
 --
 
-INSERT INTO `subject_templates` (`id`, `code`, `title_zh`, `title_en`, `type`, `stream`, `elective`, `description`, `active`, `version`, `created_at`, `updated_at`) VALUES
-(1, 'REL', '宗教', 'Relegion', 'SUB', 'LIB', 'COP', NULL, 1, '1', NULL, '2023-01-18 20:27:12'),
-(2, 'PHY', '體能', 'Physic', 'SUB', 'LIB', 'COP', NULL, 1, '', NULL, '2023-01-17 23:21:47'),
-(3, 'CLT', '語文', 'Chinese Literature', 'SUB', 'LIB', 'COP', NULL, 1, '', NULL, '2023-01-17 23:29:03'),
-(4, 'STY', '故事', 'Stry', 'SUB', 'LIB', 'COP', NULL, 1, '', NULL, '2023-01-17 23:23:22'),
-(5, 'CWR', '中寫', 'Chinse_writting', 'SUB', 'LIB', 'COP', NULL, 1, '', NULL, '2023-01-17 23:28:02'),
-(6, 'ELT', '英文', 'English Literature', 'SUB', 'LIB', 'COP', NULL, NULL, '', '2023-01-17 23:40:21', '2023-01-17 23:40:21'),
-(7, 'EWR', '英寫', 'English Writing', 'SUB', 'LIB', 'COP', NULL, 1, '', '2023-01-17 23:41:34', '2023-01-17 23:41:34'),
-(8, 'OCS', '常識', 'Ordinary Common Sense', 'SUB', 'LIB', 'COP', NULL, 1, '', '2023-01-17 23:44:50', '2023-01-17 23:44:50'),
-(9, 'NUM', '識數', 'Numeracy', 'SUB', 'LIB', 'COP', NULL, 1, '', '2023-01-17 23:45:21', '2023-01-17 23:45:21'),
-(10, 'COM', '電腦', 'Computer', 'SUB', 'LIB', 'COP', NULL, 1, '', '2023-01-17 23:46:45', '2023-01-17 23:46:45'),
-(11, 'PLA', 'Playgroup', '唱遊', 'SUB', 'LIB', 'COP', NULL, 1, '', '2023-01-17 23:47:01', '2023-01-17 23:47:01'),
-(12, 'ART', '美勞', 'Art Craft', 'SUB', 'LIB', 'COP', NULL, 1, '', '2023-01-17 23:47:23', '2023-01-17 23:47:23'),
-(13, 'ATT', '生活習慣和態度', 'Habits and Attitudes', 'SUB', 'LIB', 'COP', NULL, 1, NULL, '2023-01-18 20:36:28', '2023-01-18 20:36:28'),
-(14, 'RPLA', '獎懲遲缺', 'Reword Punishment  Late and Absent', 'SUB', 'LIB', 'COP', NULL, 1, NULL, '2023-01-18 20:39:21', '2023-01-18 20:40:15'),
-(15, 'LES', '餘暇活動', 'Leisure Activies', 'SUB', 'LIB', 'COP', NULL, 1, NULL, '2023-01-18 20:39:41', '2023-01-18 20:39:41'),
-(16, 'OVA', '總體評分', 'Overall Score', 'SUB', 'LIB', 'COP', NULL, 1, NULL, '2023-01-18 20:41:57', '2023-01-18 20:41:57');
+INSERT INTO `subject_templates` (`id`, `category`, `code`, `title_zh`, `title_en`, `type`, `stream`, `elective`, `grades`, `description`, `score_template_batch`, `version`, `active`, `created_at`, `updated_at`) VALUES
+(1, 'SUBJECT', 'REL', '宗教', 'Relegion', 'SUB', 'AAS', 'COP', '[]', '1', 'SUB', '1', 1, NULL, '2023-02-07 01:41:09'),
+(2, 'SUBJECT', 'PHY', '體能', 'Physic', 'SUB', 'LIB', 'COP', '[]', NULL, 'SUB', '1', 1, NULL, '2023-02-05 19:51:50'),
+(3, 'SUBJECT', 'CLT', '語文', 'Chinese Literature', 'SUB', 'LIB', 'COP', '[]', NULL, 'SUB', '1', 1, NULL, '2023-02-05 19:52:31'),
+(4, 'SUBJECT', 'STY', '故事', 'Stry', 'SUB', 'LIB', 'COP', '[]', NULL, 'SUB', '1', 1, NULL, '2023-02-05 19:52:40'),
+(5, 'SUBJECT', 'CWR', '中寫', 'Chinse_writting', 'SUB', 'LIB', 'COP', '[]', NULL, 'SUB', '1', 1, NULL, '2023-02-05 19:52:54'),
+(6, 'SUBJECT', 'ELT', '英文', 'English Literature', 'SUB', 'LIB', 'COP', '[]', NULL, 'SUB', '1', 1, NULL, '2023-02-05 20:00:40'),
+(7, 'SUBJECT', 'EWR', '英寫', 'English Writing', 'SUB', 'LIB', 'COP', '[]', NULL, 'SUB', '1', 1, NULL, '2023-02-05 20:00:49'),
+(8, 'SUBJECT', 'OCS', '常識', 'Ordinary Common Sense', 'SUB', 'LIB', 'COP', '[]', NULL, 'SUB', '1', 1, NULL, '2023-02-05 20:01:02'),
+(9, 'SUBJECT', 'NUM', '識數', 'Numeracy', 'SUB', 'LIB', 'COP', '[]', NULL, 'SUB', '1', 1, NULL, '2023-02-05 20:01:11'),
+(10, 'SUBJECT', 'COM', '電腦', 'Computer', 'SUB', 'LIB', 'COP', '[]', NULL, 'SUB', '1', 1, NULL, '2023-02-05 20:01:19'),
+(11, 'SUBJECT', 'PLA', '唱遊', 'Playgroup', 'SUB', 'LIB', 'COP', '[]', NULL, 'SUB', '1', 1, NULL, '2023-02-05 20:01:38'),
+(12, 'SUBJECT', 'ART', '美勞', 'Art Craft', 'SUB', 'LIB', 'COP', '[]', NULL, 'SUB', '1', 1, NULL, '2023-02-05 20:01:50'),
+(13, 'ATTITUDE', 'health_1', '衣服鞋襪整齊清潔', NULL, NULL, NULL, NULL, '[]', NULL, NULL, '1', 1, NULL, NULL),
+(14, 'ATTITUDE', 'health_2', '常剪指甲', NULL, NULL, NULL, NULL, '[]', NULL, NULL, '1', 1, NULL, NULL),
+(15, 'ATTITUDE', 'health_3', '懂得使用手帕或紙巾', NULL, NULL, NULL, NULL, '[]', NULL, NULL, '1', 1, NULL, NULL),
+(16, 'ATTITUDE', 'health_4', '不把手指雜物放進口裡', NULL, NULL, NULL, NULL, '[]', NULL, NULL, '1', 1, NULL, NULL),
+(17, 'ATTITUDE', 'health_5', '能把癈物投入廢紙箱內', NULL, NULL, NULL, NULL, '[]', NULL, NULL, '1', 1, NULL, NULL),
+(18, 'ATTITUDE', 'behaviour_1', '守秩序不喧嚷', NULL, NULL, NULL, NULL, '[]', NULL, NULL, '1', 1, NULL, NULL),
+(19, 'ATTITUDE', 'behaviour_2', '留心聽講', NULL, NULL, NULL, NULL, '[]', NULL, NULL, '1', 1, NULL, NULL),
+(20, 'ATTITUDE', 'behaviour_3', '坐立行走姿勢正確', NULL, NULL, NULL, NULL, '[]', NULL, NULL, '1', 1, NULL, NULL),
+(21, 'ATTITUDE', 'behaviour_4', '離開坐位把物件桌椅整理好', NULL, NULL, NULL, NULL, '[]', NULL, NULL, '1', 1, NULL, NULL),
+(22, 'ATTITUDE', 'behaviour_5', '愛護公物用後放回原處', NULL, NULL, NULL, NULL, '[]', NULL, NULL, '1', 1, NULL, NULL),
+(23, 'ATTITUDE', 'behaviour_6', '遵守校規', NULL, NULL, NULL, NULL, '[]', NULL, NULL, '1', 1, NULL, NULL),
+(24, 'ATTITUDE', 'social_1', '守時', NULL, NULL, NULL, NULL, '[]', NULL, NULL, '1', 1, NULL, NULL),
+(25, 'ATTITUDE', 'social_2', '尊敬師長,友愛和睦', NULL, NULL, NULL, NULL, '[]', NULL, NULL, '1', 1, NULL, NULL),
+(26, 'ATTITUDE', 'social_3', '樂於助人', NULL, NULL, NULL, NULL, '[]', NULL, NULL, '1', 1, NULL, NULL),
+(27, 'ATTITUDE', 'social_4', '會和別人分享及輪侯', NULL, NULL, NULL, NULL, '[]', NULL, NULL, '1', 1, NULL, NULL),
+(28, 'ATTITUDE', 'social_5', '誠實坦白肯認錯', NULL, NULL, NULL, NULL, '[]', NULL, NULL, '1', 1, NULL, NULL),
+(29, 'SUMMARY', 'total_score', '總分', NULL, NULL, NULL, NULL, '[]', NULL, NULL, '1', 1, NULL, NULL),
+(30, 'SUMMARY', 'average_score', '平均分', NULL, NULL, NULL, NULL, '[]', NULL, NULL, '1', 1, NULL, NULL),
+(31, 'SUMMARY', 'class_size', '全班人數', NULL, NULL, NULL, NULL, '[]', NULL, NULL, '1', 1, NULL, NULL),
+(32, 'SUMMARY', 'ranking', '考列名次', NULL, NULL, NULL, NULL, '[]', NULL, NULL, '1', 1, NULL, NULL),
+(33, 'SUMMARY', 'late', '遲到次數', NULL, NULL, NULL, NULL, '[]', NULL, NULL, '1', 1, NULL, NULL),
+(34, 'SUMMARY', 'absent', '缺席節數', NULL, NULL, NULL, NULL, '[]', NULL, NULL, '1', 1, NULL, NULL),
+(35, 'GENERAL', 'comment', '評語', NULL, NULL, NULL, NULL, '[]', NULL, NULL, '1', 1, NULL, NULL),
+(36, 'GENERAL', 'reward_punishment', '奬懲記錄', NULL, NULL, NULL, NULL, '[]', NULL, NULL, '1', 1, NULL, NULL),
+(37, 'GENERAL', 'leisure_name', '餘暇活動名稱', NULL, NULL, NULL, NULL, '[]', NULL, NULL, '1', 1, NULL, NULL),
+(38, 'GENERAL', 'leisure_performance', '餘暇活動表現', NULL, NULL, NULL, NULL, '[]', NULL, NULL, '1', 1, NULL, NULL),
+(39, 'GENERAL', 'remark', '備註', NULL, NULL, NULL, NULL, '[]', NULL, NULL, '1', 1, NULL, NULL),
+(40, 'GENERAL', 'appraisal', '學年評定', NULL, NULL, NULL, NULL, '[]', NULL, NULL, '1', 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `suppliers`
+-- Table structure for table `suppliers`
 --
 
 CREATE TABLE `suppliers` (
@@ -3682,7 +3629,7 @@ CREATE TABLE `suppliers` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `teachers`
+-- Table structure for table `teachers`
 --
 
 CREATE TABLE `teachers` (
@@ -3695,7 +3642,7 @@ CREATE TABLE `teachers` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Extraindo dados da tabela `teachers`
+-- Dumping data for table `teachers`
 --
 
 INSERT INTO `teachers` (`id`, `code`, `staff_id`, `subject_area`, `created_at`, `updated_at`) VALUES
@@ -3774,7 +3721,7 @@ INSERT INTO `teachers` (`id`, `code`, `staff_id`, `subject_area`, `created_at`, 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `teams`
+-- Table structure for table `teams`
 --
 
 CREATE TABLE `teams` (
@@ -3787,16 +3734,17 @@ CREATE TABLE `teams` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Extraindo dados da tabela `teams`
+-- Dumping data for table `teams`
 --
 
 INSERT INTO `teams` (`id`, `user_id`, `name`, `personal_team`, `created_at`, `updated_at`) VALUES
-(1, 1, 'admin\'s Team', 1, '2023-01-10 18:15:01', '2023-01-10 18:15:01');
+(1, 1, 'Master\'s Team', 1, '2023-02-03 01:27:30', '2023-02-03 01:27:30'),
+(2, 2, 'Admin\'s Team', 1, '2023-02-03 01:27:30', '2023-02-03 01:27:30');
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `team_invitations`
+-- Table structure for table `team_invitations`
 --
 
 CREATE TABLE `team_invitations` (
@@ -3811,7 +3759,7 @@ CREATE TABLE `team_invitations` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `team_user`
+-- Table structure for table `team_user`
 --
 
 CREATE TABLE `team_user` (
@@ -3826,7 +3774,7 @@ CREATE TABLE `team_user` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `transcripts`
+-- Table structure for table `transcripts`
 --
 
 CREATE TABLE `transcripts` (
@@ -3836,251 +3784,254 @@ CREATE TABLE `transcripts` (
   `category` enum('PERSONAL','SUBJECT','ATTITUDE','SUMMARY','GENERAL') NOT NULL,
   `field_name` varchar(255) NOT NULL,
   `field_value` varchar(255) NOT NULL,
+  `version` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Extraindo dados da tabela `transcripts`
+-- Dumping data for table `transcripts`
 --
 
-INSERT INTO `transcripts` (`id`, `klass_student_id`, `column`, `category`, `field_name`, `field_value`, `created_at`, `updated_at`) VALUES
-(1, 1, 'T1', 'PERSONAL', 'name_ch', 'TEST name_ch', NULL, NULL),
-(2, 1, 'T1', 'PERSONAL', 'name_fn', 'TEST name_fn', NULL, NULL),
-(3, 1, 'T1', 'PERSONAL', 'academic_year', 'TEST academic_year', NULL, NULL),
-(4, 1, 'T1', 'PERSONAL', 'grade_class', 'TEST grade_class', NULL, NULL),
-(5, 1, 'T1', 'PERSONAL', 'student_number', 'TEST student_number', NULL, NULL),
-(6, 1, 'T1', 'PERSONAL', 'id_number', 'TEST id_number', NULL, NULL),
-(7, 1, 'T1', 'PERSONAL', 'issue_date', 'TEST issue_date', NULL, NULL),
-(8, 1, 'T1E', 'SUBJECT', 'religion', '55', NULL, NULL),
-(9, 1, 'T1E', 'SUBJECT', 'chinese_literature', '96', NULL, NULL),
-(10, 1, 'T1E', 'SUBJECT', 'common_sense', '51', NULL, NULL),
-(11, 1, 'T1E', 'SUBJECT', 'story', '36', NULL, NULL),
-(12, 1, 'T1E', 'SUBJECT', 'chinese_writing', '53', NULL, NULL),
-(13, 1, 'T1E', 'SUBJECT', 'numeracy', '93', NULL, NULL),
-(14, 1, 'T1E', 'SUBJECT', 'english_reading', '25', NULL, NULL),
-(15, 1, 'T1E', 'SUBJECT', 'english_writing', '10', NULL, NULL),
-(16, 1, 'T1E', 'SUBJECT', 'computer', '61', NULL, NULL),
-(17, 1, 'T1E', 'SUBJECT', 'mandarin', '77', NULL, NULL),
-(18, 1, 'T1E', 'SUBJECT', 'art_craft', '14', NULL, NULL),
-(19, 1, 'T1E', 'SUBJECT', 'playgroup', '55', NULL, NULL),
-(20, 1, 'T1E', 'SUBJECT', 'physical_fitness', '50', NULL, NULL),
-(21, 1, 'T1P', 'SUBJECT', 'religion', '61', NULL, NULL),
-(22, 1, 'T1P', 'SUBJECT', 'chinese_literature', '85', NULL, NULL),
-(23, 1, 'T1P', 'SUBJECT', 'common_sense', '55', NULL, NULL),
-(24, 1, 'T1P', 'SUBJECT', 'story', '58', NULL, NULL),
-(25, 1, 'T1P', 'SUBJECT', 'chinese_writing', '1', NULL, NULL),
-(26, 1, 'T1P', 'SUBJECT', 'numeracy', '76', NULL, NULL),
-(27, 1, 'T1P', 'SUBJECT', 'english_reading', '22', NULL, NULL),
-(28, 1, 'T1P', 'SUBJECT', 'english_writing', '98', NULL, NULL),
-(29, 1, 'T1P', 'SUBJECT', 'computer', '14', NULL, NULL),
-(30, 1, 'T1P', 'SUBJECT', 'mandarin', '28', NULL, NULL),
-(31, 1, 'T1P', 'SUBJECT', 'art_craft', '62', NULL, NULL),
-(32, 1, 'T1P', 'SUBJECT', 'playgroup', '66', NULL, NULL),
-(33, 1, 'T1P', 'SUBJECT', 'physical_fitness', '91', NULL, NULL),
-(34, 1, 'T1A', 'SUBJECT', 'religion', '40', NULL, NULL),
-(35, 1, 'T1A', 'SUBJECT', 'chinese_literature', '32', NULL, NULL),
-(36, 1, 'T1A', 'SUBJECT', 'common_sense', '27', NULL, NULL),
-(37, 1, 'T1A', 'SUBJECT', 'story', '54', NULL, NULL),
-(38, 1, 'T1A', 'SUBJECT', 'chinese_writing', '31', NULL, NULL),
-(39, 1, 'T1A', 'SUBJECT', 'numeracy', '8', NULL, NULL),
-(40, 1, 'T1A', 'SUBJECT', 'english_reading', '80', NULL, NULL),
-(41, 1, 'T1A', 'SUBJECT', 'english_writing', '2', NULL, NULL),
-(42, 1, 'T1A', 'SUBJECT', 'computer', '33', NULL, NULL),
-(43, 1, 'T1A', 'SUBJECT', 'mandarin', '77', NULL, NULL),
-(44, 1, 'T1A', 'SUBJECT', 'art_craft', '81', NULL, NULL),
-(45, 1, 'T1A', 'SUBJECT', 'playgroup', '56', NULL, NULL),
-(46, 1, 'T1A', 'SUBJECT', 'physical_fitness', '13', NULL, NULL),
-(47, 1, 'T2E', 'SUBJECT', 'religion', '32', NULL, NULL),
-(48, 1, 'T2E', 'SUBJECT', 'chinese_literature', '45', NULL, NULL),
-(49, 1, 'T2E', 'SUBJECT', 'common_sense', '17', NULL, NULL),
-(50, 1, 'T2E', 'SUBJECT', 'story', '81', NULL, NULL),
-(51, 1, 'T2E', 'SUBJECT', 'chinese_writing', '41', NULL, NULL),
-(52, 1, 'T2E', 'SUBJECT', 'numeracy', '87', NULL, NULL),
-(53, 1, 'T2E', 'SUBJECT', 'english_reading', '28', NULL, NULL),
-(54, 1, 'T2E', 'SUBJECT', 'english_writing', '62', NULL, NULL),
-(55, 1, 'T2E', 'SUBJECT', 'computer', '75', NULL, NULL),
-(56, 1, 'T2E', 'SUBJECT', 'mandarin', '3', NULL, NULL),
-(57, 1, 'T2E', 'SUBJECT', 'art_craft', '26', NULL, NULL),
-(58, 1, 'T2E', 'SUBJECT', 'playgroup', '69', NULL, NULL),
-(59, 1, 'T2E', 'SUBJECT', 'physical_fitness', '6', NULL, NULL),
-(60, 1, 'T2P', 'SUBJECT', 'religion', '71', NULL, NULL),
-(61, 1, 'T2P', 'SUBJECT', 'chinese_literature', '91', NULL, NULL),
-(62, 1, 'T2P', 'SUBJECT', 'common_sense', '66', NULL, NULL),
-(63, 1, 'T2P', 'SUBJECT', 'story', '57', NULL, NULL),
-(64, 1, 'T2P', 'SUBJECT', 'chinese_writing', '72', NULL, NULL),
-(65, 1, 'T2P', 'SUBJECT', 'numeracy', '42', NULL, NULL),
-(66, 1, 'T2P', 'SUBJECT', 'english_reading', '20', NULL, NULL),
-(67, 1, 'T2P', 'SUBJECT', 'english_writing', '93', NULL, NULL),
-(68, 1, 'T2P', 'SUBJECT', 'computer', '67', NULL, NULL),
-(69, 1, 'T2P', 'SUBJECT', 'mandarin', '78', NULL, NULL),
-(70, 1, 'T2P', 'SUBJECT', 'art_craft', '42', NULL, NULL),
-(71, 1, 'T2P', 'SUBJECT', 'playgroup', '8', NULL, NULL),
-(72, 1, 'T2P', 'SUBJECT', 'physical_fitness', '23', NULL, NULL),
-(73, 1, 'T2A', 'SUBJECT', 'religion', '37', NULL, NULL),
-(74, 1, 'T2A', 'SUBJECT', 'chinese_literature', '62', NULL, NULL),
-(75, 1, 'T2A', 'SUBJECT', 'common_sense', '98', NULL, NULL),
-(76, 1, 'T2A', 'SUBJECT', 'story', '38', NULL, NULL),
-(77, 1, 'T2A', 'SUBJECT', 'chinese_writing', '93', NULL, NULL),
-(78, 1, 'T2A', 'SUBJECT', 'numeracy', '60', NULL, NULL),
-(79, 1, 'T2A', 'SUBJECT', 'english_reading', '97', NULL, NULL),
-(80, 1, 'T2A', 'SUBJECT', 'english_writing', '45', NULL, NULL),
-(81, 1, 'T2A', 'SUBJECT', 'computer', '100', NULL, NULL),
-(82, 1, 'T2A', 'SUBJECT', 'mandarin', '55', NULL, NULL),
-(83, 1, 'T2A', 'SUBJECT', 'art_craft', '15', NULL, NULL),
-(84, 1, 'T2A', 'SUBJECT', 'playgroup', '75', NULL, NULL),
-(85, 1, 'T2A', 'SUBJECT', 'physical_fitness', '48', NULL, NULL),
-(86, 1, 'FIN', 'SUBJECT', 'religion', '66', NULL, NULL),
-(87, 1, 'FIN', 'SUBJECT', 'chinese_literature', '51', NULL, NULL),
-(88, 1, 'FIN', 'SUBJECT', 'common_sense', '55', NULL, NULL),
-(89, 1, 'FIN', 'SUBJECT', 'story', '99', NULL, NULL),
-(90, 1, 'FIN', 'SUBJECT', 'chinese_writing', '95', NULL, NULL),
-(91, 1, 'FIN', 'SUBJECT', 'numeracy', '85', NULL, NULL),
-(92, 1, 'FIN', 'SUBJECT', 'english_reading', '82', NULL, NULL),
-(93, 1, 'FIN', 'SUBJECT', 'english_writing', '96', NULL, NULL),
-(94, 1, 'FIN', 'SUBJECT', 'computer', '90', NULL, NULL),
-(95, 1, 'FIN', 'SUBJECT', 'mandarin', '82', NULL, NULL),
-(96, 1, 'FIN', 'SUBJECT', 'art_craft', '67', NULL, NULL),
-(97, 1, 'FIN', 'SUBJECT', 'playgroup', '56', NULL, NULL),
-(98, 1, 'FIN', 'SUBJECT', 'physical_fitness', '83', NULL, NULL),
-(99, 1, 'T1', 'ATTITUDE', 'health_1', 'A', NULL, NULL),
-(100, 1, 'T1', 'ATTITUDE', 'health_2', 'A', NULL, NULL),
-(101, 1, 'T1', 'ATTITUDE', 'health_3', 'A', NULL, NULL),
-(102, 1, 'T1', 'ATTITUDE', 'health_4', 'A', NULL, NULL),
-(103, 1, 'T1', 'ATTITUDE', 'health_5', 'A', NULL, NULL),
-(104, 1, 'T1', 'ATTITUDE', 'behaviour_1', 'A', NULL, NULL),
-(105, 1, 'T1', 'ATTITUDE', 'behaviour_2', 'A', NULL, NULL),
-(106, 1, 'T1', 'ATTITUDE', 'behaviour_3', 'A', NULL, NULL),
-(107, 1, 'T1', 'ATTITUDE', 'behaviour_4', 'A', NULL, NULL),
-(108, 1, 'T1', 'ATTITUDE', 'behaviour_5', 'A', NULL, NULL),
-(109, 1, 'T1', 'ATTITUDE', 'behaviour_6', 'A', NULL, NULL),
-(110, 1, 'T1', 'ATTITUDE', 'social_1', 'A', NULL, NULL),
-(111, 1, 'T1', 'ATTITUDE', 'social_2', 'A', NULL, NULL),
-(112, 1, 'T1', 'ATTITUDE', 'social_3', 'A', NULL, NULL),
-(113, 1, 'T1', 'ATTITUDE', 'social_4', 'A', NULL, NULL),
-(114, 1, 'T1', 'ATTITUDE', 'social_5', 'A', NULL, NULL),
-(115, 1, 'T2', 'ATTITUDE', 'health_1', 'B', NULL, NULL),
-(116, 1, 'T2', 'ATTITUDE', 'health_2', 'B', NULL, NULL),
-(117, 1, 'T2', 'ATTITUDE', 'health_3', 'B', NULL, NULL),
-(118, 1, 'T2', 'ATTITUDE', 'health_4', 'B', NULL, NULL),
-(119, 1, 'T2', 'ATTITUDE', 'health_5', 'B', NULL, NULL),
-(120, 1, 'T2', 'ATTITUDE', 'behaviour_1', 'B', NULL, NULL),
-(121, 1, 'T2', 'ATTITUDE', 'behaviour_2', 'B', NULL, NULL),
-(122, 1, 'T2', 'ATTITUDE', 'behaviour_3', 'B', NULL, NULL),
-(123, 1, 'T2', 'ATTITUDE', 'behaviour_4', 'B', NULL, NULL),
-(124, 1, 'T2', 'ATTITUDE', 'behaviour_5', 'B', NULL, NULL),
-(125, 1, 'T2', 'ATTITUDE', 'behaviour_6', 'B', NULL, NULL),
-(126, 1, 'T2', 'ATTITUDE', 'social_1', 'B', NULL, NULL),
-(127, 1, 'T2', 'ATTITUDE', 'social_2', 'B', NULL, NULL),
-(128, 1, 'T2', 'ATTITUDE', 'social_3', 'B', NULL, NULL),
-(129, 1, 'T2', 'ATTITUDE', 'social_4', 'B', NULL, NULL),
-(130, 1, 'T2', 'ATTITUDE', 'social_5', 'B', NULL, NULL),
-(131, 1, 'T1', 'SUMMARY', 'total_score', '31', NULL, NULL),
-(132, 1, 'T1', 'SUMMARY', 'average_score', '13', NULL, NULL),
-(133, 1, 'T1', 'SUMMARY', 'class_size', '56', NULL, NULL),
-(134, 1, 'T1', 'SUMMARY', 'ranking', '47', NULL, NULL),
-(135, 1, 'T1', 'SUMMARY', 'late', '61', NULL, NULL),
-(136, 1, 'T1', 'SUMMARY', 'absent', '59', NULL, NULL),
-(137, 1, 'T2', 'SUMMARY', 'total_score', '39', NULL, NULL),
-(138, 1, 'T2', 'SUMMARY', 'average_score', '69', NULL, NULL),
-(139, 1, 'T2', 'SUMMARY', 'class_size', '56', NULL, NULL),
-(140, 1, 'T2', 'SUMMARY', 'ranking', '49', NULL, NULL),
-(141, 1, 'T2', 'SUMMARY', 'late', '61', NULL, NULL),
-(142, 1, 'T2', 'SUMMARY', 'absent', '26', NULL, NULL),
-(143, 1, 'FIN', 'SUMMARY', 'total_score', '81', NULL, NULL),
-(144, 1, 'FIN', 'SUMMARY', 'average_score', '45', NULL, NULL),
-(145, 1, 'FIN', 'SUMMARY', 'class_size', '38', NULL, NULL),
-(146, 1, 'FIN', 'SUMMARY', 'ranking', '3', NULL, NULL),
-(147, 1, 'FIN', 'SUMMARY', 'late', '67', NULL, NULL),
-(148, 1, 'FIN', 'SUMMARY', 'absent', '93', NULL, NULL),
-(149, 1, 'T1', 'GENERAL', 'comment', 'T1 Comment', NULL, NULL),
-(150, 1, 'T2', 'GENERAL', 'comment', 'T2 Coment', NULL, NULL),
-(151, 1, 'T1', 'GENERAL', 'reward_punishment', 'T1 reward punishment', NULL, NULL),
-(152, 1, 'T2', 'GENERAL', 'reward_punishment', 'T2 reward punishment', NULL, NULL),
-(153, 1, 'T1', 'GENERAL', 'leisure_name', 'T1 leisure name', NULL, NULL),
-(154, 1, 'T2', 'GENERAL', 'leisure_name', 'T2 leisure name', NULL, NULL),
-(155, 1, 'T1', 'GENERAL', 'leisure_performance', 'T1 leisure performance', NULL, NULL),
-(156, 1, 'T2', 'GENERAL', 'leisure_performance', 'T2 leisure performance', NULL, NULL),
-(157, 1, 'T1', 'GENERAL', 'remark', 'T1 remark', NULL, NULL),
-(158, 1, 'T2', 'GENERAL', 'remark', 'T2 remark', NULL, NULL),
-(159, 1, 'FIN', 'GENERAL', 'remark', 'FIN remark', NULL, NULL),
-(160, 1, 'FIN', 'GENERAL', 'appraisal', 'FIN Appraisal', NULL, NULL);
+INSERT INTO `transcripts` (`id`, `klass_student_id`, `column`, `category`, `field_name`, `field_value`, `version`, `created_at`, `updated_at`) VALUES
+(1, 1, 'T1', 'PERSONAL', 'name_ch', 'TEST name_ch', 1, NULL, NULL),
+(2, 1, 'T1', 'PERSONAL', 'name_fn', 'TEST name_fn', 1, NULL, NULL),
+(3, 1, 'T1', 'PERSONAL', 'academic_year', 'TEST academic_year', 1, NULL, NULL),
+(4, 1, 'T1', 'PERSONAL', 'grade_class', 'TEST grade_class', 1, NULL, NULL),
+(5, 1, 'T1', 'PERSONAL', 'student_number', 'TEST student_number', 1, NULL, NULL),
+(6, 1, 'T1', 'PERSONAL', 'id_number', 'TEST id_number', 1, NULL, NULL),
+(7, 1, 'T1', 'PERSONAL', 'issue_date', 'TEST issue_date', 1, NULL, NULL),
+(8, 1, 'T1E', 'SUBJECT', 'religion', '55', 1, NULL, NULL),
+(9, 1, 'T1E', 'SUBJECT', 'chinese_literature', '80', 1, NULL, NULL),
+(10, 1, 'T1E', 'SUBJECT', 'common_sense', '85', 1, NULL, NULL),
+(11, 1, 'T1E', 'SUBJECT', 'story', '18', 1, NULL, NULL),
+(12, 1, 'T1E', 'SUBJECT', 'chinese_writing', '22', 1, NULL, NULL),
+(13, 1, 'T1E', 'SUBJECT', 'numeracy', '74', 1, NULL, NULL),
+(14, 1, 'T1E', 'SUBJECT', 'english_reading', '14', 1, NULL, NULL),
+(15, 1, 'T1E', 'SUBJECT', 'english_writing', '8', 1, NULL, NULL),
+(16, 1, 'T1E', 'SUBJECT', 'computer', '27', 1, NULL, NULL),
+(17, 1, 'T1E', 'SUBJECT', 'mandarin', '83', 1, NULL, NULL),
+(18, 1, 'T1E', 'SUBJECT', 'art_craft', '7', 1, NULL, NULL),
+(19, 1, 'T1E', 'SUBJECT', 'playgroup', '60', 1, NULL, NULL),
+(20, 1, 'T1E', 'SUBJECT', 'physical_fitness', '85', 1, NULL, NULL),
+(21, 1, 'T1P', 'SUBJECT', 'religion', '33', 1, NULL, NULL),
+(22, 1, 'T1P', 'SUBJECT', 'chinese_literature', '26', 1, NULL, NULL),
+(23, 1, 'T1P', 'SUBJECT', 'common_sense', '79', 1, NULL, NULL),
+(24, 1, 'T1P', 'SUBJECT', 'story', '34', 1, NULL, NULL),
+(25, 1, 'T1P', 'SUBJECT', 'chinese_writing', '59', 1, NULL, NULL),
+(26, 1, 'T1P', 'SUBJECT', 'numeracy', '54', 1, NULL, NULL),
+(27, 1, 'T1P', 'SUBJECT', 'english_reading', '12', 1, NULL, NULL),
+(28, 1, 'T1P', 'SUBJECT', 'english_writing', '37', 1, NULL, NULL),
+(29, 1, 'T1P', 'SUBJECT', 'computer', '70', 1, NULL, NULL),
+(30, 1, 'T1P', 'SUBJECT', 'mandarin', '5', 1, NULL, NULL),
+(31, 1, 'T1P', 'SUBJECT', 'art_craft', '92', 1, NULL, NULL),
+(32, 1, 'T1P', 'SUBJECT', 'playgroup', '54', 1, NULL, NULL),
+(33, 1, 'T1P', 'SUBJECT', 'physical_fitness', '55', 1, NULL, NULL),
+(34, 1, 'T1A', 'SUBJECT', 'religion', '10', 1, NULL, NULL),
+(35, 1, 'T1A', 'SUBJECT', 'chinese_literature', '22', 1, NULL, NULL),
+(36, 1, 'T1A', 'SUBJECT', 'common_sense', '71', 1, NULL, NULL),
+(37, 1, 'T1A', 'SUBJECT', 'story', '78', 1, NULL, NULL),
+(38, 1, 'T1A', 'SUBJECT', 'chinese_writing', '55', 1, NULL, NULL),
+(39, 1, 'T1A', 'SUBJECT', 'numeracy', '71', 1, NULL, NULL),
+(40, 1, 'T1A', 'SUBJECT', 'english_reading', '22', 1, NULL, NULL),
+(41, 1, 'T1A', 'SUBJECT', 'english_writing', '53', 1, NULL, NULL),
+(42, 1, 'T1A', 'SUBJECT', 'computer', '50', 1, NULL, NULL),
+(43, 1, 'T1A', 'SUBJECT', 'mandarin', '83', 1, NULL, NULL),
+(44, 1, 'T1A', 'SUBJECT', 'art_craft', '26', 1, NULL, NULL),
+(45, 1, 'T1A', 'SUBJECT', 'playgroup', '36', 1, NULL, NULL),
+(46, 1, 'T1A', 'SUBJECT', 'physical_fitness', '48', 1, NULL, NULL),
+(47, 1, 'T2E', 'SUBJECT', 'religion', '36', 1, NULL, NULL),
+(48, 1, 'T2E', 'SUBJECT', 'chinese_literature', '92', 1, NULL, NULL),
+(49, 1, 'T2E', 'SUBJECT', 'common_sense', '74', 1, NULL, NULL),
+(50, 1, 'T2E', 'SUBJECT', 'story', '11', 1, NULL, NULL),
+(51, 1, 'T2E', 'SUBJECT', 'chinese_writing', '98', 1, NULL, NULL),
+(52, 1, 'T2E', 'SUBJECT', 'numeracy', '67', 1, NULL, NULL),
+(53, 1, 'T2E', 'SUBJECT', 'english_reading', '22', 1, NULL, NULL),
+(54, 1, 'T2E', 'SUBJECT', 'english_writing', '50', 1, NULL, NULL),
+(55, 1, 'T2E', 'SUBJECT', 'computer', '23', 1, NULL, NULL),
+(56, 1, 'T2E', 'SUBJECT', 'mandarin', '33', 1, NULL, NULL),
+(57, 1, 'T2E', 'SUBJECT', 'art_craft', '17', 1, NULL, NULL),
+(58, 1, 'T2E', 'SUBJECT', 'playgroup', '51', 1, NULL, NULL),
+(59, 1, 'T2E', 'SUBJECT', 'physical_fitness', '52', 1, NULL, NULL),
+(60, 1, 'T2P', 'SUBJECT', 'religion', '86', 1, NULL, NULL),
+(61, 1, 'T2P', 'SUBJECT', 'chinese_literature', '80', 1, NULL, NULL),
+(62, 1, 'T2P', 'SUBJECT', 'common_sense', '26', 1, NULL, NULL),
+(63, 1, 'T2P', 'SUBJECT', 'story', '60', 1, NULL, NULL),
+(64, 1, 'T2P', 'SUBJECT', 'chinese_writing', '52', 1, NULL, NULL),
+(65, 1, 'T2P', 'SUBJECT', 'numeracy', '18', 1, NULL, NULL),
+(66, 1, 'T2P', 'SUBJECT', 'english_reading', '80', 1, NULL, NULL),
+(67, 1, 'T2P', 'SUBJECT', 'english_writing', '32', 1, NULL, NULL),
+(68, 1, 'T2P', 'SUBJECT', 'computer', '67', 1, NULL, NULL),
+(69, 1, 'T2P', 'SUBJECT', 'mandarin', '18', 1, NULL, NULL),
+(70, 1, 'T2P', 'SUBJECT', 'art_craft', '85', 1, NULL, NULL),
+(71, 1, 'T2P', 'SUBJECT', 'playgroup', '60', 1, NULL, NULL),
+(72, 1, 'T2P', 'SUBJECT', 'physical_fitness', '23', 1, NULL, NULL),
+(73, 1, 'T2A', 'SUBJECT', 'religion', '7', 1, NULL, NULL),
+(74, 1, 'T2A', 'SUBJECT', 'chinese_literature', '34', 1, NULL, NULL),
+(75, 1, 'T2A', 'SUBJECT', 'common_sense', '43', 1, NULL, NULL),
+(76, 1, 'T2A', 'SUBJECT', 'story', '100', 1, NULL, NULL),
+(77, 1, 'T2A', 'SUBJECT', 'chinese_writing', '3', 1, NULL, NULL),
+(78, 1, 'T2A', 'SUBJECT', 'numeracy', '18', 1, NULL, NULL),
+(79, 1, 'T2A', 'SUBJECT', 'english_reading', '6', 1, NULL, NULL),
+(80, 1, 'T2A', 'SUBJECT', 'english_writing', '53', 1, NULL, NULL),
+(81, 1, 'T2A', 'SUBJECT', 'computer', '27', 1, NULL, NULL),
+(82, 1, 'T2A', 'SUBJECT', 'mandarin', '27', 1, NULL, NULL),
+(83, 1, 'T2A', 'SUBJECT', 'art_craft', '54', 1, NULL, NULL),
+(84, 1, 'T2A', 'SUBJECT', 'playgroup', '15', 1, NULL, NULL),
+(85, 1, 'T2A', 'SUBJECT', 'physical_fitness', '55', 1, NULL, NULL),
+(86, 1, 'FIN', 'SUBJECT', 'religion', '73', 1, NULL, NULL),
+(87, 1, 'FIN', 'SUBJECT', 'chinese_literature', '67', 1, NULL, NULL),
+(88, 1, 'FIN', 'SUBJECT', 'common_sense', '75', 1, NULL, NULL),
+(89, 1, 'FIN', 'SUBJECT', 'story', '96', 1, NULL, NULL),
+(90, 1, 'FIN', 'SUBJECT', 'chinese_writing', '94', 1, NULL, NULL),
+(91, 1, 'FIN', 'SUBJECT', 'numeracy', '73', 1, NULL, NULL),
+(92, 1, 'FIN', 'SUBJECT', 'english_reading', '56', 1, NULL, NULL),
+(93, 1, 'FIN', 'SUBJECT', 'english_writing', '69', 1, NULL, NULL),
+(94, 1, 'FIN', 'SUBJECT', 'computer', '72', 1, NULL, NULL),
+(95, 1, 'FIN', 'SUBJECT', 'mandarin', '87', 1, NULL, NULL),
+(96, 1, 'FIN', 'SUBJECT', 'art_craft', '81', 1, NULL, NULL),
+(97, 1, 'FIN', 'SUBJECT', 'playgroup', '66', 1, NULL, NULL),
+(98, 1, 'FIN', 'SUBJECT', 'physical_fitness', '95', 1, NULL, NULL),
+(99, 1, 'T1', 'ATTITUDE', 'health_1', 'A', 1, NULL, NULL),
+(100, 1, 'T1', 'ATTITUDE', 'health_2', 'A', 1, NULL, NULL),
+(101, 1, 'T1', 'ATTITUDE', 'health_3', 'A', 1, NULL, NULL),
+(102, 1, 'T1', 'ATTITUDE', 'health_4', 'A', 1, NULL, NULL),
+(103, 1, 'T1', 'ATTITUDE', 'health_5', 'A', 1, NULL, NULL),
+(104, 1, 'T1', 'ATTITUDE', 'behaviour_1', 'A', 1, NULL, NULL),
+(105, 1, 'T1', 'ATTITUDE', 'behaviour_2', 'A', 1, NULL, NULL),
+(106, 1, 'T1', 'ATTITUDE', 'behaviour_3', 'A', 1, NULL, NULL),
+(107, 1, 'T1', 'ATTITUDE', 'behaviour_4', 'A', 1, NULL, NULL),
+(108, 1, 'T1', 'ATTITUDE', 'behaviour_5', 'A', 1, NULL, NULL),
+(109, 1, 'T1', 'ATTITUDE', 'behaviour_6', 'A', 1, NULL, NULL),
+(110, 1, 'T1', 'ATTITUDE', 'social_1', 'A', 1, NULL, NULL),
+(111, 1, 'T1', 'ATTITUDE', 'social_2', 'A', 1, NULL, NULL),
+(112, 1, 'T1', 'ATTITUDE', 'social_3', 'A', 1, NULL, NULL),
+(113, 1, 'T1', 'ATTITUDE', 'social_4', 'A', 1, NULL, NULL),
+(114, 1, 'T1', 'ATTITUDE', 'social_5', 'A', 1, NULL, NULL),
+(115, 1, 'T2', 'ATTITUDE', 'health_1', 'B', 1, NULL, NULL),
+(116, 1, 'T2', 'ATTITUDE', 'health_2', 'B', 1, NULL, NULL),
+(117, 1, 'T2', 'ATTITUDE', 'health_3', 'B', 1, NULL, NULL),
+(118, 1, 'T2', 'ATTITUDE', 'health_4', 'B', 1, NULL, NULL),
+(119, 1, 'T2', 'ATTITUDE', 'health_5', 'B', 1, NULL, NULL),
+(120, 1, 'T2', 'ATTITUDE', 'behaviour_1', 'B', 1, NULL, NULL),
+(121, 1, 'T2', 'ATTITUDE', 'behaviour_2', 'B', 1, NULL, NULL),
+(122, 1, 'T2', 'ATTITUDE', 'behaviour_3', 'B', 1, NULL, NULL),
+(123, 1, 'T2', 'ATTITUDE', 'behaviour_4', 'B', 1, NULL, NULL),
+(124, 1, 'T2', 'ATTITUDE', 'behaviour_5', 'B', 1, NULL, NULL),
+(125, 1, 'T2', 'ATTITUDE', 'behaviour_6', 'B', 1, NULL, NULL),
+(126, 1, 'T2', 'ATTITUDE', 'social_1', 'B', 1, NULL, NULL),
+(127, 1, 'T2', 'ATTITUDE', 'social_2', 'B', 1, NULL, NULL),
+(128, 1, 'T2', 'ATTITUDE', 'social_3', 'B', 1, NULL, NULL),
+(129, 1, 'T2', 'ATTITUDE', 'social_4', 'B', 1, NULL, NULL),
+(130, 1, 'T2', 'ATTITUDE', 'social_5', 'B', 1, NULL, NULL),
+(131, 1, 'T1', 'SUMMARY', 'total_score', '100', 1, NULL, NULL),
+(132, 1, 'T1', 'SUMMARY', 'average_score', '72', 1, NULL, NULL),
+(133, 1, 'T1', 'SUMMARY', 'class_size', '87', 1, NULL, NULL),
+(134, 1, 'T1', 'SUMMARY', 'ranking', '97', 1, NULL, NULL),
+(135, 1, 'T1', 'SUMMARY', 'late', '91', 1, NULL, NULL),
+(136, 1, 'T1', 'SUMMARY', 'absent', '4', 1, NULL, NULL),
+(137, 1, 'T2', 'SUMMARY', 'total_score', '41', 1, NULL, NULL),
+(138, 1, 'T2', 'SUMMARY', 'average_score', '9', 1, NULL, NULL),
+(139, 1, 'T2', 'SUMMARY', 'class_size', '14', 1, NULL, NULL),
+(140, 1, 'T2', 'SUMMARY', 'ranking', '39', 1, NULL, NULL),
+(141, 1, 'T2', 'SUMMARY', 'late', '9', 1, NULL, NULL),
+(142, 1, 'T2', 'SUMMARY', 'absent', '71', 1, NULL, NULL),
+(143, 1, 'FIN', 'SUMMARY', 'total_score', '24', 1, NULL, NULL),
+(144, 1, 'FIN', 'SUMMARY', 'average_score', '95', 1, NULL, NULL),
+(145, 1, 'FIN', 'SUMMARY', 'class_size', '48', 1, NULL, NULL),
+(146, 1, 'FIN', 'SUMMARY', 'ranking', '100', 1, NULL, NULL),
+(147, 1, 'FIN', 'SUMMARY', 'late', '50', 1, NULL, NULL),
+(148, 1, 'FIN', 'SUMMARY', 'absent', '96', 1, NULL, NULL),
+(149, 1, 'T1', 'GENERAL', 'comment', 'T1 Comment', 1, NULL, NULL),
+(150, 1, 'T2', 'GENERAL', 'comment', 'T2 Coment', 1, NULL, NULL),
+(151, 1, 'T1', 'GENERAL', 'reward_punishment', 'T1 reward punishment', 1, NULL, NULL),
+(152, 1, 'T2', 'GENERAL', 'reward_punishment', 'T2 reward punishment', 1, NULL, NULL),
+(153, 1, 'T1', 'GENERAL', 'leisure_name', 'T1 leisure name', 1, NULL, NULL),
+(154, 1, 'T2', 'GENERAL', 'leisure_name', 'T2 leisure name', 1, NULL, NULL),
+(155, 1, 'T1', 'GENERAL', 'leisure_performance', 'T1 leisure performance', 1, NULL, NULL),
+(156, 1, 'T2', 'GENERAL', 'leisure_performance', 'T2 leisure performance', 1, NULL, NULL),
+(157, 1, 'T1', 'GENERAL', 'remark', 'T1 remark', 1, NULL, NULL),
+(158, 1, 'T2', 'GENERAL', 'remark', 'T2 remark', 1, NULL, NULL),
+(159, 1, 'FIN', 'GENERAL', 'remark', 'FIN remark', 1, NULL, NULL),
+(160, 1, 'FIN', 'GENERAL', 'appraisal', 'FIN Appraisal', 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `transcript_templates`
+-- Table structure for table `transcript_templates`
 --
 
 CREATE TABLE `transcript_templates` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `klass_id` bigint(20) NOT NULL,
   `category` enum('PERSONAL','SUBJECT','ATTITUDE','SUMMARY','GENERAL') NOT NULL,
   `field_name` varchar(255) NOT NULL,
   `title_zh` varchar(255) DEFAULT NULL,
   `title_en` varchar(255) DEFAULT NULL,
+  `remark` text DEFAULT NULL,
+  `subject_code` varchar(255) NOT NULL,
+  `version` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Extraindo dados da tabela `transcript_templates`
+-- Dumping data for table `transcript_templates`
 --
 
-INSERT INTO `transcript_templates` (`id`, `klass_id`, `category`, `field_name`, `title_zh`, `title_en`, `created_at`, `updated_at`) VALUES
-(1, 1, 'PERSONAL', 'name_ch', '姓名中文', NULL, NULL, NULL),
-(2, 1, 'PERSONAL', 'name_fn', '姓名外文', NULL, NULL, NULL),
-(3, 1, 'PERSONAL', 'academic_year', '年度', NULL, NULL, NULL),
-(4, 1, 'PERSONAL', 'grade_class', '級別', NULL, NULL, NULL),
-(5, 1, 'PERSONAL', 'student_number', '學生證編號', NULL, NULL, NULL),
-(6, 1, 'PERSONAL', 'id_number', '身份證編號', NULL, NULL, NULL),
-(7, 1, 'PERSONAL', 'issue_date', '簽發日期', NULL, NULL, NULL),
-(8, 1, 'SUBJECT', 'religion', '宗教', NULL, NULL, NULL),
-(9, 1, 'SUBJECT', 'chinese_literature', '語文', NULL, NULL, NULL),
-(10, 1, 'SUBJECT', 'common_sense', '常識', NULL, NULL, NULL),
-(11, 1, 'SUBJECT', 'story', '故事', NULL, NULL, NULL),
-(12, 1, 'SUBJECT', 'chinese_writing', '中寫', NULL, NULL, NULL),
-(13, 1, 'SUBJECT', 'numeracy', '識數', NULL, NULL, NULL),
-(14, 1, 'SUBJECT', 'english_reading', '讀本', NULL, NULL, NULL),
-(15, 1, 'SUBJECT', 'english_writing', '英寫', NULL, NULL, NULL),
-(16, 1, 'SUBJECT', 'computer', '電腦', NULL, NULL, NULL),
-(17, 1, 'SUBJECT', 'mandarin', '普通話', NULL, NULL, NULL),
-(18, 1, 'SUBJECT', 'art_craft', '美勞', NULL, NULL, NULL),
-(19, 1, 'SUBJECT', 'playgroup', '唱遊', NULL, NULL, NULL),
-(20, 1, 'SUBJECT', 'physical_fitness', '體能', NULL, NULL, NULL),
-(21, 1, 'ATTITUDE', 'health_1', '衣服鞋襪整齊清潔', NULL, NULL, NULL),
-(22, 1, 'ATTITUDE', 'health_2', '常剪指甲', NULL, NULL, NULL),
-(23, 1, 'ATTITUDE', 'health_3', '懂得使用手帕或紙巾', NULL, NULL, NULL),
-(24, 1, 'ATTITUDE', 'health_4', '不把手指雜物放進口裡', NULL, NULL, NULL),
-(25, 1, 'ATTITUDE', 'health_5', '能把癈物投入廢紙箱內', NULL, NULL, NULL),
-(26, 1, 'ATTITUDE', 'behaviour_1', '守秩序不喧嚷', NULL, NULL, NULL),
-(27, 1, 'ATTITUDE', 'behaviour_2', '留心聽講', NULL, NULL, NULL),
-(28, 1, 'ATTITUDE', 'behaviour_3', '坐立行走姿勢正確', NULL, NULL, NULL),
-(29, 1, 'ATTITUDE', 'behaviour_4', '離開坐位把物件桌椅整理好', NULL, NULL, NULL),
-(30, 1, 'ATTITUDE', 'behaviour_5', '愛護公物用後放回原處', NULL, NULL, NULL),
-(31, 1, 'ATTITUDE', 'behaviour_6', '遵守校規', NULL, NULL, NULL),
-(32, 1, 'ATTITUDE', 'social_1', '守時', NULL, NULL, NULL),
-(33, 1, 'ATTITUDE', 'social_2', '尊敬師長,友愛和睦', NULL, NULL, NULL),
-(34, 1, 'ATTITUDE', 'social_3', '樂於助人', NULL, NULL, NULL),
-(35, 1, 'ATTITUDE', 'social_4', '會和別人分享及輪侯', NULL, NULL, NULL),
-(36, 1, 'ATTITUDE', 'social_5', '誠實坦白肯認錯', NULL, NULL, NULL),
-(37, 1, 'SUMMARY', 'total_score', '總分', NULL, NULL, NULL),
-(38, 1, 'SUMMARY', 'average_score', '平均分', NULL, NULL, NULL),
-(39, 1, 'SUMMARY', 'class_size', '全班人數', NULL, NULL, NULL),
-(40, 1, 'SUMMARY', 'ranking', '考列名次', NULL, NULL, NULL),
-(41, 1, 'SUMMARY', 'late', '遲到次數', NULL, NULL, NULL),
-(42, 1, 'SUMMARY', 'absent', '缺席節數', NULL, NULL, NULL),
-(43, 1, 'GENERAL', 'comment', '評語', NULL, NULL, NULL),
-(44, 1, 'GENERAL', 'reward_punishment', '奬懲記錄', NULL, NULL, NULL),
-(45, 1, 'GENERAL', 'leisure_name', '餘暇活動名稱', NULL, NULL, NULL),
-(46, 1, 'GENERAL', 'leisure_performance', '餘暇活動表現', NULL, NULL, NULL),
-(47, 1, 'GENERAL', 'remark', '備註', NULL, NULL, NULL),
-(48, 1, 'GENERAL', 'appraisal', '學年評定', NULL, NULL, NULL);
+INSERT INTO `transcript_templates` (`id`, `category`, `field_name`, `title_zh`, `title_en`, `remark`, `subject_code`, `version`, `created_at`, `updated_at`) VALUES
+(1, 'PERSONAL', 'name_ch', '姓名中文', NULL, NULL, '', 1, NULL, NULL),
+(2, 'PERSONAL', 'name_fn', '姓名外文', NULL, NULL, '', 1, NULL, NULL),
+(3, 'PERSONAL', 'academic_year', '年度', NULL, NULL, '', 1, NULL, NULL),
+(4, 'PERSONAL', 'grade_class', '級別', NULL, NULL, '', 1, NULL, NULL),
+(5, 'PERSONAL', 'student_number', '學生證編號', NULL, NULL, '', 1, NULL, NULL),
+(6, 'PERSONAL', 'id_number', '身份證編號', NULL, NULL, '', 1, NULL, NULL),
+(7, 'PERSONAL', 'issue_date', '簽發日期', NULL, NULL, '', 1, NULL, NULL),
+(8, 'SUBJECT', 'religion', '宗教', NULL, NULL, '', 1, NULL, NULL),
+(9, 'SUBJECT', 'chinese_literature', '語文', NULL, NULL, '', 1, NULL, NULL),
+(10, 'SUBJECT', 'common_sense', '常識', NULL, NULL, '', 1, NULL, NULL),
+(11, 'SUBJECT', 'story', '故事', NULL, NULL, '', 1, NULL, NULL),
+(12, 'SUBJECT', 'chinese_writing', '中寫', NULL, NULL, '', 1, NULL, NULL),
+(13, 'SUBJECT', 'numeracy', '識數', NULL, NULL, '', 1, NULL, NULL),
+(14, 'SUBJECT', 'english_reading', '英文', NULL, NULL, '', 1, NULL, '2023-02-05 20:00:10'),
+(15, 'SUBJECT', 'english_writing', '英寫', NULL, NULL, '', 1, NULL, NULL),
+(16, 'SUBJECT', 'computer', '電腦', NULL, NULL, '', 1, NULL, NULL),
+(17, 'SUBJECT', 'mandarin', '普通話', NULL, NULL, '', 1, NULL, NULL),
+(18, 'SUBJECT', 'art_craft', '美勞', NULL, NULL, '', 1, NULL, NULL),
+(19, 'SUBJECT', 'playgroup', '唱遊', NULL, NULL, '', 1, NULL, NULL),
+(20, 'SUBJECT', 'physical_fitness', '體能', NULL, NULL, '', 1, NULL, NULL),
+(21, 'ATTITUDE', 'health_1', '衣服鞋襪整齊清潔', NULL, NULL, '', 1, NULL, NULL),
+(22, 'ATTITUDE', 'health_2', '常剪指甲', NULL, NULL, '', 1, NULL, NULL),
+(23, 'ATTITUDE', 'health_3', '懂得使用手帕或紙巾', NULL, NULL, '', 1, NULL, NULL),
+(24, 'ATTITUDE', 'health_4', '不把手指雜物放進口裡', NULL, NULL, '', 1, NULL, NULL),
+(25, 'ATTITUDE', 'health_5', '能把癈物投入廢紙箱內', NULL, NULL, '', 1, NULL, NULL),
+(26, 'ATTITUDE', 'behaviour_1', '守秩序不喧嚷', NULL, NULL, '', 1, NULL, NULL),
+(27, 'ATTITUDE', 'behaviour_2', '留心聽講', NULL, NULL, '', 1, NULL, NULL),
+(28, 'ATTITUDE', 'behaviour_3', '坐立行走姿勢正確', NULL, NULL, '', 1, NULL, NULL),
+(29, 'ATTITUDE', 'behaviour_4', '離開坐位把物件桌椅整理好', NULL, NULL, '', 1, NULL, NULL),
+(30, 'ATTITUDE', 'behaviour_5', '愛護公物用後放回原處', NULL, NULL, '', 1, NULL, NULL),
+(31, 'ATTITUDE', 'behaviour_6', '遵守校規', NULL, NULL, '', 1, NULL, NULL),
+(32, 'ATTITUDE', 'social_1', '守時', NULL, NULL, '', 1, NULL, NULL),
+(33, 'ATTITUDE', 'social_2', '尊敬師長,友愛和睦', NULL, NULL, '', 1, NULL, NULL),
+(34, 'ATTITUDE', 'social_3', '樂於助人', NULL, NULL, '', 1, NULL, NULL),
+(35, 'ATTITUDE', 'social_4', '會和別人分享及輪侯', NULL, NULL, '', 1, NULL, NULL),
+(36, 'ATTITUDE', 'social_5', '誠實坦白肯認錯', NULL, NULL, '', 1, NULL, NULL),
+(37, 'SUMMARY', 'total_score', '總分', NULL, NULL, '', 1, NULL, NULL),
+(38, 'SUMMARY', 'average_score', '平均分', NULL, NULL, '', 1, NULL, NULL),
+(39, 'SUMMARY', 'class_size', '全班人數', NULL, NULL, '', 1, NULL, NULL),
+(40, 'SUMMARY', 'ranking', '考列名次', NULL, NULL, '', 1, NULL, NULL),
+(41, 'SUMMARY', 'late', '遲到次數', NULL, NULL, '', 1, NULL, NULL),
+(42, 'SUMMARY', 'absent', '缺席節數', NULL, NULL, '', 1, NULL, NULL),
+(43, 'GENERAL', 'comment', '評語', NULL, NULL, '', 1, NULL, NULL),
+(44, 'GENERAL', 'reward_punishment', '奬懲記錄', NULL, NULL, '', 1, NULL, NULL),
+(45, 'GENERAL', 'leisure_name', '餘暇活動名稱', NULL, NULL, '', 1, NULL, NULL),
+(46, 'GENERAL', 'leisure_performance', '餘暇活動表現', NULL, NULL, '', 1, NULL, NULL),
+(47, 'GENERAL', 'remark', '備註', NULL, NULL, '', 1, NULL, NULL),
+(48, 'GENERAL', 'appraisal', '學年評定', NULL, NULL, '', 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `users`
+-- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
@@ -4100,16 +4051,17 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Extraindo dados da tabela `users`
+-- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `two_factor_secret`, `two_factor_recovery_codes`, `two_factor_confirmed_at`, `remember_token`, `current_team_id`, `profile_photo_path`, `created_at`, `updated_at`) VALUES
-(1, 'admin', 'admin@admin.com', NULL, '$2y$10$mFWu.U1se1GycJxbk8DldOGbOcTFp2VOViom3/3s40nOcrbUNHZ52', NULL, NULL, NULL, NULL, 1, NULL, '2023-01-10 18:15:01', '2023-01-10 20:28:30');
+(1, 'Master', 'master@example.com', NULL, '$2y$10$5kcHKzNKE1cwYyavtHbuaumDTUcMtE12SfE8ht7cxEGrftehwkx3q', NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-03 01:27:30', '2023-02-03 01:27:30'),
+(2, 'Admin', 'admin@example.com', NULL, '$2y$10$TanPI5vzhD5251Zzokh8w.oGAsVS6KQnJcvqrMhmle2bxzfBPnQbq', NULL, NULL, NULL, NULL, 2, NULL, '2023-02-03 01:27:30', '2023-02-03 01:28:14');
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `years`
+-- Table structure for table `years`
 --
 
 CREATE TABLE `years` (
@@ -4127,162 +4079,162 @@ CREATE TABLE `years` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Extraindo dados da tabela `years`
+-- Dumping data for table `years`
 --
 
 INSERT INTO `years` (`id`, `code`, `title`, `description`, `meta`, `transcript`, `start`, `end`, `active`, `created_at`, `updated_at`) VALUES
-(1, '2021', '2021-2022', NULL, NULL, NULL, '2021-09-01', '2022-07-30', 1, NULL, '2023-01-10 18:14:57'),
+(1, '2021', '2021-2022', NULL, NULL, NULL, '2021-09-01', '2022-07-30', 1, NULL, '2023-02-03 01:27:25'),
 (2, '2022', '2022-2023', NULL, NULL, NULL, '2022-09-01', '2023-07-30', 0, NULL, NULL);
 
 --
--- Índices para tabelas despejadas
+-- Indexes for dumped tables
 --
 
 --
--- Índices para tabela `addresses`
+-- Indexes for table `addresses`
 --
 ALTER TABLE `addresses`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `banks`
+-- Indexes for table `banks`
 --
 ALTER TABLE `banks`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `categories`
+-- Indexes for table `categories`
 --
 ALTER TABLE `categories`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `configs`
+-- Indexes for table `configs`
 --
 ALTER TABLE `configs`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `configs_key_unique` (`key`);
+
+--
+-- Indexes for table `courses`
+--
+ALTER TABLE `courses`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `courses`
---
-ALTER TABLE `courses`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `klass_subject` (`klass_id`,`code`);
-
---
--- Índices para tabela `course_scores`
+-- Indexes for table `course_scores`
 --
 ALTER TABLE `course_scores`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `course_teachers`
+-- Indexes for table `course_teachers`
 --
 ALTER TABLE `course_teachers`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `disciplines`
+-- Indexes for table `disciplines`
 --
 ALTER TABLE `disciplines`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `failed_jobs`
+-- Indexes for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
 
 --
--- Índices para tabela `gardians`
+-- Indexes for table `gardians`
 --
 ALTER TABLE `gardians`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `grades`
+-- Indexes for table `grades`
 --
 ALTER TABLE `grades`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `guardians`
+-- Indexes for table `guardians`
 --
 ALTER TABLE `guardians`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `healthcares`
+-- Indexes for table `healthcares`
 --
 ALTER TABLE `healthcares`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `identity_documents`
+-- Indexes for table `identity_documents`
 --
 ALTER TABLE `identity_documents`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `klasses`
+-- Indexes for table `klasses`
 --
 ALTER TABLE `klasses`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `klass_students`
+-- Indexes for table `klass_students`
 --
 ALTER TABLE `klass_students`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `locations`
+-- Indexes for table `locations`
 --
 ALTER TABLE `locations`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `migrations`
+-- Indexes for table `migrations`
 --
 ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `model_has_permissions`
+-- Indexes for table `model_has_permissions`
 --
 ALTER TABLE `model_has_permissions`
   ADD PRIMARY KEY (`permission_id`,`model_id`,`model_type`),
   ADD KEY `model_has_permissions_model_id_model_type_index` (`model_id`,`model_type`);
 
 --
--- Índices para tabela `model_has_roles`
+-- Indexes for table `model_has_roles`
 --
 ALTER TABLE `model_has_roles`
   ADD PRIMARY KEY (`role_id`,`model_id`,`model_type`),
   ADD KEY `model_has_roles_model_id_model_type_index` (`model_id`,`model_type`);
 
 --
--- Índices para tabela `parentals`
+-- Indexes for table `parentals`
 --
 ALTER TABLE `parentals`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `password_resets`
+-- Indexes for table `password_resets`
 --
 ALTER TABLE `password_resets`
   ADD KEY `password_resets_email_index` (`email`);
 
 --
--- Índices para tabela `permissions`
+-- Indexes for table `permissions`
 --
 ALTER TABLE `permissions`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `permissions_name_guard_name_unique` (`name`,`guard_name`);
 
 --
--- Índices para tabela `personal_access_tokens`
+-- Indexes for table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
   ADD PRIMARY KEY (`id`),
@@ -4290,33 +4242,40 @@ ALTER TABLE `personal_access_tokens`
   ADD KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`);
 
 --
--- Índices para tabela `roles`
+-- Indexes for table `roles`
 --
 ALTER TABLE `roles`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `roles_name_guard_name_unique` (`name`,`guard_name`);
 
 --
--- Índices para tabela `role_has_permissions`
+-- Indexes for table `role_has_permissions`
 --
 ALTER TABLE `role_has_permissions`
   ADD PRIMARY KEY (`permission_id`,`role_id`),
   ADD KEY `role_has_permissions_role_id_foreign` (`role_id`);
 
 --
--- Índices para tabela `scores`
+-- Indexes for table `scores`
 --
 ALTER TABLE `scores`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `student_score` (`klass_student_id`,`score_column_id`) USING BTREE;
 
 --
--- Índices para tabela `score_columns`
+-- Indexes for table `score_columns`
 --
 ALTER TABLE `score_columns`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `sessions`
+-- Indexes for table `score_templates`
+--
+ALTER TABLE `score_templates`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `sessions`
 --
 ALTER TABLE `sessions`
   ADD PRIMARY KEY (`id`),
@@ -4324,363 +4283,394 @@ ALTER TABLE `sessions`
   ADD KEY `sessions_last_activity_index` (`last_activity`);
 
 --
--- Índices para tabela `staff`
+-- Indexes for table `staff`
 --
 ALTER TABLE `staff`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `students`
+-- Indexes for table `students`
 --
 ALTER TABLE `students`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `student_details`
+-- Indexes for table `student_details`
 --
 ALTER TABLE `student_details`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `student_gardians`
+-- Indexes for table `student_gardians`
 --
 ALTER TABLE `student_gardians`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `subjects`
+-- Indexes for table `studies`
+--
+ALTER TABLE `studies`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `study_subject`
+--
+ALTER TABLE `study_subject`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `subjects`
 --
 ALTER TABLE `subjects`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `subjects_grade_id_code_unique` (`grade_id`,`code`);
 
 --
--- Índices para tabela `subject_templates`
+-- Indexes for table `subject_templates`
 --
 ALTER TABLE `subject_templates`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `suppliers`
+-- Indexes for table `suppliers`
 --
 ALTER TABLE `suppliers`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `teachers`
+-- Indexes for table `teachers`
 --
 ALTER TABLE `teachers`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `teams`
+-- Indexes for table `teams`
 --
 ALTER TABLE `teams`
   ADD PRIMARY KEY (`id`),
   ADD KEY `teams_user_id_index` (`user_id`);
 
 --
--- Índices para tabela `team_invitations`
+-- Indexes for table `team_invitations`
 --
 ALTER TABLE `team_invitations`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `team_invitations_team_id_email_unique` (`team_id`,`email`);
 
 --
--- Índices para tabela `team_user`
+-- Indexes for table `team_user`
 --
 ALTER TABLE `team_user`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `team_user_team_id_user_id_unique` (`team_id`,`user_id`);
 
 --
--- Índices para tabela `transcripts`
+-- Indexes for table `transcripts`
 --
 ALTER TABLE `transcripts`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `transcript_templates`
+-- Indexes for table `transcript_templates`
 --
 ALTER TABLE `transcript_templates`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `users`
+-- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `users_email_unique` (`email`);
 
 --
--- Índices para tabela `years`
+-- Indexes for table `years`
 --
 ALTER TABLE `years`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `years_code_unique` (`code`);
 
 --
--- AUTO_INCREMENT de tabelas despejadas
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT de tabela `addresses`
+-- AUTO_INCREMENT for table `addresses`
 --
 ALTER TABLE `addresses`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de tabela `banks`
+-- AUTO_INCREMENT for table `banks`
 --
 ALTER TABLE `banks`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de tabela `categories`
+-- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de tabela `configs`
+-- AUTO_INCREMENT for table `configs`
 --
 ALTER TABLE `configs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT de tabela `courses`
+-- AUTO_INCREMENT for table `courses`
 --
 ALTER TABLE `courses`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
--- AUTO_INCREMENT de tabela `course_scores`
+-- AUTO_INCREMENT for table `course_scores`
 --
 ALTER TABLE `course_scores`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de tabela `course_teachers`
+-- AUTO_INCREMENT for table `course_teachers`
 --
 ALTER TABLE `course_teachers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de tabela `disciplines`
+-- AUTO_INCREMENT for table `disciplines`
 --
 ALTER TABLE `disciplines`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de tabela `failed_jobs`
+-- AUTO_INCREMENT for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de tabela `gardians`
+-- AUTO_INCREMENT for table `gardians`
 --
 ALTER TABLE `gardians`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de tabela `grades`
+-- AUTO_INCREMENT for table `grades`
 --
 ALTER TABLE `grades`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
--- AUTO_INCREMENT de tabela `guardians`
+-- AUTO_INCREMENT for table `guardians`
 --
 ALTER TABLE `guardians`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de tabela `healthcares`
+-- AUTO_INCREMENT for table `healthcares`
 --
 ALTER TABLE `healthcares`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de tabela `identity_documents`
+-- AUTO_INCREMENT for table `identity_documents`
 --
 ALTER TABLE `identity_documents`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de tabela `klasses`
+-- AUTO_INCREMENT for table `klasses`
 --
 ALTER TABLE `klasses`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 
 --
--- AUTO_INCREMENT de tabela `klass_students`
+-- AUTO_INCREMENT for table `klass_students`
 --
 ALTER TABLE `klass_students`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1261;
 
 --
--- AUTO_INCREMENT de tabela `locations`
+-- AUTO_INCREMENT for table `locations`
 --
 ALTER TABLE `locations`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de tabela `migrations`
+-- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
--- AUTO_INCREMENT de tabela `parentals`
+-- AUTO_INCREMENT for table `parentals`
 --
 ALTER TABLE `parentals`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de tabela `permissions`
+-- AUTO_INCREMENT for table `permissions`
 --
 ALTER TABLE `permissions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de tabela `personal_access_tokens`
+-- AUTO_INCREMENT for table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de tabela `roles`
+-- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT de tabela `scores`
+-- AUTO_INCREMENT for table `scores`
 --
 ALTER TABLE `scores`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=181;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=394;
 
 --
--- AUTO_INCREMENT de tabela `score_columns`
+-- AUTO_INCREMENT for table `score_columns`
 --
 ALTER TABLE `score_columns`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
--- AUTO_INCREMENT de tabela `staff`
+-- AUTO_INCREMENT for table `score_templates`
+--
+ALTER TABLE `score_templates`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+
+--
+-- AUTO_INCREMENT for table `staff`
 --
 ALTER TABLE `staff`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=101;
 
 --
--- AUTO_INCREMENT de tabela `students`
+-- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1001;
 
 --
--- AUTO_INCREMENT de tabela `student_details`
+-- AUTO_INCREMENT for table `student_details`
 --
 ALTER TABLE `student_details`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de tabela `student_gardians`
+-- AUTO_INCREMENT for table `student_gardians`
 --
 ALTER TABLE `student_gardians`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de tabela `subjects`
+-- AUTO_INCREMENT for table `studies`
+--
+ALTER TABLE `studies`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `study_subject`
+--
+ALTER TABLE `study_subject`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
+
+--
+-- AUTO_INCREMENT for table `subjects`
 --
 ALTER TABLE `subjects`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=172;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
--- AUTO_INCREMENT de tabela `subject_templates`
+-- AUTO_INCREMENT for table `subject_templates`
 --
 ALTER TABLE `subject_templates`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
--- AUTO_INCREMENT de tabela `suppliers`
+-- AUTO_INCREMENT for table `suppliers`
 --
 ALTER TABLE `suppliers`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de tabela `teachers`
+-- AUTO_INCREMENT for table `teachers`
 --
 ALTER TABLE `teachers`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
 
 --
--- AUTO_INCREMENT de tabela `teams`
+-- AUTO_INCREMENT for table `teams`
 --
 ALTER TABLE `teams`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT de tabela `team_invitations`
+-- AUTO_INCREMENT for table `team_invitations`
 --
 ALTER TABLE `team_invitations`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de tabela `team_user`
+-- AUTO_INCREMENT for table `team_user`
 --
 ALTER TABLE `team_user`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de tabela `transcripts`
+-- AUTO_INCREMENT for table `transcripts`
 --
 ALTER TABLE `transcripts`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=161;
 
 --
--- AUTO_INCREMENT de tabela `transcript_templates`
+-- AUTO_INCREMENT for table `transcript_templates`
 --
 ALTER TABLE `transcript_templates`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
--- AUTO_INCREMENT de tabela `users`
+-- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT de tabela `years`
+-- AUTO_INCREMENT for table `years`
 --
 ALTER TABLE `years`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- Restrições para despejos de tabelas
+-- Constraints for dumped tables
 --
 
 --
--- Limitadores para a tabela `model_has_permissions`
+-- Constraints for table `model_has_permissions`
 --
 ALTER TABLE `model_has_permissions`
   ADD CONSTRAINT `model_has_permissions_permission_id_foreign` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE;
 
 --
--- Limitadores para a tabela `model_has_roles`
+-- Constraints for table `model_has_roles`
 --
 ALTER TABLE `model_has_roles`
   ADD CONSTRAINT `model_has_roles_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE;
 
 --
--- Limitadores para a tabela `role_has_permissions`
+-- Constraints for table `role_has_permissions`
 --
 ALTER TABLE `role_has_permissions`
   ADD CONSTRAINT `role_has_permissions_permission_id_foreign` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `role_has_permissions_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE;
 
 --
--- Limitadores para a tabela `team_invitations`
+-- Constraints for table `team_invitations`
 --
 ALTER TABLE `team_invitations`
   ADD CONSTRAINT `team_invitations_team_id_foreign` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE;

@@ -24,8 +24,8 @@ class ConfigSeeder extends Seeder
             'value' => '{"ACT": "Active","RES": "Resigned"}',
         ]);
         DB::table('configs')->insert([
-            'key' => 'streams',
-            'value' =>'[{"value":"ALL","label":"全科"},{"value":"ART","label":"文科"},{"value":"SCI","label":"理科"},{"value":"AAS","label":"文理科"}]'
+            'key' => 'score_template',
+            'value' =>'{"TERM":[{"value":"term1","label":"上學期"},{"value":"term2","label":"下學期"}],"COMMENT":[{"value":"comment","label":"描述"}]}'
         ]);
         DB::table('configs')->insert([
             'key' => 'year_creation',
