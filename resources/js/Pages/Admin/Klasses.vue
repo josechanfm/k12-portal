@@ -8,22 +8,34 @@
         <a-typography-title :level="4">學年:{{ grade.year.code }}</a-typography-title>
         <a-typography-title :level="4">年級:{{ grade.tag }}</a-typography-title>
         <ButtonLink v-for="g in grades" :href="'klasses?gid='+g.id" :style="'Add'" :type="'Link'">{{ g.tag }}</ButtonLink>
-        <br>
-        <button @click="createRecord()"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">新增班別</button>
+            <button @click="createRecord()"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">新增班別</button>
             <a-table :dataSource="klasses" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
                         <ButtonLink @click="editRecord(record)" :style="'Edit'">修改</ButtonLink>
                     </template>
+                    <template v-else-if="column.dataIndex=='stream'">
+                        <span v-if="text!=''">
+                            {{ getStream(text) }}
+                        </span>
+                    </template>
+                    <template v-else-if="column.dataIndex=='study_id'">
+                        <span v-if="text!=''">
+                            {{ getStudyPlan(text) }}
+                        </span>
+                    </template>
                     <template v-else-if="column.dataIndex=='courses'">
                         <a-popover :title="'Courses for '+record.tag">
                             <template #content>
-                                <p v-for="course in record.courses">{{ course.code }}-{{ course.title_zh }}</p>
+                                <span v-for="course in record.courses">
+                                    <p  v-if="course!=undefined && course.type=='SUB'">
+                                        {{ course.code }}-{{ course.title_zh }}
+                                    </p>
+                                </span>
                             </template>
                             <a>{{record.courses.length}}</a>
-                    </a-popover>
-
+                        </a-popover>
                     </template>
                     <template v-else>
                         {{record[column.dataIndex]}}
@@ -62,7 +74,16 @@
                     <a-radio-button v-for="ss in studyStreams" :value="ss.value">{{ ss.label }}</a-radio-button>
                 </a-radio-group>
             </a-form-item>
-
+            <a-form-item label="學習計劃" name="letter">
+                <a-select
+                    v-model:value="modal.data.study_id"
+                    style="width: 100%"
+                    placeholder="請選擇..."
+                    max-tag-count="responsive"
+                    :options="studyPlans.map(plan=>({value:plan.id, label:plan.title_zh+' (v.'+plan.version+')'}))"
+                    :disabled="modal.mode!=='CREATE'"
+                ></a-select>
+            </a-form-item>
             <a-form-item label="教室編號" name="room">
                 <a-input v-model:value="modal.data.room" />
             </a-form-item>
@@ -86,7 +107,7 @@ export default {
         AdminLayout,
         ButtonLink,
     },
-    props: ['grades','grade','klasses','klassLetters','studyStreams'],
+    props: ['grades','grade','klasses','klassLetters','studyStreams','studyPlans'],
     data() {
         return {
             gradeSelected:1,
@@ -101,38 +122,33 @@ export default {
                 {
                     title: '班別代號',
                     dataIndex: 'tag',
-                    key: 'tag',
                 },{
                     title: '專業方向',
                     dataIndex: 'stream',
-                    key: 'stream',
                 },{
                     title: '教室編號',
                     dataIndex: 'room',
-                    key: 'room',
+                },{
+                    title: '學習計劃',
+                    dataIndex: 'study_id',
                 },{
                     title: '科目數目',
                     dataIndex: 'courses',
-                    key: 'courses',
                 },{
                     title: '操作',
                     dataIndex: 'operation',
-                    key: 'operation',
                 },
             ],
             rules:{
-                name_zh:{
+                letter:{
                     required:true,
                 },
-                phone:[{
+                stream:{
                     required:true,
-                }],
-                address:[{
+                },
+                study_id:{
                     required:true,
-                }],
-                registed_date:[{
-                    required:true,
-                }],
+                }
             },
             validateMessages:{
                 required: '${label} is required!',
@@ -219,6 +235,13 @@ export default {
         onChangeGradeSelect(){
             console.log(this.gradeSelected);
             //this.$inertia.get('klasses?gid='+this.gradeSelected);
+        },
+        getStream(text){
+            return this.studyStreams.find(stream=>stream.value==text).label;
+        },
+        getStudyPlan(text){
+            const study=this.studyPlans.find(study=>study.id==text)
+            return study.title_zh + " (v."+study.version+")"
         }
     },
 }

@@ -5,11 +5,13 @@
                 總科目列表
             </h2>
         </template>
-        <button @click="onClickCreate()"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Create Subject template</button>
+            <button @click="onClickCreate()"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Create Subject template</button>
             <a-table :dataSource="studies" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
+                        <a-button :href="'study/subjects/'+record.id">List Subjects</a-button>
+                        <a-button :href="'study/subjects/'+record.id+'/edit'">Edit Subjects</a-button>
                         <a-button @click="onClickEdit(record)">Edit</a-button>
                         <a-button @click="onClickDelete(record.id)">Delete</a-button>
                     </template>
@@ -25,16 +27,19 @@
             </a-table>
 
         <!-- Modal Start-->
-        <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="60%" @update="updateRecord()" @onCancel="closeModal()">
+        <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="60%" >
             <a-form
                 :model="modal.data"
-                name="Subject"
+                name="Study"
                 ref="modalRef"
                 :rules="rules"
                 :validate-messages="validateMessages"
             >
                 <a-form-item label="版本" name="version">
-                    <a-input-number v-model:value="modal.data.version" />
+                    <a-select
+                        v-model:value="modal.data.version"
+                        :options="versions"
+                    />
                 </a-form-item>
                 <a-form-item label="名稱 (中文)" name="title_zh">
                     <a-input v-model:value="modal.data.title_zh" />
@@ -80,7 +85,7 @@ export default {
     components: {
         AdminLayout,
     },
-    props: ['studies','studyStreams','gradeCategories'],
+    props: ['studies','studyStreams','gradeCategories','versions'],
     data() {
         return {
             modal: {
@@ -89,7 +94,6 @@ export default {
                 title:'Subjects',
                 data:{}
             },
-            dataSource:[],
             columns:[
                 {
                     title: 'Version',

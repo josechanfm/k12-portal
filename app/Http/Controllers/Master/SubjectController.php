@@ -22,10 +22,7 @@ class SubjectController extends Controller
     public function index(Request $request)
     {
         $study=Study::with('subjects')->find($request->studyId);
-        $subjectTemplates=SubjectTemplate::all();
-        echo json_encode($study);
-        echo json_encode($subjectTemplates);
-        return;
+        $subjects=SubjectTemplate::all();
         return Inertia::render('Master/Subject',[
             'study'=>$study,
             'subjects'=>$subjects
@@ -81,7 +78,7 @@ class SubjectController extends Controller
     public function edit($id)
     {
         $study=Study::with('subjects')->find($id);
-        $subjects=Subject::where('version',1)->get();
+        $subjects=Subject::where('version',1)->where('active',1)->get();
         return Inertia::render('Master/SubjectEdit',[
             'study'=>$study,
             'subjects'=>$subjects
@@ -100,9 +97,8 @@ class SubjectController extends Controller
         $subjects=$request->all();
         $data=[];
         foreach($subjects as $subject){
-            $data[]=$subject['id'];
+            $data[$subject['id']]=['stream'=>'SCI','elective'=>'0'];
         }
-        //StudySubject::where('study_id',$id)->whereNotIn($data)->delete();
         $study=Study::find($id);
         $study->subjects()->sync($data);
         return redirect('/master/study/subjects/'.$id);

@@ -12,4 +12,10 @@ class Study extends Model
     public function subjects(){
         return $this->belongsToMany(Subject::class);
     }
+    static function versions(){
+        //$versions=Study::select('version as value','version as label')->groupBy('version')->get();
+        $versions=Study::select('version as value')->groupBy('version')->get();
+        $versions[]=["value"=>$versions->count()+1];
+        return $versions;
+    }
 }

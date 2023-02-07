@@ -19,22 +19,21 @@ class CourseSeeder extends Seeder
      */
     public function run()
     {
-        //$year=Year::currentYear();
-        $subjects=Subject::where('grade_id',1)->get();
-        $klasses=Klass::take(2)->get();
-        foreach($klasses as $klass){
-            foreach($subjects as $subject){
-                Course::create([
-                    'klass_id'=>$klass->id,
-                    'code'=>$subject->code,
-                    'title_zh'=>$subject->title_zh,
-                    'title_en'=>$subject->title_en,
-                    'stream'=>$subject->stream,
-                    'elective'=>$subject->elective,
-                    'active'=>$subject->active,
-                    'subject_id'=>$subject->id
-                ]);
-            }
-        }
+        // $subjects=Subject::where('grade_id',1)->get();
+        // $klasses=Klass::take(2)->get();
+        // foreach($klasses as $klass){
+        //     foreach($subjects as $subject){
+        //         Course::create([
+        //             'klass_id'=>$klass->id,
+        //             'code'=>$subject->code,
+        //             'title_zh'=>$subject->title_zh,
+        //             'title_en'=>$subject->title_en,
+        //             'stream'=>$subject->stream,
+        //             'elective'=>$subject->elective,
+        //             'active'=>$subject->active,
+        //             'study_id'=>$subject->id
+        //         ]);
+        //     }
+        // }
     }
 }

@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('elective',6)->nullable();
             $table->string('score_column')->nullable();
             $table->text('description')->nullable();
-            $table->bigInteger('subject_id')->nullable();
+            $table->bigInteger('study_id')->nullable();
             $table->string('score_template_batch')->nullable();
             $table->tinyInteger('active');
             $table->string('socre_scheme')->nullable();

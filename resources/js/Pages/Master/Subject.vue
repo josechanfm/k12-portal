@@ -7,16 +7,14 @@
         </template>
         <a-button :href="'../subjects/'+study.id+'/edit'"
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Select Subjects from template</a-button>
+        <a-button :href="'../../studies'"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Back</a-button>
+            
             <a-table :dataSource="study.subjects" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
                         <a-button @click="onClickEdit(record)">Edit</a-button>
                         <a-button @click="onClickDelete(record.id)">Delete</a-button>
-                    </template>
-                    <template v-else-if="column.dataIndex=='courses'">
-                        <ul>
-                            <li v-for="klass in record['klasses']">Class: {{klass.acronym}}</li>
-                        </ul>
                     </template>
                     <template v-else>
                         {{record[column.dataIndex]}}
@@ -92,8 +90,8 @@ export default {
             dataSource:[],
             columns:[
                 {
-                    title: 'Version',
-                    dataIndex: 'version',
+                    title: 'Code',
+                    dataIndex: 'code',
                 },{
                     title: 'Title Zh',
                     dataIndex: 'title_zh',
@@ -101,8 +99,14 @@ export default {
                     title: 'Stream',
                     dataIndex: 'stream',
                 },{
-                    title: 'grade',
-                    dataIndex: 'grade',
+                    title: 'Elective',
+                    dataIndex: 'elective',
+                },{
+                    title: 'Type',
+                    dataIndex: 'type',
+                },{
+                    title: 'Version',
+                    dataIndex: 'version',
                 },{
                     title: 'Operation',
                     dataIndex: 'operation',
@@ -184,7 +188,7 @@ export default {
         },
         updateRecord(){
             this.$refs.modalRef.validateFields().then(()=>{
-                this.$inertia.put('/master/studies/' + this.modal.data.id, this.modal.data,{
+                this.$inertia.put('/master/study/subjects/' + this.modal.data.id, this.modal.data,{
                     onSuccess:(page)=>{
                         console.log(page);
                         this.modal.isOpen=false;

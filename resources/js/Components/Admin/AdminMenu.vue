@@ -80,14 +80,18 @@
       url:'/master/subjectTemplate',
     },{
       key: '0.2',
+      title: '學習計劃',
+      url:'/master/studies',
+    },{
+      key: '0.3',
       title: '成積表欄位',
       url:'/master/transcriptTemplate',
     },{
-      key: '0.3',
+      key: '0.4',
       title: '系統參數',
       url:'/master/configs',
     },{
-      key: '0.4',
+      key: '0.5',
       title: '角色及權限',
       url:'/master/roles',
     }],

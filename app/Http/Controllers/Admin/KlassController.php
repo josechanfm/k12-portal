@@ -10,10 +10,8 @@ use App\Models\Config;
 use App\Models\Klass;
 use App\Models\Year;
 use App\Models\Grade;
-use App\Models\Disciplines;
+use App\Models\Study;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Course;
-use App\Models\ScoreTemplate;
 
 class KlassController extends Controller
 {
@@ -24,6 +22,13 @@ class KlassController extends Controller
      */
     public function index(Request $request)
     {
+        // $scores=json_decode(Config::where('key','score_template')->first()->value,true);
+        
+        // $subjects=Study::find(1)->subjects()->get();
+        // echo json_encode($subjects[0]);
+        // echo json_encode($scores['COMMENT'][0]['label']);
+        
+        // return;
         if($request->gid){
             $grade=Grade::with('year')->find($request->gid);
         }else{
@@ -36,7 +41,8 @@ class KlassController extends Controller
             'grade'=>$grade,
             'grades'=>$grades,
             'klassLetters'=>json_decode(Config::where('key','klass_letters')->first()->value),
-            'studyStreams'=>json_decode(Config::where('key','study_streams')->first()->value)
+            'studyStreams'=>json_decode(Config::where('key','study_streams')->first()->value),
+            'studyPlans'=>Study::where('active',true)->get()
         ]);
     }
 
@@ -68,6 +74,7 @@ class KlassController extends Controller
         $klass->stream=$request->stream;
         $klass->room=$request->room;
         $klass->tag=Grade::find($request->grade_id)->tag.$request->letter;
+        $klass->study_id=$request->study_id;
         $klass->save();
         return redirect()->back();
 }
@@ -116,6 +123,7 @@ class KlassController extends Controller
             $klass->stream=$request->stream;
             $klass->room=$request->room;
             $klass->tag=Grade::find($request->grade_id)->tag.$request->letter;
+            $klass->study_id=$request->study_id;
             $klass->save();
             //return response()->json($klass);
             return redirect()->back();

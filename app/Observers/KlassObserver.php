@@ -3,7 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Klass;
-use App\Models\Subject;
+use App\Models\Study;
 use App\Models\Course;
 use App\Models\ScoreColumn;
 use App\Models\ScoreTemplate;
@@ -18,7 +18,8 @@ class KlassObserver
      */
     public function created(Klass $klass)
     {
-        $subjects=Subject::where('grade_id',$klass->grade_id)->get();
+        //$subjects=Subject::where('grade_id',$klass->grade_id)->get();
+        $subjects=Study::find($klass->study_id)->subjects()->get();
         $fields=[];
         $data=[];
         foreach($subjects as $subject){
@@ -29,8 +30,8 @@ class KlassObserver
             $fields['type']=$subject->type;
             $fields['stream']=$subject->stream;
             $fields['elective']=$subject->elective;
-            $fields['score_template_batch']=$subject->score_template_batch;
-            $fields['subject_id']=$subject->id;
+            $fields['score_column_template']=$subject->score_column_template;
+            $fields['study_id']=$subject->pivot->study_id;
             $fields['active']=true;
             $data[]=$fields;
         }

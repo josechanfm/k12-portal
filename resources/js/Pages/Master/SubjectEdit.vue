@@ -6,15 +6,13 @@
             </h2>
         </template>
             <button @click="saveSelected"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Save Selected</button>
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Save Selected</button>
+            <a-button :href="'../'+study.id"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Select Subjects from template</a-button>
             <a-table :dataSource="subjects" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
-                    <template v-if="column.dataIndex=='operation'">
-                        <a-button @click="onClickEdit(record)">Edit</a-button>
-                        <a-button @click="onClickDelete(record.id)">Delete</a-button>
-                    </template>
-                    <template v-else-if="column.dataIndex=='selected'">
-                        <a-checkbox v-model:checked="record.selected">Checkbox</a-checkbox>
+                    <template v-if="column.dataIndex=='selected'">
+                        <a-checkbox v-model:checked="record.selected" />
                     </template>
                     <template v-else>
                         {{record[column.dataIndex]}}
@@ -101,10 +99,7 @@ export default {
                 },{
                     title: 'grade',
                     dataIndex: 'grade',
-                },{
-                    title: 'Operation',
-                    dataIndex: 'operation',
-                },
+                }
             ],
             rules:{
                 code:{

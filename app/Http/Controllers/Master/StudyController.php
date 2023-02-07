@@ -23,6 +23,8 @@ class StudyController extends Controller
             'studies'=>$studies,
             'studyStreams'=>json_decode(Config::where('key','study_streams')->first()->value),
             'gradeCategories'=>json_decode(Config::where('key','grade_categories')->first()->value),
+            'versions'=>Study::versions()
+            // 'versions'=>'[{value:1},{value:2}]'
         ]);
     }
 
@@ -92,7 +94,22 @@ class StudyController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        Validator::make($request->all(), [
+            'version' => ['required'],
+            'title_zh' => ['required'],
+        ])->validate();
+
+        $study=Study::find($id);
+        $study->version=$request->version;
+        $study->title_zh=$request->title_zh;
+        $study->title_en=$request->title_en;
+        $study->stream=$request->stream;
+        $study->description=$request->description;
+        $study->grade=$request->grade;
+        $study->active=$request->active;
+        $study->save();
+        return redirect()->back();
+
     }
 
     /**

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('stream',6)->nullable();
             $table->string('elective',6)->nullable();
             $table->text('description')->nullable();
+            $table->integer('version');
             $table->boolean('active');
             $table->bigInteger('subject_template_id')->nullable();
             $table->timestamps();
