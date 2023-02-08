@@ -7,9 +7,12 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Course;
 use App\Models\Score;
+use App\Models\ScoreColumn;
+use App\Models\Klass;
+use App\Models\Student;
 use App\Models\CourseScore;
 
-class ScoreController extends Controller
+class OutcomeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,15 +21,31 @@ class ScoreController extends Controller
      */
     public function index(Request $request)
     {
+        $kid=74;
+        $courses=Course::students_outcomes($kid);
+        $students=Klass::find($kid)->students()->get();
+        echo json_encode($students);
+        echo '<hr>';
+        
+        foreach($courses as $course){
+            echo json_encode($course);
+            echo $course->id.$course->title_zh;
+            echo '<hr>';
+        }
+        return;
+
         $cid=$request->cid;
         $courseScores=CourseScore::where('course_id',$cid)->orderByRaw('-sequence DESC')->get();
         $studentsScores=Course::students_scores($cid);
         $course=Course::with('klass')->with('teachers')->find($cid);
+        $courses=Course::where('klass_id',$course->klass_id)->whereNot('type','SUB')->get();
 
-        return Inertia::render('Manage/Score',[
+        return Inertia::render('Manage/Outcome',[
             'course'=>$course,
             'course_scores'=>$courseScores,
-            'students_scores'=>$studentsScores
+            'students_scores'=>$studentsScores,
+            'courses'=>$courses
+
         ]);
     }
 
@@ -80,20 +99,9 @@ class ScoreController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        $data=$request->all();
-        foreach( $data as $i=>$d){
-            if($d['point']==''){
-                unset($data[$i]);
-            }
-        }
-        Score::upsert(
-            $data,
-            ['klass_student_id','score_column_id'],
-            ['point']
-        );
-        return $data;
+        //
     }
 
     /**
@@ -106,5 +114,4 @@ class ScoreController extends Controller
     {
         //
     }
-
 }

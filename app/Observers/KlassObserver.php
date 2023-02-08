@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Observers;
-
+use App\Models\Config;
 use App\Models\Klass;
 use App\Models\Study;
 use App\Models\Course;
@@ -38,23 +38,22 @@ class KlassObserver
         Course::upsert(
             $data,
             ['klass_id','code'],
-            ['title_zh','title_en','type','stream','elective','subject_id','active']
+            ['title_zh','title_en','type','stream','elective','study_id','active']
         );
 
         $courses=Course::whereBelongsTo($klass)->get();
         foreach($courses as $course){
-            $socreBatches=ScoreTemplate::where('batch',$course->score_template_batch)->get();
-            foreach($socreBatches as $score){
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->type=$course->type;
-                $score_column->term_id=$score->term_id;
-                $score_column->name=$score->name;
-                $score_column->sequence=$score->sequence;
-                $score_column->scheme=$score->scheme;
-                $score_column->description=$score->description;
-                $score_column->for_transcript=$score->for_transcript;
-                $score_column->save();
+            $scoreTemplate=json_decode(Config::where('key','score_template')->first()->value);
+            if(property_exists($scoreTemplate,$course->score_column_template)){
+                foreach($scoreTemplate->{$course->score_column_template} as $score){
+                    $score_column = new ScoreColumn;
+                    $score_column->term_id=$score->term_id;
+                    $score_column->course_id=$course->id;
+                    $score_column->field_name=$score->value;
+                    $score_column->field_label=$score->label;
+                    $score_column->save();
+                }
+    
             }
         }
 /*            

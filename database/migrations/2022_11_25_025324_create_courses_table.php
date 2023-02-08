@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('score_column')->nullable();
             $table->text('description')->nullable();
             $table->bigInteger('study_id')->nullable();
-            $table->string('score_template_batch')->nullable();
+            $table->string('score_column_template')->nullable();
             $table->tinyInteger('active');
             $table->string('socre_scheme')->nullable();
             $table->timestamps();

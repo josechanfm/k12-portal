@@ -11,6 +11,7 @@
                 </span>
             </h2>
         </template>
+        {{ students_scores }}
         <a-button :href="'grades?kid='+course.klass_id">Back</a-button>
         <a-button type="primary" @click="onClickAddScoreColumn">新增學分欄</a-button>
         <div class="py-12">
@@ -45,10 +46,10 @@
                             <th>學生姓名</th>
                             <td v-for="column in course_scores">{{ column.field_label }}</td>
                         </tr>
-                        <tr v-for="(score, key) in scores">
-                            <td>{{ score.student_name }}</td>
+                        <tr v-for="(course, key) in courses">
+                            <td>{{ course.title_zh }}{{ course.id }}</td>
                             <td v-for="column in course_scores">
-                                <a-input  v-model:value="score['score_'+key+'_'+column.id]" @keyup.arrow-keys="onKeypressed"/>
+                                <a-input  v-model:value="course['course_'+key+'_'+column.id]" @keyup.arrow-keys="onKeypressed"/>
                             </td>
                         </tr>
                     </table>
@@ -59,7 +60,7 @@
         <a-modal v-model:visible="modal.isOpen" :title="modal.title" @ok="handleScoreColumnChange">
             <a-form 
                 :model="modal.data"
-                name="course_score"
+                name="score_column"
                 ref="modalScoreColumn"
                 @finish="onModalFinish"
             >
@@ -98,7 +99,7 @@ export default {
     components: {
         AdminLayout
     },
-    props: ['course', 'course_scores', 'students_scores'],
+    props: ['course', 'course_scores', 'students_scores','courses'],
     data() {
         return {
             keypressed:"",
@@ -111,7 +112,7 @@ export default {
             tableCell:{
                 row:0,
                 col:0,
-                maxRow:this.students_scores.length,
+                maxRow:this.courses.length,
                 maxCol:this.course_scores.length
             },
             scores:{},

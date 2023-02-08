@@ -13,12 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('score_columns', function (Blueprint $table) {
+        Schema::create('course_scores', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('term_id');
             $table->bigInteger('course_id')->on('courses')->onDelete('restrict')->onUpdate('cascade');
             $table->integer('sequence')->nullable();
-            $table->string('name');
+            $table->string('field_name');
+            $table->string('field_label');
             $table->string('type')->nullable();
             $table->string('scheme')->nullable();
             $table->string('description')->nullable();

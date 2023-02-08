@@ -7,6 +7,7 @@ use App\Models\Discipline;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Config;
+use App\Models\Course;
 use App\Models\Klass;
 use App\Models\Year;
 use App\Models\Grade;
@@ -22,13 +23,29 @@ class KlassController extends Controller
      */
     public function index(Request $request)
     {
-        // $scores=json_decode(Config::where('key','score_template')->first()->value,true);
-        
+        // $scores=json_decode(Config::where('key','score_template')->first()->value);
         // $subjects=Study::find(1)->subjects()->get();
-        // echo json_encode($subjects[0]);
-        // echo json_encode($scores['COMMENT'][0]['label']);
+        // $courses=Course::where('klass_id',65)->get();
+
+        // foreach($courses as $course){
+        //     //echo json_encode($course);
+        //     if(property_exists($scores,$course->score_column_template)){
+        //         foreach($scores->{$course->score_column_template} as $score){
+        //             //$column=json_decode($score);
+        //             echo '||';
+        //             echo json_encode($score->term_id);
+        //             echo '||<br>';
+        //         }
+   
+        //     }
+        //     echo '<hr>';
+        // }
         
+        // echo json_encode($subjects[0]);
+        // echo '<hr>';
+        // echo json_encode($scores);
         // return;
+
         if($request->gid){
             $grade=Grade::with('year')->find($request->gid);
         }else{

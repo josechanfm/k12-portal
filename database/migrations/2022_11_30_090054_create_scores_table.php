@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('scores', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('klass_student_id')->on('klass_students')->onDelete('restrict')->onUpdate('cascade');
-            $table->bigInteger('score_column_id')->on('score_columns')->onDelete('restrict')->onUpdate('cascade');            
+            $table->bigInteger('course_score_id')->on('score_columns')->onDelete('restrict')->onUpdate('cascade');            
             $table->string('point')->nullable();
             $table->string('remark')->nullable();
             $table->timestamps();

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class CourseScore extends Model
 {
     use HasFactory;
+    protected $table='course_scores';
 
     public function children(){
         return $this->hasMany(CourseScore::class,'parent_id','id')->select('id','parent_id','title','mark')->with('children');
@@ -15,6 +16,9 @@ class CourseScore extends Model
     public function parent()
     {
         return $this->belongsTo(CourseScore::class,'parent_id')->where('parent_id',0);
+    }
+    public function course(){
+        return $this->belongsTo(Course::class,'course_id');
     }
     public static function tree($courseId){
         $allData=CourseScore::where('course_id',$courseId)->get();

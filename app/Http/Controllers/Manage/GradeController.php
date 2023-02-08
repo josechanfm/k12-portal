@@ -99,7 +99,7 @@ class GradeController extends Controller
 
     public function courses($klassId){
         //$courses=Klass::find($klassId)->courses;
-        $courses=Course::where('klass_id',$klassId)->with('teachers')->get();
+        $courses=Course::where('klass_id',$klassId)->where('type','SUB')->with('teachers')->get();
         echo $courses;
     }
     public function students($klassId){

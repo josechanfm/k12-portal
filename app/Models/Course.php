@@ -16,7 +16,7 @@ class Course extends Model
         return $this->hasMany(Score::class);
     }
 
-    public function students(){
+    public function students2222222222222222(){
         return $this->belongsToMany(Student::class,'klass_students','klass_id','student_id')->withPivot(['id as pivot_klass_student_id','student_number','stream','state','promote','promote_to']);
     }
     public function teachers(){
@@ -32,6 +32,9 @@ class Course extends Model
         }
         return $students;
     }
+    public function course_scores(){
+        return $this->hasMany(CourseScore::class);
+    }
     public static function students_scores($cid){
         $course=Course::find($cid);
         $students=Klass::find($course->klass_id)->students;
@@ -39,6 +42,8 @@ class Course extends Model
             $student->scores=Score::where('klass_student_id',$student->pivot->klass_student_id)->get();
         }
         return $students;
-
+    }
+    public static function students_outcomes($kid){
+        return Course::where('klass_id',$kid)->whereNot('type','SUB')->get();
     }
 }

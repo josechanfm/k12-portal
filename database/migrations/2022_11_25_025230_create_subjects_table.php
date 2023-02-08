@@ -26,6 +26,7 @@ return new class extends Migration
             $table->integer('version');
             $table->boolean('active');
             $table->bigInteger('subject_template_id')->nullable();
+            $table->string('score_column_template')->nullable();
             $table->timestamps();
             $table->unique(['grade_id', 'code']);
         });

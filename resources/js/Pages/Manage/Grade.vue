@@ -96,6 +96,7 @@
 
             </a-tab-pane>
             <a-tab-pane key="student" :tab="'學生列表 ('+selectedKlass.tag+')'" :disabled="students.length<=0">
+                {{ students }}
                 <table width="100%">
                     <thead>
                         <tr>
