@@ -88,6 +88,7 @@
                                 </template>
                             </td>
                             <td class="text-left">
+                                <Link :href="'habits?kid='+course.klass_id" method="get" as="button" type="button">生活</Link>
                                 <Link :href="'score?cid='+course.id" method="get" as="button" type="button">學分</Link>
                             </td>
                         </tr>

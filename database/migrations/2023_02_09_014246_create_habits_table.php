@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('habits', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('klass_student_id');
-            $table->bigInteger('terim_id');
+            $table->bigInteger('term_id');
             $table->char('health_1',1)->nullable();
             $table->char('health_2',1)->nullable();
             $table->char('health_3',1)->nullable();

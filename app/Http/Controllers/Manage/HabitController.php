@@ -17,9 +17,9 @@ class HabitController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $kid=74;
+        $kid=$request->kid;
         $klass=Klass::with('students')->find($kid);
         $terms=Config::item('year_terms');
         $habitColumns=Config::item('habit_columns');

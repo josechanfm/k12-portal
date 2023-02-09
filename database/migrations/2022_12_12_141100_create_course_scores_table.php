@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('course_id');
             $table->tinyInteger('semester');
+            $table->integer('sequence');
             $table->bigInteger('parent_id')->nullable();
             $table->string('title');
             $table->integer('mark')->default(0);

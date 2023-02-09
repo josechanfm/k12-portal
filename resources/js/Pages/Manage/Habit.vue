@@ -2,62 +2,44 @@
     <AdminLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                 {{ klass.tag }}科 學分管理
+                 科 學分管理
                 <br/>
             </h2>
         </template>
-        <a-button type="primary" @click="onClickAddScoreColumn">新增學分欄</a-button>
-
+        {{selectedTerm}}
+        <a-button v-for="term in terms" @click="selectedTerm=term.value">{{term.label}}</a-button>
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <a-button type="primary" @click="saveScores">更新並保存</a-button>
                     <table id="scoreTable" ref="scoreTable">
                         <tr>
-                            <th style="width:100px">學生姓名</th>
-                            <td v-for="column in habitColumns">{{ column.short }}</td>
+                            <th style="width:100px" rowspan="2" class="crossed">
+                                <span class="float-right">評分</span><br>
+                                <span class="float-left">學生姓名</span>
+                            </th>
+                            <td colspan="5">健康與</td>
+                            <td colspan="6">健康與</td>
+                            <td colspan="5">健康與</td>
+                        </tr>
+                        <tr>
+                            <td v-for="column in habitColumns">
+                                <a-tooltip>
+                                    <template #title>{{ column.label }}</template>
+                                    {{ column.short }}
+                                </a-tooltip>
+                            </td>
                         </tr>
                         <tr v-for="student in klass.students" >
                             <td>{{ student.name_zh }}</td>
                             <td v-for="column in habitColumns">
-                                <a-input v-model="scores[student.pivot.klass_student_id][selectedTerm][column.name]"/>
+                                <a-input v-model:value="scores[student.pivot.klass_student_id][selectedTerm][column.name]"  maxlength="1"/>
                             </td>
                         </tr>
                     </table>
                 </div>
             </div>
         </div>
-        <a-modal v-model:visible="modal.isOpen" :title="modal.title" @ok="handleScoreColumnChange">
-            <a-form 
-                :model="modal.data"
-                name="score_column"
-                ref="modalScoreColumn"
-                @finish="onModalFinish"
-            >
-            
-                <a-form-item label="Field Name" :name="['field_label']" :rules="[{required:true, message:'Please input score column name'}]">
-                    <a-input v-model:value="modal.data.field_label"/>
-                </a-form-item>
-                <a-form-item label="Term" :name="['term_id']" :rules="[{required:true, message:'Please input score column name'}]">
-                    <a-input v-model:value="modal.data.term_id"/>
-                </a-form-item>
-                <a-form-item label="sequence" :name="['sequence']" >
-                    <a-input v-model:value="modal.data.sequence"/> 
-                </a-form-item>
-                <a-form-item label="Scheme" :name="['scheme']">
-                    <a-input v-model:value="modal.data.scheme" /> 
-                </a-form-item>
-                <a-form-item label="Description" :name="['description']">
-                    <a-input v-model:value="modal.data.description"/> 
-                </a-form-item>
-                <a-form-item label="Course" :name="['course_id']" :rules="[{required:true, message:'Please input score column course_id'}]" :hidden="true">
-                    <a-input v-model:value="modal.data.course_id"/>
-                </a-form-item>
-                <a-form-item label="Type" :name="['type']"  :rules="[{required:true, message:'Please input score column type'}]" :hidden="true">
-                    <a-input v-model:value="modal.data.type" /> 
-                </a-form-item>
-            </a-form>
-        </a-modal>
     </AdminLayout>
 
 </template>
@@ -73,38 +55,14 @@ export default {
     data() {
         return {
             keypressed:"",
-            modal: {
-                mode:null,
-                isOpen: false,
-                title:'Score Column',
-                data:{}
-            },
             tableCell:{
                 row:0,
                 col:0,
-                maxRow:10,
-                maxCol:10
+                maxRow:this.klass.students.length,
+                maxCol:this.habitColumns.length
             },
             selectedTerm:1,
             scores:{},
-            columns: [
-                {
-                    title: '學段',
-                    dataIndex: 'term_id',
-                },{
-                    title: '學分欄名稱',
-                    dataIndex: 'field_label',
-                },{
-                    title: '分類',
-                    dataIndex: 'type',
-                },{
-                    title: '計算方式',
-                    dataIndex: 'schema',
-                },{
-                    title: '操作',
-                    dataIndex: 'operation',
-                }
-            ]
         }
     },
     created(){
@@ -144,8 +102,10 @@ export default {
                     break;
             }
             var input =this.$refs.scoreTable.rows[this.tableCell.row].cells[this.tableCell.col].getElementsByTagName("input");
+            console.log(input);
             if(input.length>0){
-                input[0].focus();
+                //input[0].focus();
+                input[0].select();
             }
         })
         const inputs=this.$refs.scoreTable.getElementsByTagName("input");
@@ -161,28 +121,6 @@ export default {
             console.log("press");
             this.keypressed=event.keyCode;
             console.log(event.keyCode);
-        },
-        onClickAddScoreColumn() {
-            this.modal.data={};
-            this.modal.data.course_id=this.course.id;
-            this.modal.data.type='SUB';
-            this.modal.title="Add Score Column";
-            this.modal.mode='ADD';
-            this.modal.isOpen = true;
-        },
-        onClickEditScoreColumn(record){
-            this.modal.data=record;
-            this.modal.title="Edit Score Column";
-            this.modal.mode='EDIT';
-            this.modal.isOpen = true;
-        },
-        onClickDeleteScoreColumn(recordId){
-            console.log("Need to check if the column id already use in score table. need to double confirm or shows the existing score record again.");
-
-            console.log(recordId);
-        },
-        onModalFinish(){
-            console.log("modal finish");
         },
         saveScores(){
             var data=[];
@@ -202,45 +140,6 @@ export default {
                     }
             })
         },
-        handleScoreColumnChange() {
-            this.$refs.modalScoreColumn.validateFields().then(()=>{
-                if(this.modal.mode=='ADD'){
-                    this.createScoreColumn(this.modal.data);
-                    console.log("??modal ok " + this.modal.mode);
-                    this.modal.mode=null;
-                }else if(this.modal.mode=='EDIT'){
-                    console.log("to update");
-                    this.updateScoreColumn(this.modal.data);
-                }
-
-            }).catch(err => {
-                console.log(err);
-            })
-
-        },
-        createScoreColumn(data){
-            this.$inertia.post('/manage/score_column/', data, {
-                    onSuccess: (page) => {
-                        this.modal.mode=null;
-                        this.modal.isOpen=false;
-                    },
-                    onError: (error) => {
-                        console.log(error);
-                    }
-            });
-        },
-        updateScoreColumn(data){
-            console.log("in update");
-            this.$inertia.put('/manage/score_column/'+data.id, data, {
-                    onSuccess: (page) => {
-                        this.modal.mode=null;
-                        this.modal.isOpen=false;
-                    },
-                    onError: (error) => {
-                        console.log(error);
-                    }
-            });
-        }
     },
 }
 </script>
@@ -254,6 +153,14 @@ export default {
 #scoreTable {
   width: 100%;
   border-collapse: collapse;
+}
+table td.crossed, table th.crossed
+{
+   background-image: linear-gradient(to top right,  transparent calc(50% - 0.5px), black, transparent calc(50% + 1px)); 
+}
+#scoreTable input{
+    text-transform: uppercase;
+    text-align: center;
 }
 </style>
 
