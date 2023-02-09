@@ -57,8 +57,8 @@ class KlassController extends Controller
             'klasses'=>$klasses,
             'grade'=>$grade,
             'grades'=>$grades,
-            'klassLetters'=>json_decode(Config::where('key','klass_letters')->first()->value),
-            'studyStreams'=>json_decode(Config::where('key','study_streams')->first()->value),
+            'klassLetters'=>Config::item('klass_letters'),
+            'studyStreams'=>Config::item('study_streams'),
             'studyPlans'=>Study::where('active',true)->get()
         ]);
     }

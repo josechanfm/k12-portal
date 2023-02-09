@@ -22,7 +22,7 @@ class YearController extends Controller
     public function index()
     {
         $years = Year::withCount('grades')->get();
-        $param=json_decode(Config::where('key','year_creation')->first()->value);
+        $param=Config::item('year_creation');
         return Inertia::render('Admin/Years',[
             'years'=>$years,
             'param'=>$param

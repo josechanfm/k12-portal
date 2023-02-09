@@ -63,7 +63,7 @@ class KLassController extends Controller
         $grade=Grade::find($klass->grade_id);
         $courses=Klass::find($id)->courses;
         $students=Klass::klass_scores($id);
-        $score_columns=json_decode(Config::where('key','score_columns')->first()->value);
+        $score_columns=Config::item('score_columns');
         return Inertia::render('Manage/Klass',[
             'grade'=>$grade,
             'klass'=>$klass,

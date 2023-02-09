@@ -21,8 +21,8 @@ class StudyController extends Controller
         $studies=Study::all();
         return Inertia::render('Master/Study',[
             'studies'=>$studies,
-            'studyStreams'=>json_decode(Config::where('key','study_streams')->first()->value),
-            'gradeCategories'=>json_decode(Config::where('key','grade_categories')->first()->value),
+            'studyStreams'=>Config::item('study_streams'),
+            'gradeCategories'=>Config::item('grade_categories'),
             'versions'=>Study::versions()
             // 'versions'=>'[{value:1},{value:2}]'
         ]);

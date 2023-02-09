@@ -47,6 +47,28 @@ class ConfigSeeder extends Seeder
             'key'=>'study_plans',
             'value' =>'[{"value":"ALL","label":"全科"},{"value":"ART","label":"文科"},{"value":"SCI","label":"理科"},{"value":"AAS","label":"文理科"}]'
         ]);
-        
+        DB::table('configs')->insert([
+            'key'=>'year_terms',
+            'value' =>'[{"value":1,"label":"上學期"},{"value":2,"label":"下學期"}]'
+        ]);
+        DB::table('configs')->insert([
+            'key'=>'year_terms',
+            'value' =>'[{"name":"health_1","label":"衣服鞋襪整齊清潔","short":"整潔"},
+                {"name":"health_2","label":"常剪指甲","short":"指甲"},
+                {"name":"health_3","label":"懂得使用手帕或紙巾","short":"紙巾"},
+                {"name":"health_4","label":"不把手指雜物放進口裡","short":"手指"},
+                {"name":"health_5","label":"能把癈物投入癈紙箱內","short":"癈物"},
+                {"name":"behaviou_1","label":"守秩序不喧嚷","short":"喧讓"},
+                {"name":"behaviou_2","label":"留心聽講","short":"聽講"},
+                {"name":"behaviou_3","label":"坐立行走姿勢正確","short":"姿勢"},
+                {"name":"behaviou_4","label":"離開座位把物件桌椅整理好","short":"桌椅"},
+                {"name":"behaviou_5","label":"愛護公物用後放回原處","short":"公物"},
+                {"name":"behaviou_6","label":"遵守校規","short":"校規"},
+                {"name":"social_1","label":"守時","short":"守時"},
+                {"name":"social_2","label":"尊敬師長,友愛和睦","short":"尊敬"},
+                {"name":"social_3","label":"樂於助人","short":"助人"},
+                {"name":"social_4","label":"會和別人分享及輪候","short":"分享"},
+                {"name":"social_5","label":"誠實坦白肯認錯","short":"誠實"}]'
+            ]);
     }
 }

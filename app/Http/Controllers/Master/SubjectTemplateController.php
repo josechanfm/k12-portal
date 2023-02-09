@@ -20,10 +20,10 @@ class SubjectTemplateController extends Controller
     public function index()
     {
         return Inertia::render('Master/SubjectTemplate',[
-            'gradeCategories'=>json_decode(Config::where('key','grade_categories')->first()->value),
+            'gradeCategories'=>Config::item('grade_categories'),
             'subjects'=>SubjectTemplate::all(),
-            'subjectTypes'=>json_decode(Config::where('key','subject_types')->first()->value),
-            'studyStreams'=>json_decode(Config::where('key','study_streams')->first()->value),
+            'subjectTypes'=>Config::item('subject_types'),
+            'studyStreams'=>Config::item('study_streams'),
         ]);
     }
 

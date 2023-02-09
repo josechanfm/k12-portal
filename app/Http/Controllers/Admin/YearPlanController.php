@@ -27,8 +27,8 @@ class YearPlanController extends Controller
         $subjects=Subject::where('active',1)->get();
         $klassOptions=Klass::select('id as value','tag')->where('year_id',$yearId)->get();
         $klasses=Klass::where('year_id',$yearId)->get();
-        $config=json_decode(Config::where('key','grades')->first()->value,true);
-        $grades=json_decode(Config::where('key','grades')->first()->value,true);
+        $config=Config::item('grades');
+        $grades=Config::item('grades');
         $klassesSubjects=Klass::where('year_id',$yearId)->with('subjects')->get();
         return Inertia::render('Admin/Dashboard',[
             'year'=>$year,

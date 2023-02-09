@@ -5,48 +5,31 @@ namespace App\Http\Controllers\Manage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Course;
-use App\Models\Score;
-use App\Models\ScoreColumn;
+use App\Models\Config;
 use App\Models\Klass;
-use App\Models\Student;
-use App\Models\CourseScore;
+use App\Models\KlassStudent;
+use App\Models\Habit;
 
-class OutcomeController extends Controller
+class HabitController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
         $kid=74;
-        $courses=Course::students_outcomes($kid);
-        $students=Klass::find($kid)->students()->get();
-        foreach($students as $st)
-        echo json_encode($students);
-        echo '<hr>';
-        
-        foreach($courses as $course){
-            echo json_encode($course);
-            echo $course->id.$course->title_zh;
-            echo '<hr>';
-        }
-        return;
+        $klass=Klass::with('students')->find($kid);
+        $terms=Config::item('year_terms');
+        $habitColumns=Config::item('habit_columns');
+        $habits=Habit::byKlassId($kid);
 
-        $cid=$request->cid;
-        $courseScores=CourseScore::where('course_id',$cid)->orderByRaw('-sequence DESC')->get();
-        $studentsScores=Course::students_scores($cid);
-        $course=Course::with('klass')->with('teachers')->find($cid);
-        $courses=Course::where('klass_id',$course->klass_id)->whereNot('type','SUB')->get();
-
-        return Inertia::render('Manage/Outcome',[
-            'course'=>$course,
-            'course_scores'=>$courseScores,
-            'students_scores'=>$studentsScores,
-            'courses'=>$courses
-
+        return Inertia::render('Manage/Habit',[
+            'klass'=>$klass,
+            'terms'=>$terms,
+            'habitColumns'=>$habitColumns,
+            'habits'=>$habits
         ]);
     }
 
@@ -102,7 +85,12 @@ class OutcomeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        Habit::upsert(
+            $request->all(),
+            ['klass_student_id','term_id'],
+            array_column(Config::item('habit_columns'),'name')
+        );
+        return $request->all();
     }
 
     /**
