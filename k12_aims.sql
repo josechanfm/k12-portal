@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Feb 07, 2023 at 05:48 PM
+-- Generation Time: Feb 10, 2023 at 05:41 PM
 -- Server version: 10.3.37-MariaDB-0ubuntu0.20.04.1
 -- PHP Version: 8.1.9
 
@@ -62,6 +62,32 @@ CREATE TABLE `banks` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `behaviours`
+--
+
+CREATE TABLE `behaviours` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `klass_student_id` bigint(20) NOT NULL,
+  `term_id` bigint(20) NOT NULL,
+  `genre` varchar(255) NOT NULL,
+  `qty` int(11) NOT NULL,
+  `date` date NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `remark` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `behaviours`
+--
+
+INSERT INTO `behaviours` (`id`, `klass_student_id`, `term_id`, `genre`, `qty`, `date`, `description`, `remark`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 'ABSENT', 1, '2023-02-09', '54', '454', '2023-02-10 01:36:22', '2023-02-10 01:36:22');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `categories`
 --
 
@@ -93,12 +119,15 @@ CREATE TABLE `configs` (
 INSERT INTO `configs` (`id`, `key`, `value`, `remark`, `created_at`, `updated_at`) VALUES
 (1, 'grade_categories', '[{\"value\":\"K\",\"label\":\"K\"},{\"value\":\"P\",\"label\":\"P\"},{\"value\":\"S\",\"label\":\"S\"}]', NULL, NULL, NULL),
 (2, 'student_state', '{\"ACT\": \"Active\",\"RES\": \"Resigned\"}', NULL, NULL, NULL),
-(3, 'score_template', '{\r\n\"TERM\":[\r\n   {\"value\":\"term1\",\"label\":\"上學期\"},\r\n   {\"value\":\"term2\",\"label\":\"下學期\"}\r\n],\r\n\"COMMENT\":[{\"value\":\"comment\",\"label\":\"描述\"}]\r\n}\r\n', NULL, NULL, NULL),
+(3, 'score_template', '{\"TERMS\":[{\"term_id\":\"1\",\"value\":\"term1\",\"label\":\"上學期\"},{\"term_id\":\"2\",\"value\":\"term2\",\"label\":\"下學期\"}],\"COMMENT\":[{\"term_id\":\"1\",\"value\":\"comment\",\"label\":\"描述\"}]}', NULL, NULL, NULL),
 (4, 'year_creation', '{ \"kgrade\":3, \"kklass\":3, \"kgradeDefault\":0, \"kklassDefault\":0, \"pgrade\":6, \"pklass\":5, \"pgradeDefault\":6, \"pklassDefault\":4, \"sgrade\":6, \"sklass\":5, \"sgradeDefault\":6, \"sklassDefault\":4 }', NULL, NULL, NULL),
 (5, 'klass_letters', '[{\"value\":\"A\",\"label\":\"A\"},{\"value\":\"B\",\"label\":\"B\"},{\"value\":\"C\",\"label\":\"C\"},{\"value\":\"D\",\"label\":\"D\"},{\"value\":\"E\",\"label\":\"E\"},{\"value\":\"F\",\"label\":\"F\"}]', NULL, NULL, NULL),
 (6, 'score_columns', '[{\"REG\":\"平時分\"},{\"TST\":\"測驗分\"},{\"CLS\":\"課堂表現\"},{\"EXM\":\"考試分\"}]', NULL, NULL, NULL),
 (7, 'subject_types', '[{\"value\":\"SUB\",\"label\":\"學科\"},{\"value\":\"ATT\",\"label\":\"生活習慣和態度\"},{\"value\":\"RPAL\",\"label\":\"獎懲遲缺\"},{\"value\":\"LES\",\"label\":\"餘暇活動\"},{\"value\":\"OVA\",\"label\":\"總體評分\"}]', NULL, NULL, NULL),
-(8, 'study_streams', '[{\"value\":\"ALL\",\"label\":\"全科\"},{\"value\":\"ART\",\"label\":\"文科\"},{\"value\":\"SCI\",\"label\":\"理科\"},{\"value\":\"AAS\",\"label\":\"文理科\"}]', NULL, NULL, NULL);
+(8, 'study_streams', '[{\"value\":\"ALL\",\"label\":\"全科\"},{\"value\":\"ART\",\"label\":\"文科\"},{\"value\":\"SCI\",\"label\":\"理科\"},{\"value\":\"AAS\",\"label\":\"文理科\"}]', NULL, NULL, NULL),
+(9, 'year_terms', '[{\"value\":1,\"label\":\"上學期\"},{\"value\":2,\"label\":\"下學期\"}]', NULL, NULL, NULL),
+(10, 'habit_columns', '[\r\n{\"name\":\"health_1\",\"label\":\"衣服鞋襪整齊清潔\",\"short\":\"整潔\"},\r\n{\"name\":\"health_2\",\"label\":\"常剪指甲\",\"short\":\"指甲\"},\r\n{\"name\":\"health_3\",\"label\":\"懂得使用手帕或紙巾\",\"short\":\"紙巾\"},\r\n{\"name\":\"health_4\",\"label\":\"不把手指雜物放進口裡\",\"short\":\"手指\"},\r\n{\"name\":\"health_5\",\"label\":\"能把癈物投入癈紙箱內\",\"short\":\"癈物\"},\r\n{\"name\":\"behaviour_1\",\"label\":\"守秩序不喧嚷\",\"short\":\"喧讓\"},\r\n{\"name\":\"behaviour_2\",\"label\":\"留心聽講\",\"short\":\"聽講\"},\r\n{\"name\":\"behaviour_3\",\"label\":\"坐立行走姿勢正確\",\"short\":\"姿勢\"},\r\n{\"name\":\"behaviour_4\",\"label\":\"離開座位把物件桌椅整理好\",\"short\":\"桌椅\"},\r\n{\"name\":\"behaviour_5\",\"label\":\"愛護公物用後放回原處\",\"short\":\"公物\"},\r\n{\"name\":\"behaviour_6\",\"label\":\"遵守校規\",\"short\":\"校規\"},\r\n{\"name\":\"social_1\",\"label\":\"守時\",\"short\":\"守時\"},\r\n{\"name\":\"social_2\",\"label\":\"尊敬師長,友愛和睦\",\"short\":\"尊敬\"},\r\n{\"name\":\"social_3\",\"label\":\"樂於助人\",\"short\":\"助人\"},\r\n{\"name\":\"social_4\",\"label\":\"會和別人分享及輪候\",\"short\":\"分享\"},\r\n{\"name\":\"social_5\",\"label\":\"誠實坦白肯認錯\",\"short\":\"誠實\"}\r\n]', NULL, NULL, NULL),
+(11, 'behaviour_genres', '[\r\n{\"value\":\"LATE\",\"label\":\"遲到\"},\r\n{\"value\":\"ABSENT\",\"label\":\"缺席\"},\r\n{\"value\":\"DEMERIT\",\"label\":\"缺點\"},\r\n{\"value\":\"FAULT_BIG\",\"label\":\"大過\"},\r\n{\"value\":\"FAULT_SMALL\",\"label\":\"小過\"},\r\n{\"value\":\"CREDIT_BIG\",\"label\":\"大功\"},\r\n{\"value\":\"CREDIT_SMALL\",\"label\":\"小功\"},\r\n{\"value\":\"MERIT\",\"label\":\"優點\"}\r\n]\r\n', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -117,7 +146,7 @@ CREATE TABLE `courses` (
   `elective` varchar(6) DEFAULT NULL,
   `score_column` varchar(255) DEFAULT NULL,
   `description` text DEFAULT NULL,
-  `subject_id` bigint(20) DEFAULT NULL,
+  `study_id` bigint(20) DEFAULT NULL,
   `score_column_template` varchar(255) DEFAULT NULL,
   `active` tinyint(4) NOT NULL,
   `socre_scheme` varchar(255) DEFAULT NULL,
@@ -129,7 +158,7 @@ CREATE TABLE `courses` (
 -- Dumping data for table `courses`
 --
 
-INSERT INTO `courses` (`id`, `klass_id`, `code`, `title_zh`, `title_en`, `type`, `stream`, `elective`, `score_column`, `description`, `subject_id`, `score_column_template`, `active`, `socre_scheme`, `created_at`, `updated_at`) VALUES
+INSERT INTO `courses` (`id`, `klass_id`, `code`, `title_zh`, `title_en`, `type`, `stream`, `elective`, `score_column`, `description`, `study_id`, `score_column_template`, `active`, `socre_scheme`, `created_at`, `updated_at`) VALUES
 (1, 1, 'CHN', '中文', 'Chinese', NULL, 'ART', '0', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
 (2, 1, 'ENG', '英文', 'English', NULL, 'ART', '0', NULL, NULL, 2, 'TERMS', 1, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
 (3, 1, 'MAT', '數學', 'Mathematic', NULL, 'SCI', '0', NULL, NULL, 3, 'TERMS', 1, NULL, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
@@ -162,34 +191,74 @@ INSERT INTO `courses` (`id`, `klass_id`, `code`, `title_zh`, `title_en`, `type`,
 (30, 65, 'COM', '電腦', 'Computer', 'SUB', 'LIB', 'COP', NULL, NULL, 10, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
 (31, 65, 'PLA', '唱遊', 'Playgroup', 'SUB', 'LIB', 'COP', NULL, NULL, 11, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
 (32, 65, 'ART', '美勞', 'Art Craft', 'SUB', 'LIB', 'COP', NULL, NULL, 12, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
-(33, 65, 'health_1', '衣服鞋襪整齊清潔', NULL, NULL, NULL, NULL, NULL, NULL, 13, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
-(34, 65, 'health_2', '常剪指甲', NULL, NULL, NULL, NULL, NULL, NULL, 14, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
-(35, 65, 'health_3', '懂得使用手帕或紙巾', NULL, NULL, NULL, NULL, NULL, NULL, 15, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
-(36, 65, 'health_4', '不把手指雜物放進口裡', NULL, NULL, NULL, NULL, NULL, NULL, 16, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
-(37, 65, 'health_5', '能把癈物投入廢紙箱內', NULL, NULL, NULL, NULL, NULL, NULL, 17, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
-(38, 65, 'behaviour_1', '守秩序不喧嚷', NULL, NULL, NULL, NULL, NULL, NULL, 18, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
-(39, 65, 'behaviour_2', '留心聽講', NULL, NULL, NULL, NULL, NULL, NULL, 19, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
-(40, 65, 'behaviour_3', '坐立行走姿勢正確', NULL, NULL, NULL, NULL, NULL, NULL, 20, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
-(41, 65, 'behaviour_4', '離開坐位把物件桌椅整理好', NULL, NULL, NULL, NULL, NULL, NULL, 21, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
-(42, 65, 'behaviour_5', '愛護公物用後放回原處', NULL, NULL, NULL, NULL, NULL, NULL, 22, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
-(43, 65, 'behaviour_6', '遵守校規', NULL, NULL, NULL, NULL, NULL, NULL, 23, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
-(44, 65, 'social_1', '守時', NULL, NULL, NULL, NULL, NULL, NULL, 24, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
-(45, 65, 'social_2', '尊敬師長,友愛和睦', NULL, NULL, NULL, NULL, NULL, NULL, 25, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
-(46, 65, 'social_3', '樂於助人', NULL, NULL, NULL, NULL, NULL, NULL, 26, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
-(47, 65, 'social_4', '會和別人分享及輪侯', NULL, NULL, NULL, NULL, NULL, NULL, 27, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
-(48, 65, 'social_5', '誠實坦白肯認錯', NULL, NULL, NULL, NULL, NULL, NULL, 28, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
-(49, 65, 'total_score', '總分', NULL, NULL, NULL, NULL, NULL, NULL, 29, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
-(50, 65, 'average_score', '平均分', NULL, NULL, NULL, NULL, NULL, NULL, 30, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
-(51, 65, 'class_size', '全班人數', NULL, NULL, NULL, NULL, NULL, NULL, 31, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
-(52, 65, 'ranking', '考列名次', NULL, NULL, NULL, NULL, NULL, NULL, 32, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
-(53, 65, 'late', '遲到次數', NULL, NULL, NULL, NULL, NULL, NULL, 33, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
-(54, 65, 'absent', '缺席節數', NULL, NULL, NULL, NULL, NULL, NULL, 34, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
-(55, 65, 'comment', '評語', NULL, NULL, NULL, NULL, NULL, NULL, 35, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
-(56, 65, 'reward_punishment', '奬懲記錄', NULL, NULL, NULL, NULL, NULL, NULL, 36, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
-(57, 65, 'leisure_name', '餘暇活動名稱', NULL, NULL, NULL, NULL, NULL, NULL, 37, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
-(58, 65, 'leisure_performance', '餘暇活動表現', NULL, NULL, NULL, NULL, NULL, NULL, 38, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
-(59, 65, 'remark', '備註', NULL, NULL, NULL, NULL, NULL, NULL, 39, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
-(60, 65, 'appraisal', '學年評定', NULL, NULL, NULL, NULL, NULL, NULL, 40, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45');
+(33, 65, 'health_1', '衣服鞋襪整齊清潔', NULL, 'ATT', NULL, NULL, NULL, NULL, 13, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(34, 65, 'health_2', '常剪指甲', NULL, 'ATT', NULL, NULL, NULL, NULL, 14, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(35, 65, 'health_3', '懂得使用手帕或紙巾', NULL, 'ATT', NULL, NULL, NULL, NULL, 15, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(36, 65, 'health_4', '不把手指雜物放進口裡', NULL, 'ATT', NULL, NULL, NULL, NULL, 16, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(37, 65, 'health_5', '能把癈物投入廢紙箱內', NULL, 'ATT', NULL, NULL, NULL, NULL, 17, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(38, 65, 'behaviour_1', '守秩序不喧嚷', NULL, 'ATT', NULL, NULL, NULL, NULL, 18, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(39, 65, 'behaviour_2', '留心聽講', NULL, 'ATT', NULL, NULL, NULL, NULL, 19, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(40, 65, 'behaviour_3', '坐立行走姿勢正確', NULL, 'ATT', NULL, NULL, NULL, NULL, 20, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(41, 65, 'behaviour_4', '離開坐位把物件桌椅整理好', NULL, 'ATT', NULL, NULL, NULL, NULL, 21, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(42, 65, 'behaviour_5', '愛護公物用後放回原處', NULL, 'ATT', NULL, NULL, NULL, NULL, 22, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(43, 65, 'behaviour_6', '遵守校規', NULL, 'ATT', NULL, NULL, NULL, NULL, 23, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(44, 65, 'social_1', '守時', NULL, 'ATT', NULL, NULL, NULL, NULL, 24, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(45, 65, 'social_2', '尊敬師長,友愛和睦', NULL, 'ATT', NULL, NULL, NULL, NULL, 25, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(46, 65, 'social_3', '樂於助人', NULL, 'ATT', NULL, NULL, NULL, NULL, 26, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(47, 65, 'social_4', '會和別人分享及輪侯', NULL, 'ATT', NULL, NULL, NULL, NULL, 27, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(48, 65, 'social_5', '誠實坦白肯認錯', NULL, 'ATT', NULL, NULL, NULL, NULL, 28, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(49, 65, 'total_score', '總分', NULL, 'SUM', NULL, NULL, NULL, NULL, 29, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(50, 65, 'average_score', '平均分', NULL, 'SUM', NULL, NULL, NULL, NULL, 30, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(51, 65, 'class_size', '全班人數', NULL, 'SUM', NULL, NULL, NULL, NULL, 31, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(52, 65, 'ranking', '考列名次', NULL, 'SUM', NULL, NULL, NULL, NULL, 32, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(53, 65, 'late', '遲到次數', NULL, 'SUM', NULL, NULL, NULL, NULL, 33, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(54, 65, 'absent', '缺席節數', NULL, 'SUM', NULL, NULL, NULL, NULL, 34, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(55, 65, 'comment', '評語', NULL, 'SUM', NULL, NULL, NULL, NULL, 35, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(56, 65, 'reward_punishment', '奬懲記錄', NULL, 'GEN', NULL, NULL, NULL, NULL, 36, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(57, 65, 'leisure_name', '餘暇活動名稱', NULL, 'GEN', NULL, NULL, NULL, NULL, 37, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(58, 65, 'leisure_performance', '餘暇活動表現', NULL, 'GEN', NULL, NULL, NULL, NULL, 38, 'TERMS', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(59, 65, 'remark', '備註', NULL, 'GEN', NULL, NULL, NULL, NULL, 39, 'COMMENT', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(60, 65, 'appraisal', '學年評定', NULL, 'GEN', NULL, NULL, NULL, NULL, 40, 'COMMENT', 1, NULL, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(341, 74, 'REL', '宗教', 'Relegion', 'SUB', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(342, 74, 'PHY', '體能', 'Physic', 'SUB', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(343, 74, 'CLT', '語文', 'Chinese Literature', 'SUB', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(344, 74, 'STY', '故事', 'Stry', 'SUB', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(345, 74, 'CWR', '中寫', 'Chinse_writting', 'SUB', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(346, 74, 'ELT', '英文', 'English Literature', 'SUB', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(347, 74, 'EWR', '英寫', 'English Writing', 'SUB', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(348, 74, 'OCS', '常識', 'Ordinary Common Sense', 'SUB', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(349, 74, 'NUM', '識數', 'Numeracy', 'SUB', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(350, 74, 'COM', '電腦', 'Computer', 'SUB', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(351, 74, 'PLA', '唱遊', 'Playgroup', 'SUB', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(352, 74, 'ART', '美勞', 'Art Craft', 'SUB', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(353, 74, 'health_1', '衣服鞋襪整齊清潔', NULL, 'ATT', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(354, 74, 'health_2', '常剪指甲', NULL, 'ATT', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(355, 74, 'health_3', '懂得使用手帕或紙巾', NULL, 'ATT', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(356, 74, 'health_4', '不把手指雜物放進口裡', NULL, 'ATT', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(357, 74, 'health_5', '能把癈物投入廢紙箱內', NULL, 'ATT', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(358, 74, 'behaviour_1', '守秩序不喧嚷', NULL, 'ATT', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(359, 74, 'behaviour_2', '留心聽講', NULL, 'ATT', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(360, 74, 'behaviour_3', '坐立行走姿勢正確', NULL, 'ATT', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(361, 74, 'behaviour_4', '離開坐位把物件桌椅整理好', NULL, 'ATT', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(362, 74, 'behaviour_5', '愛護公物用後放回原處', NULL, 'ATT', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(363, 74, 'behaviour_6', '遵守校規', NULL, 'ATT', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(364, 74, 'social_1', '守時', NULL, 'ATT', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(365, 74, 'social_2', '尊敬師長,友愛和睦', NULL, 'ATT', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(366, 74, 'social_3', '樂於助人', NULL, 'ATT', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(367, 74, 'social_4', '會和別人分享及輪侯', NULL, 'ATT', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(368, 74, 'social_5', '誠實坦白肯認錯', NULL, 'ATT', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(369, 74, 'total_score', '總分', NULL, 'SUM', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(370, 74, 'average_score', '平均分', NULL, 'SUM', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(371, 74, 'class_size', '全班人數', NULL, 'SUM', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(372, 74, 'ranking', '考列名次', NULL, 'SUM', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(373, 74, 'late', '遲到次數', NULL, 'SUM', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(374, 74, 'absent', '缺席節數', NULL, 'SUM', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(375, 74, 'comment', '評語', NULL, 'GEN', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(376, 74, 'reward_punishment', '奬懲記錄', NULL, 'GEN', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(377, 74, 'leisure_name', '餘暇活動名稱', NULL, 'GEN', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(378, 74, 'leisure_performance', '餘暇活動表現', NULL, 'GEN', 'LIB', '1', NULL, NULL, 1, 'TERMS', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(379, 74, 'remark', '備註', NULL, 'GEN', 'LIB', '1', NULL, NULL, 1, 'COMMENT', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(380, 74, 'appraisal', '學年評定', NULL, 'GEN', 'LIB', '1', NULL, NULL, 1, 'COMMENT', 1, NULL, '2023-02-07 19:01:07', '2023-02-07 19:01:07');
 
 -- --------------------------------------------------------
 
@@ -199,15 +268,126 @@ INSERT INTO `courses` (`id`, `klass_id`, `code`, `title_zh`, `title_en`, `type`,
 
 CREATE TABLE `course_scores` (
   `id` bigint(20) UNSIGNED NOT NULL,
+  `term_id` bigint(20) NOT NULL,
   `course_id` bigint(20) NOT NULL,
-  `semester` tinyint(4) NOT NULL,
-  `parent_id` bigint(20) DEFAULT NULL,
-  `title` varchar(255) NOT NULL,
-  `mark` int(11) NOT NULL DEFAULT 0,
-  `scope` varchar(255) DEFAULT NULL,
+  `sequence` int(11) DEFAULT NULL,
+  `field_name` varchar(255) NOT NULL,
+  `field_label` varchar(255) NOT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `scheme` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `for_transcript` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `course_scores`
+--
+
+INSERT INTO `course_scores` (`id`, `term_id`, `course_id`, `sequence`, `field_name`, `field_label`, `type`, `scheme`, `description`, `for_transcript`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(2, 2, 1, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(3, 1, 2, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(4, 2, 2, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(5, 1, 3, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(6, 2, 3, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(7, 1, 4, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(8, 2, 4, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(9, 1, 5, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(10, 2, 5, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(11, 1, 6, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(12, 2, 6, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(13, 1, 7, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(14, 2, 7, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(15, 1, 8, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(16, 2, 8, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(17, 1, 9, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(18, 2, 9, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(19, 1, 10, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(20, 2, 10, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(21, 1, 1, 1, '', 'Test1', NULL, NULL, NULL, 0, NULL, NULL),
+(22, 1, 1, 2, '', 'Exam', NULL, NULL, NULL, 0, NULL, NULL),
+(23, 2, 1, 3, '', 'Test2', NULL, NULL, NULL, 0, NULL, NULL),
+(24, 2, 1, 4, '', 'Exam', NULL, NULL, NULL, 0, NULL, NULL),
+(255, 1, 341, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(256, 2, 341, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(257, 1, 342, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(258, 2, 342, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(259, 1, 343, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(260, 2, 343, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(261, 1, 344, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(262, 2, 344, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(263, 1, 345, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(264, 2, 345, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(265, 1, 346, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(266, 2, 346, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(267, 1, 347, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(268, 2, 347, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(269, 1, 348, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(270, 2, 348, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(271, 1, 349, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(272, 2, 349, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(273, 1, 350, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(274, 2, 350, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(275, 1, 351, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(276, 2, 351, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(277, 1, 352, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(278, 2, 352, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(279, 1, 353, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(280, 2, 353, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(281, 1, 354, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(282, 2, 354, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(283, 1, 355, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(284, 2, 355, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(285, 1, 356, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(286, 2, 356, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(287, 1, 357, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(288, 2, 357, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(289, 1, 358, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(290, 2, 358, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(291, 1, 359, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(292, 2, 359, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(293, 1, 360, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(294, 2, 360, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(295, 1, 361, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(296, 2, 361, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(297, 1, 362, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(298, 2, 362, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(299, 1, 363, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(300, 2, 363, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(301, 1, 364, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(302, 2, 364, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(303, 1, 365, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(304, 2, 365, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(305, 1, 366, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(306, 2, 366, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(307, 1, 367, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(308, 2, 367, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(309, 1, 368, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(310, 2, 368, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(311, 1, 369, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(312, 2, 369, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(313, 1, 370, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(314, 2, 370, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(315, 1, 371, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(316, 2, 371, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(317, 1, 372, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(318, 2, 372, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(319, 1, 373, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(320, 2, 373, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(321, 1, 374, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(322, 2, 374, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(323, 1, 375, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(324, 2, 375, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(325, 1, 376, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(326, 2, 376, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(327, 1, 377, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(328, 2, 377, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(329, 1, 378, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(330, 2, 378, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(331, 1, 379, NULL, 'comment', '描述', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(332, 1, 380, NULL, 'comment', '描述', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08');
 
 -- --------------------------------------------------------
 
@@ -351,6 +531,48 @@ CREATE TABLE `guardians` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `habits`
+--
+
+CREATE TABLE `habits` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `klass_student_id` bigint(20) NOT NULL,
+  `term_id` bigint(20) NOT NULL,
+  `health_1` char(1) DEFAULT NULL,
+  `health_2` char(1) DEFAULT NULL,
+  `health_3` char(1) DEFAULT NULL,
+  `health_4` char(1) DEFAULT NULL,
+  `health_5` char(1) DEFAULT NULL,
+  `behaviour_1` char(1) DEFAULT NULL,
+  `behaviour_2` char(1) DEFAULT NULL,
+  `behaviour_3` char(1) DEFAULT NULL,
+  `behaviour_4` char(1) DEFAULT NULL,
+  `behaviour_5` char(1) DEFAULT NULL,
+  `behaviour_6` char(1) DEFAULT NULL,
+  `social_1` char(1) DEFAULT NULL,
+  `social_2` char(1) DEFAULT NULL,
+  `social_3` char(1) DEFAULT NULL,
+  `social_4` char(1) DEFAULT NULL,
+  `social_5` char(1) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `habits`
+--
+
+INSERT INTO `habits` (`id`, `klass_student_id`, `term_id`, `health_1`, `health_2`, `health_3`, `health_4`, `health_5`, `behaviour_1`, `behaviour_2`, `behaviour_3`, `behaviour_4`, `behaviour_5`, `behaviour_6`, `social_1`, `social_2`, `social_3`, `social_4`, `social_5`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, '1', '1', '2', '4', '5', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-09 01:17:34', '2023-02-09 01:52:59'),
+(2, 22, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-09 01:17:34', '2023-02-09 01:17:34'),
+(3, 3, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-09 01:17:34', '2023-02-09 01:52:59'),
+(4, 4, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-09 01:17:34', '2023-02-09 01:52:59'),
+(5, 5, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-09 01:17:34', '2023-02-09 01:52:59'),
+(6, 2, 1, NULL, NULL, '4', '5', '6', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2023-02-09 01:44:37', '2023-02-09 01:52:59');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `healthcares`
 --
 
@@ -477,7 +699,8 @@ INSERT INTO `klasses` (`id`, `grade_id`, `letter`, `tag`, `byname`, `stream`, `r
 (59, 12, 'D', 'S6D', NULL, '', NULL, 2, NULL, NULL),
 (60, 12, 'E', 'S6E', NULL, '', NULL, 2, NULL, NULL),
 (64, 1, 'F', 'P1F', NULL, '', '123', 2, '2023-02-05 17:03:12', '2023-02-05 17:03:12'),
-(65, 2, 'F', 'P2F', NULL, 'AAS', NULL, 1, '2023-02-06 20:51:45', '2023-02-06 20:51:45');
+(65, 2, 'F', 'P2F', NULL, 'AAS', NULL, 1, '2023-02-06 20:51:45', '2023-02-06 20:51:45'),
+(74, 3, 'F', 'P3F', NULL, 'ALL', NULL, 1, '2023-02-07 19:01:07', '2023-02-07 19:01:07');
 
 -- --------------------------------------------------------
 
@@ -504,11 +727,11 @@ CREATE TABLE `klass_students` (
 --
 
 INSERT INTO `klass_students` (`id`, `klass_id`, `student_id`, `student_number`, `state`, `stream`, `promote`, `promote_to`, `score_scheme`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 1, 'ACT', 'ART', 0, 0, NULL, NULL, NULL),
-(2, 1, 2, 2, 'ACT', 'ART', 0, 0, NULL, NULL, NULL),
-(3, 1, 3, 3, 'ACT', 'ART', 0, 0, NULL, NULL, NULL),
-(4, 1, 4, 4, 'ACT', 'ART', 0, 0, NULL, NULL, NULL),
-(5, 1, 5, 5, 'ACT', 'ART', 0, 0, NULL, NULL, NULL),
+(1, 74, 1, 1, 'ACT', 'ART', 0, 0, NULL, NULL, NULL),
+(2, 74, 2, 2, 'ACT', 'ART', 0, 0, NULL, NULL, NULL),
+(3, 74, 3, 3, 'ACT', 'ART', 0, 0, NULL, NULL, NULL),
+(4, 74, 4, 4, 'ACT', 'ART', 0, 0, NULL, NULL, NULL),
+(5, 74, 5, 5, 'ACT', 'ART', 0, 0, NULL, NULL, NULL),
 (6, 1, 6, 6, 'ACT', 'ART', 0, 0, NULL, NULL, NULL),
 (7, 1, 7, 7, 'ACT', 'ART', 0, 0, NULL, NULL, NULL),
 (8, 1, 8, 8, 'ACT', 'ART', 0, 0, NULL, NULL, NULL),
@@ -1837,7 +2060,11 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (40, '2023_01_18_083745_create_subject_templates_table', 1),
 (41, '2023_02_03_013106_create_score_templates_table', 1),
 (42, '2023_02_06_084919_create_studies_table', 2),
-(43, '2023_02_06_084931_create_study_subjects_table', 2);
+(43, '2023_02_06_084931_create_study_subjects_table', 2),
+(44, '2023_01_09_033255_create_course_scores_table', 3),
+(45, '2023_02_09_014246_create_habits_table', 4),
+(46, '2023_02_09_014659_create_outcomes_table', 5),
+(47, '2023_02_10_033535_create_behaviours_table', 6);
 
 -- --------------------------------------------------------
 
@@ -1870,6 +2097,27 @@ CREATE TABLE `model_has_roles` (
 INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
 (1, 'App\\Models\\User', 1),
 (2, 'App\\Models\\User', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `outcomes`
+--
+
+CREATE TABLE `outcomes` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `klass_student_id` bigint(20) NOT NULL,
+  `terim_id` bigint(20) NOT NULL,
+  `late` int(11) NOT NULL,
+  `absent` int(11) NOT NULL,
+  `reward` varchar(255) NOT NULL,
+  `leisure_name` varchar(255) NOT NULL,
+  `leisure_perform` varchar(255) NOT NULL,
+  `comment` varchar(255) NOT NULL,
+  `appraisal` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -1981,7 +2229,7 @@ CREATE TABLE `role_has_permissions` (
 CREATE TABLE `scores` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `klass_student_id` bigint(20) NOT NULL,
-  `score_column_id` bigint(20) NOT NULL,
+  `course_score_id` bigint(20) NOT NULL,
   `point` varchar(255) DEFAULT NULL,
   `remark` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -1992,7 +2240,7 @@ CREATE TABLE `scores` (
 -- Dumping data for table `scores`
 --
 
-INSERT INTO `scores` (`id`, `klass_student_id`, `score_column_id`, `point`, `remark`, `created_at`, `updated_at`) VALUES
+INSERT INTO `scores` (`id`, `klass_student_id`, `course_score_id`, `point`, `remark`, `created_at`, `updated_at`) VALUES
 (1, 3, 1, '100', NULL, NULL, '2023-02-03 01:34:23'),
 (2, 5, 1, '80', NULL, NULL, '2023-02-03 01:34:23'),
 (3, 3, 2, '90', NULL, NULL, '2023-02-03 01:34:23'),
@@ -2003,15 +2251,16 @@ INSERT INTO `scores` (`id`, `klass_student_id`, `score_column_id`, `point`, `rem
 -- --------------------------------------------------------
 
 --
--- Table structure for table `score_columns`
+-- Table structure for table `score_columns2`
 --
 
-CREATE TABLE `score_columns` (
+CREATE TABLE `score_columns2` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `term_id` bigint(20) NOT NULL,
   `course_id` bigint(20) NOT NULL,
   `sequence` int(11) DEFAULT NULL,
-  `name` varchar(255) NOT NULL,
+  `field_name` varchar(255) NOT NULL,
+  `field_label` varchar(255) NOT NULL,
   `type` varchar(255) DEFAULT NULL,
   `scheme` varchar(255) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
@@ -2021,34 +2270,112 @@ CREATE TABLE `score_columns` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `score_columns`
+-- Dumping data for table `score_columns2`
 --
 
-INSERT INTO `score_columns` (`id`, `term_id`, `course_id`, `sequence`, `name`, `type`, `scheme`, `description`, `for_transcript`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, NULL, '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
-(2, 2, 1, NULL, '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
-(3, 1, 2, NULL, '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
-(4, 2, 2, NULL, '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
-(5, 1, 3, NULL, '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
-(6, 2, 3, NULL, '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
-(7, 1, 4, NULL, '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
-(8, 2, 4, NULL, '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
-(9, 1, 5, NULL, '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
-(10, 2, 5, NULL, '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
-(11, 1, 6, NULL, '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
-(12, 2, 6, NULL, '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
-(13, 1, 7, NULL, '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
-(14, 2, 7, NULL, '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
-(15, 1, 8, NULL, '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
-(16, 2, 8, NULL, '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
-(17, 1, 9, NULL, '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
-(18, 2, 9, NULL, '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
-(19, 1, 10, NULL, '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
-(20, 2, 10, NULL, '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
-(21, 1, 1, 1, 'Test1', NULL, NULL, NULL, 0, NULL, NULL),
-(22, 1, 1, 2, 'Exam', NULL, NULL, NULL, 0, NULL, NULL),
-(23, 2, 1, 3, 'Test2', NULL, NULL, NULL, 0, NULL, NULL),
-(24, 2, 1, 4, 'Exam', NULL, NULL, NULL, 0, NULL, NULL);
+INSERT INTO `score_columns2` (`id`, `term_id`, `course_id`, `sequence`, `field_name`, `field_label`, `type`, `scheme`, `description`, `for_transcript`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(2, 2, 1, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(3, 1, 2, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(4, 2, 2, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(5, 1, 3, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(6, 2, 3, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(7, 1, 4, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(8, 2, 4, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(9, 1, 5, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(10, 2, 5, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(11, 1, 6, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(12, 2, 6, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(13, 1, 7, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(14, 2, 7, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(15, 1, 8, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(16, 2, 8, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(17, 1, 9, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(18, 2, 9, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(19, 1, 10, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(20, 2, 10, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-03 01:27:29', '2023-02-03 01:27:29'),
+(21, 1, 1, 1, '', 'Test1', NULL, NULL, NULL, 0, NULL, NULL),
+(22, 1, 1, 2, '', 'Exam', NULL, NULL, NULL, 0, NULL, NULL),
+(23, 2, 1, 3, '', 'Test2', NULL, NULL, NULL, 0, NULL, NULL),
+(24, 2, 1, 4, '', 'Exam', NULL, NULL, NULL, 0, NULL, NULL),
+(255, 1, 341, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(256, 2, 341, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(257, 1, 342, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(258, 2, 342, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(259, 1, 343, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(260, 2, 343, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(261, 1, 344, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(262, 2, 344, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(263, 1, 345, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(264, 2, 345, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(265, 1, 346, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(266, 2, 346, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(267, 1, 347, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(268, 2, 347, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(269, 1, 348, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(270, 2, 348, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(271, 1, 349, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(272, 2, 349, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(273, 1, 350, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(274, 2, 350, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(275, 1, 351, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(276, 2, 351, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(277, 1, 352, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(278, 2, 352, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(279, 1, 353, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(280, 2, 353, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:07', '2023-02-07 19:01:07'),
+(281, 1, 354, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(282, 2, 354, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(283, 1, 355, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(284, 2, 355, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(285, 1, 356, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(286, 2, 356, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(287, 1, 357, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(288, 2, 357, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(289, 1, 358, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(290, 2, 358, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(291, 1, 359, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(292, 2, 359, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(293, 1, 360, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(294, 2, 360, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(295, 1, 361, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(296, 2, 361, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(297, 1, 362, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(298, 2, 362, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(299, 1, 363, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(300, 2, 363, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(301, 1, 364, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(302, 2, 364, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(303, 1, 365, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(304, 2, 365, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(305, 1, 366, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(306, 2, 366, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(307, 1, 367, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(308, 2, 367, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(309, 1, 368, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(310, 2, 368, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(311, 1, 369, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(312, 2, 369, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(313, 1, 370, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(314, 2, 370, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(315, 1, 371, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(316, 2, 371, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(317, 1, 372, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(318, 2, 372, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(319, 1, 373, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(320, 2, 373, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(321, 1, 374, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(322, 2, 374, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(323, 1, 375, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(324, 2, 375, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(325, 1, 376, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(326, 2, 376, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(327, 1, 377, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(328, 2, 377, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(329, 1, 378, NULL, 'term1', '上學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(330, 2, 378, NULL, 'term2', '下學期', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(331, 1, 379, NULL, 'comment', '描述', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08'),
+(332, 1, 380, NULL, 'comment', '描述', NULL, NULL, NULL, 0, '2023-02-07 19:01:08', '2023-02-07 19:01:08');
 
 -- --------------------------------------------------------
 
@@ -2061,7 +2388,8 @@ CREATE TABLE `score_templates` (
   `batch` varchar(255) DEFAULT NULL,
   `type` varchar(6) NOT NULL,
   `term_id` bigint(20) NOT NULL,
-  `name` varchar(255) NOT NULL,
+  `field_name` varchar(255) NOT NULL,
+  `field_label` varchar(255) NOT NULL,
   `sequence` int(11) DEFAULT NULL,
   `scheme` varchar(255) DEFAULT NULL,
   `for_transcript` tinyint(1) NOT NULL DEFAULT 0,
@@ -2073,41 +2401,10 @@ CREATE TABLE `score_templates` (
 -- Dumping data for table `score_templates`
 --
 
-INSERT INTO `score_templates` (`id`, `batch`, `type`, `term_id`, `name`, `sequence`, `scheme`, `for_transcript`, `created_at`, `updated_at`) VALUES
-(1, 'SUBJECT', 'SUB', 1, '上學期', 1, NULL, 1, NULL, NULL),
-(2, 'SUBJECT', 'SUB', 2, '上學期', 2, NULL, 1, NULL, NULL),
-(3, 'ATTITUDE', 'ATT', 1, '衣服鞋襪整齊清潔', 1, NULL, 1, NULL, NULL),
-(4, 'ATTITUDE', 'ATT', 1, '常剪指甲', 2, NULL, 1, NULL, NULL),
-(5, 'ATTITUDE', 'ATT', 1, '懂得使用手帕或紙巾', 3, NULL, 1, NULL, NULL),
-(6, 'ATTITUDE', 'ATT', 1, '不把手指雜物放進口裡', 4, NULL, 1, NULL, NULL),
-(7, 'ATTITUDE', 'ATT', 1, '能把癈物投入廢紙箱內', 5, NULL, 1, NULL, NULL),
-(8, 'ATTITUDE', 'ATT', 1, '守秩序不喧嚷', 6, NULL, 1, NULL, NULL),
-(9, 'ATTITUDE', 'ATT', 1, '留心聽講', 7, NULL, 1, NULL, NULL),
-(10, 'ATTITUDE', 'ATT', 1, '坐立行走姿勢正確', 8, NULL, 1, NULL, NULL),
-(11, 'ATTITUDE', 'ATT', 1, '離開坐位把物件桌椅整理好', 9, NULL, 1, NULL, NULL),
-(12, 'ATTITUDE', 'ATT', 1, '愛護公物用後放回原處', 10, NULL, 1, NULL, NULL),
-(13, 'ATTITUDE', 'ATT', 1, '遵守校規', 11, NULL, 1, NULL, NULL),
-(14, 'ATTITUDE', 'ATT', 1, '守時', 12, NULL, 1, NULL, NULL),
-(15, 'ATTITUDE', 'ATT', 1, '尊敬師長,友愛和睦', 13, NULL, 1, NULL, NULL),
-(16, 'ATTITUDE', 'ATT', 1, '樂於助人', 14, NULL, 1, NULL, NULL),
-(17, 'ATTITUDE', 'ATT', 1, '會和別人分享及輪侯', 15, NULL, 1, NULL, NULL),
-(18, 'ATTITUDE', 'ATT', 1, '誠實坦白肯認錯', 16, NULL, 1, NULL, NULL),
-(19, 'ATTITUDE', 'ATT', 2, '衣服鞋襪整齊清潔', 1, NULL, 1, NULL, NULL),
-(20, 'ATTITUDE', 'ATT', 2, '常剪指甲', 2, NULL, 1, NULL, NULL),
-(21, 'ATTITUDE', 'ATT', 2, '懂得使用手帕或紙巾', 3, NULL, 1, NULL, NULL),
-(22, 'ATTITUDE', 'ATT', 2, '不把手指雜物放進口裡', 4, NULL, 1, NULL, NULL),
-(23, 'ATTITUDE', 'ATT', 2, '能把癈物投入廢紙箱內', 5, NULL, 1, NULL, NULL),
-(24, 'ATTITUDE', 'ATT', 2, '守秩序不喧嚷', 6, NULL, 1, NULL, NULL),
-(25, 'ATTITUDE', 'ATT', 2, '留心聽講', 7, NULL, 1, NULL, NULL),
-(26, 'ATTITUDE', 'ATT', 2, '坐立行走姿勢正確', 8, NULL, 1, NULL, NULL),
-(27, 'ATTITUDE', 'ATT', 2, '離開坐位把物件桌椅整理好', 9, NULL, 1, NULL, NULL),
-(28, 'ATTITUDE', 'ATT', 2, '愛護公物用後放回原處', 10, NULL, 1, NULL, NULL),
-(29, 'ATTITUDE', 'ATT', 2, '遵守校規', 11, NULL, 1, NULL, NULL),
-(30, 'ATTITUDE', 'ATT', 2, '守時', 12, NULL, 1, NULL, NULL),
-(31, 'ATTITUDE', 'ATT', 2, '尊敬師長,友愛和睦', 13, NULL, 1, NULL, NULL),
-(32, 'ATTITUDE', 'ATT', 2, '樂於助人', 14, NULL, 1, NULL, NULL),
-(33, 'ATTITUDE', 'ATT', 2, '會和別人分享及輪侯', 15, NULL, 1, NULL, NULL),
-(34, 'ATTITUDE', 'ATT', 2, '誠實坦白肯認錯', 16, NULL, 1, NULL, NULL);
+INSERT INTO `score_templates` (`id`, `batch`, `type`, `term_id`, `field_name`, `field_label`, `sequence`, `scheme`, `for_transcript`, `created_at`, `updated_at`) VALUES
+(1, 'TERMS', 'SUB', 1, '', '上學期', 1, NULL, 1, NULL, NULL),
+(2, 'TERMS', 'SUB', 2, '', '上學期', 2, NULL, 1, NULL, NULL),
+(3, 'COMMENT', 'ATT', 0, '', '描述', 1, NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -2129,7 +2426,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('AAsekhonWmFQAgIqfjRnKUcbrYpzKUfQ28iyk92E', 2, '127.0.0.1', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiMndyYTF2RnEzVURBUklHOU9FRnl5NzEyQ214TkpBQTVLbVpibms1YSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NTY6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9tYXN0ZXIvc3R1ZHkvc3ViamVjdHMvYW50ZC5jc3MubWFwIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MjtzOjIxOiJwYXNzd29yZF9oYXNoX3NhbmN0dW0iO3M6NjA6IiQyeSQxMCRUYW5QSTV2emhENTI1MVp6b2toOHcub0dBc1ZTNktRbkpjdnFyTWhtbGUyYnh6ZkJQblFicSI7fQ==', 1675763089);
+('zn1YMqjxyGSn5TsMm3LNiGjmbyb4xBBKQa6eHtuE', 2, '127.0.0.1', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiTk80THkyQXM0ODZWc3pKMWJzZ1lxV3kyVUJMdTN2RFBwbGhpcUwzViI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDY6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9tYW5hZ2UvYmVoYXZpb3Vycz9rc2lkPTEiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToyO3M6MjE6InBhc3N3b3JkX2hhc2hfc2FuY3R1bSI7czo2MDoiJDJ5JDEwJFRhblBJNXZ6aEQ1MjUxWnpva2g4dy5vR0FzVlM2S1FuSmN2cXJNaG1sZTJieHpmQlBuUWJxIjt9', 1676021997);
 
 -- --------------------------------------------------------
 
@@ -3481,7 +3778,7 @@ CREATE TABLE `subjects` (
   `elective` varchar(6) DEFAULT NULL,
   `description` text DEFAULT NULL,
   `active` tinyint(1) NOT NULL,
-  `subject_template_id` bigint(20) DEFAULT NULL,
+  `study_id` bigint(20) DEFAULT NULL,
   `score_column_template` varchar(255) DEFAULT NULL,
   `version` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -3492,7 +3789,7 @@ CREATE TABLE `subjects` (
 -- Dumping data for table `subjects`
 --
 
-INSERT INTO `subjects` (`id`, `grade_id`, `category`, `code`, `title_zh`, `title_en`, `type`, `stream`, `elective`, `description`, `active`, `subject_template_id`, `score_column_template`, `version`, `created_at`, `updated_at`) VALUES
+INSERT INTO `subjects` (`id`, `grade_id`, `category`, `code`, `title_zh`, `title_en`, `type`, `stream`, `elective`, `description`, `active`, `study_id`, `score_column_template`, `version`, `created_at`, `updated_at`) VALUES
 (1, 1, 'SUBJECT', 'REL', '宗教', 'Relegion', 'SUB', 'LIB', '1', NULL, 1, 1, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
 (2, 1, 'SUBJECT', 'PHY', '體能', 'Physic', 'SUB', 'LIB', '1', NULL, 1, 2, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
 (3, 1, 'SUBJECT', 'CLT', '語文', 'Chinese Literature', 'SUB', 'LIB', '1', NULL, 1, 3, 'TERMS', 1, '2023-02-05 22:37:18', '2023-02-05 22:37:18'),
@@ -4103,6 +4400,13 @@ ALTER TABLE `banks`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `behaviours`
+--
+ALTER TABLE `behaviours`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `behaviours_klass_student_id_term_id_unique` (`klass_student_id`,`term_id`);
+
+--
 -- Indexes for table `categories`
 --
 ALTER TABLE `categories`
@@ -4165,6 +4469,13 @@ ALTER TABLE `guardians`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `habits`
+--
+ALTER TABLE `habits`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `klass_student_id_term_id` (`klass_student_id`,`term_id`);
+
+--
 -- Indexes for table `healthcares`
 --
 ALTER TABLE `healthcares`
@@ -4215,6 +4526,13 @@ ALTER TABLE `model_has_roles`
   ADD KEY `model_has_roles_model_id_model_type_index` (`model_id`,`model_type`);
 
 --
+-- Indexes for table `outcomes`
+--
+ALTER TABLE `outcomes`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `klass_student_id_term_id` (`klass_student_id`,`terim_id`);
+
+--
 -- Indexes for table `parentals`
 --
 ALTER TABLE `parentals`
@@ -4260,12 +4578,12 @@ ALTER TABLE `role_has_permissions`
 --
 ALTER TABLE `scores`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `student_score` (`klass_student_id`,`score_column_id`) USING BTREE;
+  ADD UNIQUE KEY `student_score` (`klass_student_id`,`course_score_id`) USING BTREE;
 
 --
--- Indexes for table `score_columns`
+-- Indexes for table `score_columns2`
 --
-ALTER TABLE `score_columns`
+ALTER TABLE `score_columns2`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -4407,6 +4725,12 @@ ALTER TABLE `banks`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `behaviours`
+--
+ALTER TABLE `behaviours`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
@@ -4416,19 +4740,19 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `configs`
 --
 ALTER TABLE `configs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `courses`
 --
 ALTER TABLE `courses`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=381;
 
 --
 -- AUTO_INCREMENT for table `course_scores`
 --
 ALTER TABLE `course_scores`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=333;
 
 --
 -- AUTO_INCREMENT for table `course_teachers`
@@ -4467,6 +4791,12 @@ ALTER TABLE `guardians`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `habits`
+--
+ALTER TABLE `habits`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
 -- AUTO_INCREMENT for table `healthcares`
 --
 ALTER TABLE `healthcares`
@@ -4482,7 +4812,7 @@ ALTER TABLE `identity_documents`
 -- AUTO_INCREMENT for table `klasses`
 --
 ALTER TABLE `klasses`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
 
 --
 -- AUTO_INCREMENT for table `klass_students`
@@ -4500,7 +4830,13 @@ ALTER TABLE `locations`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+
+--
+-- AUTO_INCREMENT for table `outcomes`
+--
+ALTER TABLE `outcomes`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `parentals`
@@ -4533,16 +4869,16 @@ ALTER TABLE `scores`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=394;
 
 --
--- AUTO_INCREMENT for table `score_columns`
+-- AUTO_INCREMENT for table `score_columns2`
 --
-ALTER TABLE `score_columns`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+ALTER TABLE `score_columns2`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=333;
 
 --
 -- AUTO_INCREMENT for table `score_templates`
 --
 ALTER TABLE `score_templates`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `staff`
@@ -4590,7 +4926,7 @@ ALTER TABLE `subjects`
 -- AUTO_INCREMENT for table `subject_templates`
 --
 ALTER TABLE `subject_templates`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `suppliers`
