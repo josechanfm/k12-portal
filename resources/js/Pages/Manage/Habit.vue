@@ -2,33 +2,35 @@
     <AdminLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                 科 學分管理
-                <br/>
+                生活習慣和態度
             </h2>
         </template>
-        {{selectedTerm}}
-        <a-button v-for="term in terms" @click="selectedTerm=term.value">{{term.label}}</a-button>
+        <a-typography-title :level="3">班別:{{klass.tag}}</a-typography-title>
+        <a-typography-title :level="3">專業方向:{{klass.stream}}</a-typography-title>
+        
         <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div>
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <a-button type="primary" @click="saveScores">更新並保存</a-button>
+                    <a-button v-for="term in terms" @click="selectedTerm=term.value" class="ml-4" :type="selectedTerm==term.value?'primary':''">{{term.label}}</a-button>
+                    <p></p>
                     <table id="scoreTable" ref="scoreTable">
                         <tr>
                             <th style="width:100px" rowspan="2" class="crossed">
                                 <span class="float-right">評分</span><br>
                                 <span class="float-left">學生姓名</span>
                             </th>
-                            <td colspan="5">健康與</td>
-                            <td colspan="6">健康與</td>
-                            <td colspan="5">健康與</td>
+                            <th colspan="5">個人衛生</th>
+                            <th colspan="6">行為習慣</th>
+                            <th colspan="5">社交態度</th>
                         </tr>
                         <tr>
-                            <td v-for="column in habitColumns">
+                            <th v-for="column in habitColumns">
                                 <a-tooltip>
                                     <template #title>{{ column.label }}</template>
                                     {{ column.short }}
                                 </a-tooltip>
-                            </td>
+                            </th>
                         </tr>
                         <tr v-for="student in klass.students" >
                             <td>{{ student.name_zh }}</td>
@@ -148,6 +150,8 @@ export default {
 <style>
 #scoreTable, #scoreTable td, #scoreTable th {
   border: 1px solid;
+  border-color: gray
+
 }
 
 #scoreTable {

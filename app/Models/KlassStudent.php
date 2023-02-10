@@ -10,4 +10,15 @@ class KlassStudent extends Model
     use HasFactory;
     protected $fillable=['promote_to'];
 
+    public function student(){
+        return $this->belongsTo(Student::class);
+    }
+
+    public function behaviours(){
+        return $this->hasMany(Behaviour::class);
+    }
+    public function klass(){
+        return $this->belongsTo(Klass::class);
+    }
+
 }

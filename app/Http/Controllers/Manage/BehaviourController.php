@@ -4,9 +4,13 @@ namespace App\Http\Controllers\Manage;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Config;
 use App\Models\Klass;
+use App\Models\Behaviour;
+use App\Models\KlassStudent;
+use Inertia\Inertia;
 
-class RplaController extends Controller
+class BehaviourController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,9 +19,20 @@ class RplaController extends Controller
      */
     public function index(Request $request)
     {
-        $kid=$request->kid;
-        $klass=Klass::with('students')->find($kid);
-        echo json_encode($klass);
+        $ksid=$request->ksid;
+        $klassStudent=KlassStudent::with('student')->with('behaviours')->with('klass')->find($ksid);
+        $behaviours=Config::item('behaviour_genres');
+        $terms=Config::item('year_terms');
+        // $klass=Klass::with('students')->find($kid);
+        // $terms=Config::item('year_terms');
+        // $habitColumns=Config::item('behaviour_genres');
+        // $habits=Behaviour::byKlassId($kid);
+        return Inertia::render('Manage/Behaviour',[
+            'klassStudent'=>$klassStudent,
+            'behaviours'=>$behaviours,
+            'terms'=>$terms,
+        ]);
+        
     }
 
     /**
@@ -38,7 +53,17 @@ class RplaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $behaviour=new Behaviour();
+        $behaviour->klass_student_id=$request->klass_student_id;
+        $behaviour->term_id=$request->term_id;
+        $behaviour->genre=$request->genre;
+        $behaviour->date=date('Y-m-d',strtotime($request->date));
+        $behaviour->qty=$request->qty;
+        $behaviour->description=$request->description;
+        $behaviour->remark=$request->remark;
+        $behaviour->save();
+    return response($behaviour);
     }
 
     /**
