@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Course;
 use App\Models\Score;
-use App\Models\CourseScore;
+use App\Models\ScoreColumn;
 
 class ScoreController extends Controller
 {
@@ -19,13 +19,13 @@ class ScoreController extends Controller
     public function index(Request $request)
     {
         $cid=$request->cid;
-        $courseScores=CourseScore::where('course_id',$cid)->orderByRaw('-sequence DESC')->get();
+        $scoreColumns=ScoreColumn::where('course_id',$cid)->orderByRaw('-sequence DESC')->get();
         $studentsScores=Course::students_scores($cid);
         $course=Course::with('klass')->with('teachers')->find($cid);
 
         return Inertia::render('Manage/Score',[
             'course'=>$course,
-            'course_scores'=>$courseScores,
+            'score_columns'=>$scoreColumns,
             'students_scores'=>$studentsScores
         ]);
     }

@@ -5,7 +5,6 @@
                 生活習慣和態度
             </h2>
         </template>
-        {{ klassStudent }}
         <a-typography-title :level="3">{{ klassStudent.klass.tag }} : {{ klassStudent.student.name_zh }}</a-typography-title>
         <a-button type="primary" @click="createBehaviour">更新並保存</a-button>
         

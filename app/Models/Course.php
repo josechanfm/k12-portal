@@ -32,9 +32,7 @@ class Course extends Model
         }
         return $students;
     }
-    public function course_scores(){
-        return $this->hasMany(CourseScore::class);
-    }
+
     public static function students_scores($cid){
         $course=Course::find($cid);
         $students=Klass::find($course->klass_id)->students;

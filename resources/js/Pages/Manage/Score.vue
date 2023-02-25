@@ -16,7 +16,7 @@
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <a-table :dataSource="course_scores" :columns="columns" >
+                    <a-table :dataSource="score_columns" :columns="columns" >
                         <template #bodyCell="{ column, text, record, index }">
                             <template v-if="column.dataIndex == 'operation'">
                                 <span v-if="record.for_transcript">
@@ -43,11 +43,11 @@
                     <table id="scoreTable" ref="scoreTable">
                         <tr>
                             <th>學生姓名</th>
-                            <td v-for="column in course_scores">{{ column.field_label }}</td>
+                            <td v-for="column in score_columns">{{ column.name }}</td>
                         </tr>
                         <tr v-for="(score, key) in scores">
                             <td>{{ score.student_name }}</td>
-                            <td v-for="column in course_scores">
+                            <td v-for="column in score_columns">
                                 <a-input  v-model:value="score['score_'+key+'_'+column.id]" @keyup.arrow-keys="onKeypressed"/>
                             </td>
                         </tr>
@@ -64,19 +64,19 @@
                 @finish="onModalFinish"
             >
             
-                <a-form-item label="Field Name" :name="['field_label']" :rules="[{required:true, message:'Please input score column name'}]">
-                    <a-input v-model:value="modal.data.field_label"/>
+                <a-form-item label="學分欄名稱 " :name="['name']" :rules="[{required:true, message:'Please input score column name'}]">
+                    <a-input v-model:value="modal.data.name"/>
                 </a-form-item>
-                <a-form-item label="Term" :name="['term_id']" :rules="[{required:true, message:'Please input score column name'}]">
+                <a-form-item label="學段" :name="['term_id']" :rules="[{required:true, message:'Please input score column name'}]">
                     <a-input v-model:value="modal.data.term_id"/>
                 </a-form-item>
-                <a-form-item label="sequence" :name="['sequence']" >
+                <a-form-item label="序號" :name="['sequence']" >
                     <a-input v-model:value="modal.data.sequence"/> 
                 </a-form-item>
-                <a-form-item label="Scheme" :name="['scheme']">
+                <a-form-item label="計算方式" :name="['scheme']">
                     <a-input v-model:value="modal.data.scheme" /> 
                 </a-form-item>
-                <a-form-item label="Description" :name="['description']">
+                <a-form-item label="簡介" :name="['description']">
                     <a-input v-model:value="modal.data.description"/> 
                 </a-form-item>
                 <a-form-item label="Course" :name="['course_id']" :rules="[{required:true, message:'Please input score column course_id'}]" :hidden="true">
@@ -98,7 +98,7 @@ export default {
     components: {
         AdminLayout
     },
-    props: ['course', 'course_scores', 'students_scores'],
+    props: ['course', 'score_columns', 'students_scores'],
     data() {
         return {
             keypressed:"",
@@ -112,7 +112,7 @@ export default {
                 row:0,
                 col:0,
                 maxRow:this.students_scores.length,
-                maxCol:this.course_scores.length
+                maxCol:this.score_columns.length
             },
             scores:{},
             columns: [
@@ -121,7 +121,7 @@ export default {
                     dataIndex: 'term_id',
                 },{
                     title: '學分欄名稱',
-                    dataIndex: 'field_label',
+                    dataIndex: 'name',
                 },{
                     title: '分類',
                     dataIndex: 'type',
@@ -140,7 +140,7 @@ export default {
         this.students_scores.forEach(student => {
             var score={};
             score['student_name']=student.name_zh
-            this.course_scores.forEach(column => {
+            this.score_columns.forEach(column => {
                 score['score_'+student.pivot.klass_student_id+"_"+column.id]=''
             })
             this.scores[student.pivot.klass_student_id]=score;
