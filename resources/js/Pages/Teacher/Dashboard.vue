@@ -7,8 +7,8 @@
         </template>
         <div>
             <p>The collection of route "teacher" is for the general operation management such as serach and preview, which not included setup of year, class or subject etc.</p>
+            {{ teacher }}
         </div>
-
     </AdminLayout>
 
 </template>
@@ -20,7 +20,7 @@ export default {
     components: {
         AdminLayout
     },
-    props: [],
+    props: ['teacher'],
     data() {
         return {
         }

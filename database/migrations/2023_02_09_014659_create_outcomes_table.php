@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('outcomes', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('klass_student_id');
-            $table->bigInteger('terim_id');
+            $table->bigInteger('term_id');
             $table->integer('late');
             $table->integer('absent');
             $table->string('reward');

@@ -21,11 +21,11 @@ class SubjectController extends Controller
      */
     public function index(Request $request)
     {
-        $study=Study::with('subjects')->find($request->studyId);
-        $subjects=SubjectTemplate::all();
+        
         return Inertia::render('Master/Subject',[
-            'study'=>$study,
-            'subjects'=>$subjects
+            'subjects'=>Subject::all(),
+            'subjectTypes'=>Config::item('subject_types'),
+            'studyStreams'=>Config::item('study_streams'),
         ]);
     }
 
@@ -47,7 +47,23 @@ class SubjectController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Validator::make($request->all(), [
+            'code' => ['required'],
+        ])->validate();
+
+        $subject=new Subject;
+        $subject->code=$request->code;
+        $subject->title_zh=$request->title_zh;
+        $subject->title_en=$request->title_en;
+        $subject->type=$request->type;
+        $subject->stream=$request->stream;
+        $subject->elective=$request->elective;
+        $subject->description=$request->description;
+        $subject->version=$request->version;
+        $subject->active=$request->active;
+        $subject->save();
+        return redirect()->back();
+        
     }
 
     /**
@@ -94,14 +110,23 @@ class SubjectController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $subjects=$request->all();
-        $data=[];
-        foreach($subjects as $subject){
-            $data[$subject['id']]=['stream'=>'SCI','elective'=>'0'];
+        Validator::make($request->all(), [
+            'code' => ['required'],
+        ])->validate();
+        if($request->has('id')){
+            $subject=Subject::find($id);
+            $subject->code=$request->code;
+            $subject->title_zh=$request->title_zh;
+            $subject->title_en=$request->title_en;
+            $subject->type=$request->type;
+            $subject->stream=$request->stream;
+            $subject->elective=$request->elective;
+            $subject->description=$request->description;
+            $subject->version=$request->version;
+            $subject->active=$request->active;
+            $subject->save();
         }
-        $study=Study::find($id);
-        $study->subjects()->sync($data);
-        return redirect('/master/study/subjects/'.$id);
+        return redirect()->back();
     }
 
     /**

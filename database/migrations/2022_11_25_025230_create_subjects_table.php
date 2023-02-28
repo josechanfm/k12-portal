@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('grade_id');
+            //$table->bigInteger('grade_id');
             $table->string('code');
             $table->string('title_zh')->nullable();
             $table->string('title_en')->nullable();
@@ -23,12 +23,12 @@ return new class extends Migration
             $table->string('stream',6)->nullable();
             $table->string('elective',6)->nullable();
             $table->text('description')->nullable();
-            $table->integer('version');
+            $table->integer('version')->nullable();
             $table->boolean('active');
-            $table->bigInteger('subject_template_id')->nullable();
-            $table->string('score_column_template')->nullable();
+            //$table->bigInteger('subject_template_id')->nullable();
+            //$table->string('score_column_template')->nullable();
             $table->timestamps();
-            $table->unique(['grade_id', 'code']);
+            //$table->unique(['grade_id', 'code']);
         });
     }
 

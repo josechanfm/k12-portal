@@ -15,8 +15,7 @@
         <a-table :dataSource="grades" :columns="columns">
             <template #bodyCell="{column, text, record, index}">
                 <template v-if="column.dataIndex=='operation'">
-                    <ButtonLink :href="'gradeSubjects?gid='+record.id" :type="'Link'">學科</ButtonLink>
-                    <ButtonLink :href="'klasses?gid='+record.id" :type="'Link'">班別</ButtonLink>
+                    <ButtonLink :href="'/admin/klasses/grade/'+record.id" :type="'Link'">班別</ButtonLink>
                     <ButtonLink @click="editRecord(record)" :style="'Edit'">修改</ButtonLink>
                     <ButtonLink @click="deleteRecord(record)" :style="'Delete'">刪除</ButtonLink>
                 </template>
@@ -41,36 +40,19 @@
                     :label-col="{ span: 8 }"
                     :wrapper-col="{ span: 16 }"
                 >
-                    <a-form-item label="學習年" name="rank" >
+                    <a-form-item label="學習年" name="sequence" v-if="modal.mode=='CREATE'">
                         <a-select
-                            v-model:value="modal.data.rank"
+                            v-model:value="modal.data.sequence"
                             style="width: 100%"
                             placeholder="請選擇..."
                             max-tag-count="responsive"
-                            :options="[...Array(12)].map((_, i) => ({ value: (i + 1) }))"
-                            disable="true"
+                            :options="gradeLevels.map(level=>({value:level.value, label:level.label}))"
+                            @change="onChangeGradeSelected"
                         ></a-select>
+                        <input v-model="modal.data.initial" hidden/>
+                        <input v-model="modal.data.level" hidden/>
                     </a-form-item>
-                    <a-form-item label="學年階段" name="initial">
-                        <a-select
-                            v-model:value="modal.data.initial"
-                            style="width: 100%"
-                            placeholder="請選擇..."
-                            max-tag-count="responsive"
-                            :options="gradeCategories"
-                        ></a-select>
-                    </a-form-item>
-                    <a-form-item label="學年階段年級" name="level" >
-                        <a-select
-                            v-model:value="modal.data.level"
-                            style="width: 100%"
-                            placeholder="請選擇..."
-                            max-tag-count="responsive"
-                            :options="[...Array(6)].map((_, i) => ({ value: (i + 1) }))"
-                            disable="true"
-                        ></a-select>
-                    </a-form-item>
-                    <a-form-item label="年級代號" name="tag">
+                    <a-form-item label="年級代號" name="tag" v-else >
                         {{ modal.data.initial }}{{ modal.data.level }}
                     </a-form-item>
                     <a-form-item label="中文名稱" name="title_zh">
@@ -116,9 +98,10 @@ export default {
         CheckSquareOutlined,
         StopOutlined
     },
-    props: ['year','grades','gradeCategories'],
+    props: ['year','grades','gradeCategories','gradeLevels'],
     data() {
         return {
+            gradeYears:0,
             modal: {
                 mode:null,
                 isOpen: false,
@@ -126,15 +109,9 @@ export default {
                 data:{}
             },
             rules:{
-                rank:{
+                sequence:{
                     required:true,
                 },
-                initial:[{
-                    required:true,
-                }],
-                level:[{
-                    required:true,
-                }],
             },
             validateMessages:{
                 required: '${label} is required!',
@@ -148,15 +125,6 @@ export default {
             },
             columns:[
                 {
-                    title: '學習年',
-                    dataIndex: 'rank',
-                },{
-                    title: '學年階段',
-                    dataIndex: 'initial',
-                },{
-                    title: '學年階段年級',
-                    dataIndex: 'level',
-                },{
                     title: '年級代號',
                     dataIndex: 'tag',
                 },{
@@ -230,11 +198,17 @@ export default {
                     console.log(record.id+" deleted.");
                 },
                 onError:(error)=>{
-                    alert(error.message);
+                    alert(error.message );
                     console.log(error);
                 }
             });
         },  
+        onChangeGradeSelected(){
+            var tmp=this.gradeLevels.find(grade=>grade.value==this.modal.data.sequence);
+            console.log(tmp);
+            this.modal.data.initial=tmp.initial;
+            this.modal.data.level=tmp.level;
+        }
     },
 }
 </script>

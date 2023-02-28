@@ -22,6 +22,7 @@ class UserSeeder extends Seeder
     {
         $masterRole=Role::create(['name'=>'master']);
         $adminRole=Role::create(['name'=>'admin']);
+        $teacherRole=Role::create(['name'=>'teacher']);
 
         $user=User::create([
             'name' => 'Master',
@@ -46,5 +47,18 @@ class UserSeeder extends Seeder
             'name' => explode(' ', $user->name, 2)[0]."'s Team",
             'personal_team' => true,
         ]));
+
+        $user=User::create([
+            'name' => 'Teacher',
+            'email' => 'teacher@example.com',
+            'password' => Hash::make('password'),
+        ]);
+        $user->assignRole('teacher');
+        $user->ownedTeams()->save(Team::forceCreate([
+            'user_id' => $user->id,
+            'name' => explode(' ', $user->name, 2)[0]."'s Team",
+            'personal_team' => true,
+        ]));
+
     }
 }

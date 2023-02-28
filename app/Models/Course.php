@@ -20,7 +20,7 @@ class Course extends Model
         return $this->belongsToMany(Student::class,'klass_students','klass_id','student_id')->withPivot(['id as pivot_klass_student_id','student_number','stream','state','promote','promote_to']);
     }
     public function teachers(){
-        return $this->belongsToMany(Teacher::class,'course_teachers','course_id','teacher_id')->withPivot('is_head');
+        return $this->belongsToMany(Teacher::class)->withPivot('is_head');
     }
     public function subject(){
         return $this->belongsTo(Subject::class);

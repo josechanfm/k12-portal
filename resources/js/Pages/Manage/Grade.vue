@@ -88,8 +88,8 @@
                                 </template>
                             </td>
                             <td class="text-left">
-                                <Link :href="'habits?kid='+course.klass_id" method="get" as="button" type="button">生活</Link>
-                                <Link :href="'score?cid='+course.id" method="get" as="button" type="button">學分</Link>
+                                <ButtonLink :href="'habits?kid='+course.klass_id" :style="'Link'" type="Link">生活</ButtonLink>
+                                <ButtonLink :href="'score?cid='+course.id" :style="'Link'" type="Link">學分</ButtonLink>
                             </td>
                         </tr>
                     </tbody>
@@ -126,12 +126,12 @@
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { TeamOutlined } from '@ant-design/icons-vue';
-import { Link } from '@inertiajs/inertia-vue3';
+import ButtonLink from '@/Components/ButtonLink.vue';
 
 
 export default {
     components: {
-        AdminLayout, TeamOutlined, Link
+        AdminLayout, TeamOutlined, ButtonLink
     },
     props: ['year','grades'],
     data() {
@@ -158,7 +158,7 @@ export default {
     methods: {
         selectKlass(klass,activeKey){   
             this.selectedKlass=klass;
-            axios.get('/manage/students/'+klass.id)
+            axios.get('/manage/students/get_by_klass_id/'+klass.id)
                 .then(response=>{
                     this.students = response.data;
                     //this.courses = [];
@@ -169,7 +169,7 @@ export default {
         },
         selectCourse(klass){
             this.selectedKlass=klass;
-            axios.get('/manage/courses/'+klass.id)
+            axios.get('/manage/courses/get_by_klass_id/'+klass.id)
                 .then(response=>{
                     this.courses = response.data;
                     //this.students = [];

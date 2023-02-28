@@ -20,8 +20,12 @@ const classes = computed(() => {
         case 'Delete':
             return 'hover:text-white border border-orange-300 hover:bg-orange-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-600 dark:focus:ring-blue-800';
             break;
+        case 'Link':
+            return 'mr-5';
+            break;
         default:
             return 'hover:text-white border border-gray-300 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-600 dark:focus:ring-blue-800';
+
 
     }
 

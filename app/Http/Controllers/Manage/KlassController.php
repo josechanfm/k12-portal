@@ -13,7 +13,6 @@ use App\Models\Staff;
 use App\Models\Teacher;
 use App\Models\CourseScore;
 
-
 class KLassController extends Controller
 {
     /**
@@ -121,7 +120,6 @@ class KLassController extends Controller
         echo $scores;
     }
 
-
-
+    
 }
 

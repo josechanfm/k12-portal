@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('course_scores', function (Blueprint $table) {
+        Schema::create('score_columns', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('term_id');
             $table->bigInteger('course_id')->on('courses')->onDelete('restrict')->onUpdate('cascade');

@@ -19,25 +19,29 @@ class ScoreColumnSeeder extends Seeder
             'term_id'=>1,
             'course_id'=>1,
             'sequence'=>1,
-            'name'=>'Test1',
+            'field_name'=>'test1',
+            'field_label'=>'Test1',
         ]);
         DB::table('score_columns')->insert([
             'term_id'=>1,
             'course_id'=>1,
             'sequence'=>2,
-            'name'=>'Exam',
+            'field_name'=>'exam',
+            'field_label'=>'Exam',
         ]);
         DB::table('score_columns')->insert([
             'term_id'=>2,
             'course_id'=>1,
             'sequence'=>3,
-            'name'=>'Test2',
+            'field_name'=>'test2',
+            'field_label'=>'Test2',
         ]);
         DB::table('score_columns')->insert([
             'term_id'=>2,
             'course_id'=>1,
             'sequence'=>4,
-            'name'=>'Exam',
+            'field_name'=>'exam',
+            'field_label'=>'Exam',
         ]);
 
     }

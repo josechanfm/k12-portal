@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Staff extends Model
 {
     use HasFactory;
-
+    protected $table='staffs';
+    
     public function teacher(){
         return $this->hasOne(Teacher::class);
     }

@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Manage;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use App\Models\Klass;
 use App\Models\Course;
-use App\Models\Score;
-use App\Models\Student;
+use App\Models\Subject;
 
 class CourseController extends Controller
 {
@@ -17,6 +18,7 @@ class CourseController extends Controller
      */
     public function index()
     {
+        echo 'courses';
     }
 
     /**
@@ -48,18 +50,7 @@ class CourseController extends Controller
      */
     public function show($id)
     {
-        echo 'show';
-        return ;
-        $courseId=1;
-        $course=Course::find($courseId);
-        $students=Course::gather_scores($courseId);
-        echo $course;
-        echo '<hr>';
-        echo '*****<br>';
-        foreach($students as $student){
-            echo  $student;
-            echo '<hr>';
-        }
+        //
     }
 
     /**
@@ -82,7 +73,15 @@ class CourseController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //return response()->json($request->all());
+        Course::upsert(
+            $request->all(),
+            ['klass_id','code'],
+            ['title_zh','title_en','type','stream','elective']
+        );
+
+        Course::whereNotIn('code',array_column($request->all(),'code'))->where('klass_id',$id)->delete();
+        return response()->json(["result"=>"done"]);
     }
 
     /**
@@ -96,12 +95,15 @@ class CourseController extends Controller
         //
     }
 
-    public function getByKlassId($klassId){
-        //$courses=Klass::find($klassId)->courses;
-        $courses=Course::where('klass_id',$klassId)->where('type','SUB')->with('teachers')->get();
-        echo $courses;
+    public function Klass($klassId){
+        $klass=Klass::find($klassId);
+        $courses=Course::whereBelongsTo($klass)->get();
+        $subjects=Subject::all();
+        return Inertia::render('Admin/CoursesKlass',[
+            'klass'=>$klass,
+            'courses'=>$courses,
+            'subjects'=>$subjects
+        ]);
     }
 
 }
-
-

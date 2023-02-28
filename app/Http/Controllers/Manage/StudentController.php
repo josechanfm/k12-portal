@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Student;
-use App\Models\Address;
+use App\Models\Klass;
 
 class StudentController extends Controller
 {
@@ -92,4 +92,10 @@ class StudentController extends Controller
     {
         //
     }
+
+    public function getByKlassId($klassId){
+        $students=Klass::find($klassId)->students;
+        echo $students;
+    }
+
 }

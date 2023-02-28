@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('title_en')->nullable();
             $table->string('subject_code')->nullable();
             $table->text('remark')->nullable();
-            $table->integer('version');
+            $table->integer('version')->nullable();
             $table->timestamps();
         });
     }

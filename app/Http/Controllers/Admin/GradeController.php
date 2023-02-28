@@ -25,14 +25,7 @@ class GradeController extends Controller
         }else{
             $year=Year::where('active',1)->orderBy('start','DESC')->first();
         }
-
-        $grades = Grade::with('subjects')->whereBelongsTo($year)->orderBy('rank')->get();
-        return Inertia::render('Admin/Grades',[
-            'year'=>$year,
-            'grades'=>$grades,
-            'gradeCategories'=>Config::item('grade_categories'),
-            //'gradeCategories'=>json_decode(Config::where('key','grade_categories')->first()->value),
-        ]);
+        return redirect('admin/grades/year/'.$year->id);
     }
 
     /**
@@ -55,7 +48,7 @@ class GradeController extends Controller
     {
         $grade=new Grade;
         $grade->year_id=$request->year_id;
-        $grade->rank=$request->rank;
+        $grade->sequence=$request->sequence;
         $grade->initial=$request->initial;
         $grade->level=$request->level;
         $grade->tag=$request->initial.$request->level;
@@ -111,10 +104,10 @@ class GradeController extends Controller
         if($request->has('id')){
             $grade=Grade::find($id);
             $grade->year_id=1;
-            $grade->rank=$request->rank;
-            $grade->initial=$request->initial;
-            $grade->initial=$request->level;
-            $grade->tag=$request->initial.$request->level;
+            // $grade->sequence=$request->sequence;
+            // $grade->initial=$request->initial;
+            // $grade->initial=$request->level;
+            // $grade->tag=$request->initial.$request->level;
             $grade->title_zh=$request->title_zh;
             $grade->title_en=$request->title_en;
             $grade->description=$request->description;
@@ -139,5 +132,16 @@ class GradeController extends Controller
             //Grade::destroy($id);
             return redirect()->back();    
         }
+    }
+
+    public function year($yearId){
+        $year=Year::find($yearId);
+        $grades=Grade::whereBelongsTo($year)->orderBy('sequence')->get();
+        return Inertia::render('Admin/GradesYear',[
+            'year'=>$year,
+            'grades'=>$grades,
+            'gradeCategories'=>Config::item('grade_categories'),
+            'gradeLevels'=>Config::item('grade_levels'),
+        ]);
     }
 }

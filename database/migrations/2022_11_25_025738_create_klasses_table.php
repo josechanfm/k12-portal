@@ -18,7 +18,7 @@ return new class extends Migration
             $table->bigInteger('grade_id')->on('grades')->onDelete('restrict')->onUpdate('cascade');
             $table->char('letter',5)->nullable();
             $table->char('tag',5)->nullable();
-            $table->char('string',5)->nullable();
+            $table->char('stream',5)->nullable();
             $table->string('byname')->nullable();
             $table->string('room')->nullable();
             $table->timestamps();

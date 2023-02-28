@@ -44,7 +44,7 @@ class ConfigSeeder extends Seeder
             'value' =>'[{"value":"SUB","label":"學科"},{"value":"ATT","label":"生活習慣和態度"},{"value":"RPAL","label":"獎懲遲缺"},{"value":"LES","label":"餘暇活動"},{"value":"OVA","label":"總體評分"}]'
         ]);
         DB::table('configs')->insert([
-            'key'=>'study_plans',
+            'key'=>'study_streams',
             'value' =>'[{"value":"ALL","label":"全科"},{"value":"ART","label":"文科"},{"value":"SCI","label":"理科"},{"value":"AAS","label":"文理科"}]'
         ]);
         DB::table('configs')->insert([
@@ -52,7 +52,7 @@ class ConfigSeeder extends Seeder
             'value' =>'[{"value":1,"label":"上學期"},{"value":2,"label":"下學期"}]'
         ]);
         DB::table('configs')->insert([
-            'key'=>'year_terms',
+            'key'=>'habit_columns',
             'value' =>'[{"name":"health_1","label":"衣服鞋襪整齊清潔","short":"整潔"},
                 {"name":"health_2","label":"常剪指甲","short":"指甲"},
                 {"name":"health_3","label":"懂得使用手帕或紙巾","short":"紙巾"},
@@ -69,6 +69,97 @@ class ConfigSeeder extends Seeder
                 {"name":"social_3","label":"樂於助人","short":"助人"},
                 {"name":"social_4","label":"會和別人分享及輪候","short":"分享"},
                 {"name":"social_5","label":"誠實坦白肯認錯","short":"誠實"}]'
-            ]);
+        ]);
+        DB::table('configs')->insert([
+            'key'=>'behaviour_genres',
+            'value'=>'[{"value":"LATE","label":"遲到"},
+                {"value":"ABSENT","label":"缺席"},
+                {"value":"DEMERIT","label":"缺點"},
+                {"value":"FAULT_BIG","label":"大過"},
+                {"value":"FAULT_SMALL","label":"小過"},
+                {"value":"CREDIT_BIG","label":"大功"},
+                {"value":"CREDIT_SMALL","label":"小功"},
+                {"value":"MERIT","label":"優點"}]'
+        ]);
+        DB::table('configs')->insert([
+            'key'=>'grade_levels',
+            'value' =>'[{
+                "value": 1,
+                "label": "K1",
+                "initial": "K",
+                "level": 1
+            }, {
+                "value": 2,
+                "label": "K2",
+                "initial": "K",
+                "level": 2
+            }, {
+                "value": 3,
+                "label": "K3",
+                "initial": "K",
+                "level": 3
+            }, {
+                "value": 4,
+                "label": "P1",
+                "initial": "P",
+                "level": 1
+            }, {
+                "value": 5,
+                "label": "P2",
+                "initial": "P",
+                "level": 2
+            }, {
+                "value": 6,
+                "label": "P3",
+                "initial": "P",
+                "level": 3
+            }, {
+                "value": 7,
+                "label": "P4",
+                "initial": "P",
+                "level": 4
+            }, {
+                "value": 8,
+                "label": "P5",
+                "initial": "P",
+                "level": 5
+            }, {
+                "value": 9,
+                "label": "P6",
+                "initial": "P",
+                "level": 6
+            }, {
+                "value": 10,
+                "label": "SC1",
+                "initial": "SC",
+                "level": 1
+            }, {
+                "value": 11,
+                "label": "SC2",
+                "initial": "SC",
+                "level": 2
+            }, {
+                "value": 12,
+                "label": "SC3",
+                "initial": "SC",
+                "level": 3
+            }, {
+                "value": 13,
+                "label": "SG1",
+                "initial": "SG",
+                "level": 1
+            }, {
+                "value": 14,
+                "label": "SG2",
+                "initial": "SG",
+                "level": 2
+            }, {
+                "value": 15,
+                "label": "SG3",
+                "initial": "SG",
+                "level": 3
+            }]'
+        ]);
+
     }
 }

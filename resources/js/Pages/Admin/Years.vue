@@ -11,8 +11,7 @@
             <a-table :dataSource="years" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
-                        <ButtonLink :href="'/admin/grades?yearId='+record.id" :type="'Link'">Grades</ButtonLink>
-                        <ButtonLink :href="'/admin/klasses?yearId='+record.id" :type="'Link'">Classes</ButtonLink>
+                        <ButtonLink :href="'/admin/grades/year/'+record.id" :type="'Link'">Grades</ButtonLink>
                         <ButtonLink @click="editRecord(record)" >Edit</ButtonLink>
                         <ButtonLink @click="deleteRecord(record.id)" >Delete</ButtonLink>
                     </template>

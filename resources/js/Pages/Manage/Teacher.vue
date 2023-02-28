@@ -7,23 +7,24 @@
         </template>
         <div>
             <a-table :dataSource="teachers" :columns="columns">
-            <template #bodyCell="{column, text, record, index}">
-                <template v-if="column.dataIndex=='operation'">
-                    <Link :href="'teaching?tid='+record.id " method="get" as="button" type="button">Teaching</Link>
+                <template #bodyCell="{column, text, record, index}">
+                    <template v-if="column.dataIndex=='operation'">
+                        <ButtonLink :href="'teaching/'+record.id" :type="'Link'">任教</ButtonLink>
+                        
+                    </template>
+                    <template v-else-if="column.dataIndex=='courses'">
+                        <ul>
+                            <li v-for="course in record.courses">
+                                {{ course.abbr }}-{{ course.title_zh }}
+                                <Link :href="'score?kid='+course.klass_id + '&cid='+course.id" method="get" as="button" type="button">Score</Link>
+                            </li>
+                        </ul>
+                    </template>
+                    <template v-else>
+                        {{record[column.dataIndex]}}
+                    </template>
                 </template>
-                <template v-else-if="column.dataIndex=='courses'">
-                    <ul>
-                        <li v-for="course in record.courses">
-                            {{ course.abbr }}-{{ course.title_zh }}
-                            <Link :href="'score?kid='+course.klass_id + '&cid='+course.id" method="get" as="button" type="button">Score</Link>
-                        </li>
-                    </ul>
-                </template>
-                <template v-else>
-                    {{record[column.dataIndex]}}
-                </template>
-            </template>
-        </a-table>
+            </a-table>
 
         </div>
     </AdminLayout>
@@ -31,11 +32,11 @@
 
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
-import { Link } from '@inertiajs/inertia-vue3';
+import ButtonLink from '@/Components/ButtonLink.vue';
 
 export default {
     components: {
-        AdminLayout, Link
+        AdminLayout, ButtonLink
     },
     props: ['teachers'],
     data() {

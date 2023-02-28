@@ -29,7 +29,7 @@ class YearSeeder extends Seeder
             for($i=1;$i<=6;$i++){
                 DB::table('grades')->insert([
                         'year_id'=>$yearId,
-                        'rank'=>$i,
+                        'sequence'=>$i,
                         'initial'=>'P',
                         'level'=>$i,
                         'tag'=>'P'.$i,
@@ -37,13 +37,24 @@ class YearSeeder extends Seeder
                         'active'=>1
                 ]);
             }
-            for($i=7;$i<=12;$i++){
+            for($i=7;$i<=9;$i++){
                 DB::table('grades')->insert([
                         'year_id'=>$yearId,
-                        'rank'=>$i,
-                        'initial'=>'S',
+                        'sequence'=>$i,
+                        'initial'=>'SC',
                         'level'=>$i-6,
-                        'tag'=>'S'.$i-6,
+                        'tag'=>'SC'.$i-6,
+                        'version'=>1,
+                        'active'=>1
+                ]);
+            }
+            for($i=10;$i<=12;$i++){
+                DB::table('grades')->insert([
+                        'year_id'=>$yearId,
+                        'sequence'=>$i,
+                        'initial'=>'SG',
+                        'level'=>$i-9,
+                        'tag'=>'SG'.$i-9,
                         'version'=>1,
                         'active'=>1
                 ]);

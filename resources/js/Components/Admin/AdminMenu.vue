@@ -1,8 +1,5 @@
 <template>
     <div id="main_menu">
-      <a-button v-can="'add'">Add</a-button>
-      <a-button v-role="'admin'" >Is admin</a-button>
-      <a-button v-role="'master'">Is master</a-button>
       <a-menu
         v-model:openKeys="openKeys"
         v-model:selectedKeys="selectedKeys"
@@ -133,7 +130,7 @@
     children: [{
       key: '3.1',
       title: '任教',
-      url:'/manage/teaching',
+      url:'/teacher',
     }],
   },{
     key: '4',

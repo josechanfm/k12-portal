@@ -88,9 +88,10 @@ class TeacherController extends Controller
         //
     }
 
-    public function teaching(Request $request){
-        $tid=$request->tid;
-        $teacher=Teacher::with('courses')->find($tid);
+    public function teaching($teacherId){
+        $teacher=Teacher::with('courses')->find($teacherId);
+        // echo json_encode($teacher);
+        // return;
         return Inertia::render('Manage/Teaching',[
             'teacher'=>$teacher
         ]);

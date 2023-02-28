@@ -63,9 +63,8 @@
                 ref="modalScoreColumn"
                 @finish="onModalFinish"
             >
-            
-                <a-form-item label="學分欄名稱 " :name="['name']" :rules="[{required:true, message:'Please input score column name'}]">
-                    <a-input v-model:value="modal.data.name"/>
+                <a-form-item label="學分欄名稱 " :name="['field_label']" :rules="[{required:true, message:'Please input score column name'}]">
+                    <a-input v-model:value="modal.data.field_label"/>
                 </a-form-item>
                 <a-form-item label="學段" :name="['term_id']" :rules="[{required:true, message:'Please input score column name'}]">
                     <a-input v-model:value="modal.data.term_id"/>
@@ -121,7 +120,7 @@ export default {
                     dataIndex: 'term_id',
                 },{
                     title: '學分欄名稱',
-                    dataIndex: 'name',
+                    dataIndex: 'field_label',
                 },{
                     title: '分類',
                     dataIndex: 'type',

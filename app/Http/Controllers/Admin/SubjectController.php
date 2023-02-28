@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Grade;
+use App\Models\Klass;
+use App\Models\Course;
 use App\Models\Subject;
 use App\Models\SubjectTemplate;
 use Illuminate\Support\Facades\Validator;
@@ -158,4 +160,5 @@ class SubjectController extends Controller
         Subject::destroy($id);
         return redirect()->back();
     }
+
 }

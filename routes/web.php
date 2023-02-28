@@ -62,7 +62,7 @@ Route::resource('/courses',CourseController::class);
 Route::prefix('master')->group(function(){
     Route::resource('/studies',App\Http\Controllers\Master\StudyController::class);
     Route::resource('/study/subjects',App\Http\Controllers\Master\SubjectController::class);
-    Route::resource('/subjectTemplate',App\Http\Controllers\Master\SubjectTemplateController::class);
+    Route::resource('/subjects',App\Http\Controllers\Master\SubjectController::class);
     Route::resource('/configs',App\Http\Controllers\Master\ConfigController::class);
     Route::resource('/transcriptTemplate',App\Http\Controllers\Master\TranscriptTemplateController::class);
     Route::resource('/roles',App\Http\Controllers\Master\RoleController::class);
@@ -73,15 +73,18 @@ Route::prefix('admin')->group(function(){
     Route::resource('/',App\Http\Controllers\Admin\DashboardController::class);
     Route::resource('/years',App\Http\Controllers\Admin\YearController::class);
     Route::resource('/grades',App\Http\Controllers\Admin\GradeController::class);
+    Route::get('grades/year/{yearId}',[App\Http\Controllers\Admin\GradeController::class,'year']);
     Route::resource('/klasses',App\Http\Controllers\Admin\KlassController::class);
-    Route::resource('/gradeSubjects',App\Http\Controllers\Admin\SubjectController::class);
+    Route::get('klasses/grade/{gradeId}',[App\Http\Controllers\Admin\KlassController::class,'grade']);
+    Route::resource('/courses',App\Http\Controllers\Admin\CourseController::class);
+    Route::get('courses/klass/{klassId}',[App\Http\Controllers\Admin\CourseController::class,'klass'])->name('abc');
 });
 
 Route::prefix('manage/')->group(function(){
     Route::resource('/',App\Http\Controllers\Manage\DashboardController::class);
     Route::resource('/grades',App\Http\Controllers\Manage\GradeController::class);
-    Route::get('/courses/{klassId}',[App\Http\Controllers\Manage\GradeController::class, 'courses']);
-    Route::get('/students/{klassId}',[App\Http\Controllers\Manage\GradeController::class,'students']);
+    Route::get('/courses/get_by_klass_id/{klassId}',[App\Http\Controllers\Manage\CourseController::class, 'getByKlassId']);
+    Route::get('/students/get_by_klass_id/{klassId}',[App\Http\Controllers\Manage\StudentsController::class,'getByKlassId']);
     Route::get('/klass_scores/{klassId}',[App\Http\Controllers\Manage\KlassController::class,'klass_scores']);
     Route::get('/score',[App\Http\Controllers\Manage\ScoreController::class,'index']);
     Route::post('/score_update',[App\Http\Controllers\Manage\ScoreController::class,'update']);
@@ -91,7 +94,7 @@ Route::prefix('manage/')->group(function(){
     Route::get('/test_data',[App\Http\Controllers\Manage\KlassController::class,'test_data']);
     Route::get('/transcript',[App\Http\Controllers\Manage\TranscriptController::class,'index']);
     Route::get('/transcript/klass_student/{id}',[App\Http\Controllers\Manage\TranscriptController::class,'klassStudent']);
-    Route::get('teaching',[App\Http\Controllers\Manage\TeacherController::class,'teaching']);
+    Route::get('teaching/{teacherId}',[App\Http\Controllers\Manage\TeacherController::class,'teaching']);
     Route::resource('/teacher',App\Http\Controllers\Manage\TeacherController::class);
     Route::resource('/student',App\Http\Controllers\Manage\StudentController::class);
     Route::resource('/outcome',App\Http\Controllers\Manage\OutcomeController::class);

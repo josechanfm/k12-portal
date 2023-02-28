@@ -22,13 +22,12 @@ return new class extends Migration
             $table->string('type',6)->nullable();
             $table->string('stream',6)->nullable();
             $table->string('elective',6)->nullable();
-            $table->string('score_column')->nullable();
             $table->text('description')->nullable();
-            $table->bigInteger('study_id')->nullable();
-            $table->string('score_column_template')->nullable();
-            $table->tinyInteger('active');
+            $table->string('score_column')->nullable();
             $table->string('socre_scheme')->nullable();
+            $table->tinyInteger('active');
             $table->timestamps();
+            $table->unique(['klass_id','code'],'klass_id_code');
         });
     }
 
