@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('stream');
             $table->string('elective');
             $table->timestamps();
+            $table->unique(['study_id','subject_id'],'study_id_subject_id');
         });
     }
 

@@ -126,9 +126,7 @@ class KlassController extends Controller
             $klass->delete();
             return redirect()->back()
                 ->with('message', 'Blog Delete Successfully');
-
         }
-        
     }
 
     public function disciplines($klassId){

@@ -5,23 +5,24 @@ namespace App\Http\Controllers\Master;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Config;
+use App\Models\Study;
+use App\Models\Subject;
+use App\Models\StudySubject;
 use App\Models\SubjectTemplate;
-use App\Models\TranscriptTemplate;
+use App\Models\Config;
 use Illuminate\Support\Facades\Validator;
 
-class SubjectTemplateController extends Controller
+class StudySubjectController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('Master/SubjectTemplate',[
-            'gradeCategories'=>Config::item('grade_categories'),
-            'subjects'=>SubjectTemplate::all(),
+        return Inertia::render('Master/StudySubject',[
+            'subjects'=>Subject::all(),
             'subjectTypes'=>Config::item('subject_types'),
             'studyStreams'=>Config::item('study_streams'),
         ]);
@@ -49,7 +50,7 @@ class SubjectTemplateController extends Controller
             'code' => ['required'],
         ])->validate();
 
-        $subject=new SubjectTemplate;
+        $subject=new Subject;
         $subject->code=$request->code;
         $subject->title_zh=$request->title_zh;
         $subject->title_en=$request->title_en;
@@ -57,11 +58,11 @@ class SubjectTemplateController extends Controller
         $subject->stream=$request->stream;
         $subject->elective=$request->elective;
         $subject->description=$request->description;
-        $subject->grades=$request->grades;
         $subject->version=$request->version;
         $subject->active=$request->active;
         $subject->save();
         return redirect()->back();
+        
     }
 
     /**
@@ -72,6 +73,15 @@ class SubjectTemplateController extends Controller
      */
     public function show($id)
     {
+        $study=Study::with('subjects')->find($id);
+        $subjects=Subject::where('version',1)->get();
+        // echo json_encode($study);
+        // echo json_encode($subjects);
+        // return;
+        return Inertia::render('Master/Subject',[
+            'study'=>$study,
+            'subjects'=>$subjects
+        ]);
     }
 
     /**
@@ -82,7 +92,12 @@ class SubjectTemplateController extends Controller
      */
     public function edit($id)
     {
-        //
+        $study=Study::with('subjects')->find($id);
+        $subjects=Subject::where('active',1)->get();
+        return Inertia::render('Master/StudySubjectEdit',[
+            'study'=>$study,
+            'subjects'=>$subjects
+        ]);
     }
 
     /**
@@ -94,24 +109,23 @@ class SubjectTemplateController extends Controller
      */
     public function update(Request $request, $id)
     {
-        Validator::make($request->all(), [
-            'code' => ['required'],
-        ])->validate();
-        if($request->has('id')){
-            $subject=SubjectTemplate::find($id);
-            $subject->code=$request->code;
-            $subject->title_zh=$request->title_zh;
-            $subject->title_en=$request->title_en;
-            $subject->type=$request->type;
-            $subject->stream=$request->stream;
-            $subject->elective=$request->elective;
-            $subject->description=$request->description;
-            $subject->grades=$request->grades;
-            $subject->version=$request->version;
-            $subject->active=$request->active;
-            $subject->save();
-        }
-        return redirect()->back();
+        $data = array_map(function($d) use ($id){
+            return array(
+                'study_id'=>$id,
+                'subject_id'=>$d['id'],
+                'stream'=>$d['stream'],
+                'elective'=>$d['elective']
+            );
+        }, $request->all());
+        StudySubject::upsert(
+            $data,
+            ['study_id','subject_id'],
+            ['stream','elective']
+        );
+
+        StudySubject::whereNotIn('subject_id',array_column($data,'subject_id'))->where('study_id',$id)->delete();
+        return response()->json($data);
+        //return response()->json($request->all());
     }
 
     /**

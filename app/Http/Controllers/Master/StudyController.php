@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Study;
+use App\Models\Subject;
 use App\Models\Config;
 use Illuminate\Support\Facades\Validator;
 
@@ -120,6 +121,22 @@ class StudyController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $study=Study::find($id);
+        if($study){
+            $study->delete();
+            return redirect()->back()
+                ->with('message', 'Study Delete Successfully');
+
+        }
     }
+
+    public function subjects(Request $request)
+    {
+        return Inertia::render('Master/StudySubject',[
+            'subjects'=>Subject::all(),
+            'subjectTypes'=>Config::item('subject_types'),
+            'studyStreams'=>Config::item('study_streams'),
+        ]);
+    }
+    
 }

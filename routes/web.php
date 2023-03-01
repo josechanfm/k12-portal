@@ -43,7 +43,6 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
     Route::prefix('master')->group(function(){
-        Route::resource('/subjectTemplate',App\Http\Controllers\Master\SubjectTemplateController::class);
         Route::resource('/configs',App\Http\Controllers\Master\ConfigController::class);
         Route::resource('/transcriptTemplate',App\Http\Controllers\Master\TranscriptTemplateController::class);
         Route::resource('/users',App\Http\Controllers\Master\UserController::class);
@@ -61,7 +60,7 @@ Route::resource('/courses',CourseController::class);
 
 Route::prefix('master')->group(function(){
     Route::resource('/studies',App\Http\Controllers\Master\StudyController::class);
-    Route::resource('/study/subjects',App\Http\Controllers\Master\SubjectController::class);
+    Route::resource('/study/subjects',App\Http\Controllers\Master\StudySubjectController::class);
     Route::resource('/subjects',App\Http\Controllers\Master\SubjectController::class);
     Route::resource('/configs',App\Http\Controllers\Master\ConfigController::class);
     Route::resource('/transcriptTemplate',App\Http\Controllers\Master\TranscriptTemplateController::class);

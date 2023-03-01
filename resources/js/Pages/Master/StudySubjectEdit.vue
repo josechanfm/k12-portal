@@ -5,18 +5,14 @@
                 總科目列表
             </h2>
         </template>
-        <button @click="onClickCreate()"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Create Subject template</button>
+            <button @click="saveSelected"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Save Selected</button>
+            <a-button :href="'../'+study.id"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Select Subjects from template</a-button>
             <a-table :dataSource="subjects" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
-                    <template v-if="column.dataIndex=='operation'">
-                        <a-button @click="onClickEdit(record)">Edit</a-button>
-                        <a-button @click="onClickDelete(record.id)">Delete</a-button>
-                    </template>
-                    <template v-else-if="column.dataIndex=='courses'">
-                        <ul>
-                            <li v-for="klass in record['klasses']">Class: {{klass.acronym}}</li>
-                        </ul>
+                    <template v-if="column.dataIndex=='selected'">
+                        <a-checkbox v-model:checked="record.selected" />
                     </template>
                     <template v-else>
                         {{record[column.dataIndex]}}
@@ -33,45 +29,30 @@
                 :rules="rules"
                 :validate-messages="validateMessages"
             >
-                <a-form-item label="科目代號" name="code">
-                    <a-input v-model:value="modal.data.code" />
+                <a-form-item label="版本" name="version">
+                    <a-input-number v-model:value="modal.data.version" />
                 </a-form-item>
-                <a-form-item label="科目名稱 (中文)" name="title_zh">
+                <a-form-item label="名稱 (中文)" name="title_zh">
                     <a-input v-model:value="modal.data.title_zh" />
                 </a-form-item>
-                <a-form-item label="科目名稱 (英文)" name="title_en">
+                <a-form-item label="名稱 (英文)" name="title_en">
                     <a-input v-model:value="modal.data.title_en" />
-                </a-form-item>
-                <a-form-item label="分類" name="type">
-                    <a-radio-group v-model:value="modal.data.type" button-style="solid">
-                        <a-radio-button v-for="st in subjectTypes" :value="st.value">{{ st.label }}</a-radio-button>
-                    </a-radio-group>
                 </a-form-item>
                 <a-form-item label="專業方向" name="stream">
                     <a-radio-group v-model:value="modal.data.stream" button-style="solid">
                         <a-radio-button v-for="ss in studyStreams" :value="ss.value">{{ ss.label }}</a-radio-button>
                     </a-radio-group>
                 </a-form-item>
-                <a-form-item label="必修/選修" name="elective">
-                    <a-radio-group v-model:value="modal.data.elective" button-style="solid">
-                        <a-radio-button value="COP">Compulsary</a-radio-button>
-                        <a-radio-button value="ELE">Elective</a-radio-button>
-                    </a-radio-group>
-                </a-form-item>
                 <a-form-item label="簡介" name="description">
                     <a-textarea v-model:value="modal.data.description" placeholder="textarea with clear icon" allow-clear />
-                </a-form-item>
-                <a-form-item label="版本" name="version">
-                    <a-input-number v-model:value="modal.data.version" />
                 </a-form-item>
                 <a-form-item label="有效" name="active">
                     <a-switch v-model:checked="modal.data.active" :checkedValue="1" :uncheckedValue="0"/>
                 </a-form-item>
-                <a-form-item label="學年階段" name="grades">
+                <a-form-item label="學年階段" name="grade">
                     <a-select
                         ref="select"
-                        mode="multiple"
-                        v-model:value="modal.data.grades"
+                        v-model:value="modal.data.grade"
                         :options="gradeCategories"
                     />
                 </a-form-item>
@@ -89,13 +70,14 @@
 
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
+import axios from 'axios';
 import { defineComponent, reactive } from 'vue';
 
 export default {
     components: {
         AdminLayout,
     },
-    props: ['gradeCategories','subjects','subjectTypes','studyStreams'],
+    props: ['study','subjects'],
     data() {
         return {
             modal: {
@@ -107,34 +89,18 @@ export default {
             dataSource:[],
             columns:[
                 {
-                    title: 'Code',
-                    dataIndex: 'code',
-                    key: 'code',
+                    title: 'Selected',
+                    dataIndex: 'selected',
                 },{
                     title: 'Title Zh',
                     dataIndex: 'title_zh',
-                    key: 'title_zh',
                 },{
                     title: 'Stream',
                     dataIndex: 'stream',
-                    key: 'stream',
                 },{
-                    title: 'Elective',
-                    dataIndex: 'elective',
-                    key: 'elective',
-                },{
-                    title: 'Type',
-                    dataIndex: 'type',
-                    key: 'type',
-                },{
-                    title: 'Active',
-                    dataIndex: 'active',
-                    key: 'active',
-                },{
-                    title: 'Operation',
-                    dataIndex: 'operation',
-                    key: 'operation',
-                },
+                    title: 'grade',
+                    dataIndex: 'grade',
+                }
             ],
             rules:{
                 code:{
@@ -182,30 +148,29 @@ export default {
 
         }
     },
+    mounted(){
+        this.subjects.map(subject=>{
+            return subject.selected=this.study.subjects.find(ss=>{
+                return subject.id==ss.id
+            })!==undefined;
+        } )
+    },
     methods: {
         onClickCreate(record){
             this.modal.data={};
-            this.modal.data.type=this.subjectTypes[0].value;
-            this.modal.data.stream='LIB';
-            this.modal.data.elective='COP';
             this.modal.title="Edit Subject";
             this.modal.mode='CREATE';
             this.modal.isOpen = true;
         },
         onClickEdit(record){
             this.modal.data={...record};
-            if(this.modal.data.grades==''){
-                this.modal.data.grades=[];
-            }else{
-                this.modal.data.grades=JSON.parse(this.modal.data.grades);
-            }
             this.modal.title="Edit Subject";
             this.modal.mode='EDIT';
             this.modal.isOpen = true;
         },
         storeRecord(){
             this.$refs.modalRef.validateFields().then(()=>{
-                this.$inertia.post('/master/subjectTemplate/', this.modal.data,{
+                this.$inertia.post('/master/studies/', this.modal.data,{
                     onSuccess:(page)=>{
                         console.log(page);
                         this.modal.isOpen=false;
@@ -220,7 +185,7 @@ export default {
         },
         updateRecord(){
             this.$refs.modalRef.validateFields().then(()=>{
-                this.$inertia.put('/master/subjectTemplate/' + this.modal.data.id, this.modal.data,{
+                this.$inertia.put('/master/studies/' + this.modal.data.id, this.modal.data,{
                     onSuccess:(page)=>{
                         console.log(page);
                         this.modal.isOpen=false;
@@ -252,6 +217,20 @@ export default {
         },
         onFinishFailed(errorInfo){
             console.log('errorInfo: '+errorInfo);
+        },
+        saveSelected(){
+            const subjects=this.subjects.filter(subject=>{ return subject.selected==true });
+            //this.$inertia.put('/master/study/subjects/' + this.study.id, subjects,{
+            axios.put('/master/study/subjects/' + this.study.id, subjects,{
+                onSuccess:(page)=>{
+                    console.log(page);
+                    this.modal.isOpen=false;
+                },
+                onError:(error)=>{
+                    console.log(error);
+                }
+            });
+
         }
     },
 }

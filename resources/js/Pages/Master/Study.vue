@@ -10,7 +10,6 @@
             <a-table :dataSource="studies" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
-                        <a-button :href="'study/subjects/'+record.id">List Subjects</a-button>
                         <a-button :href="'study/subjects/'+record.id+'/edit'">Edit Subjects</a-button>
                         <a-button @click="onClickEdit(record)">Edit</a-button>
                         <a-button @click="onClickDelete(record.id)">Delete</a-button>
@@ -119,9 +118,6 @@ export default {
                 title_zh:{
                     required:true,
                 },
-                title_en:{
-                    required:true,
-                },
                 type:{
                     required:true,
                 },
@@ -129,6 +125,12 @@ export default {
                     required:true,
                 },
                 eletive:{
+                    required:true,
+                },
+                grade:{
+                    required:true,
+                },
+                active:{
                     required:true,
                 },
             },
@@ -160,7 +162,7 @@ export default {
     },
     methods: {
         onClickCreate(record){
-            this.modal.data={};
+            this.modal.data={active:0};
             this.modal.title="Edit Subject";
             this.modal.mode='CREATE';
             this.modal.isOpen = true;
@@ -204,7 +206,7 @@ export default {
         },
         onClickDelete(recordId){
             if (!confirm('Are you sure want to remove?')) return;
-            this.$inertia.delete('/master/subjects/' + recordId,{
+            this.$inertia.delete('/master/studies/' + recordId,{
                 onSuccess: (page)=>{
                     console.log(page);
                 },
@@ -212,7 +214,6 @@ export default {
                     console.log(error);
                 }
             });
-            this.ChangeModalMode('Close');
         },
         modalCancel(){
             this.modal.data={}
