@@ -19,7 +19,10 @@ class KlassObserver
     public function created(Klass $klass)
     {
         //$subjects=Subject::where('grade_id',$klass->grade_id)->get();
-        $subjects=Study::find($klass->study_id)->subjects()->get();
+        if(empty($klass->study_id)){
+            return false;
+        };
+        $subjects=Study::find($klass->study_id)->subjects;
         $fields=[];
         $data=[];
         foreach($subjects as $subject){
@@ -28,305 +31,33 @@ class KlassObserver
             $fields['title_zh']=$subject->title_zh;
             $fields['title_en']=$subject->title_en;
             $fields['type']=$subject->type;
-            $fields['stream']=$subject->stream;
-            $fields['elective']=$subject->elective;
-            $fields['score_column_template']=$subject->score_column_template;
-            $fields['study_id']=$subject->pivot->study_id;
+            $fields['stream']=$subject->pivot->stream;
+            $fields['elective']=$subject->pivot->elective;
             $fields['active']=true;
             $data[]=$fields;
         }
         Course::upsert(
             $data,
             ['klass_id','code'],
-            ['title_zh','title_en','type','stream','elective','study_id','active']
+            ['title_zh','title_en','type','stream','elective','active']
         );
 
         $courses=Course::whereBelongsTo($klass)->get();
+        $scoreTemplate=json_decode(Config::where('key','score_template')->first()->value);
         foreach($courses as $course){
-            $scoreTemplate=json_decode(Config::where('key','score_template')->first()->value);
-            if(property_exists($scoreTemplate,$course->score_column_template)){
-                foreach($scoreTemplate->{$course->score_column_template} as $score){
+            // if(property_exists($scoreTemplate,$course->score_column_template)){
+                //foreach($scoreTemplate->{$course->score_column_template} as $score){
+                foreach($scoreTemplate->term as $i=>$score){
                     $score_column = new ScoreColumn;
                     $score_column->term_id=$score->term_id;
                     $score_column->course_id=$course->id;
+                    $score_column->sequence=$i;
                     $score_column->field_name=$score->value;
                     $score_column->field_label=$score->label;
                     $score_column->save();
                 }
-    
-            }
+            //}
         }
-/*            
-            if($course->code=='LES'){
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=1;
-                $score_column->name='活動名稱';
-                $score_column->type=$course->type;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=1;
-                $score_column->name='活動表現';
-                $score_column->type=$course->type;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=2;
-                $score_column->name='活動名稱';
-                $score_column->type=$course->type;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=2;
-                $score_column->name='活動表現';
-                $score_column->type=$course->type;
-                $score_column->save();
-            }elseif($course->code=='ATT'){
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=1;
-                $score_column->name='衣服鞋襪整齊清潔。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=1;
-                $score_column->name='常剪指甲。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=1;
-                $score_column->name='懂得使用手帕或紙巾。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=1;
-                $score_column->name='不把手指雜物放進口裡。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=1;
-                $score_column->name='能把廢物投入廢紙箱內。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=1;
-                $score_column->name='守秩序不喧嚷。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=1;
-                $score_column->name='留心聽講。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=1;
-                $score_column->name='坐立行走姿勢正確。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=1;
-                $score_column->name='離開座位把物件桌椅整理好。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=1;
-                $score_column->name='愛護公物用後放回原處。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=1;
-                $score_column->name='遵守校規。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=1;
-                $score_column->name='守時。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=1;
-                $score_column->name='尊敬師長，友受和睦。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=1;
-                $score_column->name='樂於助人。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=1;
-                $score_column->name='會和別人分享及輪候。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=1;
-                $score_column->name='誠實坦白肯認錯。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=2;
-                $score_column->name='衣服鞋襪整齊清潔。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=2;
-                $score_column->name='常剪指甲。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=2;
-                $score_column->name='懂得使用手帕或紙巾。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=2;
-                $score_column->name='不把手指雜物放進口裡。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=2;
-                $score_column->name='能把廢物投入廢紙箱內。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=2;
-                $score_column->name='守秩序不喧嚷。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=2;
-                $score_column->name='留心聽講。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=2;
-                $score_column->name='坐立行走姿勢正確。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=2;
-                $score_column->name='離開座位把物件桌椅整理好。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=2;
-                $score_column->name='愛護公物用後放回原處。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=2;
-                $score_column->name='遵守校規。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=2;
-                $score_column->name='守時。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=2;
-                $score_column->name='尊敬師長，友受和睦。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=2;
-                $score_column->name='樂於助人。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=2;
-                $score_column->name='會和別人分享及輪候。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-                $score_column = new ScoreColumn;
-                $score_column->course_id=$course->id;
-                $score_column->term_id=2;
-                $score_column->name='誠實坦白肯認錯。';
-                $score_column->type=$course->type;
-                $score_column->for_transcript=true;
-                $score_column->save();
-            }
-*/            
-            // "H1":"衣服鞋襪整齊清潔。"
-            // "H2":"常剪指甲。"
-            // "H3":"懂得使用手帕或紙巾。"
-            // "H4":"不把手指雜物放進口裡。"
-            // "H5":"能把廢物投入廢紙箱內。"
-
-            // "B1":"守秩序不喧嚷。"
-            // "B2":"留心聽講。"
-            // "B3":"坐立行走姿勢正確。"
-            // "B4":"離開座位把物件桌椅整理好。"
-            // "B5":"愛護公物用後放回原處。"
-            // "B6":"遵守校規。"
-
-            // "S1":"守時。"
-            // "S2":"尊敬師長，友受和睦。"
-            // "S3":"樂於助人。"
-            // "S4":"會和別人分享及輪候。"
-            // "S5":"誠實坦白肯認錯。"
     }
 
     /**

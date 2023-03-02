@@ -5,7 +5,6 @@
                 學年階段之班別
             </h2>
         </template>
-        
         <a-typography-title :level="4">學年:{{ grade.year.code }}</a-typography-title>
         <a-typography-title :level="4">年級:{{ grade.tag }}</a-typography-title>
         <ButtonLink v-for="g in grades" :href="'/admin/klasses/grade/'+g.id" :style="'Add'" :type="'Link'">{{ g.tag }}</ButtonLink>
@@ -69,11 +68,23 @@
                     :options="klassLetters"
                 ></a-select>
             </a-form-item>
+            <a-form-item label="學生計劃" name="study_id">
+                <a-select
+                    v-model:value="modal.data.study_id"
+                    styple="with:100%"
+                    placeholder="請選擇..."
+                    max-tag-count="responsive"
+                    :options="studies.filter(study=>study.grade==grade.initial).map(study=>(
+                        {value:study.id,label:study.title_zh}
+                    ))"
+                ></a-select>
+            </a-form-item>
+<!-- 
             <a-form-item label="專業方向" name="stream">
                 <a-radio-group v-model:value="modal.data.stream" button-style="solid">
                     <a-radio-button v-for="ss in studyStreams" :value="ss.value">{{ ss.label }}</a-radio-button>
                 </a-radio-group>
-            </a-form-item>
+            </a-form-item> -->
             <a-form-item label="教室編號" name="room">
                 <a-input v-model:value="modal.data.room" />
             </a-form-item>
@@ -97,7 +108,7 @@ export default {
         AdminLayout,
         ButtonLink,
     },
-    props: ['grades','grade','klasses','klassLetters','studyStreams'],
+    props: ['grades','grade','klasses','klassLetters','studyStreams','studies'],
     data() {
         return {
             gradeSelected:1,
@@ -128,9 +139,6 @@ export default {
             ],
             rules:{
                 letter:{
-                    required:true,
-                },
-                stream:{
                     required:true,
                 },
                 study_id:{
@@ -170,6 +178,7 @@ export default {
             this.editMode = false;
         },
         storeRecord(){
+            console.log(this.modal.data);
             this.$refs.modalRef.validateFields().then(()=>{
                 this.$inertia.post('/admin/klasses/', this.modal.data,{
                     onSuccess:(page)=>{

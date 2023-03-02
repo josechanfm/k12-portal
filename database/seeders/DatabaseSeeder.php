@@ -31,7 +31,6 @@ class DatabaseSeeder extends Seeder
             LocationSeeder::class,
             SupplierSeeder::class,
             UserSeeder::class,
-            TranscriptTemplateSeeder::class,
             TranscriptSeeder::class,
             ScoreColumnSeeder::class,
             ScoreSeeder::class,

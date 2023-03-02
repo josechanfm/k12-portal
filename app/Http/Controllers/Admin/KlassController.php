@@ -59,6 +59,7 @@ class KlassController extends Controller
         $klass->stream=$request->stream;
         $klass->room=$request->room;
         $klass->tag=Grade::find($request->grade_id)->tag.$request->letter;
+        $klass->study_id=$request->study_id;
         $klass->save();
         return redirect()->back();
 }
@@ -83,7 +84,8 @@ class KlassController extends Controller
      */
     public function edit($id)
     {
-        //
+        $studySubjects=Study::find(1)->subjects;
+        echo json_encode($studySubjects);
     }
 
     /**
@@ -145,14 +147,17 @@ class KlassController extends Controller
 
     public function grade($gradeId){
         $grade=Grade::with('year')->find($gradeId);
+        //if grade not found return some kind of error...
         $grades=Grade::where('year_id',$grade->year_id)->get();
         $klasses=Klass::with('courses')->whereBelongsTo($grade)->get();
+        $studies=Study::all();
         return Inertia::render('Admin/KlassesGrade',[
             'klasses'=>$klasses,
             'grade'=>$grade,
             'grades'=>$grades,
             'klassLetters'=>Config::item('klass_letters'),
             'studyStreams'=>Config::item('study_streams'),
+            'studies'=>$studies
         ]);
 
     }

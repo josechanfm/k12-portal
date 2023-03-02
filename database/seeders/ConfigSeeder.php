@@ -25,7 +25,7 @@ class ConfigSeeder extends Seeder
         ]);
         DB::table('configs')->insert([
             'key' => 'score_template',
-            'value' =>'{"TERM":[{"value":"term1","label":"上學期"},{"value":"term2","label":"下學期"}],"COMMENT":[{"value":"comment","label":"描述"}]}'
+            'value' =>'{"term":[{"value":"term1","label":"上學期","term_id":1},{"value":"term2","label":"下學期","term_id":2}],"comment":[{"value":"comment","label":"描述"}]}'
         ]);
         DB::table('configs')->insert([
             'key' => 'year_creation',

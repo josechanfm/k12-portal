@@ -83,7 +83,7 @@ Route::prefix('manage/')->group(function(){
     Route::resource('/',App\Http\Controllers\Manage\DashboardController::class);
     Route::resource('/grades',App\Http\Controllers\Manage\GradeController::class);
     Route::get('/courses/get_by_klass_id/{klassId}',[App\Http\Controllers\Manage\CourseController::class, 'getByKlassId']);
-    Route::get('/students/get_by_klass_id/{klassId}',[App\Http\Controllers\Manage\StudentsController::class,'getByKlassId']);
+    Route::get('/students/get_by_klass_id/{klassId}',[App\Http\Controllers\Manage\StudentController::class,'getByKlassId']);
     Route::get('/klass_scores/{klassId}',[App\Http\Controllers\Manage\KlassController::class,'klass_scores']);
     Route::get('/score',[App\Http\Controllers\Manage\ScoreController::class,'index']);
     Route::post('/score_update',[App\Http\Controllers\Manage\ScoreController::class,'update']);
