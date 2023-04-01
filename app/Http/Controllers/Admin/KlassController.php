@@ -12,6 +12,8 @@ use App\Models\Klass;
 use App\Models\Year;
 use App\Models\Grade;
 use App\Models\Study;
+use App\Models\Subject;
+
 use Illuminate\Support\Facades\Validator;
 
 class KlassController extends Controller
@@ -159,7 +161,17 @@ class KlassController extends Controller
             'studyStreams'=>Config::item('study_streams'),
             'studies'=>$studies
         ]);
+    }
 
+    public function courses(Klass $klass)
+    {
+        $courses=Course::whereBelongsTo($klass)->get();
+        $subjects=Subject::all();
+        return Inertia::render('Admin/KlassCourses',[
+            'klass'=>$klass,
+            'courses'=>$courses,
+            'subjects'=>$subjects
+        ]);
     }
 
 }

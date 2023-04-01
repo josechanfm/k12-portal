@@ -105,5 +105,8 @@ class CourseController extends Controller
             'subjects'=>$subjects
         ]);
     }
+    public function students(Course $course){
+        dd($course->students);
+    }
 
 }

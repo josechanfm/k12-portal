@@ -29,7 +29,7 @@ class KlassStudentSeeder extends Seeder
             foreach ($klasses as $klass) {
                 
                 for($i=1;$i<=21;$i++){
-                    DB::table('klass_students')->insert([
+                    DB::table('klass_student')->insert([
                         'klass_id' => $klass->id,
                         'student_id' => $studentId++,
                         'student_number'=>$i

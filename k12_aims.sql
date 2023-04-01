@@ -705,10 +705,10 @@ INSERT INTO `klasses` (`id`, `grade_id`, `letter`, `tag`, `byname`, `stream`, `r
 -- --------------------------------------------------------
 
 --
--- Table structure for table `klass_students`
+-- Table structure for table `klass_student`
 --
 
-CREATE TABLE `klass_students` (
+CREATE TABLE `klass_student` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `klass_id` bigint(20) NOT NULL,
   `student_id` bigint(20) NOT NULL,
@@ -723,10 +723,10 @@ CREATE TABLE `klass_students` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `klass_students`
+-- Dumping data for table `klass_student`
 --
 
-INSERT INTO `klass_students` (`id`, `klass_id`, `student_id`, `student_number`, `state`, `stream`, `promote`, `promote_to`, `score_scheme`, `created_at`, `updated_at`) VALUES
+INSERT INTO `klass_student` (`id`, `klass_id`, `student_id`, `student_number`, `state`, `stream`, `promote`, `promote_to`, `score_scheme`, `created_at`, `updated_at`) VALUES
 (1, 74, 1, 1, 'ACT', 'ART', 0, 0, NULL, NULL, NULL),
 (2, 74, 2, 2, 'ACT', 'ART', 0, 0, NULL, NULL, NULL),
 (3, 74, 3, 3, 'ACT', 'ART', 0, 0, NULL, NULL, NULL),
@@ -1630,7 +1630,7 @@ INSERT INTO `klass_students` (`id`, `klass_id`, `student_id`, `student_number`, 
 (901, 43, 901, 19, 'ACT', 'ART', 0, 0, NULL, NULL, NULL),
 (902, 43, 902, 20, 'ACT', 'ART', 0, 0, NULL, NULL, NULL),
 (903, 43, 903, 21, 'ACT', 'ART', 0, 0, NULL, NULL, NULL);
-INSERT INTO `klass_students` (`id`, `klass_id`, `student_id`, `student_number`, `state`, `stream`, `promote`, `promote_to`, `score_scheme`, `created_at`, `updated_at`) VALUES
+INSERT INTO `klass_student` (`id`, `klass_id`, `student_id`, `student_number`, `state`, `stream`, `promote`, `promote_to`, `score_scheme`, `created_at`, `updated_at`) VALUES
 (904, 44, 904, 1, 'ACT', 'ART', 0, 0, NULL, NULL, NULL),
 (905, 44, 905, 2, 'ACT', 'ART', 0, 0, NULL, NULL, NULL),
 (906, 44, 906, 3, 'ACT', 'ART', 0, 0, NULL, NULL, NULL),
@@ -2042,7 +2042,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (22, '2022_11_29_035409_create_configs_table', 1),
 (23, '2022_11_30_090054_create_scores_table', 1),
 (24, '2022_12_01_075920_create_grades_table', 1),
-(25, '2022_12_02_011550_create_klass_students_table', 1),
+(25, '2022_12_02_011550_create_klass_student_table', 1),
 (26, '2022_12_09_071744_create_teachers_table', 1),
 (27, '2022_12_12_141100_create_course_scores_table', 1),
 (28, '2023_01_07_152244_create_transcripts_table', 1),
@@ -4494,9 +4494,9 @@ ALTER TABLE `klasses`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `klass_students`
+-- Indexes for table `klass_student`
 --
-ALTER TABLE `klass_students`
+ALTER TABLE `klass_student`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -4815,9 +4815,9 @@ ALTER TABLE `klasses`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
 
 --
--- AUTO_INCREMENT for table `klass_students`
+-- AUTO_INCREMENT for table `klass_student`
 --
-ALTER TABLE `klass_students`
+ALTER TABLE `klass_student`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1261;
 
 --

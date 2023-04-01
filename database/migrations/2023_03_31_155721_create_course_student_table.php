@@ -13,14 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('study_subject', function (Blueprint $table) {
+        Schema::create('course_student', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('study_id');
-            $table->bigInteger('subject_id');
-            $table->string('stream');
-            $table->string('elective');
+            $table->bigInteger('course_id');
+            $table->bigInteger('student_id');
             $table->timestamps();
-            $table->unique(['study_id','subject_id'],'study_id_subject_id');
         });
     }
 
@@ -31,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('study_subjects');
+        Schema::dropIfExists('course_student');
     }
 };

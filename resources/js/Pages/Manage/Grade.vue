@@ -172,6 +172,7 @@ export default {
             axios.get('/manage/courses/get_by_klass_id/'+klass.id)
                 .then(response=>{
                     this.courses = response.data;
+                    console.log(reponse.data);
                     //this.students = [];
                 });
         }

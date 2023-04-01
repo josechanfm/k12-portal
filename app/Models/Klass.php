@@ -32,13 +32,13 @@ class Klass extends Model
         return $this->belongsTo(Grade::class);
     }
     public function students(){
-        return $this->belongsToMany(Student::class,'klass_students','klass_id','student_id')->withPivot(['id as pivot_klass_student_id','student_number','stream','state','promote','promote_to']);
+        return $this->belongsToMany(Student::class,'klass_student','klass_id','student_id')->withPivot(['id as pivot_klass_student_id','student_number','stream','state','promote','promote_to']);
     }
     public function teachers(){
-        return $this->belongsToMany(Teacher::class,'klass_teachers','klass_id','teacher_id');
+        return $this->belongsToMany(Teacher::class,'klass_teacher','klass_id','teacher_id');
     }
     public function promoteTo(){
-        return $this->belongsToMany(Student::class,'klass_students','promote_to','student_id')->withPivot(['id as pivot_klass_student_id','student_number','stream','state','promote','promote_to','id as pivot_klass_id']);
+        return $this->belongsToMany(Student::class,'klass_student','promote_to','student_id')->withPivot(['id as pivot_klass_student_id','student_number','stream','state','promote','promote_to','id as pivot_klass_id']);
     }
     public function courses(){
         return $this->hasMany(Course::class);

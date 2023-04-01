@@ -9,7 +9,12 @@
         <a-typography-title :level="3">年級全稱: {{ klass.title_zh }}</a-typography-title>
             <a-table :dataSource="subjects" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
+                    <template v-if="column.dataIndex=='students'">
+                        <inertia-link :href="'/admin/course/'+record.id+'/student'">Students</inertia-link>
+                    </template>
+                    <template v-else>
                         {{record[column.dataIndex]}}
+                    </template>
                 </template>
             </a-table>
     </AdminLayout>
@@ -44,23 +49,21 @@ export default {
                 {
                     title: '學科代號',
                     dataIndex: 'code',
-                    key: 'code',
                 },{
                     title: '中文名稱',
                     dataIndex: 'title_zh',
-                    key: 'title_zh',
                 },{
                     title: '專業方向',
                     dataIndex: 'stream',
-                    key: 'stream',
                 },{
                     title: '選修/必修',
                     dataIndex: 'elective',
-                    key: 'elective',
                 },{
                     title: '有效',
                     dataIndex: 'active',
-                    key: 'active',
+                },{
+                    title: '學生',
+                    dataIndex: 'students',
                 }
             ],
             rules:{

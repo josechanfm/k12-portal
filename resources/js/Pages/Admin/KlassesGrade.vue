@@ -13,7 +13,7 @@
             <a-table :dataSource="klasses" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
-                        <ButtonLink :href="'/admin/courses/klass/'+record.id" :type="'Link'">科目</ButtonLink>
+                        <ButtonLink :href="'/admin/klass/'+record.id+'/courses'" :type="'Link'">科目</ButtonLink>
                         <ButtonLink @click="editRecord(record)" :style="'Edit'">修改</ButtonLink>
                     </template>
                     <template v-else-if="column.dataIndex=='stream'">

@@ -75,8 +75,10 @@ Route::prefix('admin')->group(function(){
     Route::get('grades/year/{yearId}',[App\Http\Controllers\Admin\GradeController::class,'year']);
     Route::resource('/klasses',App\Http\Controllers\Admin\KlassController::class);
     Route::get('klasses/grade/{gradeId}',[App\Http\Controllers\Admin\KlassController::class,'grade']);
+    Route::get('klass/{klass}/courses',[App\Http\Controllers\Admin\KlassController::class,'courses']);
     Route::resource('/courses',App\Http\Controllers\Admin\CourseController::class);
-    Route::get('courses/klass/{klassId}',[App\Http\Controllers\Admin\CourseController::class,'klass'])->name('abc');
+    //Route::get('courses/klass/{klassId}',[App\Http\Controllers\Admin\CourseController::class,'klass'])->name('admin.course.klass');
+    Route::get('course/{course}/students',[App\Http\Controllers\Admin\CourseController::class,'students'])->name('admin.course.students');
 });
 
 Route::prefix('manage/')->group(function(){

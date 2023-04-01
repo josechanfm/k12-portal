@@ -22,7 +22,6 @@ class ScoreController extends Controller
         $scoreColumns=ScoreColumn::where('course_id',$cid)->orderByRaw('-sequence DESC')->get();
         $studentsScores=Course::students_scores($cid);
         $course=Course::with('klass')->with('teachers')->find($cid);
-
         return Inertia::render('Manage/Score',[
             'course'=>$course,
             'score_columns'=>$scoreColumns,
