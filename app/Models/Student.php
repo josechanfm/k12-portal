@@ -17,7 +17,9 @@ class Student extends Model
     //     return $this->hasManyThrough(Score::class, KlassStudent::class);
     // }
 
-    
+    public function courses(){
+        return $this->belongsToMany(Course::class);
+    }
     public function addresses(){
         return $this->morphMany(Address::class, 'addressable');
     }

@@ -5,42 +5,45 @@
                 學年階段之班別
             </h2>
         </template>
-        <a-typography-title :level="4">學年:{{ grade.year.code }}</a-typography-title>
+        <a-typography-title :level="4">學年:{{ grade.year.title }}</a-typography-title>
         <a-typography-title :level="4">年級:{{ grade.tag }}</a-typography-title>
-        <ButtonLink v-for="g in grades" :href="'/admin/klasses/grade/'+g.id" :style="'Add'" :type="'Link'">{{ g.tag }}</ButtonLink>
-            <button @click="createRecord()"
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">新增班別</button>
-            <a-table :dataSource="klasses" :columns="columns">
-                <template #bodyCell="{column, text, record, index}">
-                    <template v-if="column.dataIndex=='operation'">
-                        <ButtonLink :href="'/admin/courses/klass/'+record.id" :type="'Link'">科目</ButtonLink>
-                        <ButtonLink @click="editRecord(record)" :style="'Edit'">修改</ButtonLink>
-                    </template>
-                    <template v-else-if="column.dataIndex=='stream'">
-                            {{ getStream(text) }}
-                    </template>
-                    <template v-else-if="column.dataIndex=='study_id'">
-                        <span v-if="text!=''">
-                            {{ getStudyPlan(text) }}
-                        </span>
-                    </template>
-                    <template v-else-if="column.dataIndex=='courses'">
-                        <a-popover :title="'Courses for '+record.tag">
-                            <template #content>
-                                <span v-for="course in record.courses">
-                                    <p  v-if="course!=undefined && course.type=='SUB'">
-                                        {{ course.code }}-{{ course.title_zh }}
-                                    </p>
-                                </span>
-                            </template>
-                            <a>{{record.courses.length}}</a>
-                        </a-popover>
-                    </template>
-                    <template v-else>
-                        {{record[column.dataIndex]}}
-                    </template>
+        <inertia-link v-for="g in grades" :href="route('admin.grade.klasses',g.id)" class="px-3 py-2 mr-2 rounded text-white text-sm font-bold whitespace-no-wrap bg-blue-600 hover:bg-blue-800" >{{ g.tag }}</inertia-link>
+        <a-button @click="createRecord()" type="primary">新增班別</a-button>
+        <a-table :dataSource="klasses" :columns="columns">
+            <template #bodyCell="{column, text, record, index}">
+                <template v-if="column.dataIndex=='operation'">
+                    <inertia-link :href="route('admin.klass.courses',record.id)" class="ant-btn">科目</inertia-link>
+                    <inertia-link :href="route('admin.klass.students',record.id)" class="ant-btn">學生</inertia-link>
+                    <a-button @click="editRecord(record)">修改</a-button>
                 </template>
-            </a-table>
+                <template v-else-if="column.dataIndex=='stream'">
+                        {{ getStream(text) }}
+                </template>
+                <template v-else-if="column.dataIndex=='study_id'">
+                    <span v-if="text!=''">
+                        {{ getStudyPlan(text) }}
+                    </span>
+                </template>
+                <template v-else-if="column.dataIndex=='courses'">
+                    <a-popover :title="'Courses for '+record.tag">
+                        <template #content>
+                            <span v-for="course in record.courses">
+                                <p  v-if="course!=undefined && course.type=='SUB'">
+                                    {{ course.code }}-{{ course.title_zh }}
+                                </p>
+                            </span>
+                        </template>
+                        <a>{{record.courses.length}}</a>
+                    </a-popover>
+                </template>
+                <template v-else-if="column.dataIndex=='students'">
+                    {{record.students.length}}
+                </template>
+                <template v-else>
+                    {{record[column.dataIndex]}}
+                </template>
+            </template>
+        </a-table>
 
         <!-- Modal Start-->
         <a-modal v-model:visible="modal.isOpen" 
@@ -79,12 +82,6 @@
                     ))"
                 ></a-select>
             </a-form-item>
-<!-- 
-            <a-form-item label="專業方向" name="stream">
-                <a-radio-group v-model:value="modal.data.stream" button-style="solid">
-                    <a-radio-button v-for="ss in studyStreams" :value="ss.value">{{ ss.label }}</a-radio-button>
-                </a-radio-group>
-            </a-form-item> -->
             <a-form-item label="教室編號" name="room">
                 <a-input v-model:value="modal.data.room" />
             </a-form-item>
@@ -108,7 +105,7 @@ export default {
         AdminLayout,
         ButtonLink,
     },
-    props: ['grades','grade','klasses','klassLetters','studyStreams','studies'],
+    props: ['year','grades','grade','klasses','klassLetters','studyStreams','studies'],
     data() {
         return {
             gradeSelected:1,
@@ -132,6 +129,9 @@ export default {
                 },{
                     title: '科目數目',
                     dataIndex: 'courses',
+                },{
+                    title: '學生人數',
+                    dataIndex: 'students',
                 },{
                     title: '操作',
                     dataIndex: 'operation',

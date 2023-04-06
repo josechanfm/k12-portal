@@ -190,4 +190,16 @@ class YearController extends Controller
             'klasses'=>$data,
         ]);
     }
+
+    public function grades(Year $year){
+        $grades=Grade::whereBelongsTo($year)->orderBy('sequence')->get();
+        return Inertia::render('Admin/YearGrades',[
+            'years'=>Year::where('active',true)->get(),
+            'year'=>$year,
+            'grades'=>$grades,
+            'gradeCategories'=>Config::item('grade_categories'),
+            'gradeLevels'=>Config::item('grade_levels'),
+        ]);
+
+    }
 }

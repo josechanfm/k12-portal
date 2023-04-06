@@ -12,6 +12,8 @@ use App\Models\Klass;
 use App\Models\Year;
 use App\Models\Grade;
 use App\Models\Study;
+use App\Models\Subject;
+use App\Models\Student;
 use Illuminate\Support\Facades\Validator;
 
 class KlassController extends Controller
@@ -28,7 +30,7 @@ class KlassController extends Controller
         }else{
             $grade=Grade::with('year')->whereBelongsTo(Year::currentYear())->first();
         }
-        return redirect('admin/klasses/grade/'.$grade->id);
+        return redirect()->route('admin.grade.klasses',$grade);
     }
 
     /**
@@ -131,35 +133,23 @@ class KlassController extends Controller
         }
     }
 
-    public function disciplines($klassId){
-        $klass=Klass::find($klassId);
-        $disciplines=$klass->subjects;
-        // foreach($klass as $subject){
-        //     echo $subject->subjects()->get();
-        //     echo '<hr>';
-        // }
-        //return response()->json($klass);
-        return Inertia::render('Admin/Klass_disciplines',[
+    public function courses(Klass $klass){
+        //$klass=Klass::find($klassId);
+        $courses=Course::whereBelongsTo($klass)->get();
+        $subjects=Subject::all();
+        return Inertia::render('Admin/KlassCourses',[
             'klass'=>$klass,
-            'disciplines'=>$disciplines,
+            'courses'=>$courses,
+            //'subjects'=>$subjects
         ]);
     }
+    public function students(Klass $klass){
+        dd($klass->students->with('courses'));
 
-    public function grade($gradeId){
-        $grade=Grade::with('year')->find($gradeId);
-        //if grade not found return some kind of error...
-        $grades=Grade::where('year_id',$grade->year_id)->get();
-        $klasses=Klass::with('courses')->whereBelongsTo($grade)->get();
-        $studies=Study::all();
-        return Inertia::render('Admin/KlassesGrade',[
-            'klasses'=>$klasses,
-            'grade'=>$grade,
-            'grades'=>$grades,
-            'klassLetters'=>Config::item('klass_letters'),
-            'studyStreams'=>Config::item('study_streams'),
-            'studies'=>$studies
+        return Inertia::render('Admin/KlassStudents',[
+            'klass'=>Klass::where('id',$klass->id)->with('students')->with('courses')->first(),
+            'students'=>$klass->students,
+            'courses'=>$klass->courses
         ]);
-
     }
-
 }

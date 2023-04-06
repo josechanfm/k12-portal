@@ -5,9 +5,7 @@
                 學年級別學科列表
             </h2>
         </template>
-        <a-typography-title :level="3">年級: {{ klass.tag }}</a-typography-title>
-        <a-typography-title :level="3">年級全稱: {{ klass.title_zh }}</a-typography-title>
-            <a-table :dataSource="subjects" :columns="columns">
+            <a-table :dataSource="students.data" :columns="columns" :pagination="pagination" @change="onPaginationChange" ref="dataTable">
                 <template #bodyCell="{column, text, record, index}">
                         {{record[column.dataIndex]}}
                 </template>
@@ -20,6 +18,7 @@
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
 import {CheckSquareOutlined, StopOutlined} from '@ant-design/icons-vue';
+import { extractIdentifiers } from '@vue/compiler-core';
 
 export default {
     components: {
@@ -28,7 +27,7 @@ export default {
         CheckSquareOutlined,
         StopOutlined
     },
-    props: ['klass','courses','subjects'],
+    props: ['students'],
     data() {
         return {
             modal: {
@@ -37,30 +36,24 @@ export default {
                 title:'Subjects',
                 data:{}
             },
-            selectedSubjects:[],
-            selectAll:false,
-            dataSource:[],
+            pagination:{
+                total: this.students.total,
+                current:this.students.current_page,
+                pageSize:this.students.per_page,
+            },
             columns:[
                 {
-                    title: '學科代號',
-                    dataIndex: 'code',
-                    key: 'code',
+                    title: '姓名(中文)',
+                    dataIndex: 'name_zh',
                 },{
-                    title: '中文名稱',
-                    dataIndex: 'title_zh',
-                    key: 'title_zh',
+                    title: '姓名(外文)',
+                    dataIndex: 'name_fn',
                 },{
-                    title: '專業方向',
-                    dataIndex: 'stream',
-                    key: 'stream',
-                },{
-                    title: '選修/必修',
-                    dataIndex: 'elective',
-                    key: 'elective',
+                    title: '性別',
+                    dataIndex: 'gender',
                 },{
                     title: '有效',
-                    dataIndex: 'active',
-                    key: 'active',
+                    dataIndex: 'operation',
                 }
             ],
             rules:{
@@ -107,16 +100,24 @@ export default {
         }
     },
     created(){
-        this.subjects.map(subject=>{
-            this.courses.map(course=>{
-                if(course.code==subject.code){
-                    subject.selected=true;
-                }
-            })
-        })
-
+       
     },
     methods: {
+        onPaginationChange(page, filters, sorter){
+            this.$inertia.get(route('admin.students.index'),{
+                page:page.current,
+                per_page:page.pageSize,
+                //filter:filters,
+                //sorter:sorter
+            },{
+                onSuccess: (page)=>{
+                    console.log(page);
+                },
+                onError: (error)=>{
+                    console.log(error);
+                }
+            });
+        }
     },
 }
 </script>

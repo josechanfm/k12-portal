@@ -11,9 +11,9 @@
             <a-table :dataSource="years" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
-                        <ButtonLink :href="'/admin/grades/year/'+record.id" :type="'Link'">Grades</ButtonLink>
-                        <ButtonLink @click="editRecord(record)" >Edit</ButtonLink>
-                        <ButtonLink @click="deleteRecord(record.id)" >Delete</ButtonLink>
+                        <inertia-link :href="route('admin.year.grades',record.id)" class="ant-btn">Grades</inertia-link>
+                        <a-button @click="editRecord(record)">Edit</a-button>
+                        <a-button @click="deleteRecord(record)">Delete</a-button>
                     </template>
                     <template v-else-if="column.dataIndex=='grade_group'">
                         <a-tag v-for="item in record[column.dataIndex]" 
@@ -142,18 +142,11 @@
 
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
-import ButtonLink from '@/Components/ButtonLink.vue';
-import { defineComponent, reactive } from 'vue';
 import dayjs from 'dayjs';
-// import utc from 'dayjs/plugin/utc';
-// import timezone from 'dayjs/plugin/timezone';
-// dayjs.extend(utc);
-// dayjs.extend(timezone);
 
 export default {
     components: {
         AdminLayout,
-        ButtonLink,
     },
     props: ['years','param'],
     data() {

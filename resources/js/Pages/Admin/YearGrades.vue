@@ -5,7 +5,18 @@
                 學年級別
             </h2>
         </template>
-        <a-typography-title :level="4">學年代號: {{ year.code }}</a-typography-title>
+        <a-typography-title :level="4">
+            學年代號: 
+            <a-select
+                ref="select"
+                v-model:value="year.id"
+                style="width: 120px"
+                @change="selectYear"
+                :options="years"
+                :field-names="{label:'code',value:'id'}"
+            >
+        </a-select>        
+        </a-typography-title>
         <a-typography-title :level="4">學年全稱: {{ year.title }}</a-typography-title>
         <a-typography-title :level="4">學年開始: {{ year.start }}</a-typography-title>
         <a-typography-title :level="4">學年結束: {{ year.end }}</a-typography-title>
@@ -15,9 +26,9 @@
         <a-table :dataSource="grades" :columns="columns">
             <template #bodyCell="{column, text, record, index}">
                 <template v-if="column.dataIndex=='operation'">
-                    <ButtonLink :href="'/admin/klasses/grade/'+record.id" :type="'Link'">班別</ButtonLink>
-                    <ButtonLink @click="editRecord(record)" :style="'Edit'">修改</ButtonLink>
-                    <ButtonLink @click="deleteRecord(record)" :style="'Delete'">刪除</ButtonLink>
+                    <inertia-link :href="route('admin.grade.klasses',record.id)" class="ant-btn">班別</inertia-link>
+                    <a-button @click="editRecord(record)">修改</a-button>
+                    <a-button @click="deleteRecord(record)">刪除</a-button>
                 </template>
                 <template v-if="column.dataIndex=='active'">
                     <check-square-outlined v-if="text=='1'" :style="{color:'green'}"/>
@@ -98,10 +109,10 @@ export default {
         CheckSquareOutlined,
         StopOutlined
     },
-    props: ['year','grades','gradeCategories','gradeLevels'],
+    props: ['years','year','grades','gradeCategories','gradeLevels'],
     data() {
         return {
-            gradeYears:0,
+            selectedYear:this.year.id,
             modal: {
                 mode:null,
                 isOpen: false,
@@ -202,7 +213,10 @@ export default {
                     console.log(error);
                 }
             });
-        },  
+        },
+        selectYear(item){
+            this.$inertia.get(route('admin.year.grades',item));
+        },
         onChangeGradeSelected(){
             var tmp=this.gradeLevels.find(grade=>grade.value==this.modal.data.sequence);
             console.log(tmp);

@@ -51,9 +51,10 @@ class KlassObserver
                     $score_column = new ScoreColumn;
                     $score_column->term_id=$score->term_id;
                     $score_column->course_id=$course->id;
-                    $score_column->sequence=$i;
+                    $score_column->sequence=$i+1;
                     $score_column->field_name=$score->value;
                     $score_column->field_label=$score->label;
+                    $score_column->for_transcript=true;
                     $score_column->save();
                 }
             //}

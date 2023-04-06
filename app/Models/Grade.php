@@ -10,6 +10,7 @@ class Grade extends Model
     use HasFactory;
 
     protected $fillable=['year_id','rank','initial','level','tag','title_zh','title_en','description','version','active'];
+
     public function klasses(){
         return $this->hasMany(Klass::class);
     }
