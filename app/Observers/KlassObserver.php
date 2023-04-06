@@ -31,8 +31,8 @@ class KlassObserver
             $fields['title_zh']=$subject->title_zh;
             $fields['title_en']=$subject->title_en;
             $fields['type']=$subject->type;
-            $fields['stream']=$subject->pivot->stream;
-            $fields['elective']=$subject->pivot->elective;
+            $fields['stream']=$subject->stream;
+            $fields['elective']=$subject->elective;
             $fields['active']=true;
             $data[]=$fields;
         }

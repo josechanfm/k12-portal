@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->integer('version');
             $table->string('title_zh');
-            $table->string('title_en');
+            $table->string('title_en')->nullable();
             $table->string('stream');
             $table->string('grade');
             $table->string('description')->nullable();

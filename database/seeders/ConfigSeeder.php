@@ -17,7 +17,20 @@ class ConfigSeeder extends Seeder
     {
         DB::table('configs')->insert([
             'key' => 'grade_categories',
-            'value' => '[{"value":"P1","label":"P1"},{"value":"P2","label":"P2"},{"value":"P3","label":"P3"}]',
+            'value' => '[
+                {"value":"P1","label":"P1"},
+                {"value":"P2","label":"P2"},
+                {"value":"P3","label":"P3"},
+                {"value":"P4","label":"P4"},
+                {"value":"P5","label":"P5"},
+                {"value":"P6","label":"P6"},
+                {"value":"SC1","label":"SC1"},
+                {"value":"SC2","label":"SC2"},
+                {"value":"SC3","label":"SC3"},
+                {"value":"SG1","label":"SG1"},
+                {"value":"SG2","label":"SG2"},
+                {"value":"SG3","label":"SG3"},
+            ]',
         ]);
         DB::table('configs')->insert([
             'key' => 'student_state',

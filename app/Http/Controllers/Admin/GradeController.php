@@ -150,7 +150,7 @@ class GradeController extends Controller
         //if grade not found return some kind of error...
         $grades=Grade::where('year_id',$grade->year_id)->get();
         $klasses=Klass::with('courses')->with('students')->whereBelongsTo($grade)->get();
-        $studies=Study::where('active',true)->get();
+        $studies=Study::where('active',1)->get();
         return Inertia::render('Admin/GradeKlasses',[
             'year'=>$grade->year,
             'grade'=>$grade,

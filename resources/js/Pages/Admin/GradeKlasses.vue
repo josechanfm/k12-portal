@@ -77,9 +77,8 @@
                     styple="with:100%"
                     placeholder="請選擇..."
                     max-tag-count="responsive"
-                    :options="studies.filter(study=>study.grade==grade.initial).map(study=>(
-                        {value:study.id,label:study.title_zh}
-                    ))"
+                    :options="studies"
+                    :field-names="{label:'title_zh',value:'id'}"
                 ></a-select>
             </a-form-item>
             <a-form-item label="教室編號" name="room">

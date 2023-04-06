@@ -21,7 +21,7 @@
             <ol>
                 <li v-for="course in klass.courses">
                     <a-checkbox v-model:checked="course.selected">
-                        {{ course.code }} - {{ course.title_zh }}
+                        {{ course.code }} - {{ course.title_zh }} {{ course.stream}}
                     </a-checkbox>
                 </li>
             </ol>
