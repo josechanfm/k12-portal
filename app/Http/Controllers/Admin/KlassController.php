@@ -144,11 +144,9 @@ class KlassController extends Controller
         ]);
     }
     public function students(Klass $klass){
-        dd($klass->students->with('courses'));
-
         return Inertia::render('Admin/KlassStudents',[
-            'klass'=>Klass::where('id',$klass->id)->with('students')->with('courses')->first(),
-            'students'=>$klass->students,
+            'klass'=>Klass::where('id',$klass->id)->with('courses')->first(),
+            'students'=>$klass->students()->with('courses')->get(),
             'courses'=>$klass->courses
         ]);
     }

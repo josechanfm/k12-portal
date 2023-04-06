@@ -6,7 +6,7 @@
             </h2>
         </template>
         <a-typography-title :level="3">班別: {{ klass.tag }}</a-typography-title>
-        <a-table :dataSource="klass.students" :columns="columns">
+        <a-table :dataSource="students" :columns="columns">
             <template #bodyCell="{column, text, record, index}">
                 <template v-if="column.dataIndex=='subject'">
                     <a-button @click="selectedCourses(record)">選科</a-button>
@@ -18,31 +18,18 @@
         </a-table>
         <!-- Modal Start-->
         <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="60%" @update="updateRecord()" @onCancel="closeModal()">
-            {{ modal.data }}
-
-            <a-checkbox-group v-if="modal.mode=='CREATE'"
-                v-model:value="selectedSubjects" 
-                name="checkboxgroup" 
-                :options="subjectTemplates.map(subject=>({value:subject.code,label:subject.title_zh+' ('+subject.stream+')'}))" 
-            />
-            <a-form
-                v-if="modal.mode=='EDIT'"
-                :model="modal.data"
-                name="Courses"
-                ref="modalRef"
-                :rules="rules"
-                :validate-messages="validateMessages"
-            >
-                <a-form-item label="科目名稱 (中文)" name="title_zh">
-                    <a-input v-model:value="modal.data.title_zh" />
-                </a-form-item>
-            </a-form>
+            <ol>
+                <li v-for="course in klass.courses">
+                    <a-checkbox v-model:checked="course.selected">
+                        {{ course.code }} - {{ course.title_zh }}
+                    </a-checkbox>
+                </li>
+            </ol>
             <template #footer>
-                <a-checkbox v-if="modal.mode=='CREATE'" class="float-left" v-model:checked="selectAll" @change="onChangeSelectAll">SelectAll</a-checkbox>
                 <a-button key="back" @click="modalCancel">Return</a-button>
-                <a-button v-if="modal.mode=='EDIT'" key="Update" type="primary" @click="updateRecord()">Update</a-button>
-                <a-button v-if="modal.mode=='CREATE'"  key="Store" type="primary" @click="storeRecord()">Create</a-button>
+                <a-button type="primary" @click="updateRecord()">Create</a-button>
             </template>
+            
         </a-modal>    
         <!-- Modal End-->
 
@@ -62,7 +49,7 @@ export default {
         CheckSquareOutlined,
         StopOutlined
     },
-    props: ['klass'],
+    props: ['klass','students'],
     data() {
         return {
             modal: {
@@ -149,10 +136,21 @@ export default {
         selectedCourses(student){
             console.log(student);
             this.modal.data={...student};
+            this.klass.courses.forEach((course1,index)=>{
+                course1.selected=false;
+                student.courses.forEach((course2,index)=>{
+                  if(course1.id==course2.id){
+                    course1.selected=true;
+                  }
+                })
+            })
             this.modal.isOpen=true;
         },
         modalCancel(){
             console.log('modal cancel');
+        },
+        updateRecord(){
+            console.log(this.klass.courses);
         }
     },
 }
