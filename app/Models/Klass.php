@@ -50,5 +50,5 @@ class Klass extends Model
     //     }
     //     return $students;
     // }
-    
+
 }

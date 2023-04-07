@@ -74,7 +74,7 @@
     children: [{
       key: '0.1',
       title: '全校學科總表',
-      url:'/master/subjectTemplate',
+      url:'/master/subjects',
     },{
       key: '0.2',
       title: '學習計劃',

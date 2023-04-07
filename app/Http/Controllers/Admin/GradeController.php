@@ -9,6 +9,7 @@ use App\Models\Year;
 use App\Models\Grade;
 use App\Models\Klass;
 use App\Models\Config;
+use App\Models\Study;
 
 class GradeController extends Controller
 {
@@ -25,7 +26,7 @@ class GradeController extends Controller
         }else{
             $year=Year::where('active',1)->orderBy('start','DESC')->first();
         }
-        return redirect('admin/grades/year/'.$year->id);
+        return redirect()->route('admin.year.grades',$year);
     }
 
     /**
@@ -134,14 +135,30 @@ class GradeController extends Controller
         }
     }
 
-    public function year($yearId){
-        $year=Year::find($yearId);
-        $grades=Grade::whereBelongsTo($year)->orderBy('sequence')->get();
-        return Inertia::render('Admin/GradesYear',[
-            'year'=>$year,
+    // public function year($yearId){
+    //     $year=Year::find($yearId);
+    //     $grades=Grade::whereBelongsTo($year)->orderBy('sequence')->get();
+    //     return Inertia::render('Admin/GradesYear',[
+    //         'year'=>$year,
+    //         'grades'=>$grades,
+    //         'gradeCategories'=>Config::item('grade_categories'),
+    //         'gradeLevels'=>Config::item('grade_levels'),
+    //     ]);
+    // }
+
+    public function klasses(Grade $grade){
+        //if grade not found return some kind of error...
+        $grades=Grade::where('year_id',$grade->year_id)->get();
+        $klasses=Klass::with('courses')->with('students')->whereBelongsTo($grade)->get();
+        $studies=Study::where('active',true)->get();
+        return Inertia::render('Admin/GradeKlasses',[
+            'year'=>$grade->year,
+            'grade'=>$grade,
             'grades'=>$grades,
-            'gradeCategories'=>Config::item('grade_categories'),
-            'gradeLevels'=>Config::item('grade_levels'),
-        ]);
+            'klasses'=>$klasses,
+            'klassLetters'=>Config::item('klass_letters'),
+            'studyStreams'=>Config::item('study_streams'),
+            'studies'=>$studies
+        ]);        
     }
 }

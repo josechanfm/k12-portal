@@ -29,6 +29,13 @@
                 :rules="rules"
                 :validate-messages="validateMessages"
             >
+                <a-form-item label="學年階段" name="grade">
+                    <a-select
+                        ref="select"
+                        v-model:value="modal.data.grade"
+                        :options="gradeCategories"
+                    />
+                </a-form-item>
                 <a-form-item label="版本" name="version">
                     <a-input-number v-model:value="modal.data.version" />
                 </a-form-item>
@@ -48,13 +55,6 @@
                 </a-form-item>
                 <a-form-item label="有效" name="active">
                     <a-switch v-model:checked="modal.data.active" :checkedValue="1" :uncheckedValue="0"/>
-                </a-form-item>
-                <a-form-item label="學年階段" name="grade">
-                    <a-select
-                        ref="select"
-                        v-model:value="modal.data.grade"
-                        :options="gradeCategories"
-                    />
                 </a-form-item>
             </a-form>
         <template #footer>

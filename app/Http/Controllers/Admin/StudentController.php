@@ -5,11 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Student;
 use App\Models\Klass;
-use App\Models\Course;
-use App\Models\Subject;
 
-class CourseController extends Controller
+class StudentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,7 +17,10 @@ class CourseController extends Controller
      */
     public function index()
     {
-        echo 'courses';
+        $students=Student::paginate(request('per_page'));
+        return Inertia::render('Admin/Student',[
+            'students'=>$students
+        ]);
     }
 
     /**
@@ -73,15 +75,7 @@ class CourseController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //return response()->json($request->all());
-        Course::upsert(
-            $request->all(),
-            ['klass_id','code'],
-            ['title_zh','title_en','type','stream','elective']
-        );
-
-        Course::whereNotIn('code',array_column($request->all(),'code'))->where('klass_id',$id)->delete();
-        return response()->json(["result"=>"done"]);
+        //
     }
 
     /**
@@ -95,5 +89,12 @@ class CourseController extends Controller
         //
     }
 
+    public function klass(Klass $klass){
+        return Inertia::render('Admin/KlassStudents',[
+            'klass'=>$klass,
+            'students'=>$klass->students
+        ]);
+        
+    }
 
 }

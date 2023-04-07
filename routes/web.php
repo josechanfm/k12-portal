@@ -69,16 +69,22 @@ Route::prefix('master')->group(function(){
 });
 
 Route::prefix('admin')->group(function(){
-    Route::resource('/',App\Http\Controllers\Admin\DashboardController::class);
-    Route::resource('/years',App\Http\Controllers\Admin\YearController::class);
-    Route::resource('/grades',App\Http\Controllers\Admin\GradeController::class);
-    Route::get('grades/year/{yearId}',[App\Http\Controllers\Admin\GradeController::class,'year']);
-    Route::resource('/klasses',App\Http\Controllers\Admin\KlassController::class);
-    Route::get('klasses/grade/{gradeId}',[App\Http\Controllers\Admin\KlassController::class,'grade']);
-    Route::get('klass/{klass}/courses',[App\Http\Controllers\Admin\KlassController::class,'courses']);
-    Route::resource('/courses',App\Http\Controllers\Admin\CourseController::class);
-    //Route::get('courses/klass/{klassId}',[App\Http\Controllers\Admin\CourseController::class,'klass'])->name('admin.course.klass');
-    Route::get('course/{course}/students',[App\Http\Controllers\Admin\CourseController::class,'students'])->name('admin.course.students');
+    Route::resource('/',App\Http\Controllers\Admin\DashboardController::class)->names('admin');
+    Route::resource('years',App\Http\Controllers\Admin\YearController::class)->names('admin.years');
+    Route::get('year/{year}/grades',[App\Http\Controllers\Admin\YearController::class,'grades'])->name('admin.year.grades');
+    Route::resource('/grades',App\Http\Controllers\Admin\GradeController::class)->names('admin.grades');
+    Route::get('grade/{grade}/klasses',[App\Http\Controllers\Admin\GradeController::class,'klasses'])->name('admin.grade.klasses');
+    Route::get('klass/{klass}/courses',[App\Http\Controllers\Admin\KlassController::class,'courses'])->name('admin.klass.courses');
+    Route::get('klass/{klass}/students',[App\Http\Controllers\Admin\KlassController::class,'students'])->name('admin.klass.students');
+
+    Route::get('grades/year/{year}',[App\Http\Controllers\Admin\GradeController::class,'admin.grades.year']);
+    Route::resource('/klasses',App\Http\Controllers\Admin\KlassController::class)->names('admin.klasses');
+    Route::get('klasses/grade/{grade}',[App\Http\Controllers\Admin\KlassController::class,'admin.klasses.grade']);
+    Route::resource('/courses',App\Http\Controllers\Admin\CourseController::class)->names('admin.courses');
+    Route::resource('/students',App\Http\Controllers\Admin\StudentController::class)->names('admin.students');
+    
+    
+    Route::get('klass/{klass}/students',[App\Http\Controllers\Admin\KlassController::class,'students'])->name('admin.klass.students');
 });
 
 Route::prefix('manage/')->group(function(){

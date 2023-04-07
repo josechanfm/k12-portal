@@ -2,21 +2,37 @@
     <AdminLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                學年級別學科列表
+                班別學生列表
             </h2>
         </template>
-        <a-typography-title :level="3">年級: {{ klass.tag }}</a-typography-title>
-        <a-typography-title :level="3">年級全稱: {{ klass.title_zh }}</a-typography-title>
-            <a-table :dataSource="courses" :columns="columns">
-                <template #bodyCell="{column, text, record, index}">
-                    <template v-if="column.dataIndex=='students'">
-                        <inertia-link :href="'/admin/course/'+record.id+'/student'">Students</inertia-link>
-                    </template>
-                    <template v-else>
-                        {{record[column.dataIndex]}}
-                    </template>
+        <a-typography-title :level="3">班別: {{ klass.tag }}</a-typography-title>
+        <a-table :dataSource="students" :columns="columns">
+            <template #bodyCell="{column, text, record, index}">
+                <template v-if="column.dataIndex=='subject'">
+                    <a-button @click="selectedCourses(record)">選科</a-button>
                 </template>
-            </a-table>
+                <template v-else>
+                    {{record[column.dataIndex]}}
+                </template>
+            </template>
+        </a-table>
+        <!-- Modal Start-->
+        <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="60%" @update="updateRecord()" @onCancel="closeModal()">
+            <ol>
+                <li v-for="course in klass.courses">
+                    <a-checkbox v-model:checked="course.selected">
+                        {{ course.code }} - {{ course.title_zh }}
+                    </a-checkbox>
+                </li>
+            </ol>
+            <template #footer>
+                <a-button key="back" @click="modalCancel">Return</a-button>
+                <a-button type="primary" @click="updateRecord()">Create</a-button>
+            </template>
+            
+        </a-modal>    
+        <!-- Modal End-->
+
     </AdminLayout>
 
 </template>
@@ -33,7 +49,7 @@ export default {
         CheckSquareOutlined,
         StopOutlined
     },
-    props: ['klass','courses','subjects'],
+    props: ['klass','students'],
     data() {
         return {
             modal: {
@@ -46,24 +62,21 @@ export default {
             selectAll:false,
             dataSource:[],
             columns:[
-                {
-                    title: '學科代號',
-                    dataIndex: 'code',
+            {
+                    title: '姓名(中文)',
+                    dataIndex: 'name_zh',
                 },{
-                    title: '中文名稱',
-                    dataIndex: 'title_zh',
+                    title: '姓名(外文)',
+                    dataIndex: 'name_fn',
                 },{
-                    title: '專業方向',
-                    dataIndex: 'stream',
-                },{
-                    title: '選修/必修',
-                    dataIndex: 'elective',
+                    title: '性別',
+                    dataIndex: 'gender',
                 },{
                     title: '有效',
                     dataIndex: 'active',
                 },{
-                    title: '學生',
-                    dataIndex: 'students',
+                    title: '選科',
+                    dataIndex: 'subject',
                 }
             ],
             rules:{
@@ -120,6 +133,25 @@ export default {
 
     },
     methods: {
+        selectedCourses(student){
+            console.log(student);
+            this.modal.data={...student};
+            this.klass.courses.forEach((course1,index)=>{
+                course1.selected=false;
+                student.courses.forEach((course2,index)=>{
+                  if(course1.id==course2.id){
+                    course1.selected=true;
+                  }
+                })
+            })
+            this.modal.isOpen=true;
+        },
+        modalCancel(){
+            console.log('modal cancel');
+        },
+        updateRecord(){
+            console.log(this.klass.courses);
+        }
     },
 }
 </script>
