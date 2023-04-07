@@ -16,7 +16,7 @@ class CourseTeacherSeeder extends Seeder
     public function run()
     {
         for($c=1;$c<=10;$c++){
-            DB::table('course_teachers')->insert([
+            DB::table('course_teacher')->insert([
                 'course_id'=>$c,
                 'teacher_id'=>$c+10
             ]);

@@ -8,7 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Course extends Model
 {
     use HasFactory;
+    // protected $appends=['student_count'];
 
+    // public function getStudentCountAttribute(){
+    //     return $this->students->count();
+    // }
     public function klass(){
         return $this->belongsTo(Klass::class);
     }

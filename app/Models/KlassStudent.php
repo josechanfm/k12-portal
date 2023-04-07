@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class KlassStudent extends Model
 {
     use HasFactory;
+    protected $table='klass_student';
     protected $fillable=['promote_to'];
 
     public function student(){

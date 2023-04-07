@@ -327,10 +327,10 @@ INSERT INTO `klasses` (`id`, `grade_id`, `head_id`, `letter`, `tag`, `acronym`, 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `klass_students`
+-- Estrutura da tabela `klass_student`
 --
 
-CREATE TABLE `klass_students` (
+CREATE TABLE `klass_student` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `klass_id` bigint(20) NOT NULL,
   `student_id` bigint(20) NOT NULL,
@@ -344,10 +344,10 @@ CREATE TABLE `klass_students` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Extraindo dados da tabela `klass_students`
+-- Extraindo dados da tabela `klass_student`
 --
 
-INSERT INTO `klass_students` (`id`, `klass_id`, `student_id`, `student_number`, `state`, `stream`, `promote`, `promote_to`, `created_at`, `updated_at`) VALUES
+INSERT INTO `klass_student` (`id`, `klass_id`, `student_id`, `student_number`, `state`, `stream`, `promote`, `promote_to`, `created_at`, `updated_at`) VALUES
 (1, 1, 1, 1, 'ACT', 'ART', 0, -1, NULL, '2022-12-06 03:34:29'),
 (2, 1, 2, 2, 'ACT', 'ART', 0, 56, NULL, '2022-12-06 03:34:41'),
 (3, 1, 3, 3, 'ACT', 'ART', 0, 55, NULL, '2022-12-06 03:34:41'),
@@ -1444,7 +1444,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (26, '2022_11_30_090054_create_scores_table', 11),
 (27, '2022_12_01_075920_create_grades_table', 12),
 (30, '2022_11_25_025738_create_klasses_table', 14),
-(35, '2022_12_02_011550_create_klass_students_table', 15);
+(35, '2022_12_02_011550_create_klass_student_table', 15);
 
 -- --------------------------------------------------------
 
@@ -3990,9 +3990,9 @@ ALTER TABLE `klasses`
   ADD PRIMARY KEY (`id`);
 
 --
--- Índices para tabela `klass_students`
+-- Índices para tabela `klass_student`
 --
-ALTER TABLE `klass_students`
+ALTER TABLE `klass_student`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -4164,9 +4164,9 @@ ALTER TABLE `klasses`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=97;
 
 --
--- AUTO_INCREMENT de tabela `klass_students`
+-- AUTO_INCREMENT de tabela `klass_student`
 --
-ALTER TABLE `klass_students`
+ALTER TABLE `klass_student`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1009;
 
 --

@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('klass_students', function (Blueprint $table) {
+        Schema::create('klass_student', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('klass_id')->on('klasses')->onDelete('restrict')->onUpdate('cascade');
             $table->bigInteger('student_id')->on('students')->onDelete('restrict')->onUpdate('cascade');
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('klass_students');
+        Schema::dropIfExists('klass_student');
     }
 };
