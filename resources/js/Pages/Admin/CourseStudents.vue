@@ -35,7 +35,7 @@
         </a-modal>    
         -->
         <!-- Modal End-->
-        <SyncCourseStudents :course="course" :courses="courses" :selectedStudent="selectedStudent"/>
+        <SyncCourseStudents :courses="courses" :student="selectedStudent"/>
     </AdminLayout>
 
 </template>
@@ -122,20 +122,15 @@ export default {
     },
     methods: {
         selectedCourses(student){
-            // console.log(this.courses);
-            // return ;
-            // this.modal.data={...student};
-            // this.courses.forEach((course1,index)=>{
-            //     course1.selected=false;
-            //     student.courses.forEach((course2,index)=>{
-            //       if(course1.id==course2.id){
-            //         course1.selected=true;
-            //       }
-            //     })
-            // })
-            console.log(student);
+            this.courses.forEach((course1,index)=>{
+                course1.selected=false;
+                student.courses.forEach((course2,index)=>{
+                  if(course1.id==course2.id){
+                    course1.selected=true;
+                  }
+                })
+            })
             this.selectedStudent={...student};
-            //this.modal.isOpen=true;
         },
     },
 }
