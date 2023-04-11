@@ -155,7 +155,7 @@ export default {
             }).map(c=>(c.id));
             console.log(selectedCourse);
             // this.$refs.modalRef.validateFields().then(()=>{
-                this.$inertia.post('/admin/student/add_courses', {
+                this.$inertia.post('/admin/student/sync_courses', {
                     student_id:this.modal.data.id, //student id
                     courses:selectedCourse
                 },{

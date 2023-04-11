@@ -102,7 +102,7 @@ class StudySeeder extends Seeder
         $id=DB::table('studies')->insertGetId([
             'version'=>1,
             'grade'=>'SC1',
-            'title_zh'=>'𥘉中一年級',
+            'title_zh'=>'初中一年級',
             'stream'=>'ALL',
             'active'=>true
         ]);
@@ -116,7 +116,7 @@ class StudySeeder extends Seeder
         $id=DB::table('studies')->insertGetId([
             'version'=>1,
             'grade'=>'SC2',
-            'title_zh'=>'𥘉中二年級',
+            'title_zh'=>'初中二年級',
             'stream'=>'ALL',
             'active'=>true
         ]);
@@ -130,7 +130,7 @@ class StudySeeder extends Seeder
         $id=DB::table('studies')->insertGetId([
             'version'=>1,
             'grade'=>'SC3',
-            'title_zh'=>'𥘉中三年級',
+            'title_zh'=>'初中三年級',
             'stream'=>'ALL',
             'active'=>true
         ]);

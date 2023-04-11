@@ -96,19 +96,17 @@ class CourseController extends Controller
     }
 
     public function students(Course $course){
-        // $students=$course->students()->with('courses')->get();
-        dd($course->klass->courses()->get());
+        $students=$course->students()->with('courses')->get();
+        // foreach($students as $student){
+        //     echo json_encode($student);
+        // }
+        //dd($course->klass->courses()->get());
         return Inertia::render('Admin/CourseStudents',[
             'course'=>$course,
-            'courses'=>$course->klass->with('courses')->get(),
+            'courses'=>$course->klass->courses()->get(),
             'students'=>$course->students()->with('courses')->get()
         ]);
     }
 
-    // return Inertia::render('Admin/KlassStudents',[
-    //     'klass'=>Klass::where('id',$klass->id)->with('courses')->first(),
-    //     'students'=>$klass->students()->with('courses')->get(),
-    //     'courses'=>$klass->courses
-    // ]);
-
+ 
 }

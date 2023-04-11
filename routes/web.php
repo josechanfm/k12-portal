@@ -76,7 +76,7 @@ Route::prefix('admin')->group(function(){
     Route::get('grade/{grade}/klasses',[App\Http\Controllers\Admin\GradeController::class,'klasses'])->name('admin.grade.klasses');
     Route::get('klass/{klass}/courses',[App\Http\Controllers\Admin\KlassController::class,'courses'])->name('admin.klass.courses');
     Route::get('klass/{klass}/students',[App\Http\Controllers\Admin\KlassController::class,'students'])->name('admin.klass.students');
-    Route::post('student/add_courses',[App\Http\Controllers\Admin\StudentController::class,'addCourses'])->name('admin.klass.addCourses');
+    Route::post('student/sync_courses',[App\Http\Controllers\Admin\StudentController::class,'syncCourses'])->name('admin.klass.syncCourses');
     Route::get('course/{course}/students',[App\Http\Controllers\Admin\CourseController::class,'students'])->name('admin.course.students');
 
     // Route::get('grades/year/{year}',[App\Http\Controllers\Admin\GradeController::class,'admin.grades.year']);

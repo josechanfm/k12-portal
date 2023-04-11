@@ -18,9 +18,10 @@
             </template>
         </a-table>
         <!-- Modal Start-->
+        <!--
         <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="60%" @update="updateRecord()" @onCancel="closeModal()">
             <ol>
-                <li v-for="course in klass.courses">
+                <li v-for="course in courses">
                     <a-checkbox v-model:checked="course.selected">
                         {{ course.code }} - {{ course.title_zh }} {{ course.stream}}
                     </a-checkbox>
@@ -32,8 +33,9 @@
             </template>
             
         </a-modal>    
+        -->
         <!-- Modal End-->
-
+        <SyncCourseStudents :course="course" :courses="courses" :selectedStudent="selectedStudent"/>
     </AdminLayout>
 
 </template>
@@ -42,26 +44,20 @@
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
 import {CheckSquareOutlined, StopOutlined} from '@ant-design/icons-vue';
+import SyncCourseStudents from '@/Components/SyncCourseStudents.vue';
 
 export default {
     components: {
         AdminLayout,
         ButtonLink,
         CheckSquareOutlined,
-        StopOutlined
+        StopOutlined,
+        SyncCourseStudents
     },
-    props: ['course','klass','students'],
+    props: ['course','courses','klass','students'],
     data() {
         return {
-            modal: {
-                mode:null,
-                isOpen: false,
-                title:'學生選課',
-                data:{}
-            },
-            selectedSubjects:[],
-            selectAll:false,
-            dataSource:[],
+            selectedStudent:{},
             columns:[
             {
                     title: '姓名(中文)',
@@ -126,44 +122,21 @@ export default {
     },
     methods: {
         selectedCourses(student){
-            console.log(this.klass);
-            exit();
-            this.modal.data={...student};
-            this.klass.courses.forEach((course1,index)=>{
-                course1.selected=false;
-                student.courses.forEach((course2,index)=>{
-                  if(course1.id==course2.id){
-                    course1.selected=true;
-                  }
-                })
-            })
-            this.modal.isOpen=true;
+            // console.log(this.courses);
+            // return ;
+            // this.modal.data={...student};
+            // this.courses.forEach((course1,index)=>{
+            //     course1.selected=false;
+            //     student.courses.forEach((course2,index)=>{
+            //       if(course1.id==course2.id){
+            //         course1.selected=true;
+            //       }
+            //     })
+            // })
+            console.log(student);
+            this.selectedStudent={...student};
+            //this.modal.isOpen=true;
         },
-        modalCancel(){
-            console.log('modal cancel');
-        },
-        updateRecord(){
-            var selectedCourse=this.klass.courses.filter(course=>{
-                return course.selected;
-            }).map(c=>(c.id));
-            console.log(selectedCourse);
-            // this.$refs.modalRef.validateFields().then(()=>{
-                this.$inertia.post('/admin/student/add_courses', {
-                    student_id:this.modal.data.id, //student id
-                    courses:selectedCourse
-                },{
-                    onSuccess:(page)=>{
-                        this.modal.isOpen=false;
-                        console.log(page);
-                    },
-                    onError:(err)=>{
-                        console.log(err);
-                    }
-                });
-            // }).catch(err => {
-            //     console.log(err);
-            // });
-        }
     },
 }
 </script>

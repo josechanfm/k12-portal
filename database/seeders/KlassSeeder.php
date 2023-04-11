@@ -29,6 +29,7 @@ class KlassSeeder extends Seeder
                     'grade_id'=>$g,
                     'letter'=>$ini,
                     'tag'=>$grade->tag.$ini,
+                    'study_id'=>1
                 ]);
             }
         }
