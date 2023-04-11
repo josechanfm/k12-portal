@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use App\Models\Grade;
+use App\Models\Klass;
 
 class KlassSeeder extends Seeder
 {
@@ -23,7 +24,8 @@ class KlassSeeder extends Seeder
         for($g=1;$g<=12;$g++){
             $grade=Grade::find($g);
             foreach($initial as $ini){
-                DB::table('klasses')->insert([
+                // DB::table('klasses')->insert([
+                Klass::create([
                     'grade_id'=>$g,
                     'letter'=>$ini,
                     'tag'=>$grade->tag.$ini,

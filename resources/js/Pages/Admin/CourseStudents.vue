@@ -5,7 +5,8 @@
                 班別學生列表
             </h2>
         </template>
-        <a-typography-title :level="3">班別: {{ klass.tag }}</a-typography-title>
+        <a-typography-title :level="3">課程代號: {{ course.code }}</a-typography-title>
+        <a-typography-title :level="3">課程名稱: {{ course.title_zh }}</a-typography-title>
         <a-table :dataSource="students" :columns="columns">
             <template #bodyCell="{column, text, record, index}">
                 <template v-if="column.dataIndex=='subject'">
@@ -49,7 +50,7 @@ export default {
         CheckSquareOutlined,
         StopOutlined
     },
-    props: ['klass','students'],
+    props: ['course','klass','students'],
     data() {
         return {
             modal: {
@@ -111,15 +112,6 @@ export default {
                 width: '150px',
                 },
             },
-            layout2col: {
-                labelCol: {
-                    span: 8,
-                },
-                wrapperCol: {
-                    span: 20,
-                },
-            }
-
         }
     },
     created(){
@@ -134,7 +126,8 @@ export default {
     },
     methods: {
         selectedCourses(student){
-            console.log(student);
+            console.log(this.klass);
+            exit();
             this.modal.data={...student};
             this.klass.courses.forEach((course1,index)=>{
                 course1.selected=false;
@@ -147,7 +140,7 @@ export default {
             this.modal.isOpen=true;
         },
         modalCancel(){
-            this.modal.isOpen=false;
+            console.log('modal cancel');
         },
         updateRecord(){
             var selectedCourse=this.klass.courses.filter(course=>{

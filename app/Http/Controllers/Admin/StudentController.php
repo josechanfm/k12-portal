@@ -96,5 +96,10 @@ class StudentController extends Controller
         ]);
         
     }
+    public function addCourses(Request $request){
+        $student=Student::find($request->student_id);
+        $student->courses()->sync($request->courses);
+        return redirect()->back();
+    }
 
 }

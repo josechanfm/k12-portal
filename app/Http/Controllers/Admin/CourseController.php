@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Klass;
 use App\Models\Course;
-use App\Models\Subject;
+use App\Models\Student;
 
 class CourseController extends Controller
 {
@@ -95,5 +95,20 @@ class CourseController extends Controller
         //
     }
 
+    public function students(Course $course){
+        // $students=$course->students()->with('courses')->get();
+        dd($course->klass->courses()->get());
+        return Inertia::render('Admin/CourseStudents',[
+            'course'=>$course,
+            'courses'=>$course->klass->with('courses')->get(),
+            'students'=>$course->students()->with('courses')->get()
+        ]);
+    }
+
+    // return Inertia::render('Admin/KlassStudents',[
+    //     'klass'=>Klass::where('id',$klass->id)->with('courses')->first(),
+    //     'students'=>$klass->students()->with('courses')->get(),
+    //     'courses'=>$klass->courses
+    // ]);
 
 }

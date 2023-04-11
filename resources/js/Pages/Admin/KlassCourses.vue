@@ -10,7 +10,7 @@
             <a-table :dataSource="courses" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='students'">
-                        <inertia-link :href="'/admin/course/'+record.id+'/student'">Students</inertia-link>
+                        <inertia-link :href="route('admin.course.students',record.id)">Students</inertia-link>
                     </template>
                     <template v-else>
                         {{record[column.dataIndex]}}

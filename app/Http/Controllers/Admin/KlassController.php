@@ -151,4 +151,5 @@ class KlassController extends Controller
             'courses'=>$klass->courses
         ]);
     }
+
 }
