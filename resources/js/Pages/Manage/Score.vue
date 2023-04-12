@@ -13,6 +13,7 @@
         </template>
         <a-button :href="'grades?kid='+course.klass_id">Back</a-button>
         <a-button type="primary" @click="onClickAddScoreColumn">新增學分欄</a-button>
+
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -27,6 +28,9 @@
                                     <a-button @click="onClickDeleteScoreColumn(record.id)">刪除</a-button>
                                 </span>
                             </template>
+                            <template v-else-if="column.dataIndex=='term_id'">
+                                {{ year_terms.find(t=>t.value==text).label }}
+                            </template>
                             <template v-else>
                                 {{ record[column.dataIndex]}}
                             </template>
@@ -40,15 +44,21 @@
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <a-button type="primary" @click="saveScores">更新並保存</a-button>
+                    {{ scores }}
                     <table id="scoreTable" ref="scoreTable">
                         <tr>
                             <th>學生姓名</th>
-                            <td v-for="column in score_columns">{{ column.name }}</td>
+                            <td v-for="(column,idx) in score_columns">{{ column.field_label }} ({{ String.fromCharCode(idx+65) }})</td>
                         </tr>
                         <tr v-for="(score, key) in scores">
                             <td>{{ score.student_name }}</td>
                             <td v-for="column in score_columns">
-                                <a-input  v-model:value="score['score_'+key+'_'+column.id]" @keyup.arrow-keys="onKeypressed"/>
+                                <span v-if="column.scheme">
+                                    {{ column.scheme }}
+                                </span>
+                                <span v-else>
+                                    <a-input  v-model:value="score['score_'+key+'_'+column.id]" @keyup.arrow-keys="onKeypressed"/>
+                                </span>
                             </td>
                         </tr>
                     </table>
@@ -66,8 +76,8 @@
                 <a-form-item label="學分欄名稱 " :name="['field_label']" :rules="[{required:true, message:'Please input score column name'}]">
                     <a-input v-model:value="modal.data.field_label"/>
                 </a-form-item>
-                <a-form-item label="學段" :name="['term_id']" :rules="[{required:true, message:'Please input score column name'}]">
-                    <a-input v-model:value="modal.data.term_id"/>
+                <a-form-item label="學段" :name="['term_id']">
+                    <a-select v-model:value="modal.data.term_id" :options="year_terms"/>
                 </a-form-item>
                 <a-form-item label="序號" :name="['sequence']" >
                     <a-input v-model:value="modal.data.sequence"/> 
@@ -77,12 +87,6 @@
                 </a-form-item>
                 <a-form-item label="簡介" :name="['description']">
                     <a-input v-model:value="modal.data.description"/> 
-                </a-form-item>
-                <a-form-item label="Course" :name="['course_id']" :rules="[{required:true, message:'Please input score column course_id'}]" :hidden="true">
-                    <a-input v-model:value="modal.data.course_id"/>
-                </a-form-item>
-                <a-form-item label="Type" :name="['type']"  :rules="[{required:true, message:'Please input score column type'}]" :hidden="true">
-                    <a-input v-model:value="modal.data.type" /> 
                 </a-form-item>
             </a-form>
         </a-modal>
@@ -97,7 +101,7 @@ export default {
     components: {
         AdminLayout
     },
-    props: ['course', 'score_columns', 'students_scores'],
+    props: ['year_terms','course', 'score_columns', 'students_scores'],
     data() {
         return {
             keypressed:"",
@@ -128,6 +132,9 @@ export default {
                     title: '計算方式',
                     dataIndex: 'schema',
                 },{
+                    title: '排序',
+                    dataIndex: 'sequence',
+                },{
                     title: '操作',
                     dataIndex: 'operation',
                 }
@@ -140,14 +147,13 @@ export default {
             var score={};
             score['student_name']=student.name_zh
             this.score_columns.forEach(column => {
-                score['score_'+student.pivot.klass_student_id+"_"+column.id]=''
+                score['score_'+student.pivot.course_student_id+"_"+column.id]=''
             })
-            this.scores[student.pivot.klass_student_id]=score;
+            this.scores[student.pivot.course_student_id]=score;
         })
         this.students_scores.forEach(student => {
             student.scores.forEach(score => {
-                
-                this.scores[student.pivot.klass_student_id]['score_'+score.klass_student_id+'_'+score.score_column_id]=score.point;
+                this.scores[student.pivot.course_student_id]['score_'+score.course_student_id+'_'+score.score_column_id]=score.point;
             })
         })
         //console.log(this.scores)
@@ -219,13 +225,12 @@ export default {
                     const [key, value] = item;
                     const arr = key.split("_");
                     data.push({
-                        "klass_student_id":arr[1],
+                        "course_student_id":arr[1],
                         "score_column_id":arr[2],
                         "point":value
                     })
                 })
             })
-
             axios.post('score_update',data)
                 .then(resp=> 
                     console.log(resp.data)

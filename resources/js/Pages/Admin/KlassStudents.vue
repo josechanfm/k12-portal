@@ -17,6 +17,7 @@
             </template>
         </a-table>
         <!-- Modal Start-->
+        <!--
         <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="60%" @update="updateRecord()" @onCancel="closeModal()">
             <ol>
                 <li v-for="course in klass.courses">
@@ -29,10 +30,10 @@
                 <a-button key="back" @click="modalCancel">返回</a-button>
                 <a-button type="primary" @click="updateRecord()">更新</a-button>
             </template>
-            
         </a-modal>    
+        -->
         <!-- Modal End-->
-
+        <SyncCourseStudents :courses="klass.courses" :student="selectedStudent"/>
     </AdminLayout>
 
 </template>
@@ -41,26 +42,20 @@
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
 import {CheckSquareOutlined, StopOutlined} from '@ant-design/icons-vue';
+import SyncCourseStudents from '@/Components/SyncCourseStudents.vue';
 
 export default {
     components: {
         AdminLayout,
         ButtonLink,
         CheckSquareOutlined,
-        StopOutlined
+        StopOutlined,
+        SyncCourseStudents
     },
     props: ['klass','students'],
     data() {
         return {
-            modal: {
-                mode:null,
-                isOpen: false,
-                title:'學生選課',
-                data:{}
-            },
-            selectedSubjects:[],
-            selectAll:false,
-            dataSource:[],
+            selectedStudent:{},
             columns:[
             {
                     title: '姓名(中文)',
@@ -134,8 +129,6 @@ export default {
     },
     methods: {
         selectedCourses(student){
-            console.log(student);
-            this.modal.data={...student};
             this.klass.courses.forEach((course1,index)=>{
                 course1.selected=false;
                 student.courses.forEach((course2,index)=>{
@@ -144,33 +137,8 @@ export default {
                   }
                 })
             })
-            this.modal.isOpen=true;
+            this.selectedStudent={...student};
         },
-        modalCancel(){
-            this.modal.isOpen=false;
-        },
-        updateRecord(){
-            var selectedCourse=this.klass.courses.filter(course=>{
-                return course.selected;
-            }).map(c=>(c.id));
-            console.log(selectedCourse);
-            // this.$refs.modalRef.validateFields().then(()=>{
-                this.$inertia.post('/admin/student/sync_courses', {
-                    student_id:this.modal.data.id, //student id
-                    courses:selectedCourse
-                },{
-                    onSuccess:(page)=>{
-                        this.modal.isOpen=false;
-                        console.log(page);
-                    },
-                    onError:(err)=>{
-                        console.log(err);
-                    }
-                });
-            // }).catch(err => {
-            //     console.log(err);
-            // });
-        }
     },
 }
 </script>

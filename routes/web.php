@@ -107,6 +107,7 @@ Route::prefix('manage/')->group(function(){
     Route::resource('/outcome',App\Http\Controllers\Manage\OutcomeController::class);
     Route::resource('/behaviours',App\Http\Controllers\Manage\BehaviourController::class);
     Route::resource('/habits',App\Http\Controllers\Manage\HabitController::class);
+    Route::get('cal_score',[App\Http\Controllers\Manage\ScoreController::class,'calScore']);
 });
 
 Route::prefix('teacher/')->group(function(){

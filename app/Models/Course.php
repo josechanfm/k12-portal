@@ -19,12 +19,15 @@ class Course extends Model
     public function scores(){
         return $this->hasMany(Score::class);
     }
+    public function scoreColumns(){
+        return $this->hasMany(ScoreColumn::class)->orderByRaw('-sequence DESC');
+    }
 
     // public function students(){
     //     return $this->belongsToMany(Student::class,'klass_students','klass_id','student_id')->withPivot(['id as pivot_klass_student_id','student_number','stream','state','promote','promote_to']);
     // }
     public function students(){
-        return $this->belongsToMany(Student::class);
+        return $this->belongsToMany(Student::class)->withPivot('id as pivot_course_student_id');
     }
     public function teachers(){
         return $this->belongsToMany(Teacher::class)->withPivot('is_head');
@@ -42,9 +45,10 @@ class Course extends Model
 
     public static function students_scores($cid){
         $course=Course::find($cid);
-        $students=Klass::find($course->klass_id)->students;
+        //$students=Klass::find($course->klass_id)->students;
+        $students=Course::find($cid)->students;
         foreach($students as $student){
-            $student->scores=Score::where('klass_student_id',$student->pivot->klass_student_id)->get();
+            $student->scores=Score::where('course_student_id',$student->pivot->course_student_id)->get();
         }
         return $students;
     }

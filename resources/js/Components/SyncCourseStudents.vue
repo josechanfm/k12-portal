@@ -2,6 +2,8 @@
 
         <!-- Modal Start-->
         <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="60%" @update="updateRecord()" @onCancel="closeModal()">
+            <p><strong>中文姓名: </strong>{{ student.name_zh }}</p>
+            <p><strong>出生日期: </strong>{{ student.dob }}</p>
             <ol>
                 <li v-for="course in courses">
                     <a-checkbox v-model:checked="course.selected">

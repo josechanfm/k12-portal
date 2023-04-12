@@ -35,7 +35,7 @@
                         <tr v-for="student in klass.students" >
                             <td>{{ student.name_zh }}</td>
                             <td v-for="column in habitColumns">
-                                <a-input v-model:value="scores[student.pivot.klass_student_id][selectedTerm][column.name]"  maxlength="1"/>
+                                <a-input v-model:value="scores[student.pivot.klass_student_id][selectedTerm][column.name]"  />
                             </td>
                         </tr>
                     </table>
@@ -85,7 +85,7 @@ export default {
 
             //console.log(this.scores[habit.klass_student_id][1]);
         })
-        console.log(this.scores);
+        //console.log(this.scores);
     },
     mounted() {
         this.$refs.scoreTable.addEventListener('keydown', (e) => {
@@ -104,7 +104,7 @@ export default {
                     break;
             }
             var input =this.$refs.scoreTable.rows[this.tableCell.row].cells[this.tableCell.col].getElementsByTagName("input");
-            console.log(input);
+            //console.log(input);
             if(input.length>0){
                 //input[0].focus();
                 input[0].select();

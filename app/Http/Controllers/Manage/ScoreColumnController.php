@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Manage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ScoreColumn;
+use Illuminate\Support\Str;
 
 class ScoreColumnController extends Controller
 {
@@ -36,13 +37,17 @@ class ScoreColumnController extends Controller
      */
     public function store(Request $request)
     {
+        //dd($request);
         $ScoreColumn=new ScoreColumn;
         $ScoreColumn->term_id=$request->term_id;
         $ScoreColumn->course_id=$request->course_id;
+        $ScoreColumn->field_label=$request->field_label;
+        $ScoreColumn->field_name=Str::uuid();
         $ScoreColumn->sequence=$request->sequence;
-        $ScoreColumn->name=$request->name;
         $ScoreColumn->type=$request->type;
         $ScoreColumn->scheme=$request->scheme;
+        $ScoreColumn->description=$request->description;
+        $ScoreColumn->for_transcript=false;
         $ScoreColumn->save();
         return redirect()->back();
     }
@@ -81,10 +86,13 @@ class ScoreColumnController extends Controller
         $ScoreColumn=ScoreColumn::find($id);
         $ScoreColumn->term_id=$request->term_id;
         $ScoreColumn->course_id=$request->course_id;
+        $ScoreColumn->field_label=$request->field_label;
+        $ScoreColumn->field_name=Str::uuid()->toString();
         $ScoreColumn->sequence=$request->sequence;
-        $ScoreColumn->name=$request->name;
         $ScoreColumn->type=$request->type;
         $ScoreColumn->scheme=$request->scheme;
+        $ScoreColumn->description=$request->description;
+        $ScoreColumn->for_transcript=false;
         $ScoreColumn->save();
         return redirect()->back();
     }
