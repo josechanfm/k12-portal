@@ -90,24 +90,32 @@ Route::prefix('admin')->group(function(){
 Route::prefix('manage/')->group(function(){
     Route::resource('/',App\Http\Controllers\Manage\DashboardController::class);
     Route::resource('/grades',App\Http\Controllers\Manage\GradeController::class);
-    Route::get('/courses/get_by_klass_id/{klassId}',[App\Http\Controllers\Manage\CourseController::class, 'getByKlassId']);
-    Route::get('/students/get_by_klass_id/{klassId}',[App\Http\Controllers\Manage\StudentController::class,'getByKlassId']);
-    Route::get('/klass_scores/{klassId}',[App\Http\Controllers\Manage\KlassController::class,'klass_scores']);
-    Route::get('/score',[App\Http\Controllers\Manage\ScoreController::class,'index']);
-    Route::post('/score_update',[App\Http\Controllers\Manage\ScoreController::class,'update']);
-    Route::resource('/score_column',App\Http\Controllers\Manage\ScoreColumnController::class);
+
     Route::resource('/course',App\Http\Controllers\Manage\CourseController::class);
+    Route::get('/courses/get_by_klass_id/{klassId}',[App\Http\Controllers\Manage\CourseController::class, 'getByKlassId']);
+    Route::get('/course/{course}/scores',[App\Http\Controllers\Manage\ScoreController::class,'byCourse'])->name('manage.course.scores');
+
+    Route::resource('/student',App\Http\Controllers\Manage\StudentController::class);
+    Route::get('/students/get_by_klass_id/{klassId}',[App\Http\Controllers\Manage\StudentController::class,'getByKlassId']);
+
     Route::resource('/klass',App\Http\Controllers\Manage\KlassController::class);
-    Route::get('/test_data',[App\Http\Controllers\Manage\KlassController::class,'test_data']);
+    Route::get('/klass_scores/{klassId}',[App\Http\Controllers\Manage\KlassController::class,'klass_scores']);
+    
+    Route::post('/score/update',[App\Http\Controllers\Manage\ScoreController::class,'update'])->name('manage.score.update');
+    Route::resource('/score_column',App\Http\Controllers\Manage\ScoreColumnController::class)->names('manage.score_column');
+
+    Route::get('/klass/{klass}/habits',[App\Http\Controllers\Manage\HabitController::class,'byKlass'])->name('manage.klass.habits');
+    Route::put('/klass/{klass}/habits',[App\Http\Controllers\Manage\HabitController::class,'update'])->name('manage.klass.habits.update');
+
+    Route::get('/klass/{klass}/outcomes',[App\Http\Controllers\Manage\OutcomeController::class,'byKlass'])->name('manage.outcomes');
+
+    Route::resource('/behaviours',App\Http\Controllers\Manage\BehaviourController::class);
+
     Route::get('/transcript',[App\Http\Controllers\Manage\TranscriptController::class,'index']);
     Route::get('/transcript/klass_student/{id}',[App\Http\Controllers\Manage\TranscriptController::class,'klassStudent']);
-    Route::get('teaching/{teacherId}',[App\Http\Controllers\Manage\TeacherController::class,'teaching']);
+
     Route::resource('/teacher',App\Http\Controllers\Manage\TeacherController::class);
-    Route::resource('/student',App\Http\Controllers\Manage\StudentController::class);
-    Route::resource('/outcome',App\Http\Controllers\Manage\OutcomeController::class);
-    Route::resource('/behaviours',App\Http\Controllers\Manage\BehaviourController::class);
-    Route::resource('/habits',App\Http\Controllers\Manage\HabitController::class);
-    Route::get('cal_score',[App\Http\Controllers\Manage\ScoreController::class,'calScore']);
+    Route::get('teaching/{teacherId}',[App\Http\Controllers\Manage\TeacherController::class,'teaching']);   
 });
 
 Route::prefix('teacher/')->group(function(){

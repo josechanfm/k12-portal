@@ -33,6 +33,6 @@ class Score extends Model
             ['course_student_id','score_column_id'],
             ['point']
         );
-        return $data;
+        return count($data);
     }
 }

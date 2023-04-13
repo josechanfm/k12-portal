@@ -44,21 +44,23 @@
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <a-button type="primary" @click="saveScores">更新並保存</a-button>
-                    {{ scores }}
                     <table id="scoreTable" ref="scoreTable">
                         <tr>
                             <th>學生姓名</th>
-                            <td v-for="(column,idx) in score_columns">{{ column.field_label }} ({{ String.fromCharCode(idx+65) }})</td>
+                            <td v-for="(column,idx) in score_columns">
+                                <span :title="column.scheme">
+                                    {{ column.field_label }} ({{ String.fromCharCode(idx+65) }})
+                                    <span v-if="column.scheme">*</span>
+                                </span>
+                            </td>
                         </tr>
                         <tr v-for="(score, key) in scores">
                             <td>{{ score.student_name }}</td>
                             <td v-for="column in score_columns">
-                                <span v-if="column.scheme">
-                                    {{ column.scheme }}
-                                </span>
-                                <span v-else>
-                                    <a-input  v-model:value="score['score_'+key+'_'+column.id]" @keyup.arrow-keys="onKeypressed"/>
-                                </span>
+                                <a-input v-model:value="score['score_'+key+'_'+column.id]" 
+                                    @blur="onScoreChange(key)"
+                                    @keyup.arrow-keys="onKeypressed" 
+                                />
                             </td>
                         </tr>
                     </table>
@@ -96,6 +98,7 @@
 
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
+import { ContactsOutlined } from '@ant-design/icons-vue';
 
 export default {
     components: {
@@ -130,7 +133,7 @@ export default {
                     dataIndex: 'type',
                 },{
                     title: '計算方式',
-                    dataIndex: 'schema',
+                    dataIndex: 'scheme',
                 },{
                     title: '排序',
                     dataIndex: 'sequence',
@@ -190,9 +193,7 @@ export default {
     },
     methods: {
         onKeypressed(event){
-            console.log("press");
             this.keypressed=event.keyCode;
-            console.log(event.keyCode);
         },
         onClickAddScoreColumn() {
             this.modal.data={};
@@ -210,7 +211,6 @@ export default {
         },
         onClickDeleteScoreColumn(recordId){
             console.log("Need to check if the column id already use in score table. need to double confirm or shows the existing score record again.");
-
             console.log(recordId);
         },
         onModalFinish(){
@@ -231,26 +231,24 @@ export default {
                     })
                 })
             })
-            axios.post('score_update',data)
+            axios.post(route('manage.score.update'),data)
                 .then(resp=> 
-                    console.log(resp.data)
+                    console.log("update "+resp.data+" records")
                 );
         },
         handleScoreColumnChange() {
             this.$refs.modalScoreColumn.validateFields().then(()=>{
                 if(this.modal.mode=='ADD'){
                     this.createScoreColumn(this.modal.data);
-                    console.log("??modal ok " + this.modal.mode);
+                    //this.runFormular(this.score_columns, this.scores, index);   
                     this.modal.mode=null;
                 }else if(this.modal.mode=='EDIT'){
-                    console.log("to update");
                     this.updateScoreColumn(this.modal.data);
                 }
 
             }).catch(err => {
                 console.log(err);
             })
-
         },
         createScoreColumn(data){
             this.$inertia.post('/manage/score_column/', data, {
@@ -264,16 +262,57 @@ export default {
             });
         },
         updateScoreColumn(data){
-            console.log("in update");
-            this.$inertia.put('/manage/score_column/'+data.id, data, {
+            //this.$inertia.put('/manage/score_column/'+data.id, data, {
+            this.$inertia.put(route("manage.score_column.update",data.id), data, {
                     onSuccess: (page) => {
                         this.modal.mode=null;
                         this.modal.isOpen=false;
+                        this.updateAllScores();
                     },
                     onError: (error) => {
                         console.log(error);
                     }
             });
+        },
+        onScoreChange(key){
+            this.runFormular(this.score_columns, this.scores[key], key);
+        },
+        updateAllScores(){
+            for(const [key, obj] of Object.entries(this.scores)){
+                this.runFormular(this.score_columns, obj, key);
+            }
+        },
+        runFormular(columns, score, courseStudentId){
+            var fields=[];
+            var letter=65;
+            //["A":xx,"B":xx,..]
+            Object.entries(score).forEach(([key,value])=>{
+                if(key.startsWith('score_')){ //online transform field start with "score_"
+                    fields[String.fromCharCode(letter++)] = value;
+                }
+            });
+            //loop through all score columns
+            columns.forEach((column, idx)=>{
+                //if column scheme is not empty, meaning with formular
+                if(column.scheme!=null){
+                    var fieldName="score_"+courseStudentId+"_"+column.id;
+                    var formular=column.scheme;
+                    //remove "=" from the origianl formular
+                    formular=formular.replace("=","");
+                    //replace round as Math.round in the formular
+                    formular=formular.replace("round","Math.round");
+                    //replace values to formular, according to the fields values
+                    Object.entries(fields).forEach(([key,value])=>{
+                        if(value=='')return; //escape formular calculation if any field is empty
+                        formular=formular.replace(key,value);
+                    });
+                    try{
+                        score[fieldName]=eval(formular);
+                    }catch(error){
+                        console.log("("+courseStudentId+")"+score.student_name+", formular incurrect");
+                    }
+                }
+            });                
         }
     },
 }

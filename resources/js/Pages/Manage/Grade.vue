@@ -89,7 +89,8 @@
                             </td>
                             <td class="text-left">
                                 <ButtonLink :href="'habits?kid='+course.klass_id" :style="'Link'" type="Link">生活</ButtonLink>
-                                <ButtonLink :href="'score?cid='+course.id" :style="'Link'" type="Link">學分</ButtonLink>
+                                
+                                <inertia-link :href="route('manage.course.scores',course.id)" :style="'Link'" type="Link">學分</inertia-link>
                             </td>
                         </tr>
                     </tbody>

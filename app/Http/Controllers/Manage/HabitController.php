@@ -17,13 +17,11 @@ class HabitController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
-    {
-        $kid=$request->kid;
-        $klass=Klass::with('students')->find($kid);
+    public function byKlass(Klass $klass){
+        $klass=Klass::with('students')->find($klass->id);
         $terms=Config::item('year_terms');
         $habitColumns=Config::item('habit_columns');
-        $habits=Habit::byKlassId($kid);
+        $habits=Habit::byKlassId($klass->id);
 
         return Inertia::render('Manage/Habit',[
             'klass'=>$klass,
@@ -32,6 +30,22 @@ class HabitController extends Controller
             'habits'=>$habits
         ]);
     }
+
+    // public function index(Request $request)
+    // {
+    //     $kid=$request->kid;
+    //     $klass=Klass::with('students')->find($kid);
+    //     $terms=Config::item('year_terms');
+    //     $habitColumns=Config::item('habit_columns');
+    //     $habits=Habit::byKlassId($kid);
+
+    //     return Inertia::render('Manage/Habit',[
+    //         'klass'=>$klass,
+    //         'terms'=>$terms,
+    //         'habitColumns'=>$habitColumns,
+    //         'habits'=>$habits
+    //     ]);
+    // }
 
     /**
      * Show the form for creating a new resource.

@@ -11,6 +11,7 @@ use App\Models\ScoreColumn;
 use App\Models\Klass;
 use App\Models\Student;
 use App\Models\CourseScore;
+use App\Models\Outcome;
 
 class OutcomeController extends Controller
 {
@@ -19,6 +20,17 @@ class OutcomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function byKlass(Klass $klass){
+        $courses=$klass->courses;
+        $students=$klass->students;
+        $outcomes=Outcome::all();
+        dd($outcomes);
+
+        return Inertia::render('Manage/Outcome',[
+            'students'=>$students,
+        ]);
+
+    }
     public function index(Request $request)
     {
         $kid=74;

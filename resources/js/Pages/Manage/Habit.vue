@@ -133,7 +133,7 @@ export default {
                     }
                 })
             })
-            this.$inertia.put('/manage/habits/'+this.klass.id, data, {
+            this.$inertia.put(route("manage.klass.habits.update",this.klass.id), data, {
                 onSuccess: (page) => {
                         console.log(page);
                     },

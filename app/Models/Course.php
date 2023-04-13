@@ -43,10 +43,11 @@ class Course extends Model
         return $students;
     }
 
-    public static function students_scores($cid){
-        $course=Course::find($cid);
+    //public static function students_scores($cid){
+    public function students_scores(){
+        //$course=Course::find($cid);
         //$students=Klass::find($course->klass_id)->students;
-        $students=Course::find($cid)->students;
+        $students=Course::find($this->id)->students;
         foreach($students as $student){
             $student->scores=Score::where('course_student_id',$student->pivot->course_student_id)->get();
         }

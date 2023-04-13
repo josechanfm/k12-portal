@@ -21,6 +21,7 @@ class KLassController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+ 
     public function index()
     {
         $klass=Klass::with('courses')->find(1);
@@ -107,19 +108,10 @@ class KLassController extends Controller
         //
     }
 
-    public function test_data(){
-        //$courseScores=CourseScore::whereNull('parent_id')->orderBy('parent_id')->with('children')->get();
-        $courseScores=CourseScore::tree(1);
-        foreach($courseScores as $cs){
-            echo $cs;
-            echo '<hr>';
-        }
-    }
     public function klass_scores($klassId){
         $scores=Klass::klass_scores($klassId);
         echo $scores;
     }
-
     
 }
 
