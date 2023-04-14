@@ -17,14 +17,14 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('klass_student_id');
             $table->bigInteger('term_id');
-            $table->integer('late');
-            $table->integer('absent');
-            $table->string('reward');
-            $table->string('leisure_name');
-            $table->string('leisure_perform');
-            $table->string('comment');
-            $table->string('appraisal');
-            $table->unique(['klass_student_id','term_id']);
+            $table->integer('late')->nullable();
+            $table->integer('absent')->nullable();
+            $table->string('reward')->nullable();
+            $table->string('leisure_name')->nullable();
+            $table->string('leisure_perform')->nullable();
+            $table->string('comment')->nullable();
+            $table->string('appraisal')->nullable();
+            $table->unique(['klass_student_id','term_id'])->nullable();
             $table->timestamps();
         });
     }

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Course;
-use App\Models\Score;
+use App\Models\Config;
 use App\Models\ScoreColumn;
 use App\Models\Klass;
 use App\Models\Student;
@@ -21,13 +21,16 @@ class OutcomeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function byKlass(Klass $klass){
-        $courses=$klass->courses;
-        $students=$klass->students;
-        $outcomes=Outcome::all();
-        dd($outcomes);
+        // $courses=$klass->courses;
+        // $students=$klass->studentsOutcome;
+        // $outcomes=$klass->outcomes;
+        //$outcome=OUtcome::with('student')->find(1);
+        // dd($outcomes);
 
         return Inertia::render('Manage/Outcome',[
-            'students'=>$students,
+            'terms'=>Config::item('year_terms'),
+            'klass'=>$klass,
+            'outcomes'=>$klass->outcomes,
         ]);
 
     }
@@ -112,9 +115,15 @@ class OutcomeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(klass $klass, Request $request)
     {
-        //
+        Outcome::upsert(
+            $request->all(),
+            ['klass_student_id','term_id'],
+            ['late','absent','reward','leisure_name','leisure_perform','comment','appraisal']
+        );
+        return count($request->all());
+
     }
 
     /**

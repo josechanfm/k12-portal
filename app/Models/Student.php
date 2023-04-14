@@ -16,6 +16,9 @@ class Student extends Model
     // public static function scores(){
     //     return $this->hasManyThrough(Score::class, KlassStudent::class);
     // }
+    public function klasses(){
+        return $this->belongsToMany(Klass::class);
+    }
     public function courses(){
         return $this->belongsToMany(Course::class);
     }

@@ -104,10 +104,13 @@ Route::prefix('manage/')->group(function(){
     Route::post('/score/update',[App\Http\Controllers\Manage\ScoreController::class,'update'])->name('manage.score.update');
     Route::resource('/score_column',App\Http\Controllers\Manage\ScoreColumnController::class)->names('manage.score_column');
 
+    
+
     Route::get('/klass/{klass}/habits',[App\Http\Controllers\Manage\HabitController::class,'byKlass'])->name('manage.klass.habits');
     Route::put('/klass/{klass}/habits',[App\Http\Controllers\Manage\HabitController::class,'update'])->name('manage.klass.habits.update');
 
-    Route::get('/klass/{klass}/outcomes',[App\Http\Controllers\Manage\OutcomeController::class,'byKlass'])->name('manage.outcomes');
+    Route::get('/klass/{klass}/outcomes',[App\Http\Controllers\Manage\OutcomeController::class,'byKlass'])->name('manage.klass.outcomes');
+    Route::post('/klass/{klass}/outcomes',[\App\Http\Controllers\Manage\OutcomeController::class,'update'])->name('manage.klass.outcomes.update');
 
     Route::resource('/behaviours',App\Http\Controllers\Manage\BehaviourController::class);
 

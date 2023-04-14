@@ -32,7 +32,7 @@ class Klass extends Model
         return $this->belongsTo(Grade::class);
     }
     public function students(){
-        return $this->belongsToMany(Student::class,'klass_student','klass_id','student_id')
+        return $this->belongsToMany(Student::class)
                 ->withPivot(['id as pivot_klass_student_id','student_number','stream','state','promote','promote_to']);
     }
     public function teachers(){
@@ -43,6 +43,9 @@ class Klass extends Model
     }
     public function courses(){
         return $this->hasMany(Course::class);
+    }
+    public function outcomes(){
+        return $this->hasManyThrough(Outcome::class, KlassStudent::class,'klass_id', 'klass_student_id')->with('student');
     }
     // public static function klass_scores($klassId){
     //     $students=Klass::find($klassId)->students;

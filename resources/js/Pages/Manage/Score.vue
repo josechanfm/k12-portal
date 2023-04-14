@@ -213,6 +213,30 @@ export default {
             console.log("Need to check if the column id already use in score table. need to double confirm or shows the existing score record again.");
             console.log(recordId);
         },
+        createScoreColumn(data){
+            this.$inertia.post('/manage/score_column/', data, {
+                    onSuccess: (page) => {
+                        this.modal.mode=null;
+                        this.modal.isOpen=false;
+                    },
+                    onError: (error) => {
+                        console.log(error);
+                    }
+            });
+        },
+        updateScoreColumn(data){
+            //this.$inertia.put('/manage/score_column/'+data.id, data, {
+            this.$inertia.put(route("manage.score_column.update",data.id), data, {
+                    onSuccess: (page) => {
+                        this.modal.mode=null;
+                        this.modal.isOpen=false;
+                        this.updateAllScores();
+                    },
+                    onError: (error) => {
+                        console.log(error);
+                    }
+            });
+        },
         onModalFinish(){
             console.log("modal finish");
         },
@@ -249,30 +273,6 @@ export default {
             }).catch(err => {
                 console.log(err);
             })
-        },
-        createScoreColumn(data){
-            this.$inertia.post('/manage/score_column/', data, {
-                    onSuccess: (page) => {
-                        this.modal.mode=null;
-                        this.modal.isOpen=false;
-                    },
-                    onError: (error) => {
-                        console.log(error);
-                    }
-            });
-        },
-        updateScoreColumn(data){
-            //this.$inertia.put('/manage/score_column/'+data.id, data, {
-            this.$inertia.put(route("manage.score_column.update",data.id), data, {
-                    onSuccess: (page) => {
-                        this.modal.mode=null;
-                        this.modal.isOpen=false;
-                        this.updateAllScores();
-                    },
-                    onError: (error) => {
-                        console.log(error);
-                    }
-            });
         },
         onScoreChange(key){
             this.runFormular(this.score_columns, this.scores[key], key);

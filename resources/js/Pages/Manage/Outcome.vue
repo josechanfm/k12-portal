@@ -2,161 +2,74 @@
     <AdminLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                 {{ course.klass.tag }} {{ course.title_zh }}科 學分管理
-                <br/>
-                <span v-for="teacher in course.teachers">
-                    {{ teacher.name_zh }} 
-                    <span v-if="teacher.pivot.is_head">(Head)</span>
-                    &nbsp;
-                </span>
+                Year: {{ klass.year_code }}
+            </h2>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                Class: {{ klass.tag }}
             </h2>
         </template>
-        {{ students_scores }}
-        <a-button :href="'grades?kid='+course.klass_id">Back</a-button>
-        <a-button type="primary" @click="onClickAddScoreColumn">新增學分欄</a-button>
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <a-table :dataSource="course_scores" :columns="columns" >
-                        <template #bodyCell="{ column, text, record, index }">
-                            <template v-if="column.dataIndex == 'operation'">
-                                <span v-if="record.for_transcript">
-                                    成積表欄
-                                </span>
-                                <span v-else>
-                                    <a-button @click="onClickEditScoreColumn(record)">修改</a-button>
-                                    <a-button @click="onClickDeleteScoreColumn(record.id)">刪除</a-button>
-                                </span>
-                            </template>
-                            <template v-else>
-                                {{ record[column.dataIndex]}}
-                            </template>
-                        </template>
-                    </a-table>
-                </div>
-            </div>
-        </div>
-
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <a-button type="primary" @click="saveScores">更新並保存</a-button>
-                    <table id="scoreTable" ref="scoreTable">
+                    <a-button type="primary" @click="saveOutcomes">更新並保存</a-button>
+                    <a-button v-for="term in terms" @click="selectedTerm=term.value" class="ml-4" :type="selectedTerm==term.value?'primary':''">{{term.label}}</a-button>
+                    <table id="outcomeTable" ref="outcomeTable">
                         <tr>
                             <th>學生姓名</th>
-                            <td v-for="column in course_scores">{{ column.field_label }}</td>
+                            <td>late</td>
+                            <td>Absent</td>
+                            <td>reward</td>
+                            <td>leisure_name</td>
+                            <td>leisure_perform</td>
+                            <td>comment</td>
+                            <td>appraisal</td>
                         </tr>
-                        <tr v-for="(course, key) in courses">
-                            <td>{{ course.title_zh }}{{ course.id }}</td>
-                            <td v-for="column in course_scores">
-                                <a-input  v-model:value="course['course_'+key+'_'+column.id]" @keyup.arrow-keys="onKeypressed"/>
-                            </td>
-                        </tr>
+                        <template v-for="(outcome, key) in outcomes">
+                            <tr v-if="outcome && outcome.term_id==selectedTerm">
+                                <td>{{ outcome.student.name_zh }}</td>
+                                <td><a-input v-model:value="outcome.late" @keyup.arrow-keys="onKeypressed"/></td>
+                                <td><a-input v-model:value="outcome.absent" @keyup.arrow-keys="onKeypressed"/></td>
+                                <td><a-input v-model:value="outcome.reward" @keyup.arrow-keys="onKeypressed"/></td>
+                                <td><a-input v-model:value="outcome.leisure_name" @keyup.arrow-keys="onKeypressed"/></td>
+                                <td><a-input v-model:value="outcome.leisure_perform" @keyup.arrow-keys="onKeypressed"/></td>
+                                <td><a-input v-model:value="outcome.comment" @keyup.arrow-keys="onKeypressed"/></td>
+                                <td><a-input v-model:value="outcome.appraisal" @keyup.arrow-keys="onKeypressed"/></td>
+                            </tr>
+                        </template>
                     </table>
                 </div>
             </div>
         </div>
-
-        <a-modal v-model:visible="modal.isOpen" :title="modal.title" @ok="handleScoreColumnChange">
-            <a-form 
-                :model="modal.data"
-                name="score_column"
-                ref="modalScoreColumn"
-                @finish="onModalFinish"
-            >
-            
-                <a-form-item label="Field Name" :name="['field_label']" :rules="[{required:true, message:'Please input score column name'}]">
-                    <a-input v-model:value="modal.data.field_label"/>
-                </a-form-item>
-                <a-form-item label="Term" :name="['term_id']" :rules="[{required:true, message:'Please input score column name'}]">
-                    <a-input v-model:value="modal.data.term_id"/>
-                </a-form-item>
-                <a-form-item label="sequence" :name="['sequence']" >
-                    <a-input v-model:value="modal.data.sequence"/> 
-                </a-form-item>
-                <a-form-item label="Scheme" :name="['scheme']">
-                    <a-input v-model:value="modal.data.scheme" /> 
-                </a-form-item>
-                <a-form-item label="Description" :name="['description']">
-                    <a-input v-model:value="modal.data.description"/> 
-                </a-form-item>
-                <a-form-item label="Course" :name="['course_id']" :rules="[{required:true, message:'Please input score column course_id'}]" :hidden="true">
-                    <a-input v-model:value="modal.data.course_id"/>
-                </a-form-item>
-                <a-form-item label="Type" :name="['type']"  :rules="[{required:true, message:'Please input score column type'}]" :hidden="true">
-                    <a-input v-model:value="modal.data.type" /> 
-                </a-form-item>
-            </a-form>
-        </a-modal>
     </AdminLayout>
 
 </template>
 
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
+import { VueElement } from 'vue';
 
 export default {
     components: {
         AdminLayout
     },
-    props: ['course', 'course_scores', 'students_scores','courses'],
+    props: ['terms','klass', 'outcomes'],
     data() {
         return {
             keypressed:"",
-            modal: {
-                mode:null,
-                isOpen: false,
-                title:'Score Column',
-                data:{}
-            },
+            selectedTerm:1,
             tableCell:{
                 row:0,
                 col:0,
-                maxRow:this.courses.length,
-                maxCol:this.course_scores.length
+                maxRow:this.outcomes.length,
+                maxCol:7
             },
-            scores:{},
-            columns: [
-                {
-                    title: '學段',
-                    dataIndex: 'term_id',
-                },{
-                    title: '學分欄名稱',
-                    dataIndex: 'field_label',
-                },{
-                    title: '分類',
-                    dataIndex: 'type',
-                },{
-                    title: '計算方式',
-                    dataIndex: 'schema',
-                },{
-                    title: '操作',
-                    dataIndex: 'operation',
-                }
-            ]
-
         }
     },
     created(){
-        this.students_scores.forEach(student => {
-            var score={};
-            score['student_name']=student.name_zh
-            this.course_scores.forEach(column => {
-                score['score_'+student.pivot.klass_student_id+"_"+column.id]=''
-            })
-            this.scores[student.pivot.klass_student_id]=score;
-        })
-        this.students_scores.forEach(student => {
-            student.scores.forEach(score => {
-                
-                this.scores[student.pivot.klass_student_id]['score_'+score.klass_student_id+'_'+score.score_column_id]=score.point;
-            })
-        })
-        //console.log(this.scores)
         
     },
     mounted() {
-        this.$refs.scoreTable.addEventListener('keydown', (e) => {
+        this.$refs.outcomeTable.addEventListener('keydown', (e) => {
             switch(e.key){
                 case 'ArrowUp':
                     this.tableCell.row>1?this.tableCell.row--:'';
@@ -171,12 +84,12 @@ export default {
                     this.tableCell.col<this.tableCell.maxCol?this.tableCell.col++:'';
                     break;
             }
-            var input =this.$refs.scoreTable.rows[this.tableCell.row].cells[this.tableCell.col].getElementsByTagName("input");
+            var input =this.$refs.outcomeTable.rows[this.tableCell.row].cells[this.tableCell.col].getElementsByTagName("input");
             if(input.length>0){
                 input[0].focus();
             }
         })
-        const inputs=this.$refs.scoreTable.getElementsByTagName("input");
+        const inputs=this.$refs.outcomeTable.getElementsByTagName("input");
         for(var i=0; i<inputs.length; i++){
             inputs[i].addEventListener("focus", (e) => {
                 this.tableCell.row=e.target.closest('tr').rowIndex;
@@ -190,98 +103,29 @@ export default {
             this.keypressed=event.keyCode;
             console.log(event.keyCode);
         },
-        onClickAddScoreColumn() {
-            this.modal.data={};
-            this.modal.data.course_id=this.course.id;
-            this.modal.data.type='SUB';
-            this.modal.title="Add Score Column";
-            this.modal.mode='ADD';
-            this.modal.isOpen = true;
-        },
-        onClickEditScoreColumn(record){
-            this.modal.data=record;
-            this.modal.title="Edit Score Column";
-            this.modal.mode='EDIT';
-            this.modal.isOpen = true;
-        },
-        onClickDeleteScoreColumn(recordId){
-            console.log("Need to check if the column id already use in score table. need to double confirm or shows the existing score record again.");
-
-            console.log(recordId);
-        },
-        onModalFinish(){
-            console.log("modal finish");
-        },
-        saveScores(){
-            var data=[];
-            Object.entries(this.scores).forEach(score => {
-                const temp={...score[1]};
-                delete temp.student_name
-                Object.entries(temp).forEach((item) => {
-                    const [key, value] = item;
-                    const arr = key.split("_");
-                    data.push({
-                        "klass_student_id":arr[1],
-                        "score_column_id":arr[2],
-                        "point":value
-                    })
-                })
-            })
-
-            axios.post('score_update',data)
+        saveOutcomes(){
+            var data=JSON.parse(JSON.stringify(this.outcomes));
+            data.forEach(function (d) { 
+                delete d.student;
+                delete d.laravel_through_key;
+                delete d.created_at;
+                delete d.updated_at;
+            });
+            axios.post(route('manage.klass.outcomes.update',this.klass.id),data)
                 .then(resp=> 
                     console.log(resp.data)
                 );
         },
-        handleScoreColumnChange() {
-            this.$refs.modalScoreColumn.validateFields().then(()=>{
-                if(this.modal.mode=='ADD'){
-                    this.createScoreColumn(this.modal.data);
-                    console.log("??modal ok " + this.modal.mode);
-                    this.modal.mode=null;
-                }else if(this.modal.mode=='EDIT'){
-                    console.log("to update");
-                    this.updateScoreColumn(this.modal.data);
-                }
-
-            }).catch(err => {
-                console.log(err);
-            })
-
-        },
-        createScoreColumn(data){
-            this.$inertia.post('/manage/score_column/', data, {
-                    onSuccess: (page) => {
-                        this.modal.mode=null;
-                        this.modal.isOpen=false;
-                    },
-                    onError: (error) => {
-                        console.log(error);
-                    }
-            });
-        },
-        updateScoreColumn(data){
-            console.log("in update");
-            this.$inertia.put('/manage/score_column/'+data.id, data, {
-                    onSuccess: (page) => {
-                        this.modal.mode=null;
-                        this.modal.isOpen=false;
-                    },
-                    onError: (error) => {
-                        console.log(error);
-                    }
-            });
-        }
     },
 }
 </script>
 
 <style>
-#scoreTable, #scoreTable td, #scoreTable th {
+#outcomeTable, #outcomeTable td, #outcomeTable th {
   border: 1px solid;
 }
 
-#scoreTable {
+#outcomeTable {
   width: 100%;
   border-collapse: collapse;
 }
