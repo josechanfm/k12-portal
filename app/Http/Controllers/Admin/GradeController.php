@@ -49,7 +49,7 @@ class GradeController extends Controller
     {
         $grade=new Grade;
         $grade->year_id=$request->year_id;
-        $grade->sequence=$request->sequence;
+        $grade->grade_year=$request->grade_year;
         $grade->initial=$request->initial;
         $grade->level=$request->level;
         $grade->tag=$request->initial.$request->level;
@@ -105,10 +105,6 @@ class GradeController extends Controller
         if($request->has('id')){
             $grade=Grade::find($id);
             $grade->year_id=1;
-            // $grade->sequence=$request->sequence;
-            // $grade->initial=$request->initial;
-            // $grade->initial=$request->level;
-            // $grade->tag=$request->initial.$request->level;
             $grade->title_zh=$request->title_zh;
             $grade->title_en=$request->title_en;
             $grade->description=$request->description;
@@ -135,21 +131,12 @@ class GradeController extends Controller
         }
     }
 
-    // public function year($yearId){
-    //     $year=Year::find($yearId);
-    //     $grades=Grade::whereBelongsTo($year)->orderBy('sequence')->get();
-    //     return Inertia::render('Admin/GradesYear',[
-    //         'year'=>$year,
-    //         'grades'=>$grades,
-    //         'gradeCategories'=>Config::item('grade_categories'),
-    //         'gradeLevels'=>Config::item('grade_levels'),
-    //     ]);
-    // }
+
 
     public function klasses(Grade $grade){
         //if grade not found return some kind of error...
         $grades=Grade::where('year_id',$grade->year_id)->get();
-        $klasses=Klass::with('courses')->with('students')->whereBelongsTo($grade)->get();
+        $klasses=Klass::with('courses')->with('students')->with('grade')->whereBelongsTo($grade)->get();
         $studies=Study::where('active',1)->get();
         return Inertia::render('Admin/GradeKlasses',[
             'year'=>$grade->year,
@@ -160,5 +147,12 @@ class GradeController extends Controller
             'studyStreams'=>Config::item('study_streams'),
             'studies'=>$studies
         ]);        
+    }
+
+    public function themes(Grade $grade){
+        return Inertia::render('Admin/GradeThemes',[
+            'grade'=>$grade,
+            'topics'=>$grade->topics
+        ]);
     }
 }

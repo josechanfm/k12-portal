@@ -40,7 +40,6 @@
                                     <li v-for="(klass, klassKey) in grade.klasses" :klass_id="klass.id">
                                         <span @click="selectKlass(klass,'student')">
                                             {{ klass.student_count }}
-
                                         </span>
                                     </li>
                                 </ul>
@@ -50,6 +49,7 @@
                                     <li v-for="klass in grade.klasses" :klass_id="klass.id">
                                         <span @click="selectKlass(klass,'course')">
                                             Courses
+                                            <inertia-link :href="route('/manage.klasses.show',klass.id)" class="ant-btn" >Panel</inertia-link>
                                         </span>
                                     </li>
                                 </ul>

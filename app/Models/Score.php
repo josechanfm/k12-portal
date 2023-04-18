@@ -19,7 +19,6 @@ class Score extends Model
     }
 
     public function student(){
-        //return $this->belongsTo(KlassStudent::class,'klass_student_id','id');
         return $this->belongsToMany(Student::class,'klass_student','student_id','klass_id');
     }
     static function updateScore($data){

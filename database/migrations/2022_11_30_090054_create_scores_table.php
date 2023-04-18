@@ -15,12 +15,12 @@ return new class extends Migration
     {
         Schema::create('scores', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('klass_student_id')->on('klass_student')->onDelete('restrict')->onUpdate('cascade');
+            $table->bigInteger('course_student_id')->on('course_student')->onDelete('restrict')->onUpdate('cascade');
             $table->bigInteger('score_column_id')->on('score_columns')->onDelete('restrict')->onUpdate('cascade');            
             $table->string('point')->nullable();
             $table->string('remark')->nullable();
             $table->timestamps();
-            $table->unique(['klass_student_id','score_column_id'],'student_score');
+            $table->unique(['course_student_id','score_column_id'],'student_score');
         });
     }
 

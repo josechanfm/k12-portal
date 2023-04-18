@@ -53,4 +53,7 @@ class Student extends Model
     public function healthcare(){
         return $this->hasOne(Healthcare::class);
     }
+    public function abilities(){
+        return $this->hasManyThrough(Ability::class, KlassStudent::class, 'student_id','klass_student_id')->with('topic');
+    }
 }

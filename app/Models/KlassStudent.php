@@ -21,5 +21,6 @@ class KlassStudent extends Model
     public function klass(){
         return $this->belongsTo(Klass::class);
     }
+   
 
 }

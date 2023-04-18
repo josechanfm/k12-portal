@@ -12,7 +12,8 @@
         <a-table :dataSource="klasses" :columns="columns">
             <template #bodyCell="{column, text, record, index}">
                 <template v-if="column.dataIndex=='operation'">
-                    <inertia-link :href="route('admin.klass.courses',record.id)" class="ant-btn">科目</inertia-link>
+                    <inertia-link v-if="record.grade.themes.length>0" :href="route('admin.grade.themes',record.grade.id)" class="ant-btn">主題</inertia-link>
+                    <inertia-link v-else :href="route('admin.klass.courses',record.id)" class="ant-btn">科目</inertia-link>
                     <inertia-link :href="route('admin.klass.students',record.id)" class="ant-btn">學生</inertia-link>
                     <a-button @click="editRecord(record)">修改</a-button>
                 </template>

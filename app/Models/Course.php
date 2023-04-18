@@ -32,28 +32,26 @@ class Course extends Model
     public function teachers(){
         return $this->belongsToMany(Teacher::class)->withPivot('is_head');
     }
-    public function subject(){
-        return $this->belongsTo(Subject::class);
-    }
-    public static function gather_scores($courseId){
-        $students=Course::find($courseId)->students;
-        foreach($students as $student){
-            $student->scores=Score::where('klass_student_id',$student->pivot->klass_student_id)->get();
-        }
-        return $students;
-    }
+    // public function subject(){
+    //     return $this->belongsTo(Subject::class);
+    // }
+    // public static function gather_scores($courseId){
+    //     $students=Course::find($courseId)->students;
+    //     foreach($students as $student){
+    //         $student->scores=Score::where('klass_student_id',$student->pivot->klass_student_id)->get();
+    //     }
+    //     return $students;
+    // }
 
     //public static function students_scores($cid){
     public function students_scores(){
-        //$course=Course::find($cid);
-        //$students=Klass::find($course->klass_id)->students;
         $students=Course::find($this->id)->students;
         foreach($students as $student){
             $student->scores=Score::where('course_student_id',$student->pivot->course_student_id)->get();
         }
         return $students;
     }
-    public static function students_outcomes($kid){
-        return Course::where('klass_id',$kid)->whereNot('type','SUB')->get();
-    }
+    // public static function students_outcomes($kid){
+    //     return Course::where('klass_id',$kid)->whereNot('type','SUB')->get();
+    // }
 }

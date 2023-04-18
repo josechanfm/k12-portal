@@ -29,7 +29,7 @@ class Klass extends Model
         return KlassStudent::where('promote_to',$this->id)->count();
     }
     public function grade(){
-        return $this->belongsTo(Grade::class);
+        return $this->belongsTo(Grade::class)->with('themes');
     }
     public function students(){
         return $this->belongsToMany(Student::class)
@@ -47,6 +47,14 @@ class Klass extends Model
     public function outcomes(){
         return $this->hasManyThrough(Outcome::class, KlassStudent::class,'klass_id', 'klass_student_id')->with('student');
     }
+    // public function abilities(){
+    //     return $this->belongsTo(Topic::class);
+    //     //return $this->hasManyThrough(Ability::class, KlassStudent::class,'klass_id', 'klass_student_id')->with('topic');
+    // }
+    public function students_abilities(){
+        return $this->belongsToMany(Student::class)->with('abilities')->withPivot('id as pivot_klass_student_id');
+    }
+
     // public static function klass_scores($klassId){
     //     $students=Klass::find($klassId)->students;
     //     foreach($students as $i=>$student){

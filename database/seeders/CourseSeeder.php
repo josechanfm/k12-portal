@@ -5,10 +5,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use App\Models\Year;
-use App\Models\Subject;
-use App\Models\Course;
-use App\Models\Klass;
 
 class CourseSeeder extends Seeder
 {

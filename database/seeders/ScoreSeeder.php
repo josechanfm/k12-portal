@@ -16,17 +16,17 @@ class ScoreSeeder extends Seeder
     public function run()
     {
         DB::table('scores')->insert([
-            'klass_student_id'=>3,
+            'course_student_id'=>3,
             'score_column_id'=>1,
             'point'=>100
         ]);
         DB::table('scores')->insert([
-            'klass_student_id'=>5,
+            'course_student_id'=>5,
             'score_column_id'=>1,
             'point'=>80
         ]);
         DB::table('scores')->insert([
-            'klass_student_id'=>3,
+            'course_student_id'=>3,
             'score_column_id'=>2,
             'point'=>90
         ]);

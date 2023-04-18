@@ -13,13 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('klass_topics', function (Blueprint $table) {
+        Schema::create('abilities', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('klass_id');
+            $table->bigInteger('klass_student_id');
             $table->bigInteger('topic_id');
-            $table->integer('credit');
-            $table->text('remark');
+            $table->integer('credit')->nullable();
+            $table->text('remark')->nullable();
             $table->timestamps();
+            $table->unique(['klass_student_id','topic_id'])->nullable();
         });
     }
 
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('klass_topics');
+        Schema::dropIfExists('abilities');
     }
 };

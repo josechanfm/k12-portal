@@ -7,22 +7,29 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Config;
 use App\Models\Klass;
-use App\Models\Teacher;
+use App\Models\Ability;
 
-class KLassController extends Controller
+class AbilityController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
- 
+    public function byKlass(Klass $klass){
+        return Inertia::render('Manage/Ability',[
+            'terms'=>Config::item('year_terms'),
+            'klass'=>$klass,
+            'topics'=>$klass->grade->topics,
+            // 'abilities'=>$klass->abilities,
+            'students_abilities'=>$klass->students_abilities
+        ]);
+
+    }
+
     public function index()
     {
-        $klass=Klass::with('courses')->find(1);
-        $teacher=Teacher::with('courses')->find(1);
-        return response($teacher);
-        //return response($klass);
+        //
     }
 
     /**
@@ -52,19 +59,9 @@ class KLassController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Klass $klass)
+    public function show($id)
     {
-        $grade=$klass->grade;
-        $courses=Klass::find($klass->id)->courses;
-        $score_columns=Config::item('score_columns');
-        return Inertia::render('Manage/Klass',[
-            'grade'=>$grade,
-            'klass'=>$klass,
-            'courses'=>$courses,
-            //'students'=>$students,
-            'score_columns'=>$score_columns
-        ]);
-
+        //
     }
 
     /**
@@ -85,9 +82,17 @@ class KLassController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Klass $klass, Request $request)
     {
-        //
+        //return $request->all();
+        Ability::upsert(
+            $request->all(),
+            ['klass_student_id','topic_id'],
+            ['credit']
+        );
+        return count($request->all());
+
+
     }
 
     /**
@@ -100,18 +105,4 @@ class KLassController extends Controller
     {
         //
     }
-
-    public function klass_scores($klassId){
-        $scores=Klass::klass_scores($klassId);
-        echo $scores;
-    }
-
-    public function students(Klass $klass){
-        return Inertia::render('Manage/KlassStudents',[
-            'klass'=>$klass,
-            'students'=>$klass->students,
-        ]);
-    }
-
 }
-

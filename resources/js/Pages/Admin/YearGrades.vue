@@ -29,6 +29,7 @@
                     <inertia-link :href="route('admin.grade.klasses',record.id)" class="ant-btn">班別</inertia-link>
                     <a-button @click="editRecord(record)">修改</a-button>
                     <a-button @click="deleteRecord(record)">刪除</a-button>
+
                 </template>
                 <template v-if="column.dataIndex=='active'">
                     <check-square-outlined v-if="text=='1'" :style="{color:'green'}"/>
@@ -51,9 +52,9 @@
                     :label-col="{ span: 8 }"
                     :wrapper-col="{ span: 16 }"
                 >
-                    <a-form-item label="學習年" name="sequence" v-if="modal.mode=='CREATE'">
+                    <a-form-item label="學習年" name="grade_year" v-if="modal.mode=='CREATE'">
                         <a-select
-                            v-model:value="modal.data.sequence"
+                            v-model:value="modal.data.grade_year"
                             style="width: 100%"
                             placeholder="請選擇..."
                             max-tag-count="responsive"
@@ -218,7 +219,7 @@ export default {
             this.$inertia.get(route('admin.year.grades',item));
         },
         onChangeGradeSelected(){
-            var tmp=this.gradeLevels.find(grade=>grade.value==this.modal.data.sequence);
+            var tmp=this.gradeLevels.find(grade=>grade.value==this.modal.data.grade_year);
             console.log(tmp);
             this.modal.data.initial=tmp.initial;
             this.modal.data.level=tmp.level;

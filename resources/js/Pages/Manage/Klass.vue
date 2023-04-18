@@ -5,10 +5,12 @@
                 班別管理
             </h2>
         </template>
-        {{klass}}
-        <hr>
-        {{courses}}
-        <p></p>
+        {{ grade.themes }}
+        
+
+        <p>Klass: {{ klass.tag }}</p>
+        <p>Students: {{ klass.student_count }}</p>
+        <inertia-link :href="route('manage.klass.students',klass.id)" class="ant-btn" >Students</inertia-link>        
         <table width="100%">
                     <thead>
                         <tr>
@@ -22,12 +24,17 @@
                     </thead>
                     <tbody>
                         <tr v-for="(course, courseKey) in courses" :course_id="course.id">
-                            <td class="text-left">{{ course.abbr }}</td>
+                            <td class="text-left">{{ course.code }}</td>
                             <td class="text-left">{{ course.title_zh }}</td>
                             <td class="text-left">{{ course.stream }}</td>
                             <td class="text-left">{{ course.elective }}</td>
                             <td class="text-left">{{ course.active }}</td>
-                            <th class="text-left"><span @click="modify_score_scheme(courseKey)">Score Scheme</span></th>
+                            <th class="text-left">
+
+                                <inertia-link :href="route('manage.klass.habits',course.klass_id)" class="ant-btn" >生活</inertia-link>
+                                <inertia-link :href="route('manage.klass',course.id)" class="ant-btn" >學分</inertia-link>
+                                <inertia-link :href="route('manage.course.scores',course.id)" class="ant-btn" >學分</inertia-link>
+                            </th>
                         </tr>
                     </tbody>
                 </table>

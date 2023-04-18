@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('grades', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('year_id')->on('years')->onDelete('restrict')->onUpdate('cascade');
-            $table->integer('sequence');
+            $table->integer('grade_year');
             $table->char('initial',2);
             $table->integer('level');            
             $table->string('tag',5)->nullable();
