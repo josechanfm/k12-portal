@@ -13,7 +13,7 @@
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <a-button type="primary" @click="saveAbilities">更新並保存</a-button>
                     <a-button v-for="term in terms" @click="selectedTerm=term.value" class="ml-4" :type="selectedTerm==term.value?'primary':''">{{term.label}}</a-button>
-                    <table id="topicTable" ref="topicTable">
+                    <table id="abilityTable" ref="abilityTable">
                         <tr>
                             <th width="100px" rowspan="2" class="text-center">學生姓名</th>
                             <th v-for="theme in themes" :colspan="theme.topic_count" class="text-center">
@@ -27,6 +27,7 @@
                                     {{ topic.abbr_zh }} 
                                 </a-tooltip>
                             </th>
+                            <th></th>
                         </tr>
                         <template v-for="(student, key) in abilities">
                             <tr>
@@ -36,6 +37,7 @@
                                         <template v-if="term_id==selectedTerm">
                                             <a-input v-model:value="ability['ability_'+topic.id]" 
                                                 @keyup.arrow-keys="onKeypressed" 
+                                                @click="onFocusInput($event)"
                                             />
                                         </template>
                                     </template>
@@ -97,7 +99,7 @@ export default {
         console.log(this.abilities);
     },
     mounted() {
-        this.$refs.topicTable.addEventListener('keydown', (e) => {
+        this.$refs.abilityTable.addEventListener('keydown', (e) => {
             switch(e.key){
                 case 'ArrowUp': 
                     this.tableCell.row>1?this.tableCell.row--:'';
@@ -112,12 +114,13 @@ export default {
                     this.tableCell.col<this.tableCell.maxCol?this.tableCell.col++:'';
                     break;
             }
-            var input =this.$refs.topicTable.rows[this.tableCell.row].cells[this.tableCell.col].getElementsByTagName("input");
+            
+            var input =this.$refs.abilityTable.rows[this.tableCell.row].cells[this.tableCell.col].getElementsByTagName("input");
             if(input.length>0){
-                input[0].focus();
+                input[0].select();
             }
         })
-        const inputs=this.$refs.topicTable.getElementsByTagName("input");
+        const inputs=this.$refs.abilityTable.getElementsByTagName("input");
         for(var i=0; i<inputs.length; i++){
             inputs[i].addEventListener("focus", (e) => {
                 this.tableCell.row=e.target.closest('tr').rowIndex;
@@ -160,17 +163,21 @@ export default {
             }
             return ability.credit
             
+        },
+        onFocusInput(event){
+            this.tableCell.row=event.target.closest('tr').rowIndex;
+            this.tableCell.col=event.target.closest('td').cellIndex;
         }
     },
 }
 </script>
 
 <style>
-#topicTable, #topicTable td, #topicTable th {
+#abilityTable, #abilityTable td, #abilityTable th {
   border: 1px solid;
 }
 
-#topicTable {
+#abilityTable {
   width: 100%;
   border-collapse: collapse;
 }

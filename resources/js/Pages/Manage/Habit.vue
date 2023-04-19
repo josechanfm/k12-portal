@@ -34,7 +34,8 @@
                         <tr v-for="student in klass.students" >
                             <td>{{ student.name_zh }}</td>
                             <td v-for="column in habitColumns">
-                                <a-input v-model:value="scores[student.pivot.klass_student_id][selectedTerm][column.name]"  />
+                                <a-input v-model:value="scores[student.pivot.klass_student_id][selectedTerm][column.name]"  
+                                />
                             </td>
                         </tr>
                     </table>
@@ -115,9 +116,7 @@ export default {
     },
     methods: {
         onKeypressed(event){
-            console.log("press");
             this.keypressed=event.keyCode;
-            console.log(event.keyCode);
         },
         saveScores(){
             var data=[];
@@ -137,6 +136,11 @@ export default {
                     }
             })
         },
+        onFocusInput(event){
+            this.tableCell.row=event.target.closest('tr').rowIndex;
+            this.tableCell.col=event.target.closest('td').cellIndex;
+        }
+        
     },
 }
 </script>
