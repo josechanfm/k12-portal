@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use App\Models\Config;
 use App\Models\Klass;
 use App\Models\Ability;
+use App\Models\Theme;
 
 class AbilityController extends Controller
 {
@@ -20,6 +21,7 @@ class AbilityController extends Controller
         return Inertia::render('Manage/Ability',[
             'terms'=>Config::item('year_terms'),
             'klass'=>$klass,
+            'themes'=>$klass->themes,
             'topics'=>$klass->grade->topics,
             // 'abilities'=>$klass->abilities,
             'students_abilities'=>$klass->students_abilities
@@ -87,7 +89,7 @@ class AbilityController extends Controller
         //return $request->all();
         Ability::upsert(
             $request->all(),
-            ['klass_student_id','topic_id'],
+            ['klass_student_id','topic_id','term_id'],
             ['credit']
         );
         return count($request->all());

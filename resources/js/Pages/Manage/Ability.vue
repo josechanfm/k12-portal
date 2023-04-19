@@ -9,27 +9,36 @@
             </h2>
         </template>
         <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <a-button type="primary" @click="saveAbilities">更新並保存</a-button>
                     <a-button v-for="term in terms" @click="selectedTerm=term.value" class="ml-4" :type="selectedTerm==term.value?'primary':''">{{term.label}}</a-button>
                     <table id="topicTable" ref="topicTable">
                         <tr>
-                            <th width="100px">學生姓名</th>
-                            <td v-for="topic in topics">
+                            <th width="100px" rowspan="2" class="text-center">學生姓名</th>
+                            <th v-for="theme in themes" :colspan="theme.topic_count" class="text-center">
+                                {{ theme.title_zh }}
+                            </th>
+                        </tr>
+                        <tr>
+                            <th v-for="topic in topics"  class="text-center">
                                 <a-tooltip>
-                                    <template #title>{{ topic.title_zh }}</template>
+                                    <template #title>[{{topic.theme.title_zh}}]<br>{{ topic.title_zh }}</template>
                                     {{ topic.abbr_zh }} 
                                 </a-tooltip>
-                            </td>
+                            </th>
                         </tr>
-                        <template v-for="(ability, key) in abilities">
+                        <template v-for="(student, key) in abilities">
                             <tr>
-                                <td>{{ ability.student_name }}</td>
+                                <td>{{ student.student_name }}</td>
                                 <td v-for="topic in topics">
-                                    <a-input v-model:value="ability['ability_'+key+'_'+topic.id]" 
-                                        @keyup.arrow-keys="onKeypressed" 
-                                    />
+                                    <template v-for="(ability, term_id) in student">
+                                        <template v-if="term_id==selectedTerm">
+                                            <a-input v-model:value="ability['ability_'+topic.id]" 
+                                                @keyup.arrow-keys="onKeypressed" 
+                                            />
+                                        </template>
+                                    </template>
                                 </td>
                             </tr>
                         </template>
@@ -48,7 +57,7 @@ export default {
     components: {
         AdminLayout
     },
-    props: ['terms','klass', 'topics','students_abilities'],
+    props: ['terms','klass','themes', 'topics','students_abilities'],
     data() {
         return {
             keypressed:"",
@@ -57,26 +66,35 @@ export default {
             tableCell:{
                 row:0,
                 col:0,
-                maxRow:this.students_abilities.length,
+                maxRow:this.students_abilities.length+1,
                 maxCol:this.topics.length
             },
         }
     },
     created(){
         this.students_abilities.forEach(student=>{
-            var ability={};
-            ability['student_name'] = student.name_zh;
-            this.topics.forEach(topic=>{
-                ability['ability_'+student.pivot.klass_student_id+'_'+topic.id]='';
-            })
-            this.abilities[student.pivot.student_id]=ability;
+            this.abilities[student.pivot.klass_student_id]={}
+            this.abilities[student.pivot.klass_student_id]={student_name:student.name_zh,terms:[]};
+                this.terms.forEach(term=>{
+                this.abilities[student.pivot.klass_student_id][term.value]={};
+                    this.topics.forEach(topic=>{
+                        this.abilities[student.pivot.klass_student_id][term.value]['ability_'+topic.id]='';
+                    })
+                }) 
+                
         })
         this.students_abilities.forEach(student=>{
-            student.abilities.forEach(ability => {
-                //console.log(ability);
-                this.abilities[student.pivot.student_id]['ability_'+student.pivot.klass_student_id+'_'+ability.topic.id]=ability.credit;
+            this.terms.forEach(term=>{
+                this.topics.forEach(topic=>{
+                    student.abilities.forEach(ability=>{
+                        if(ability.term_id==term.value){
+                            this.abilities[student.pivot.klass_student_id][term.value]['ability_'+ability.topic_id]=ability.credit;
+                        }
+                    })
+                })
             })
         })
+        console.log(this.abilities);
     },
     mounted() {
         this.$refs.topicTable.addEventListener('keydown', (e) => {
@@ -113,22 +131,20 @@ export default {
         },
         saveAbilities(){
             var data=[];
-            Object.entries(this.abilities).forEach(ability => {
-                const temp={...ability[1]};
-                delete temp.student_name
-                Object.entries(temp).forEach((item) => {
-                    const [key, value] = item;
-                    const arr = key.split("_");
-                    console.log("value: "+value);
-                    if(value!=null){
+            Object.entries(this.abilities).forEach(([klass_student_id,student])=>{
+                this.terms.forEach(term=>{
+                    Object.entries(student[term.value]).forEach(([key,value])=>{
+                        const arr = key.split("_");
                         data.push({
-                            "klass_student_id":arr[1],
-                            "topic_id":arr[2],
-                            "credit":value
-                        })
-                    }
+                            'term_id':term.value,
+                            'klass_student_id':klass_student_id,
+                            'topic_id':arr[1],
+                            'credit':value
+                        });
+                    })
                 })
             })
+            console.log(data);
             axios.post(route('manage.klass.abilities.update',this.klass.id),data)
                 .then(resp=> 
                     console.log(resp.data)

@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Theme extends Model
 {
     use HasFactory;
+    protected $appends= ['topic_count'];
+    
+    public function getTopicCountAttribute(){
+        return Topic::where('theme_id',$this->id)->count();
+    }
     
     public function grade(){
         return $this->belongsTo(Garde::class);

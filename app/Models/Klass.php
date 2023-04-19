@@ -16,8 +16,11 @@ class Klass extends Model
     //     return $this->belongsToMany(Subject::class);
     // }
    
-    protected $appends= ['student_count','promoted_count','year_code'];
+    protected $appends= ['student_count','promoted_count','year_code','grade_year'];
     
+    public function getGradeYearAttribute(){
+        return Grade::find($this->grade_id)->grade_year;
+    }
     public function getYearCodeAttribute(){
         return Grade::find($this->grade_id)->year->code;
     }
@@ -47,12 +50,12 @@ class Klass extends Model
     public function outcomes(){
         return $this->hasManyThrough(Outcome::class, KlassStudent::class,'klass_id', 'klass_student_id')->with('student');
     }
-    // public function abilities(){
-    //     return $this->belongsTo(Topic::class);
-    //     //return $this->hasManyThrough(Ability::class, KlassStudent::class,'klass_id', 'klass_student_id')->with('topic');
-    // }
     public function students_abilities(){
         return $this->belongsToMany(Student::class)->with('abilities')->withPivot('id as pivot_klass_student_id');
+    }
+
+    public function themes(){
+        return $this->belongsToMany(Theme::class,'grades','id','grade_year','grade_year','grade_year');
     }
 
     // public static function klass_scores($klassId){

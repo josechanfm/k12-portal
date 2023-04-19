@@ -7,7 +7,6 @@
         </template>
         <a-typography-title :level="3">班別:{{klass.tag}}</a-typography-title>
         <a-typography-title :level="3">專業方向:{{klass.stream}}</a-typography-title>
-        
         <div class="py-12">
             <div>
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -81,11 +80,7 @@ export default {
             this.habitColumns.forEach(column=>{
                 this.scores[habit.klass_student_id][habit.term_id][column.name]=habit[column.name];
             });
-            //console.log(habit);
-
-            //console.log(this.scores[habit.klass_student_id][1]);
         })
-        //console.log(this.scores);
     },
     mounted() {
         this.$refs.scoreTable.addEventListener('keydown', (e) => {
