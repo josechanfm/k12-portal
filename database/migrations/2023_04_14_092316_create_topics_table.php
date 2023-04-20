@@ -16,10 +16,10 @@ return new class extends Migration
         Schema::create('topics', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('theme_id');
-            $table->string('abbr_zh')->nullable();
-            $table->string('abbr_en')->nullable();
-            $table->string('title_zh')->nullable();
-            $table->string('title_en')->nullable();
+            $table->integer('sequence');
+            $table->string('section')->nullable();
+            $table->string('abbr')->nullable();
+            $table->string('title')->nullable();
             $table->text('description')->nullable();
             $table->timestamps();
         });

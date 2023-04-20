@@ -12,36 +12,35 @@
             <div class="mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <a-button type="primary" @click="saveAbilities">更新並保存</a-button>
-                    <a-button v-for="term in terms" @click="selectedTerm=term.value" class="ml-4" :type="selectedTerm==term.value?'primary':''">{{term.label}}</a-button>
+                    <a-select
+                        v-model:value="selectedTheme"
+                        :options="themes"
+                        :field-names="{value:'id',label:'title'}"
+                    ></a-select>
+
                     <table id="abilityTable" ref="abilityTable">
                         <tr>
-                            <th width="100px" rowspan="2" class="text-center">學生姓名</th>
-                            <th v-for="theme in themes" :colspan="theme.topic_count" class="text-center">
-                                {{ theme.title_zh }}
-                            </th>
+                            <th>Student name</th>
+                            <template v-for="topic in topics"  >
+                                <th v-if="topic.theme_id==selectedTheme" class="text-center">
+                                    <a-tooltip>
+                                        <template #title>[{{topic.theme.title}}]<br>{{ topic.title }}</template>
+                                        {{ topic.abbr }} 
+                                    </a-tooltip>
+                                </th>
+                            </template>
                         </tr>
-                        <tr>
-                            <th v-for="topic in topics"  class="text-center">
-                                <a-tooltip>
-                                    <template #title>[{{topic.theme.title_zh}}]<br>{{ topic.title_zh }}</template>
-                                    {{ topic.abbr_zh }} 
-                                </a-tooltip>
-                            </th>
-                            <th></th>
-                        </tr>
-                        <template v-for="(student, key) in abilities">
+                        <template v-for="(ability, key) in abilities">
                             <tr>
-                                <td>{{ student.student_name }}</td>
-                                <td v-for="topic in topics">
-                                    <template v-for="(ability, term_id) in student">
-                                        <template v-if="term_id==selectedTerm">
-                                            <a-input v-model:value="ability['ability_'+topic.id]" 
-                                                @keyup.arrow-keys="onKeypressed" 
-                                                @click="onFocusInput($event)"
-                                            />
-                                        </template>
-                                    </template>
-                                </td>
+                                <td>{{ ability.student_name }}</td>
+                                <template v-for="topic in topics">
+                                    <td v-if="topic.theme_id==selectedTheme">
+                                        <a-input v-model:value="ability['ability_'+topic.id]" 
+                                            @keyup.arrow-keys="onKeypressed" 
+                                            @click="onFocusInput($event)"
+                                        />
+                                    </td>
+                                </template>
                             </tr>
                         </template>
                     </table>
@@ -63,40 +62,41 @@ export default {
     data() {
         return {
             keypressed:"",
-            selectedTerm:1,
+            selectedTheme:this.themes[0].id,
             abilities:{},
             tableCell:{
                 row:0,
                 col:0,
-                maxRow:this.students_abilities.length+1,
+                maxRow:this.students_abilities.length,
                 maxCol:this.topics.length
             },
         }
     },
     created(){
-        this.students_abilities.forEach(student=>{
-            this.abilities[student.pivot.klass_student_id]={}
-            this.abilities[student.pivot.klass_student_id]={student_name:student.name_zh,terms:[]};
-                this.terms.forEach(term=>{
-                this.abilities[student.pivot.klass_student_id][term.value]={};
-                    this.topics.forEach(topic=>{
-                        this.abilities[student.pivot.klass_student_id][term.value]['ability_'+topic.id]='';
-                    })
-                }) 
+        this.gatherAbilities();
+        // this.students_abilities.forEach(student=>{
+        //     this.abilities[student.pivot.klass_student_id]={}
+        //     this.abilities[student.pivot.klass_student_id]={student_name:student.name,terms:[]};
+        //         this.terms.forEach(term=>{
+        //         this.abilities[student.pivot.klass_student_id][term.value]={};
+        //             this.topics.forEach(topic=>{
+        //                 this.abilities[student.pivot.klass_student_id][term.value]['ability_'+topic.id]='';
+        //             })
+        //         }) 
                 
-        })
-        this.students_abilities.forEach(student=>{
-            this.terms.forEach(term=>{
-                this.topics.forEach(topic=>{
-                    student.abilities.forEach(ability=>{
-                        if(ability.term_id==term.value){
-                            this.abilities[student.pivot.klass_student_id][term.value]['ability_'+ability.topic_id]=ability.credit;
-                        }
-                    })
-                })
-            })
-        })
-        console.log(this.abilities);
+        // })
+        // this.students_abilities.forEach(student=>{
+        //     this.terms.forEach(term=>{
+        //         this.topics.forEach(topic=>{
+        //             student.abilities.forEach(ability=>{
+        //                 if(ability.term_id==term.value){
+        //                     this.abilities[student.pivot.klass_student_id][term.value]['ability_'+ability.topic_id]=ability.credit;
+        //                 }
+        //             })
+        //         })
+        //     })
+        // })
+        // console.log(this.abilities);
     },
     mounted() {
         this.$refs.abilityTable.addEventListener('keydown', (e) => {
@@ -167,7 +167,29 @@ export default {
         onFocusInput(event){
             this.tableCell.row=event.target.closest('tr').rowIndex;
             this.tableCell.col=event.target.closest('td').cellIndex;
-        }
+        },
+        gatherAbilities(){
+            //create array objects
+            this.students_abilities.forEach(student=>{
+                this.abilities[student.pivot.klass_student_id]={student_name:student.name_zh};
+                this.topics.forEach(topic=>{
+                    if(topic.theme_id==this.selectedTheme){
+                        this.abilities[student.pivot.klass_student_id]['ability_'+topic.id]='';
+                    }
+                })
+            })
+            //assign value to array objects
+            this.students_abilities.forEach(student=>{
+                this.topics.forEach(topic=>{
+                    student.abilities.forEach(ability=>{
+                        if(ability.topic_id==topic.id){
+                            this.abilities[student.pivot.klass_student_id]['ability_'+ability.topic_id]=ability.credit;
+                        }
+                    })
+                })
+            })
+        console.log(this.abilities);
+        },
     },
 }
 </script>

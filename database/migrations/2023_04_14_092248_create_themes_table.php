@@ -16,8 +16,9 @@ return new class extends Migration
         Schema::create('themes', function (Blueprint $table) {
             $table->id();
             $table->integer('grade_year');
-            $table->string('title_zh');
-            $table->string('title_en')->nullable();
+            $table->integer('term_id');
+            $table->integer('sequence');
+            $table->string('title');
             $table->text('description')->nullable();
             $table->timestamps();
         });
