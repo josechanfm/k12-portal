@@ -5,12 +5,14 @@
                 班別管理
             </h2>
         </template>
-        {{ grade.themes }}
-        
-
         <p>Klass: {{ klass.tag }}</p>
         <p>Students: {{ klass.student_count }}</p>
-        <inertia-link :href="route('manage.klass.students',klass.id)" class="ant-btn" >Students</inertia-link>        
+        <inertia-link :href="route('manage.klass.habits',klass.id)" class="ant-btn" >生活習摜</inertia-link>
+        <inertia-link :href="route('manage.klass.abilities',klass.id)" class="ant-btn" >學習主題</inertia-link>
+        <inertia-link :href="route('manage.klass.outcomes',klass.id)" class="ant-btn" >獎懲</inertia-link>
+        <inertia-link :href="route('manage.klass.behaviours',klass.id)" class="ant-btn" >行為表現</inertia-link>
+        <inertia-link :href="route('manage.klass.students',klass.id)" class="ant-btn" >學生名單</inertia-link>        
+        <p>&nbsp;</p>
         <table width="100%">
                     <thead>
                         <tr>
@@ -30,9 +32,6 @@
                             <td class="text-left">{{ course.elective }}</td>
                             <td class="text-left">{{ course.active }}</td>
                             <th class="text-left">
-
-                                <inertia-link :href="route('manage.klass.habits',course.klass_id)" class="ant-btn" >生活</inertia-link>
-                                <inertia-link :href="route('manage.klass',course.id)" class="ant-btn" >學分</inertia-link>
                                 <inertia-link :href="route('manage.course.scores',course.id)" class="ant-btn" >學分</inertia-link>
                             </th>
                         </tr>

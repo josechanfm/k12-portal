@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Manage;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Klass;
 use App\Models\Course;
 use App\Models\Score;
 use App\Models\Student;
@@ -101,6 +102,12 @@ class CourseController extends Controller
         $courses=Course::where('klass_id',$klassId)->where('type','SUB')->with('teachers')->get();
         echo $courses;
     }
+
+    public function byKlass(Klass $klass){
+        dd($klass);
+    }
+
+
 
 }
 

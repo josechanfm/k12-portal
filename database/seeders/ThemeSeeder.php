@@ -175,8 +175,8 @@ class ThemeSeeder extends Seeder
         $id=DB::table('themes')->insertGetId([
             'grade_year'=>1,
             'term_id'=>2,
-            'sequence'=>2,
-            'title'=>'第二天上學',
+            'sequence'=>3,
+            'title'=>'第三天上學',
         ]);
         DB::table('topics')->insert([
             'theme_id'=>$id,

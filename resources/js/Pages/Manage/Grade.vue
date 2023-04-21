@@ -49,7 +49,7 @@
                                     <li v-for="klass in grade.klasses" :klass_id="klass.id">
                                         <span @click="selectKlass(klass,'course')">
                                             Courses
-                                            <inertia-link :href="route('/manage.klasses.show',klass.id)" class="ant-btn" >Panel</inertia-link>
+                                            <inertia-link :href="route('manage.klasses.show',klass.id)" class="ant-btn" >Panel</inertia-link>
                                         </span>
                                     </li>
                                 </ul>

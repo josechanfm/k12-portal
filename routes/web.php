@@ -102,12 +102,14 @@ Route::prefix('manage/')->group(function(){
     Route::resource('/student',App\Http\Controllers\Manage\StudentController::class);
     Route::get('/students/get_by_klass_id/{klassId}',[App\Http\Controllers\Manage\StudentController::class,'getByKlassId']);
 
-    Route::resource('/klasses',App\Http\Controllers\Manage\KlassController::class)->names('/manage.klasses');
+    Route::resource('/klasses',App\Http\Controllers\Manage\KlassController::class)->names('manage.klasses');
     Route::get('/klass_scores/{klassId}',[App\Http\Controllers\Manage\KlassController::class,'klass_scores']);
     Route::get('klass/{klass}/students',[App\Http\Controllers\Manage\KlassController::class,'students'])->name('manage.klass.students');
 
     Route::post('/score/update',[App\Http\Controllers\Manage\ScoreController::class,'update'])->name('manage.score.update');
     Route::resource('/score_column',App\Http\Controllers\Manage\ScoreColumnController::class)->names('manage.score_column');
+
+    Route::get('/klass/{klass}/courses',[App\Http\Controllers\Manage\CourseController::class,'byKlass'])->name('manage.klass.courses');
 
     Route::get('/klass/{klass}/abilities',[App\Http\Controllers\Manage\AbilityController::class,'byKlass'])->name('manage.klass.abilities');
     Route::post('/klass/{klass}/abilities/update',[App\Http\Controllers\Manage\AbilityController::class,'update'])->name('manage.klass.abilities.update');
@@ -116,9 +118,9 @@ Route::prefix('manage/')->group(function(){
     Route::put('/klass/{klass}/habits',[App\Http\Controllers\Manage\HabitController::class,'update'])->name('manage.klass.habits.update');
 
     Route::get('/klass/{klass}/outcomes',[App\Http\Controllers\Manage\OutcomeController::class,'byKlass'])->name('manage.klass.outcomes');
-    Route::post('/klass/{klass}/outcomes',[\App\Http\Controllers\Manage\OutcomeController::class,'update'])->name('manage.klass.outcomes.update');
+    Route::post('/klass/{klass}/outcomes',[App\Http\Controllers\Manage\OutcomeController::class,'update'])->name('manage.klass.outcomes.update');
 
-    Route::resource('/behaviours',App\Http\Controllers\Manage\BehaviourController::class);
+    Route::get('/klass/{klass}/behaviours',[App\Http\Controllers\Manage\BehaviourController::class,'byKlass'])->name('manage.klass.behaviours');
 
     Route::get('/transcript',[App\Http\Controllers\Manage\TranscriptController::class,'index']);
     Route::get('/transcript/klass_student/{id}',[App\Http\Controllers\Manage\TranscriptController::class,'klassStudent']);

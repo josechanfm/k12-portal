@@ -110,4 +110,8 @@ class BehaviourController extends Controller
     {
         //
     }
+
+    public function byKlass(Klass $klass){
+        dd($klass);
+    }
 }

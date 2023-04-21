@@ -20,7 +20,14 @@
 
                     <table id="abilityTable" ref="abilityTable">
                         <tr>
-                            <th>Student name</th>
+                            <th rowspan="2">Student name</th>
+                            <template v-for="topic in topics"  >
+                                <th v-if="topic.theme_id==selectedTheme" class="text-center">
+                                    {{ topic.section }} 
+                                </th>
+                            </template>
+                        </tr>
+                        <tr>
                             <template v-for="topic in topics"  >
                                 <th v-if="topic.theme_id==selectedTheme" class="text-center">
                                     <a-tooltip>
@@ -73,30 +80,27 @@ export default {
         }
     },
     created(){
-        this.gatherAbilities();
-        // this.students_abilities.forEach(student=>{
-        //     this.abilities[student.pivot.klass_student_id]={}
-        //     this.abilities[student.pivot.klass_student_id]={student_name:student.name,terms:[]};
-        //         this.terms.forEach(term=>{
-        //         this.abilities[student.pivot.klass_student_id][term.value]={};
-        //             this.topics.forEach(topic=>{
-        //                 this.abilities[student.pivot.klass_student_id][term.value]['ability_'+topic.id]='';
-        //             })
-        //         }) 
-                
-        // })
-        // this.students_abilities.forEach(student=>{
-        //     this.terms.forEach(term=>{
-        //         this.topics.forEach(topic=>{
-        //             student.abilities.forEach(ability=>{
-        //                 if(ability.term_id==term.value){
-        //                     this.abilities[student.pivot.klass_student_id][term.value]['ability_'+ability.topic_id]=ability.credit;
-        //                 }
-        //             })
-        //         })
-        //     })
-        // })
-        // console.log(this.abilities);
+            //create array objects
+            this.abilities={};
+            this.students_abilities.forEach(student=>{
+                this.abilities[student.pivot.klass_student_id]={student_name:student.name_zh};
+                this.topics.forEach(topic=>{
+                    //if(topic.theme_id==this.selectedTheme){
+                        this.abilities[student.pivot.klass_student_id]['ability_'+topic.id]='';
+                    //}
+                })
+            })
+            //assign value to array objects
+            this.students_abilities.forEach(student=>{
+                this.topics.forEach(topic=>{
+                    student.abilities.forEach(ability=>{
+                        if(ability.topic_id==topic.id){
+                            this.abilities[student.pivot.klass_student_id]['ability_'+ability.topic_id]=ability.credit;
+                        }
+                    })
+                })
+            })
+        console.log(this.abilities);
     },
     mounted() {
         this.$refs.abilityTable.addEventListener('keydown', (e) => {
@@ -135,23 +139,21 @@ export default {
         saveAbilities(){
             var data=[];
             Object.entries(this.abilities).forEach(([klass_student_id,student])=>{
-                this.terms.forEach(term=>{
-                    Object.entries(student[term.value]).forEach(([key,value])=>{
-                        const arr = key.split("_");
-                        data.push({
-                            'term_id':term.value,
-                            'klass_student_id':klass_student_id,
-                            'topic_id':arr[1],
-                            'credit':value
-                        });
-                    })
-                })
+                    Object.entries(student).forEach(row=>{
+                        console.log(row);
+                        // const arr = key.split("_");
+                        // data.push({
+                        //     'klass_student_id':klass_student_id,
+                        //     'topic_id':arr[1],
+                        //     'credit':value
+                        // });
+                    })   
             })
             console.log(data);
-            axios.post(route('manage.klass.abilities.update',this.klass.id),data)
-                .then(resp=> 
-                    console.log(resp.data)
-                );
+            // axios.post   (route('manage.klass.abilities.update',this.klass.id),data)
+            //     .then(resp=> 
+            //         console.log(resp.data)
+            //     );
         },
         getAbilityName(abilities, topic){
             if(abilities.length==0){
@@ -167,28 +169,6 @@ export default {
         onFocusInput(event){
             this.tableCell.row=event.target.closest('tr').rowIndex;
             this.tableCell.col=event.target.closest('td').cellIndex;
-        },
-        gatherAbilities(){
-            //create array objects
-            this.students_abilities.forEach(student=>{
-                this.abilities[student.pivot.klass_student_id]={student_name:student.name_zh};
-                this.topics.forEach(topic=>{
-                    if(topic.theme_id==this.selectedTheme){
-                        this.abilities[student.pivot.klass_student_id]['ability_'+topic.id]='';
-                    }
-                })
-            })
-            //assign value to array objects
-            this.students_abilities.forEach(student=>{
-                this.topics.forEach(topic=>{
-                    student.abilities.forEach(ability=>{
-                        if(ability.topic_id==topic.id){
-                            this.abilities[student.pivot.klass_student_id]['ability_'+ability.topic_id]=ability.credit;
-                        }
-                    })
-                })
-            })
-        console.log(this.abilities);
         },
     },
 }
