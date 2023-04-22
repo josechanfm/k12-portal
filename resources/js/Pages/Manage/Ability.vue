@@ -42,7 +42,7 @@
                                 <td>{{ ability.student_name }}</td>
                                 <template v-for="topic in topics">
                                     <td v-if="topic.theme_id==selectedTheme">
-                                        <a-input v-model:value="ability['ability_'+topic.id]" 
+                                        <a-input v-model:value="ability.topics[topic.id]" 
                                             @keyup.arrow-keys="onKeypressed" 
                                             @click="onFocusInput($event)"
                                         />
@@ -70,7 +70,7 @@ export default {
         return {
             keypressed:"",
             selectedTheme:this.themes[0].id,
-            abilities:{},
+            abilities:[],
             tableCell:{
                 row:0,
                 col:0,
@@ -80,27 +80,18 @@ export default {
         }
     },
     created(){
-            //create array objects
-            this.abilities={};
-            this.students_abilities.forEach(student=>{
-                this.abilities[student.pivot.klass_student_id]={student_name:student.name_zh};
-                this.topics.forEach(topic=>{
-                    //if(topic.theme_id==this.selectedTheme){
-                        this.abilities[student.pivot.klass_student_id]['ability_'+topic.id]='';
-                    //}
-                })
+        this.students_abilities.forEach(student=>{
+            let temp={}
+            student.abilities.forEach(ability=>{
+                temp[ability.topic_id]=ability.credit
             })
-            //assign value to array objects
-            this.students_abilities.forEach(student=>{
-                this.topics.forEach(topic=>{
-                    student.abilities.forEach(ability=>{
-                        if(ability.topic_id==topic.id){
-                            this.abilities[student.pivot.klass_student_id]['ability_'+ability.topic_id]=ability.credit;
-                        }
-                    })
-                })
+            this.abilities.push({
+                klass_student_id:student.pivot.klass_student_id,
+                student_name:student.name_zh,
+                topics:temp
             })
-        console.log(this.abilities);
+        })
+        // console.log(this.abilities);
     },
     mounted() {
         this.$refs.abilityTable.addEventListener('keydown', (e) => {
@@ -138,22 +129,20 @@ export default {
         },
         saveAbilities(){
             var data=[];
-            Object.entries(this.abilities).forEach(([klass_student_id,student])=>{
-                    Object.entries(student).forEach(row=>{
-                        console.log(row);
-                        // const arr = key.split("_");
-                        // data.push({
-                        //     'klass_student_id':klass_student_id,
-                        //     'topic_id':arr[1],
-                        //     'credit':value
-                        // });
-                    })   
+            this.abilities.forEach((ability)=>{
+                Object.entries(ability.topics).forEach(([k,v])=>{
+                    data.push({
+                        'klass_student_id':ability.klass_student_id,
+                        'topic_id':k,
+                        'credit':v
+                    });
+                })   
             })
-            console.log(data);
-            // axios.post   (route('manage.klass.abilities.update',this.klass.id),data)
-            //     .then(resp=> 
-            //         console.log(resp.data)
-            //     );
+            // console.log(data);
+            axios.post   (route('manage.klass.abilities.update',this.klass.id),data)
+                .then(resp=> 
+                    console.log(resp.data)
+                );
         },
         getAbilityName(abilities, topic){
             if(abilities.length==0){
