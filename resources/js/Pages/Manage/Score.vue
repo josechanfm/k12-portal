@@ -32,6 +32,7 @@
                                 {{ year_terms.find(t=>t.value==text).label }}
                             </template>
                             <template v-else>
+                                ({{ String.fromCharCode(65+index) }})
                                 {{ record[column.dataIndex]}}
                             </template>
                         </template>
@@ -45,19 +46,21 @@
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <a-button type="primary" @click="saveScores">更新並保存</a-button>
                     <table id="scoreTable" ref="scoreTable">
-                        <tr>
-                            <th>學生姓名</th>
-                            <td v-for="(column,idx) in score_columns">
-                                <span :title="column.scheme">
-                                    {{ column.field_label }} ({{ String.fromCharCode(idx+65) }})
-                                    <span v-if="column.scheme">*</span>
-                                </span>
-                            </td>
-                        </tr>
-                        <tr v-for="(score, key) in scores">
-                            <td>{{ score.student_name }}</td>
+                        <thead>
+                            <tr>
+                                <th width="100px">學生姓名</th>
+                                <th v-for="(column,idx) in score_columns">
+                                    <span :title="column.scheme">
+                                        ({{ String.fromCharCode(idx+65) }}) {{ column.field_label }}
+                                        <span v-if="column.scheme">*</span>
+                                    </span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tr v-for="(row, key) in scores">
+                            <td>{{ row.student_name }}</td>
                             <td v-for="column in score_columns">
-                                <a-input v-model:value="score['score_'+key+'_'+column.id]" 
+                                <a-input v-model:value="row.scores[column.id]" 
                                     @blur="onScoreChange(key)"
                                     @keyup.arrow-keys="onKeypressed" 
                                 />
@@ -120,7 +123,7 @@ export default {
                 maxRow:this.students_scores.length,
                 maxCol:this.score_columns.length
             },
-            scores:{},
+            scores:[],
             columns: [
                 {
                     title: '學段',
@@ -147,20 +150,16 @@ export default {
     },
     created(){
         this.students_scores.forEach(student => {
-            var score={};
-            score['student_name']=student.name_zh
-            this.score_columns.forEach(column => {
-                score['score_'+student.pivot.course_student_id+"_"+column.id]=''
+            let temp={}
+            student.scores.forEach(score=>{
+                temp[score.score_column_id]=score.point
             })
-            this.scores[student.pivot.course_student_id]=score;
-        })
-        this.students_scores.forEach(student => {
-            student.scores.forEach(score => {
-                this.scores[student.pivot.course_student_id]['score_'+score.course_student_id+'_'+score.score_column_id]=score.point;
-            })
-        })
-        //console.log(this.scores)
-        
+            this.scores.push({
+                course_student_id:student.pivot.course_student_id,
+                student_name:student.name_zh,
+                scores:temp
+            });
+        })        
     },
     mounted() {
         this.$refs.scoreTable.addEventListener('keydown', (e) => {
@@ -242,16 +241,12 @@ export default {
         },
         saveScores(){
             var data=[];
-            Object.entries(this.scores).forEach(score => {
-                const temp={...score[1]};
-                delete temp.student_name
-                Object.entries(temp).forEach((item) => {
-                    const [key, value] = item;
-                    const arr = key.split("_");
+            this.scores.forEach(row => {
+                Object.entries(row.scores).forEach(([score_column_id,value]) => {
                     data.push({
-                        "course_student_id":arr[1],
-                        "score_column_id":arr[2],
-                        "point":value
+                        course_student_id:row.course_student_id,
+                        score_column_id:score_column_id,
+                        point:value
                     })
                 })
             })
@@ -264,7 +259,6 @@ export default {
             this.$refs.modalScoreColumn.validateFields().then(()=>{
                 if(this.modal.mode=='ADD'){
                     this.createScoreColumn(this.modal.data);
-                    //this.runFormular(this.score_columns, this.scores, index);   
                     this.modal.mode=null;
                 }else if(this.modal.mode=='EDIT'){
                     this.updateScoreColumn(this.modal.data);
@@ -278,24 +272,28 @@ export default {
             this.runFormular(this.score_columns, this.scores[key], key);
         },
         updateAllScores(){
-            for(const [key, obj] of Object.entries(this.scores)){
-                this.runFormular(this.score_columns, obj, key);
-            }
+            this.scores.forEach(row=>{
+                console.log(row);
+            })
+            // for(const [key, obj] of Object.entries(this.scores)){
+            //     this.runFormular(this.score_columns, obj, key);
+            // }
         },
-        runFormular(columns, score, courseStudentId){
-            var fields=[];
+        runFormular(columns, row, courseStudentId){
+            var fields={};
             var letter=65;
-            //["A":xx,"B":xx,..]
-            Object.entries(score).forEach(([key,value])=>{
-                if(key.startsWith('score_')){ //online transform field start with "score_"
-                    fields[String.fromCharCode(letter++)] = value;
+            columns.forEach(column=>{
+                if (row.scores[column.id] === undefined) {
+                    fields[String.fromCharCode(letter++)] = '';
+                }else{
+                    fields[String.fromCharCode(letter++)] = row.scores[column.id];
                 }
-            });
+            })
             //loop through all score columns
             columns.forEach((column, idx)=>{
                 //if column scheme is not empty, meaning with formular
                 if(column.scheme!=null){
-                    var fieldName="score_"+courseStudentId+"_"+column.id;
+                    var fieldName=column.id;
                     var formular=column.scheme;
                     //remove "=" from the origianl formular
                     formular=formular.replace("=","");
@@ -304,12 +302,12 @@ export default {
                     //replace values to formular, according to the fields values
                     Object.entries(fields).forEach(([key,value])=>{
                         if(value=='')return; //escape formular calculation if any field is empty
-                        formular=formular.replace(key,value);
+                            formular=formular.replace(key,value);
                     });
                     try{
-                        score[fieldName]=eval(formular);
+                        row.scores[fieldName]=eval(formular);
                     }catch(error){
-                        console.log("("+courseStudentId+")"+score.student_name+", formular incurrect");
+                        console.log("("+courseStudentId+")"+row.student_name+", formular incurrect");
                     }
                 }
             });                
@@ -326,5 +324,8 @@ export default {
 #scoreTable {
   width: 100%;
   border-collapse: collapse;
+}
+#scoreTable input{
+    text-align: center; 
 }
 </style>
