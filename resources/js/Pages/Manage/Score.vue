@@ -14,17 +14,29 @@
         <a-button :href="'grades?kid='+course.klass_id">Back</a-button>
         <a-button type="primary" @click="onClickAddScoreColumn">新增學分欄</a-button>
 
+
+        <table class="itxst">
+            <tbody component='VueDraggableNext' animation="500"  force-fallback="true">
+                <draggable class="dragArea list-group w-full" :list="score_columns" @change="rowChange">
+                      <transition-group>
+
+                    <tr v-for="item in score_columns" :key="item.id">
+                        <td style="width:50px" class="move">{{item.id}}</td>
+                        <td style="width:250px">{{item.field_label}}</td>
+                    </tr>
+                      </transition-group>
+                </draggable>
+            </tbody>
+        </table>
+
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <a-table :dataSource="score_columns" :columns="columns" >
                         <template #bodyCell="{ column, text, record, index }">
                             <template v-if="column.dataIndex == 'operation'">
-                                <span v-if="record.for_transcript">
-                                    成積表欄
-                                </span>
-                                <span v-else>
-                                    <a-button @click="onClickEditScoreColumn(record)">修改</a-button>
+                                <a-button @click="onClickEditScoreColumn(record)">修改</a-button>
+                                <span v-if="record.for_transcript==0">
                                     <a-button @click="onClickDeleteScoreColumn(record.id)">刪除</a-button>
                                 </span>
                             </template>
@@ -88,7 +100,7 @@
                     <a-input v-model:value="modal.data.sequence"/> 
                 </a-form-item>
                 <a-form-item label="計算方式" :name="['scheme']">
-                    <a-input v-model:value="modal.data.scheme" /> 
+                    <a-input v-model:value="modal.data.scheme" @change="()=>{modal.data.scheme=modal.data.scheme.toUpperCase()}"/> 
                 </a-form-item>
                 <a-form-item label="簡介" :name="['description']">
                     <a-input v-model:value="modal.data.description"/> 
@@ -102,10 +114,12 @@
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { ContactsOutlined } from '@ant-design/icons-vue';
+import { VueDraggableNext } from 'vue-draggable-next'
 
 export default {
     components: {
-        AdminLayout
+        AdminLayout,
+        draggable: VueDraggableNext,
     },
     props: ['year_terms','course', 'score_columns', 'students_scores'],
     data() {
@@ -225,6 +239,7 @@ export default {
         },
         updateScoreColumn(data){
             //this.$inertia.put('/manage/score_column/'+data.id, data, {
+                
             this.$inertia.put(route("manage.score_column.update",data.id), data, {
                     onSuccess: (page) => {
                         this.modal.mode=null;
@@ -301,9 +316,12 @@ export default {
                     formular=formular.replace("round","Math.round");
                     //replace values to formular, according to the fields values
                     Object.entries(fields).forEach(([key,value])=>{
-                        if(value=='')return; //escape formular calculation if any field is empty
-                            formular=formular.replace(key,value);
+                        console.log(key);
+                        console.log(value);
+                        if(value=='') value=0; //escape formular calculation if any field is empty
+                        formular=formular.replace(key,value);
                     });
+                    console.log(formular)
                     try{
                         row.scores[fieldName]=eval(formular);
                     }catch(error){
@@ -311,8 +329,12 @@ export default {
                     }
                 }
             });                
-        }
+        },
+        rowChange(event){
+            console.log(event);
+        }        
     },
+
 }
 </script>
 
@@ -328,4 +350,31 @@ export default {
 #scoreTable input{
     text-align: center; 
 }
+
+        /*定义要拖拽元素的样式*/
+        table.itxst {
+            color: #333333;
+            border: #ddd solid 1px;
+            border-collapse: collapse;
+        }
+
+            table.itxst th {
+                border: #ddd solid 1px;
+                padding: 8px;
+                background-color: #dedede;
+            }
+
+            table.itxst td {
+                border: #ddd solid 1px;
+                padding: 8px;
+                background-color: #ffffff;
+            }
+
+            table.itxst tr {
+                cursor: pointer;
+            }
+
+            table.itxst td.move:hover {
+                cursor: move;
+            }
 </style>
