@@ -20,7 +20,7 @@ return new class extends Migration
             $table->integer('credit')->nullable();
             $table->text('remark')->nullable();
             $table->timestamps();
-            $table->unique(['klass_student_id','topic_id'])->nullable();
+            $table->unique(['klass_student_id','topic_id']);
         });
     }
 

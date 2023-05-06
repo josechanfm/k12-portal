@@ -17,7 +17,14 @@ class Course extends Model
         return $this->belongsTo(Klass::class);
     }
     public function scores(){
-        return $this->hasMany(Score::class);
+        return $this->hasManyThrough(
+            Score::class,
+            CourseStudent::class,
+            'course_id',
+            'course_student_id',
+            'id',
+            'id'
+        );
     }
     public function scoreColumns(){
         return $this->hasMany(ScoreColumn::class)->orderByRaw('-sequence DESC');

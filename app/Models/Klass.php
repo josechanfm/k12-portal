@@ -47,6 +47,9 @@ class Klass extends Model
     public function courses(){
         return $this->hasMany(Course::class);
     }
+    public function scores(){
+        return $this->hasMany(Course::class)->with('scores');
+    }
     public function outcomes(){
         return $this->hasManyThrough(Outcome::class, KlassStudent::class,'klass_id', 'klass_student_id')->with('student');
     }

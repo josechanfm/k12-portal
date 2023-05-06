@@ -11,72 +11,80 @@
                 </span>
             </h2>
         </template>
-        <a-button :href="'grades?kid='+course.klass_id">Back</a-button>
-        <a-button type="primary" @click="onClickAddScoreColumn">新增學分欄</a-button>
-
-
-        <table class="itxst">
-            <tbody component='VueDraggableNext' animation="500"  force-fallback="true">
-                <draggable class="dragArea list-group w-full" :list="score_columns" @change="rowChange">
-                      <transition-group>
-
-                    <tr v-for="item in score_columns" :key="item.id">
-                        <td style="width:50px" class="move">{{item.id}}</td>
-                        <td style="width:250px">{{item.field_label}}</td>
-                    </tr>
-                      </transition-group>
-                </draggable>
-            </tbody>
-        </table>
-
-        <div class="py-12">
+        <div class="py-6">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <inertia-link :href="route('manage.klasses.show',course.klass_id)" class="ant-btn">Back</inertia-link>
+                <a-button type="primary" @click="onClickAddScoreColumn">新增學分欄</a-button>
+                <a-button v-for="term in year_terms" @click="selectedTerm=term.value" class="ml-4" :type="selectedTerm==term.value?'primary':''">{{term.label}}</a-button>
+            </div>
+        </div>
+        <div class="py-6">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <a-table :dataSource="score_columns" :columns="columns" >
-                        <template #bodyCell="{ column, text, record, index }">
-                            <template v-if="column.dataIndex == 'operation'">
-                                <a-button @click="onClickEditScoreColumn(record)">修改</a-button>
-                                <span v-if="record.for_transcript==0">
-                                    <a-button @click="onClickDeleteScoreColumn(record.id)">刪除</a-button>
-                                </span>
-                            </template>
-                            <template v-else-if="column.dataIndex=='term_id'">
-                                {{ year_terms.find(t=>t.value==text).label }}
-                            </template>
-                            <template v-else>
-                                ({{ String.fromCharCode(65+index) }})
-                                {{ record[column.dataIndex]}}
-                            </template>
-                        </template>
-                    </a-table>
+                    <table class="itxst" component='VueDraggableNext' animation="500"  force-fallback="true" width="100%">
+                        <thead>
+                                <tr>
+                                    <th>排序</th>
+                                    <th>學段</th>
+                                    <th>學分欄名稱</th>
+                                    <th>分類</th>
+                                    <th>計算方式</th>
+                                    <th>操作</th>
+                                </tr>
+                        </thead>
+                        <draggable tag="tbody" class="dragArea list-group w-full" :list="score_columns" @change="rowChange">
+                            <transition-group v-for="(record,idx) in score_columns" :key="record.id">
+                            <tr v-if="record.term_id==selectedTerm">
+                                <td>{{ String.fromCharCode(65+idx) }}</td>
+                                <td>{{ year_terms.find(t=>t.value==record.term_id).label }}</td>
+                                <td>{{record.field_label}}</td>
+                                <td>{{ record.type }}</td>
+                                <td>{{ record.scheme }}</td>
+                                <td style="width:250px">
+                                    <a-button @click="onClickEditScoreColumn(record)">修改</a-button>
+                                    <span v-if="record.for_transcript==0">
+                                        <a-button @click="onClickDeleteScoreColumn(record.id)">刪除</a-button>
+                                    </span>
+
+                                </td>
+                            </tr>
+                            </transition-group>
+                        </draggable>
+                    </table>
                 </div>
             </div>
         </div>
 
-        <div class="py-12">
+        <div class="py-6">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <a-button type="primary" @click="saveScores">更新並保存</a-button>
+                    <a-button @click="sampleData">Sample Data</a-button>
                     <table id="scoreTable" ref="scoreTable">
                         <thead>
                             <tr>
                                 <th width="100px">學生姓名</th>
-                                <th v-for="(column,idx) in score_columns">
-                                    <span :title="column.scheme">
-                                        ({{ String.fromCharCode(idx+65) }}) {{ column.field_label }}
-                                        <span v-if="column.scheme">*</span>
-                                    </span>
-                                </th>
+                                <template v-for="(column,idx) in score_columns" >
+                                    <th v-if="column.term_id==selectedTerm">
+                                        <span :title="column.scheme">
+                                            ({{ String.fromCharCode(idx+65) }}) {{ column.field_label }}
+                                            <span v-if="column.scheme">*</span>
+                                        </span>
+                                    </th>
+
+                                </template>
                             </tr>
                         </thead>
                         <tr v-for="(row, key) in scores">
                             <td>{{ row.student_name }}</td>
-                            <td v-for="column in score_columns">
-                                <a-input v-model:value="row.scores[column.id]" 
-                                    @blur="onScoreChange(key)"
-                                    @keyup.arrow-keys="onKeypressed" 
-                                />
-                            </td>
+                            <template v-for="column in score_columns">
+                                <td v-if="column.term_id==selectedTerm">
+                                    <a-input v-model:value="row.scores[column.id]" 
+                                        @blur="onScoreChange(key)"
+                                        @keyup.arrow-keys="onKeypressed" 
+                                    />
+                                </td>
+                            </template>
                         </tr>
                     </table>
                 </div>
@@ -124,6 +132,7 @@ export default {
     props: ['year_terms','course', 'score_columns', 'students_scores'],
     data() {
         return {
+            selectedTerm:1,
             keypressed:"",
             modal: {
                 mode:null,
@@ -140,6 +149,9 @@ export default {
             scores:[],
             columns: [
                 {
+                    title: 'Lette',
+                    dataIndex: 'letter',
+                },{
                     title: '學段',
                     dataIndex: 'term_id',
                 },{
@@ -168,6 +180,7 @@ export default {
             student.scores.forEach(score=>{
                 temp[score.score_column_id]=score.point
             })
+            console.log(student);
             this.scores.push({
                 course_student_id:student.pivot.course_student_id,
                 student_name:student.name_zh,
@@ -290,9 +303,9 @@ export default {
             this.scores.forEach(row=>{
                 console.log(row);
             })
-            // for(const [key, obj] of Object.entries(this.scores)){
-            //     this.runFormular(this.score_columns, obj, key);
-            // }
+            for(const [key, obj] of Object.entries(this.scores)){
+                this.runFormular(this.score_columns, obj, key);
+            }
         },
         runFormular(columns, row, courseStudentId){
             var fields={};
@@ -313,7 +326,7 @@ export default {
                     //remove "=" from the origianl formular
                     formular=formular.replace("=","");
                     //replace round as Math.round in the formular
-                    formular=formular.replace("round","Math.round");
+                    formular=formular.replace("ROUND","Math.round");
                     //replace values to formular, according to the fields values
                     Object.entries(fields).forEach(([key,value])=>{
                         console.log(key);
@@ -331,8 +344,27 @@ export default {
             });                
         },
         rowChange(event){
-            console.log(event);
-        }        
+            let i=1;
+            this.score_columns.forEach(column=>{
+                column.sequence=i++
+            })
+            this.$inertia.post(route("manage.score_column.reorder"), this.score_columns, {
+                    onSuccess: (page) => {
+                        console.log(page);
+                    },
+                    onError: (error) => {
+                        console.log(error);
+                    }
+            });            
+        },
+        sampleData(){
+            this.scores.forEach(score=>{
+                this.score_columns.forEach(column=>{
+                    score.scores[column.id]=Math.floor(Math.random() * 100)+1
+                })
+            })
+            this.updateAllScores();
+        }
     },
 
 }
@@ -361,7 +393,7 @@ export default {
             table.itxst th {
                 border: #ddd solid 1px;
                 padding: 8px;
-                background-color: #dedede;
+                background-color: #fafafa;
             }
 
             table.itxst td {

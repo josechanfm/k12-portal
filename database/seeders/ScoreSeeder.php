@@ -15,20 +15,20 @@ class ScoreSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('scores')->insert([
-            'course_student_id'=>3,
-            'score_column_id'=>1,
-            'point'=>100
-        ]);
-        DB::table('scores')->insert([
-            'course_student_id'=>5,
-            'score_column_id'=>1,
-            'point'=>80
-        ]);
-        DB::table('scores')->insert([
-            'course_student_id'=>3,
-            'score_column_id'=>2,
-            'point'=>90
-        ]);
+        // DB::table('scores')->insert([
+        //     'course_student_id'=>3,
+        //     'score_column_id'=>1,
+        //     'point'=>100
+        // ]);
+        // DB::table('scores')->insert([
+        //     'course_student_id'=>5,
+        //     'score_column_id'=>1,
+        //     'point'=>80
+        // ]);
+        // DB::table('scores')->insert([
+        //     'course_student_id'=>3,
+        //     'score_column_id'=>2,
+        //     'point'=>90
+        // ]);
     }
 }

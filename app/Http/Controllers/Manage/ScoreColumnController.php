@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Manage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ScoreColumn;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Support\Str;
 
 class ScoreColumnController extends Controller
@@ -106,5 +107,14 @@ class ScoreColumnController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function reorder(Request $request){
+        $records=$request->all();
+        foreach($records as $record){
+            ScoreColumn::where('id',$record['id'])
+                ->update(['sequence'=>$record['sequence']]);
+        }
+        return redirect()->back();
     }
 }

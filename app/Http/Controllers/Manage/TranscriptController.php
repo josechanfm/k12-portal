@@ -8,6 +8,8 @@ use Inertia\Inertia;
 use App\Models\KlassStudent;
 use App\Models\Transcript;
 use App\Models\TranscriptTemplate;
+use App\Models\Klass;
+use App\Models\Course;
 
 class TranscriptController extends Controller
 {
@@ -25,5 +27,10 @@ class TranscriptController extends Controller
         $klassStudent=KlassStudent::find($id);
         return response($klassStudent);
 
+    }
+    public function klass(Klass $klass){
+        $courses=Course::whereBelongsTo($klass)->with('scores')->orderBy('id')->get();
+        dd($courses);
+        //dd($klass->scores);
     }
 }
