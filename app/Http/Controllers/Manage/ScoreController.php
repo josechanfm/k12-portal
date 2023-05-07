@@ -19,6 +19,20 @@ class ScoreController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function byCourse(Course $course){
+        // $studentsScores=$course->students2;
+        // foreach($studentsScores as $student){
+        //     echo json_encode($student);
+        //     echo '<hr>';
+        // };
+        // return true;
+
+        // $studentsScores=$course->students_scores();
+        // foreach($studentsScores as $student){
+        //     echo json_encode($student);
+        //     echo '<hr>';
+        // };
+        // return true;
+        
         $studentsScores=$course->students_scores();
         $scoreColumns=$course->scoreColumns;
         $course=Course::with('klass')->with('teachers')->find($course->id);

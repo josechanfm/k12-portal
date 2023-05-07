@@ -30,11 +30,11 @@ class Course extends Model
         return $this->hasMany(ScoreColumn::class)->orderByRaw('-sequence DESC');
     }
 
-    // public function students(){
-    //     return $this->belongsToMany(Student::class,'klass_students','klass_id','student_id')->withPivot(['id as pivot_klass_student_id','student_number','stream','state','promote','promote_to']);
-    // }
+    public function students2(){
+        return $this->belongsToMany(Student::class)->with('scores');
+    }
     public function students(){
-        return $this->belongsToMany(Student::class)->withPivot('id as pivot_course_student_id');
+        return $this->belongsToMany(Student::class,'course_students')->withPivot('id as pivot_course_student_id');
     }
     public function teachers(){
         return $this->belongsToMany(Teacher::class)->withPivot('is_head');

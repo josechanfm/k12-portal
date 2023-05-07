@@ -20,7 +20,10 @@ class Student extends Model
         return $this->belongsToMany(Klass::class);
     }
     public function courses(){
-        return $this->belongsToMany(Course::class);
+        return $this->belongsToMany(Course::class,'course_students');
+    }
+    public function coursesScores(){
+        return $this->belongsToMany(Course::class,'course_students')->with('scores');
     }
     public function addresses(){
         return $this->morphMany(Address::class, 'addressable');
@@ -56,5 +59,6 @@ class Student extends Model
     public function abilities(){
         return $this->hasManyThrough(Ability::class, KlassStudent::class, 'student_id','klass_student_id')->with('topic');
     }
+
 
 }

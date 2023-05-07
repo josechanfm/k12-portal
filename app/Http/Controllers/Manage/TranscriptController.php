@@ -29,8 +29,43 @@ class TranscriptController extends Controller
 
     }
     public function klass(Klass $klass){
-        $courses=Course::whereBelongsTo($klass)->with('scores')->orderBy('id')->get();
-        dd($courses);
+        $scores=[];
+        $students=$klass->students;
+        $coursesStudents=$klass->coursesStudents;
+        dd($students);
+        foreach($students as $student){
+            $scores[$student->id]=array("name_zh"=>$student->name_zh);
+            foreach($coursesStudents as $course){
+                foreach($course->students as $s){
+                    if($s->id==$student->id){
+                        $scores[$student->id][$course->id]=$s->pivot->course_student_id;
+                    }
+                }
+            }
+        }
+        echo json_encode($scores);
+        echo '<hr>';
+        $coursesStudents=$klass->coursesScores;
+        echo json_encode($coursesStudents);
+        return true;
+
+        $studentsCoursesScores=$klass->studentsCoursesScores;
+        dd($studentsCoursesScores);
+
+        return Inertia::render('Manage/ScoreBigTable',[
+            'students_courses_scores'=>$studentsCoursesScores,
+            'courses'=>$klass->courses
+        ]);
+
+        $courses=Course::whereBelongsTo($klass)->with('scores')->with('students')->orderBy('id')->get();
+        foreach($courses as $course){
+            //echo json_encode($course);
+            foreach($course->scores as $score){
+                echo json_encode($score);
+                echo '<hr>';
+            }
+            echo '<hr>';
+        }
         //dd($klass->scores);
     }
 }
