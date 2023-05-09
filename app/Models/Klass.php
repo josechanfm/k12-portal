@@ -51,10 +51,10 @@ class Klass extends Model
         return $this->hasMany(Course::class)->with('students');
     }
     public function coursesScores(){
-        return $this->hasMany(Course::class)->with('scores');
+        return $this->hasMany(Course::class)->with('all_scores');
     }
     public function scores(){
-        return $this->hasMany(Course::class)->with('scores');
+        return $this->hasMany(Course::class)->with('scores')->with('students');
     }
     public function outcomes(){
         return $this->hasManyThrough(Outcome::class, KlassStudent::class,'klass_id', 'klass_student_id')->with('student');

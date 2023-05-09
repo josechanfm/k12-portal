@@ -16,7 +16,7 @@ class Course extends Model
     public function klass(){
         return $this->belongsTo(Klass::class);
     }
-    public function scores(){
+    public function all_scores(){
         return $this->hasManyThrough(
             Score::class,
             CourseStudent::class,
@@ -25,6 +25,9 @@ class Course extends Model
             'id',
             'id'
         );
+    }
+    public function scores(){
+        return $this->belongsToMany(Student::class,'course_students')->withPivot('id as pivot_course_student_id');
     }
     public function scoreColumns(){
         return $this->hasMany(ScoreColumn::class)->orderByRaw('-sequence DESC');

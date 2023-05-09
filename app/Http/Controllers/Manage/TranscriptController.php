@@ -30,9 +30,25 @@ class TranscriptController extends Controller
     }
     public function klass(Klass $klass){
         $scores=[];
-        $students=$klass->students;
-        $coursesStudents=$klass->coursesStudents;
-        dd($students);
+        $students=$klass->students->map->only('id','name_zh');
+        $courses=$klass->courses->map->only('id','title_zh');
+        $coursesScores=$klass->coursesScores;
+        foreach($coursesScores as $cs){
+            echo json_encode($cs);
+            echo '<hr>';
+        }
+        return true;
+        $studentList=array_column($students->toArray(),null,'id');
+        
+        //dd($studentList);
+        foreach($studentList as $i=>$sl){
+            $studentList[$i]['courses']=array_column($courses->toArray(),null,'id');
+        }
+        dd($studentList);
+        // dd($coursesStudents);
+
+
+
         foreach($students as $student){
             $scores[$student->id]=array("name_zh"=>$student->name_zh);
             foreach($coursesStudents as $course){
