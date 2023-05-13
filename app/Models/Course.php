@@ -37,7 +37,7 @@ class Course extends Model
         return $this->belongsToMany(Student::class)->with('scores');
     }
     public function students(){
-        return $this->belongsToMany(Student::class,'course_students')->withPivot('id as pivot_course_student_id');
+        return $this->belongsToMany(Student::class,'course_student')->withPivot('id as pivot_course_student_id');
     }
     public function teachers(){
         return $this->belongsToMany(Teacher::class)->withPivot('is_head');

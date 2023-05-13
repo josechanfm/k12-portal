@@ -32,8 +32,8 @@ class ScoreController extends Controller
         //     echo '<hr>';
         // };
         // return true;
-        
         $studentsScores=$course->students_scores();
+        
         $scoreColumns=$course->scoreColumns;
         $course=Course::with('klass')->with('teachers')->find($course->id);
         return Inertia::render('Manage/Score',[

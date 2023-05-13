@@ -184,6 +184,7 @@ export default {
             this.scores.push({
                 course_student_id:student.pivot.course_student_id,
                 student_name:student.name_zh,
+                student_id:student.id,
                 scores:temp
             });
         })        
@@ -252,7 +253,6 @@ export default {
         },
         updateScoreColumn(data){
             //this.$inertia.put('/manage/score_column/'+data.id, data, {
-                
             this.$inertia.put(route("manage.score_column.update",data.id), data, {
                     onSuccess: (page) => {
                         this.modal.mode=null;
@@ -274,6 +274,7 @@ export default {
                     data.push({
                         course_student_id:row.course_student_id,
                         score_column_id:score_column_id,
+                        student_id:row.student_id,
                         point:value
                     })
                 })
