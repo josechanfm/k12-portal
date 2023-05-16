@@ -330,12 +330,9 @@ export default {
                     formular=formular.replace("ROUND","Math.round");
                     //replace values to formular, according to the fields values
                     Object.entries(fields).forEach(([key,value])=>{
-                        console.log(key);
-                        console.log(value);
                         if(value=='') value=0; //escape formular calculation if any field is empty
                         formular=formular.replace(key,value);
                     });
-                    console.log(formular)
                     try{
                         row.scores[fieldName]=eval(formular);
                     }catch(error){

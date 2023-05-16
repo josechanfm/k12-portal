@@ -30,7 +30,7 @@ class Course extends Model
         return $this->belongsToMany(Student::class,'course_students')->withPivot('id as pivot_course_student_id');
     }
     public function scoreColumns(){
-        return $this->hasMany(ScoreColumn::class)->orderByRaw('-sequence DESC');
+        return $this->hasMany(ScoreColumn::class)->orderBy('term_id')->orderByRaw('-sequence DESC');
     }
 
     public function students2(){

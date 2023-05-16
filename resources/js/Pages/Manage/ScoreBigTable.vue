@@ -5,55 +5,39 @@
                 Teacher
             </h2>
         </template>
-        {{courses}}
-        <table width="100%" border="1">
+        <table width="100%" border="1" id="bigTable">
             <tr>
-                <td>Student Name</td>
-                <td v-for="course in courses">{{course.title_zh}}</td>
-            </tr>
-
-            <tr v-for="student in students_courses_scores">
-                <td>{{student.name_zh}}</td>
-                <td v-for="course in courses">
-                    {{course.id}}
-                    <span v-for="sc in student.courses_scores">
-                        <span v-if="sc.id==course.id">
-                            {{ sc.scores }}                            
-                        </span>
-                    </span>
+                <td rowspan="3">Student Name</td>
+                <td v-for="course in courses" :colspan="course.score_columns.length">
+                    {{course.title_zh}}
                 </td>
             </tr>
-        </table>
-        <ul>
-            <li v-for="student in students_courses_scores">
-                <ol v-for="courses in student.courses_scores">
-
-                        <li>{{ courses.scores }}<hr></li>
-                </ol>
-            </li>
-        </ul>
-        <div>
-            <a-table :dataSource="students_courses_scores" :columns="columns">
-                <template #bodyCell="{column, text, record, index}">
-                    <template v-if="column.dataIndex=='operation'">
-                        <ButtonLink :href="'teaching/'+record.id" :type="'Link'">任教</ButtonLink>
-                        
-                    </template>
-                    <template v-else-if="column.dataIndex=='courses'">
-                        <ul>
-                            <li v-for="course in record.courses">
-                                {{ course.abbr }}-{{ course.title_zh }}
-                                <Link :href="'score?kid='+course.klass_id + '&cid='+course.id" method="get" as="button" type="button">Score</Link>
-                            </li>
-                        </ul>
-                    </template>
-                    <template v-else>
-                        {{record[column.dataIndex]}}
-                    </template>
+            <tr>
+                <template v-for="course in courses">
+                    <td v-for="term in course.terms" :colspan="term.columns">
+                        {{term.label}}
+                    </td>
                 </template>
-            </a-table>
+            </tr>
+            <tr>
+                <template v-for="course in courses">
+                    <td v-for="column in course.score_columns">
+                        {{column.field_label}}
+                    </td>
+                </template>
+            </tr>
 
-        </div>
+            <tr v-for="score in scores">
+                <td>{{score.name_zh}}</td>
+                <template v-for="course in courses">
+                    <td v-for="column in course.score_columns">
+                        {{score[course.id][column.id]}}
+                    </td>
+                </template>
+            </tr>
+
+        </table>
+
     </AdminLayout>
 </template>
 
@@ -65,7 +49,7 @@ export default {
     components: {
         AdminLayout, ButtonLink
     },
-    props: ['students_courses_scores','courses'],
+    props: ['students_courses_scores','courses','scores'],
     data() {
         return {
             columns:[
@@ -93,3 +77,8 @@ export default {
 }
 </script>
 
+<style>
+#bigTable, #bigTable td, #bigTable tr{
+    border: 1px solid;
+}
+</style>

@@ -45,7 +45,7 @@ class Klass extends Model
         return $this->belongsToMany(Student::class,'klass_student','promote_to','student_id')->withPivot(['id as pivot_klass_student_id','student_number','stream','state','promote','promote_to','id as pivot_klass_id']);
     }
     public function courses(){
-        return $this->hasMany(Course::class);
+        return $this->hasMany(Course::class)->with('scoreColumns');
     }
     public function coursesStudents(){
         return $this->hasMany(Course::class)->with('students');
