@@ -109,6 +109,7 @@ Route::prefix('manage/')->group(function(){
     Route::post('/score/update',[App\Http\Controllers\Manage\ScoreController::class,'update'])->name('manage.score.update');
     Route::resource('/score_column',App\Http\Controllers\Manage\ScoreColumnController::class)->names('manage.score_column');
     Route::post('/score_column/reorder',[App\Http\Controllers\Manage\ScoreColumnController::class,'reorder'])->name('manage.score_column.reorder');
+    Route::post('/score_column/update_is_total',[App\Http\Controllers\Manage\ScoreColumnController::class,'update_is_total'])->name('manage.score_column.update_is_total');
 
     Route::get('/klass/{klass}/courses',[App\Http\Controllers\Manage\CourseController::class,'byKlass'])->name('manage.klass.courses');
 
@@ -126,6 +127,7 @@ Route::prefix('manage/')->group(function(){
     Route::get('/transcript',[App\Http\Controllers\Manage\TranscriptController::class,'index']);
     Route::get('/transcript/klass_student/{id}',[App\Http\Controllers\Manage\TranscriptController::class,'klassStudent']);
     Route::get('/transcript/klass/{klass}',[App\Http\Controllers\Manage\TranscriptController::class,'klass']);
+    // Route::get('/transcript/klass/{klass}/summary_table',[App\Http\Controllers\Manage\TranscriptController::class,'klass_summary_table']);
 
     Route::resource('/teacher',App\Http\Controllers\Manage\TeacherController::class);
     Route::get('teaching/{teacherId}',[App\Http\Controllers\Manage\TeacherController::class,'teaching']);   

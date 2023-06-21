@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('type')->nullable();
             $table->string('scheme')->nullable();
             $table->string('description')->nullable();
+            $table->boolean('is_total')->nullable(false);
             $table->boolean('for_transcript')->default(false);
             $table->timestamps();
         });

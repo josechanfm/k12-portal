@@ -44,16 +44,20 @@ class KlassObserver
 
         $courses=Course::whereBelongsTo($klass)->get();
         $scoreTemplate=json_decode(Config::where('key','score_template')->first()->value);
+        
         foreach($courses as $course){
             // if(property_exists($scoreTemplate,$course->score_column_template)){
                 //foreach($scoreTemplate->{$course->score_column_template} as $score){
+                $x='A';
                 foreach($scoreTemplate->term as $i=>$score){
                     $score_column = new ScoreColumn;
                     $score_column->term_id=$score->term_id;
                     $score_column->course_id=$course->id;
                     $score_column->sequence=$i+1;
+                    $score_column->column_letter=$x++;
                     $score_column->field_name=$score->value;
                     $score_column->field_label=$score->label;
+                    $score_column->is_total=$score->is_total;
                     $score_column->for_transcript=true;
                     $score_column->save();
                 }

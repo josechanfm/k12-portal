@@ -29,23 +29,26 @@
                                     <th>學分欄名稱</th>
                                     <th>分類</th>
                                     <th>計算方式</th>
+                                    <th>學期總分</th>
                                     <th>操作</th>
                                 </tr>
                         </thead>
                         <draggable tag="tbody" class="dragArea list-group w-full" :list="score_columns" @change="rowChange">
                             <transition-group v-for="(record,idx) in score_columns" :key="record.id">
                             <tr v-if="record.term_id==selectedTerm">
-                                <td>{{ String.fromCharCode(65+idx) }}</td>
+                                <td>{{record.column_letter}}</td>
                                 <td>{{ year_terms.find(t=>t.value==record.term_id).label }}</td>
                                 <td>{{record.field_label}}</td>
                                 <td>{{ record.type }}</td>
                                 <td>{{ record.scheme }}</td>
+                                <td>
+                                    <a-switch v-model:checked="record.is_total" :checked-value="1" :un-checked-value="0" @click="onChangeTotalColumn(record)"/>
+                                </td>
                                 <td style="width:250px">
                                     <a-button @click="onClickEditScoreColumn(record)">修改</a-button>
                                     <span v-if="record.for_transcript==0">
                                         <a-button @click="onClickDeleteScoreColumn(record.id)">刪除</a-button>
                                     </span>
-
                                 </td>
                             </tr>
                             </transition-group>
@@ -67,12 +70,12 @@
                                 <template v-for="(column,idx) in score_columns" >
                                     <th v-if="column.term_id==selectedTerm">
                                         <span :title="column.scheme">
-                                            ({{ String.fromCharCode(idx+65) }}) {{ column.field_label }}
+                                            ( {{ column.column_letter }} ) {{ column.field_label }}
                                             <span v-if="column.scheme">*</span>
                                         </span>
                                     </th>
-
                                 </template>
+                                <td>全年總平均分</td>
                             </tr>
                         </thead>
                         <tr v-for="(row, key) in scores">
@@ -85,6 +88,8 @@
                                     />
                                 </td>
                             </template>
+                            <td>{{ getYearAverage(row)}}
+                            </td>
                         </tr>
                     </table>
                 </div>
@@ -175,19 +180,20 @@ export default {
         }
     },
     created(){
+        console.log(this.score_columns)
         this.students_scores.forEach(student => {
             let temp={}
             student.scores.forEach(score=>{
                 temp[score.score_column_id]=score.point
             })
-            console.log(student);
             this.scores.push({
                 course_student_id:student.pivot.course_student_id,
                 student_name:student.name_zh,
                 student_id:student.id,
                 scores:temp
             });
-        })        
+        })
+        console.log(this.scores)   
     },
     mounted() {
         this.$refs.scoreTable.addEventListener('keydown', (e) => {
@@ -309,15 +315,30 @@ export default {
             }
         },
         runFormular(columns, row, courseStudentId){
+            //console.log(this.students_scores);
             var fields={};
-            var letter=65;
+            var termTotals=[];
+            //init column letters
             columns.forEach(column=>{
                 if (row.scores[column.id] === undefined) {
-                    fields[String.fromCharCode(letter++)] = '';
+                    fields[column.column_letter] = '';
                 }else{
-                    fields[String.fromCharCode(letter++)] = row.scores[column.id];
+                    fields[column.column_letter] = row.scores[column.id];
                 }
             })
+
+            //change year total scheme formular
+            columns.forEach((column, idx)=>{
+                if(column.is_total==1){
+                    termTotals.push(column.column_letter);
+                }
+                if(column.term_id==9){
+                    termTotals.forEach((t,i)=>{
+                        column.scheme=column.scheme.replace('T'+(i+1),termTotals[i])
+                    })
+                }
+            })
+
             //loop through all score columns
             columns.forEach((column, idx)=>{
                 //if column scheme is not empty, meaning with formular
@@ -339,7 +360,25 @@ export default {
                         console.log("("+courseStudentId+")"+row.student_name+", formular incurrect");
                     }
                 }
-            });                
+            });
+            // //calculate year total, average terms total column
+            // var sum=0;
+            // var cnt=0;
+            // columns.forEach((column,idx)=>{
+            //     if(column.is_total==1 && column.term_id!=9){
+            //         cnt++
+            //         sum+=eval(row.scores[column.id])
+            //     }
+            // })
+            // //give year total to data column, default was set by term_id==9
+            // columns.forEach((column,idx)=>{
+            //     if(column.term_id==9){
+            //         row.scores[column.id]=sum/cnt
+            //     }
+            // })
+        },
+        countYearAverage(){
+            console.log(this.scores);
         },
         rowChange(event){
             let i=1;
@@ -356,12 +395,37 @@ export default {
             });            
         },
         sampleData(){
+            const total=this.score_columns
             this.scores.forEach(score=>{
                 this.score_columns.forEach(column=>{
                     score.scores[column.id]=Math.floor(Math.random() * 100)+1
                 })
             })
             this.updateAllScores();
+        },
+        onChangeTotalColumn(record){
+            if(confirm('Are you sure??')==false){
+                record.is_total=!record.is_total;
+                return false;
+            }
+            //set all is_total to false, according to term_id selected
+            this.score_columns.map(item=>{
+                if(item.term_id==this.selectedTerm)
+                    item.is_total=0
+            })
+            //set the select score column as is_total=true
+            record.is_total=1;
+            this.$inertia.post(route("manage.score_column.update_is_total"), this.score_columns, {
+                    onSuccess: (page) => {
+                        console.log(page);
+                    },
+                    onError: (error) => {
+                        console.log(error);
+                    }
+            });            
+        },
+        getYearAverage(row){
+            return row.scores[this.score_columns.find(c=>c.term_id==9).id] 
         }
     },
 
@@ -380,7 +444,6 @@ export default {
 #scoreTable input{
     text-align: center; 
 }
-
         /*定义要拖拽元素的样式*/
         table.itxst {
             color: #333333;

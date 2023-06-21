@@ -111,9 +111,21 @@ class ScoreColumnController extends Controller
 
     public function reorder(Request $request){
         $records=$request->all();
+        $x='A';
         foreach($records as $record){
             ScoreColumn::where('id',$record['id'])
-                ->update(['sequence'=>$record['sequence']]);
+                ->update([
+                    'sequence'=>$record['sequence'],
+                    'column_letter'=>$x++
+                ]);
+        }
+        return redirect()->back();
+    }
+    public function update_is_total(Request $request){
+        $records=$request->all();
+        foreach($records as $record){
+            ScoreColumn::where('id',$record['id'])
+                ->update(['is_total'=>$record['is_total']]);
         }
         return redirect()->back();
     }

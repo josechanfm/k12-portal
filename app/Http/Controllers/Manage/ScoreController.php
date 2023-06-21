@@ -19,22 +19,25 @@ class ScoreController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function byCourse(Course $course){
-        // $studentsScores=$course->students2;
-        // foreach($studentsScores as $student){
-        //     echo json_encode($student);
-        //     echo '<hr>';
-        // };
+        // $courses=Course::all();
+        // foreach($courses as $course){
+        //     $x='A';
+        //     $columns=ScoreColumn::where('course_id',$course->id)->orderBy('term_id')->orderByRaw('-sequence DESC')->get();
+        //     echo $course->code;
+        //     echo '<br>';
+        //     foreach($columns as $column){
+        //         echo json_encode($column);
+        //         echo '<hr>';
+        //         $column->column_letter=$x++;
+        //         $column->save();
+        //     }
+        // }
         // return true;
 
-        // $studentsScores=$course->students_scores();
-        // foreach($studentsScores as $student){
-        //     echo json_encode($student);
-        //     echo '<hr>';
-        // };
-        // return true;
         $studentsScores=$course->students_scores();
         
         $scoreColumns=$course->scoreColumns;
+        // dd($scoreColumns);
         $course=Course::with('klass')->with('teachers')->find($course->id);
         return Inertia::render('Manage/Score',[
             'year_terms'=>Config::item('year_terms'),

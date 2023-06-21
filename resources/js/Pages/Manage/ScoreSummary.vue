@@ -2,37 +2,31 @@
     <AdminLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Teacher
+                Summary
             </h2>
         </template>
         <table width="100%" border="1" id="bigTable">
             <tr>
-                <td rowspan="3">Student Name</td>
-                <td v-for="course in courses" :colspan="course.score_columns.length">
+                <td rowspan="2">Student Name</td>
+                <td v-for="course in courses" :colspan="year_terms.length">
                     {{course.title_zh}}
                 </td>
             </tr>
             <tr>
                 <template v-for="course in courses">
-                    <td v-for="term in course.terms" :colspan="term.column_count">
+                    <td v-for="term in course.terms" >
                         {{term.label}}
                     </td>
                 </template>
             </tr>
-            <tr>
-                <template v-for="course in courses">
-                    <td v-for="column in course.score_columns">
-                        {{column.field_label}}
-                    </td>
-                </template>
-            </tr>
-
             <tr v-for="score in scores">
                 <td>{{score.name_zh}}</td>
                 <template v-for="course in courses">
-                    <td v-for="column in course.score_columns">
-                        {{score[course.id][column.id]['point'] }}
-                    </td>
+                    <template v-for="column in course.score_columns">
+                        <td v-if="column.is_total==1">
+                            {{score[course.id][column.id]['point']}}
+                        </td>
+                    </template>
                 </template>
             </tr>
 
@@ -49,7 +43,7 @@ export default {
     components: {
         AdminLayout, ButtonLink
     },
-    props: ['students_courses_scores','courses','scores'],
+    props: ['year_terms','students_courses_scores','courses','scores'],
     data() {
         return {
             columns:[
