@@ -42,33 +42,33 @@ class ConfigSeeder extends Seeder
                 "term": [{
                     "value": "regular1",
                     "label": "平時",
-                    "term_id": 1
-                    "is_total": 0,
+                    "term_id": 1,
+                    "is_total": 0
                 }, {
                     "value": "term1",
                     "label": "考試",
-                    "term_id": 1
-                    "is_total": 0,
+                    "term_id": 1,
+                    "is_total": 0
                 }, {
                     "value": "total1",
                     "label": "總分",
-                    "term_id": 1
-                    "is_total": 1,
+                    "term_id": 1,
+                    "is_total": 1
                 }, {
                     "value": "regular2",
                     "label": "平時",
-                    "term_id": 2
-                    "is_total": 0,
+                    "term_id": 2,
+                    "is_total": 0
                 }, {
                     "value": "term2",
                     "label": "考試",
-                    "term_id": 2
-                    "is_total": 0,
+                    "term_id": 2,
+                    "is_total": 0
                 }, {
                     "value": "total2",
                     "label": "總分",
-                    "term_id": 2
-                    "is_total": 1,
+                    "term_id": 2,
+                    "is_total": 1
                 }, {
                     "value": "total2",
                     "label": "學年總分",

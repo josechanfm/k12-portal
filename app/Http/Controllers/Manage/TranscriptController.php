@@ -71,7 +71,7 @@ class TranscriptController extends Controller
         $coursesScores=$klass->coursesScores;
         //assign score value to the score array 
         foreach($coursesScores as $cs){
-            foreach($cs->all_scores as $s){
+            foreach($cs->allScores as $s){
                 $scores[$s->student_id][$cs->id][$s->score_column_id]['point']=$s->point;
             }
         }

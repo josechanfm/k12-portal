@@ -18,6 +18,7 @@ return new class extends Migration
             $table->bigInteger('term_id');
             $table->bigInteger('course_id')->on('courses')->onDelete('restrict')->onUpdate('cascade');
             $table->integer('sequence')->nullable();
+            $table->string('column_letter');
             $table->string('field_name');
             $table->string('field_label');
             $table->string('type')->nullable();

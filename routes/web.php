@@ -131,6 +131,8 @@ Route::prefix('manage/')->group(function(){
 
     Route::resource('/teacher',App\Http\Controllers\Manage\TeacherController::class);
     Route::get('teaching/{teacherId}',[App\Http\Controllers\Manage\TeacherController::class,'teaching']);   
+    
+    Route::get('/score/test/{course}',[App\Http\Controllers\Manage\ScoreController::class,'test']);
 });
 
 Route::prefix('teacher/')->group(function(){

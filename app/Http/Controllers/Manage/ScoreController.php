@@ -150,4 +150,47 @@ class ScoreController extends Controller
         //
     }
 
+    public function test(Course $course){
+        
+        //dd($course->studentsScores());
+
+        $studentsScores=$course->students_scores();
+        $allCourses=\App\Models\Klass::where('id',$course->klass_id)->first()->courses;
+        //dd($allCourses);
+        // $tmp=0;
+        $toCourses=$allCourses->whereNotNull('score_scheme');
+
+        foreach($toCourses as $toCourse){
+        //     // dd($mc->score_scheme);
+            $schemes=json_decode($toCourse->score_scheme);
+            $toCourseStudentsScores=$toCourse->studentsScores();
+            //dd($toCourseStudentsScores);
+            $fromCourses=[];
+            foreach($schemes as $scheme){
+                $fromCourses[$scheme->course_id]=Course::find($scheme->course_id)->studentsScores();
+                //array_push($fromCourses,Course::find($scheme->course_id)->studentsScores());
+            }
+            dd($fromCourses[4][0]);
+        //     foreach($schemes as $scheme){
+        //         dd($scheme->percentage);
+        //         $tmp=Course::find($scheme->course_id);
+        //         dd($scheme->percentage);
+        //     }
+        }
+        // dd($tmp);
+        // //dd($course->studentsScores());
+
+        //scoreColumns=$course->scoreColumns;
+        // dd($scoreColumns);
+        $course=Course::with('klass')->with('teachers')->find($course->id);
+        return Inertia::render('Manage/Score2',[
+            'year_terms'=>Config::item('year_terms'),
+            'course'=>$course,
+            'score_columns'=>$course->scoreColumns,
+            'students_scores'=>$course->studentsScores()
+        ]);
+
+
+    }
+
 }

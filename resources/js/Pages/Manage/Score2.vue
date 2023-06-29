@@ -78,19 +78,28 @@
                                 <td>全年總平均分</td>
                             </tr>
                         </thead>
-                        <tr v-for="(row, key) in scores">
-                            <td>{{ row.student_name }}</td>
-                            <template v-for="column in score_columns">
-                                <td v-if="column.term_id==selectedTerm">
-                                    <a-input v-model:value="row.scores[column.id]" 
-                                        @blur="onScoreChange(key)"
-                                        @keyup.arrow-keys="onKeypressed" 
-                                    />
-                                </td>
-                            </template>
-                            <td>{{ getYearAverage(row)}}
-                            </td>
-                        </tr>
+                        <template v-for="(student,sid) in students_scores">
+                            <tr>
+                                <td>{{ student['student_name'] }}</td>
+                                <template v-for="column in score_columns">
+                                    <template v-for="(score, cid) in student.scores">
+                                        <td v-if="column.term_id==selectedTerm && column.id==cid">
+                                            <a-input v-model:value="score.point" 
+                                                @blur="onScoreChange(student,cid)"
+                                                @keyup.arrow-keys="onKeypressed" 
+                                            />
+
+                                        </td>
+                                    </template>
+                                </template>
+                                <template v-for="column in score_columns">
+                                    <td v-if="column.term_id==9">{{ student.scores[column.id].point }}</td>    
+                                </template>
+                                
+                            </tr>
+                        </template>
+
+
                     </table>
                 </div>
             </div>
@@ -180,20 +189,6 @@ export default {
         }
     },
     created(){
-        console.log(this.score_columns)
-        this.students_scores.forEach(student => {
-            let temp={}
-            student.scores.forEach(score=>{
-                temp[score.score_column_id]=score.point
-            })
-            this.scores.push({
-                course_student_id:student.pivot.course_student_id,
-                student_name:student.name_zh,
-                student_id:student.id,
-                scores:temp
-            });
-        })
-        console.log(this.scores)   
     },
     mounted() {
         this.$refs.scoreTable.addEventListener('keydown', (e) => {
@@ -208,7 +203,7 @@ export default {
                     this.tableCell.col>1?this.tableCell.col--:'';
                     break;
                 case 'ArrowRight':
-                    this.tableCell.col<this.tableCell.maxCol?this.tableCell.col++:'';
+                    this.tableCell.col<(this.$refs.scoreTable.rows[0].cells.length-1)?this.tableCell.col++:'';
                     break;
             }
             var input =this.$refs.scoreTable.rows[this.tableCell.row].cells[this.tableCell.col].getElementsByTagName("input");
@@ -275,17 +270,17 @@ export default {
         },
         saveScores(){
             var data=[];
-            this.scores.forEach(row => {
-                Object.entries(row.scores).forEach(([score_column_id,value]) => {
+            this.students_scores.forEach(student => {
+                Object.entries(student.scores).forEach(([cid,score]) => {
+
                     data.push({
-                        course_student_id:row.course_student_id,
-                        score_column_id:score_column_id,
-                        student_id:row.student_id,
-                        point:value
+                        course_student_id:score.course_student_id,
+                        score_column_id:score.score_column_id,
+                        student_id:student.student_id,
+                        point: score.point
                     })
                 })
             })
-            console.log(data);
             axios.post(route('manage.score.update'),data)
                 .then(resp=> 
                     console.log("update "+resp.data+" records")
@@ -304,8 +299,42 @@ export default {
                 console.log(err);
             })
         },
-        onScoreChange(key){
-            this.runFormular(this.score_columns, this.scores[key], key);
+        onScoreChange(student,columnId){
+            var fields=[];
+            //change year total scheme formular
+            var termTotals=[];
+            this.score_columns.forEach((column, idx)=>{
+                if(column.is_total==1){
+                    termTotals.push(column.column_letter);
+                }
+                if(column.term_id==9){
+                    termTotals.forEach((t,i)=>{
+                        column.scheme=column.scheme.replace('T'+(i+1),termTotals[i])
+                    })
+                }
+            })
+
+
+            this.score_columns.forEach(column=>{
+                var formular='';
+                fields[column.id]= {'point':'','letter':column.column_letter};
+                if(column.scheme!==null){
+                    formular=column.scheme;
+                    Object.entries(student.scores).forEach(([columnId,score])=>{
+                        formular=formular.replace(score.column_letter, score.point);
+                    })
+                    try{
+                        formular=formular.replace("=","");
+                        student.scores[column.id].point=eval(formular)
+                    }catch(error){
+                        console.log('error');
+                    }
+               }
+            })
+
+
+            //init column letters
+            //this.runFormular(this.score_columns, this.scores[key], key);
         },
         updateAllScores(){
             this.scores.forEach(row=>{
@@ -318,6 +347,7 @@ export default {
         runFormular(columns, row, courseStudentId){
             //console.log(this.students_scores);
             var fields={};
+            var termTotals=[];
             //init column letters
             columns.forEach(column=>{
                 if (row.scores[column.id] === undefined) {
@@ -327,7 +357,17 @@ export default {
                 }
             })
 
-            //console.log(termTotals);
+            //change year total scheme formular
+            columns.forEach((column, idx)=>{
+                if(column.is_total==1){
+                    termTotals.push(column.column_letter);
+                }
+                if(column.term_id==9){
+                    termTotals.forEach((t,i)=>{
+                        //column.scheme=column.scheme.replace('T'+(i+1),termTotals[i])
+                    })
+                }
+            })
 
             //loop through all score columns
             columns.forEach((column, idx)=>{
@@ -348,6 +388,7 @@ export default {
                         row.scores[fieldName]=eval(formular);
                     }catch(error){
                         console.log("("+courseStudentId+")"+row.student_name+", formular incurrect");
+                        console.log(formular);
                     }
                 }
             });
@@ -386,9 +427,9 @@ export default {
         },
         sampleData(){
             const total=this.score_columns
-            this.scores.forEach(score=>{
+            this.students_scores.forEach(student=>{
                 this.score_columns.forEach(column=>{
-                    score.scores[column.id]=Math.floor(Math.random() * 100)+1
+                    student.scores[column.id]['point']=Math.floor(Math.random() * 100)+1
                 })
             })
             this.updateAllScores();
