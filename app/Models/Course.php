@@ -33,35 +33,35 @@ class Course extends Model
         return $this->hasMany(ScoreColumn::class)->orderBy('term_id')->orderByRaw('-sequence DESC');
     }
 
-    public function students2(){
-        return $this->belongsToMany(Student::class)->with('scores');
-    }
+    // public function students2(){
+    //     return $this->belongsToMany(Student::class)->with('scores');
+    // }
     public function students(){
         return $this->belongsToMany(Student::class,'course_student')->withPivot('id as pivot_course_student_id');
     }
     public function teachers(){
         return $this->belongsToMany(Teacher::class)->withPivot('is_head');
     }
-    // public function subject(){
-    //     return $this->belongsTo(Subject::class);
-    // }
-    // public static function gather_scores($courseId){
-    //     $students=Course::find($courseId)->students;
+    // // public function subject(){
+    // //     return $this->belongsTo(Subject::class);
+    // // }
+    // // public static function gather_scores($courseId){
+    // //     $students=Course::find($courseId)->students;
+    // //     foreach($students as $student){
+    // //         $student->scores=Score::where('klass_student_id',$student->pivot->klass_student_id)->get();
+    // //     }
+    // //     return $students;
+    // // }
+
+    // //public static function students_scores($cid){
+    // public function students_scores(){
+    //     //$students=Course::find($this->id)->students;
+    //     $students=$this->students;
     //     foreach($students as $student){
-    //         $student->scores=Score::where('klass_student_id',$student->pivot->klass_student_id)->get();
+    //         $student->scores=Score::where('course_student_id',$student->pivot->course_student_id)->get();
     //     }
     //     return $students;
     // }
-
-    //public static function students_scores($cid){
-    public function students_scores(){
-        //$students=Course::find($this->id)->students;
-        $students=$this->students;
-        foreach($students as $student){
-            $student->scores=Score::where('course_student_id',$student->pivot->course_student_id)->get();
-        }
-        return $students;
-    }
 
     public function studentsScores(){
         $terms=Config::item('year_terms');

@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('elective',6)->nullable();
             $table->text('description')->nullable();
             $table->string('score_column')->nullable();
-            $table->string('socre_scheme')->nullable();
+            $table->string('score_scheme')->nullable();
             $table->tinyInteger('active');
             $table->timestamps();
             $table->unique(['klass_id','code'],'klass_id_code');

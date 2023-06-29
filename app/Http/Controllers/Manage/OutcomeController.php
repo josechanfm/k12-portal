@@ -52,7 +52,7 @@ class OutcomeController extends Controller
 
         $cid=$request->cid;
         $courseScores=CourseScore::where('course_id',$cid)->orderByRaw('-sequence DESC')->get();
-        $studentsScores=Course::students_scores($cid);
+        $studentsScores=Course::studentsScores($cid);
         $course=Course::with('klass')->with('teachers')->find($cid);
         $courses=Course::where('klass_id',$course->klass_id)->whereNot('type','SUB')->get();
 

@@ -97,7 +97,7 @@ Route::prefix('manage/')->group(function(){
 
     Route::resource('/course',App\Http\Controllers\Manage\CourseController::class);
     Route::get('/courses/get_by_klass_id/{klassId}',[App\Http\Controllers\Manage\CourseController::class, 'getByKlassId']);
-    Route::get('/course/{course}/scores',[App\Http\Controllers\Manage\ScoreController::class,'byCourse'])->name('manage.course.scores');
+    // Route::get('/course/{course}/scores',[App\Http\Controllers\Manage\ScoreController::class,'byCourse'])->name('manage.course.scores');
 
     Route::resource('/student',App\Http\Controllers\Manage\StudentController::class);
     Route::get('/students/get_by_klass_id/{klassId}',[App\Http\Controllers\Manage\StudentController::class,'getByKlassId']);
@@ -132,7 +132,7 @@ Route::prefix('manage/')->group(function(){
     Route::resource('/teacher',App\Http\Controllers\Manage\TeacherController::class);
     Route::get('teaching/{teacherId}',[App\Http\Controllers\Manage\TeacherController::class,'teaching']);   
     
-    Route::get('/score/test/{course}',[App\Http\Controllers\Manage\ScoreController::class,'test']);
+    Route::get('/course/{course}/scores',[App\Http\Controllers\Manage\CourseController::class,'scores'])->name('manage.course.scores');
 });
 
 Route::prefix('teacher/')->group(function(){
