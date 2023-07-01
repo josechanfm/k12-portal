@@ -65,7 +65,7 @@ class CourseObserver
      */
     public function updated(Course $course)
     {
-        //
+        
     }
 
     /**

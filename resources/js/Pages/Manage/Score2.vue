@@ -189,6 +189,7 @@ export default {
         }
     },
     created(){
+        
     },
     mounted() {
         this.$refs.scoreTable.addEventListener('keydown', (e) => {
@@ -197,7 +198,8 @@ export default {
                     this.tableCell.row>1?this.tableCell.row--:'';
                     break;
                 case 'ArrowDown':
-                    this.tableCell.row<this.tableCell.maxRow?this.tableCell.row++:'';
+                    this.tableCell.row<(this.$refs.scoreTable.rows.length-1)?this.tableCell.row++:'';
+                    //this.tableCell.row<this.tableCell.maxRow?this.tableCell.row++:'';
                     break;
                 case 'ArrowLeft':
                     this.tableCell.col>1?this.tableCell.col--:'';
@@ -207,6 +209,7 @@ export default {
                     break;
             }
             var input =this.$refs.scoreTable.rows[this.tableCell.row].cells[this.tableCell.col].getElementsByTagName("input");
+            console.log(input);
             if(input.length>0){
                 input[0].focus();
             }
@@ -270,9 +273,8 @@ export default {
         },
         saveScores(){
             var data=[];
-            this.students_scores.forEach(student => {
+            Object.entries(this.students_scores).forEach(([sid,student]) => {
                 Object.entries(student.scores).forEach(([cid,score]) => {
-
                     data.push({
                         course_student_id:score.course_student_id,
                         score_column_id:score.score_column_id,
@@ -281,10 +283,19 @@ export default {
                     })
                 })
             })
-            axios.post(route('manage.score.update'),data)
-                .then(resp=> 
-                    console.log("update "+resp.data+" records")
-                );
+            // axios.post(route('manage.score.update'),data)
+            //     .then(resp=> 
+            //         console.log("update "+resp.data+" records")
+            //     );
+            this.$inertia.post(route("manage.score.update"),data, {
+                onSuccess: (page) => {
+                        console.log("update "+page)
+                    },
+                    onError: (error) => {
+                        console.log(error);
+                    }
+
+            })
         },
         handleScoreColumnChange() {
             this.$refs.modalScoreColumn.validateFields().then(()=>{
@@ -427,7 +438,7 @@ export default {
         },
         sampleData(){
             const total=this.score_columns
-            this.students_scores.forEach(student=>{
+            Object.entries(this.students_scores).forEach(([sid, student])=>{
                 this.score_columns.forEach(column=>{
                     student.scores[column.id]['point']=Math.floor(Math.random() * 100)+1
                 })

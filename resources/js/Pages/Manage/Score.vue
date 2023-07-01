@@ -27,10 +27,10 @@
                                     <th>排序</th>
                                     <th>學段</th>
                                     <th>學分欄名稱</th>
-                                    <th>分類</th>
                                     <th>計算方式</th>
                                     <th>學期總分</th>
                                     <th>操作</th>
+                                    <th>分數合計</th>
                                 </tr>
                         </thead>
                         <draggable tag="tbody" class="dragArea list-group w-full" :list="score_columns" @change="rowChange">
@@ -39,11 +39,11 @@
                                 <td>{{record.column_letter}}</td>
                                 <td>{{ year_terms.find(t=>t.value==record.term_id).label }}</td>
                                 <td>{{record.field_label}}</td>
-                                <td>{{ record.type }}</td>
                                 <td>{{ record.scheme }}</td>
-                                <td>
-                                    <a-switch v-model:checked="record.is_total" :checked-value="1" :un-checked-value="0" @click="onChangeTotalColumn(record)"/>
+                                <td><span v-if="record.is_total">是</span>
+                                    <!-- <a-switch v-model:checked="record.is_total" :checked-value="1" :un-checked-value="0" @click="onChangeTotalColumn(record)"/> -->
                                 </td>
+                                <td><span v-if="record.merge">是</span></td>
                                 <td style="width:250px">
                                     <a-button @click="onClickEditScoreColumn(record)">修改</a-button>
                                     <span v-if="record.for_transcript==0">
@@ -78,19 +78,30 @@
                                 <td>全年總平均分</td>
                             </tr>
                         </thead>
-                        <tr v-for="(row, key) in scores">
-                            <td>{{ row.student_name }}</td>
-                            <template v-for="column in score_columns">
-                                <td v-if="column.term_id==selectedTerm">
-                                    <a-input v-model:value="row.scores[column.id]" 
-                                        @blur="onScoreChange(key)"
-                                        @keyup.arrow-keys="onKeypressed" 
-                                    />
-                                </td>
-                            </template>
-                            <td>{{ getYearAverage(row)}}
-                            </td>
-                        </tr>
+                        <template v-for="(student,sid) in students_scores">
+                            <tr>
+                                <td>{{ student['student_name'] }}</td>
+                                <template v-for="column in score_columns">
+                                    <template v-for="(score, cid) in student.scores">
+                                        <td v-if="column.term_id==selectedTerm && column.id==cid" class="text-center">
+                                            <span v-if="column.merge || column.scheme">
+                                                {{score.point}}
+                                            </span>
+                                            <span v-else>
+                                                <a-input v-model:value="score.point" 
+                                                @blur="onScoreChange(student,cid)"
+                                                @keyup.arrow-keys="onKeypressed" 
+                                            />
+                                            </span>
+
+                                        </td>
+                                    </template>
+                                </template>
+                                <template v-for="column in score_columns">
+                                    <td v-if="column.term_id==9">{{ student.scores[column.id].point }}</td>    
+                                </template>
+                            </tr>
+                        </template>
                     </table>
                 </div>
             </div>
@@ -118,6 +129,41 @@
                 <a-form-item label="簡介" :name="['description']">
                     <a-input v-model:value="modal.data.description"/> 
                 </a-form-item>
+
+                <a-divider style="height: 2px; background-color: #7cb305" />
+
+                <div>
+                    <label>分數合計欄</label>
+                    <ol class="ml-5">
+                        <li v-for="(item,idx) in modal.data.merge" class="list-disc">
+                            <div class="flow-root">
+                                {{ mergeItem(item) }}
+                                <a @click="deleteMerge(idx)" class="float-right" v-if="$page.props.currentUserRoles.includes('admin')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="red" class="w-4 h-4">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+
+                <a-collapse v-if="$page.props.currentUserRoles.includes('admin')">
+                    <a-collapse-panel key="1" header="新增分數合計">
+                        <a-form-item label="科目">
+                            <a-select v-model:value="merge.course_id" :options="klass_courses.map(c=>({value:c.id, label:c.code+'-'+c.title_zh}))" @change="onChangeMergeCourse"></a-select>
+                        </a-form-item>
+                        <a-form-item label="分數欄">
+                            <a-select v-model:value="merge.score_column_id" :options="modal.data.scoreColumnOptions"></a-select>
+                        </a-form-item>
+                        <a-form-item label="比例">
+                            <a-input v-model:value="merge.percentage"/>
+                            <span>(%，百份比)</span>
+                        </a-form-item>
+                        <a-button @click="addMerge">Add</a-button>
+                    </a-collapse-panel>
+                </a-collapse>
+
             </a-form>
         </a-modal>
     </AdminLayout>
@@ -134,9 +180,14 @@ export default {
         AdminLayout,
         draggable: VueDraggableNext,
     },
-    props: ['year_terms','course', 'score_columns', 'students_scores'],
+    props: ['year_terms','course', 'score_columns', 'students_scores','klass_courses'],
     data() {
         return {
+            merge:{
+                course_id:null,
+                score_column_id:null,
+                percentage:null,
+            },
             selectedTerm:1,
             keypressed:"",
             modal: {
@@ -180,35 +231,27 @@ export default {
         }
     },
     created(){
-        console.log(this.score_columns)
-        this.students_scores.forEach(student => {
-            let temp={}
-            student.scores.forEach(score=>{
-                temp[score.score_column_id]=score.point
-            })
-            this.scores.push({
-                course_student_id:student.pivot.course_student_id,
-                student_name:student.name_zh,
-                student_id:student.id,
-                scores:temp
-            });
-        })
-        console.log(this.scores)   
+        
     },
     mounted() {
+        this.$refs.scoreTable.addEventListener('click', (e) => {
+            this.tableCell.row=e.target.closest('tr').rowIndex;
+            this.tableCell.col=e.target.closest('td').cellIndex;
+        })
         this.$refs.scoreTable.addEventListener('keydown', (e) => {
             switch(e.key){
                 case 'ArrowUp':
                     this.tableCell.row>1?this.tableCell.row--:'';
                     break;
                 case 'ArrowDown':
-                    this.tableCell.row<this.tableCell.maxRow?this.tableCell.row++:'';
+                    this.tableCell.row<(this.$refs.scoreTable.rows.length-1)?this.tableCell.row++:'';
+                    //this.tableCell.row<this.tableCell.maxRow?this.tableCell.row++:'';
                     break;
                 case 'ArrowLeft':
                     this.tableCell.col>1?this.tableCell.col--:'';
                     break;
                 case 'ArrowRight':
-                    this.tableCell.col<this.tableCell.maxCol?this.tableCell.col++:'';
+                    this.tableCell.col<(this.$refs.scoreTable.rows[0].cells.length-1)?this.tableCell.col++:'';
                     break;
             }
             var input =this.$refs.scoreTable.rows[this.tableCell.row].cells[this.tableCell.col].getElementsByTagName("input");
@@ -238,6 +281,11 @@ export default {
         },
         onClickEditScoreColumn(record){
             this.modal.data=record;
+            if(record.merge==null || record.merge==''){
+                this.modal.data.merge=[];
+            }else if(!Array.isArray(record.merge)){
+                this.modal.data.merge=JSON.parse(record.merge);
+            }
             this.modal.title="Edit Score Column";
             this.modal.mode='EDIT';
             this.modal.isOpen = true;
@@ -275,21 +323,29 @@ export default {
         },
         saveScores(){
             var data=[];
-            this.scores.forEach(row => {
-                Object.entries(row.scores).forEach(([score_column_id,value]) => {
+            Object.entries(this.students_scores).forEach(([sid,student]) => {
+                Object.entries(student.scores).forEach(([cid,score]) => {
                     data.push({
-                        course_student_id:row.course_student_id,
-                        score_column_id:score_column_id,
-                        student_id:row.student_id,
-                        point:value
+                        course_student_id:score.course_student_id,
+                        score_column_id:score.score_column_id,
+                        student_id:student.student_id,
+                        point: score.point
                     })
                 })
             })
-            console.log(data);
-            axios.post(route('manage.score.update'),data)
-                .then(resp=> 
-                    console.log("update "+resp.data+" records")
-                );
+            // axios.post(route('manage.score.update'),data)
+            //     .then(resp=> 
+            //         console.log("update "+resp.data+" records")
+            //     );
+            this.$inertia.post(route("manage.score.update"),data, {
+                onSuccess: (page) => {
+                        console.log("update "+page)
+                    },
+                    onError: (error) => {
+                        console.log(error);
+                    }
+
+            })
         },
         handleScoreColumnChange() {
             this.$refs.modalScoreColumn.validateFields().then(()=>{
@@ -304,8 +360,42 @@ export default {
                 console.log(err);
             })
         },
-        onScoreChange(key){
-            this.runFormular(this.score_columns, this.scores[key], key);
+        onScoreChange(student,columnId){
+            var fields=[];
+            //change year total scheme formular
+            var termTotals=[];
+            this.score_columns.forEach((column, idx)=>{
+                if(column.is_total==1){
+                    termTotals.push(column.column_letter);
+                }
+                if(column.term_id==9){
+                    termTotals.forEach((t,i)=>{
+                        column.scheme=column.scheme.replace('T'+(i+1),termTotals[i])
+                    })
+                }
+            })
+
+
+            this.score_columns.forEach(column=>{
+                var formular='';
+                fields[column.id]= {'point':'','letter':column.column_letter};
+                if(column.scheme!==null){
+                    formular=column.scheme;
+                    Object.entries(student.scores).forEach(([columnId,score])=>{
+                        formular=formular.replace(score.column_letter, score.point);
+                    })
+                    try{
+                        formular=formular.replace("=","");
+                        student.scores[column.id].point=Math.round(eval(formular)*100)/100
+                    }catch(error){
+                        console.log('error');
+                    }
+               }
+            })
+
+
+            //init column letters
+            //this.runFormular(this.score_columns, this.scores[key], key);
         },
         updateAllScores(){
             this.scores.forEach(row=>{
@@ -318,6 +408,7 @@ export default {
         runFormular(columns, row, courseStudentId){
             //console.log(this.students_scores);
             var fields={};
+            var termTotals=[];
             //init column letters
             columns.forEach(column=>{
                 if (row.scores[column.id] === undefined) {
@@ -327,7 +418,17 @@ export default {
                 }
             })
 
-            //console.log(termTotals);
+            //change year total scheme formular
+            columns.forEach((column, idx)=>{
+                if(column.is_total==1){
+                    termTotals.push(column.column_letter);
+                }
+                if(column.term_id==9){
+                    termTotals.forEach((t,i)=>{
+                        //column.scheme=column.scheme.replace('T'+(i+1),termTotals[i])
+                    })
+                }
+            })
 
             //loop through all score columns
             columns.forEach((column, idx)=>{
@@ -348,6 +449,7 @@ export default {
                         row.scores[fieldName]=eval(formular);
                     }catch(error){
                         console.log("("+courseStudentId+")"+row.student_name+", formular incurrect");
+                        console.log(formular);
                     }
                 }
             });
@@ -386,36 +488,70 @@ export default {
         },
         sampleData(){
             const total=this.score_columns
-            this.scores.forEach(score=>{
+            Object.entries(this.students_scores).forEach(([sid, student])=>{
                 this.score_columns.forEach(column=>{
-                    score.scores[column.id]=Math.floor(Math.random() * 100)+1
+                    student.scores[column.id]['point']=Math.floor(Math.random() * 100)+1
                 })
             })
             this.updateAllScores();
         },
-        onChangeTotalColumn(record){
-            if(confirm('Are you sure??')==false){
-                record.is_total=!record.is_total;
-                return false;
-            }
-            //set all is_total to false, according to term_id selected
-            this.score_columns.map(item=>{
-                if(item.term_id==this.selectedTerm)
-                    item.is_total=0
-            })
-            //set the select score column as is_total=true
-            record.is_total=1;
-            this.$inertia.post(route("manage.score_column.update_is_total"), this.score_columns, {
-                    onSuccess: (page) => {
-                        console.log(page);
-                    },
-                    onError: (error) => {
-                        console.log(error);
-                    }
-            });            
-        },
+        // onChangeTotalColumn(record){
+        //     if(confirm('Are you sure??')==false){
+        //         record.is_total=!record.is_total;
+        //         return false;
+        //     }
+        //     //set all is_total to false, according to term_id selected
+        //     this.score_columns.map(item=>{
+        //         if(item.term_id==this.selectedTerm)
+        //             item.is_total=0
+        //     })
+        //     //set the select score column as is_total=true
+        //     record.is_total=1;
+        //     this.$inertia.post(route("manage.score_column.update_is_total"), this.score_columns, {
+        //             onSuccess: (page) => {
+        //                 console.log(page);
+        //             },
+        //             onError: (error) => {
+        //                 console.log(error);
+        //             }
+        //     });            
+        // },
         getYearAverage(row){
             return row.scores[this.score_columns.find(c=>c.term_id==9).id] 
+        },
+        addMerge(){
+            console.log(this.merge)
+            if(this.merge.course_id===null || this.merge.score_column_id===null || this.merge.percentage===null){
+                alert("Please also select Score item and input percentage")
+                return false
+            }
+            this.modal.data.merge.push({...this.merge})
+        },
+        deleteMerge(idx){
+            const selected =this.klass_courses.find(c=>c.id==this.modal.data.merge[idx].course_id).title_zh;
+            if(confirm('Are you sure to delete: '+ selected)){
+                this.modal.data.merge.splice(idx,1)
+            }
+        },
+        onChangeMergeCourse(courseId){
+            this.merge.score_column_id = null;
+            var course =this.klass_courses.find(c=>c.id==this.merge.course_id)
+            if(course){
+                this.modal.data.scoreColumnOptions=course.score_columns.map(sc=>({value:sc.id,label:sc.field_label}))
+            }else{
+                this.modal.data.scoreColumnOptions=[]
+
+            }
+        },
+        mergeItem(item){
+            var course =this.klass_courses.find(c=>c.id==item.course_id)
+            if(course){
+                var scoreFieldLabel=course.score_columns.find(sc=>sc.id==item.score_column_id).field_label
+                return course.title_zh + ": "+scoreFieldLabel+" : " + item.percentage;
+            }
+            return 'NaN';
+
+
         }
     },
 

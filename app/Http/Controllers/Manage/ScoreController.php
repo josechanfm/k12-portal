@@ -105,39 +105,9 @@ class ScoreController extends Controller
     public function update(Request $request)
     {
         $data=$request->all();
-        return Score::updateScore($data);
+        $updatedCount=Score::updateScore($data);
+        return redirect()->back();
     }
-
-    // public function calScore(Request $request){
-    //     $klass=Course::find($request->cid)->klass;
-    //     //dd($klass->students->where('id',2)->first()->pivot->klass_student_id);
-    //     $scoreColumns=Course::find($request->cid)->scoreColumns;
-    //     //init score column in letter array
-    //     $i=65;
-    //     foreach($scoreColumns as $column){
-    //         $fields[chr($i++)]=0;
-    //     }
-        
-    //     //dd($fields);
-    //     $students=Course::find($request->cid)->students;
-    //     foreach($students as $student){
-    //     };
-    //     //dd($students);
-    //     $data=[];
-    //     foreach($students as $student){
-    //         foreach($scoreColumns as $column){
-    //             if(!empty($column->scheme)){
-    //                 $point=$column->scheme;
-    //                 $data=[
-    //                     'klass_student_id'=>$klass->students->where('id',$student->id)->first()->pivot->klass_student_id,
-    //                     'score_column_id'=>$column->id,
-    //                     'point'=>json_encode($fields)
-    //                 ];
-    //             }
-    //         }
-    //     }
-    //     dd($data);
-    // }
 
     /**
      * Remove the specified resource from storage.

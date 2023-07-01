@@ -92,6 +92,7 @@ class ScoreColumnController extends Controller
         $ScoreColumn->sequence=$request->sequence;
         $ScoreColumn->type=$request->type;
         $ScoreColumn->scheme=$request->scheme;
+        $ScoreColumn->merge=json_encode($request->merge);
         $ScoreColumn->description=$request->description;
         $ScoreColumn->for_transcript=false;
         $ScoreColumn->save();

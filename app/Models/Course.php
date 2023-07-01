@@ -93,7 +93,8 @@ class Course extends Model
                 }
 
             }
-            array_push($table, $tmp);
+            $table[$student->id]=$tmp;
+            //array_push($table, $tmp);
         }
         return $table;
 
