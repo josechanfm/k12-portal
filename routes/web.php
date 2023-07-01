@@ -133,6 +133,8 @@ Route::prefix('manage/')->group(function(){
     Route::get('teaching/{teacherId}',[App\Http\Controllers\Manage\TeacherController::class,'teaching']);   
     
     Route::get('/course/{course}/scores',[App\Http\Controllers\Manage\CourseController::class,'scores'])->name('manage.course.scores');
+    Route::resource('/course/{course}/makeups',App\Http\Controllers\Manage\MakeupController::class)->names('manage.course.makeups');
+    
 });
 
 Route::prefix('teacher/')->group(function(){

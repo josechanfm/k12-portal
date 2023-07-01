@@ -97,7 +97,36 @@ class Course extends Model
             //array_push($table, $tmp);
         }
         return $table;
+    }
 
+    public function makeups(){
+        return $this->hasManyThrough(
+            Makeup::class,
+            CourseStudent::class,
+            'course_id',
+            'course_student_id',
+            'id',
+            'id'
+        );
+    }
+
+    public function studentsMakeups(){
+        $students=$this->students;
+        $makeups=$this->makeups;
+        $table=[];
+
+        foreach($makeups as $makeup){
+            foreach($students as $student){
+                if($makeup->course_student_id==$student->pivot->course_student_id){
+                    $table[$student->id]['student_id']=$student->id;
+                    $table[$student->id]['student_name']=$student->name_zh;
+                    $table[$student->id]['course_student_id']=$student->pivot->course_student_id;
+                    $table[$student->id]['point']=$makeup->point;
+                }
+            }
+        }
+
+        return $table;
     }
 
     // public static function students_outcomes($kid){
