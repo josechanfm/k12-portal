@@ -47,14 +47,16 @@ class Klass extends Model
     public function courses(){
         return $this->hasMany(Course::class)->with('scoreColumns');
     }
+
     public function coursesStudents(){
         return $this->hasMany(Course::class)->with('students');
     }
     public function coursesScores(){
         return $this->hasMany(Course::class)->with('all_scores');
     }
-    public function scores(){
-        return $this->hasMany(Course::class)->with('scores')->with('students');
+    public function transcriptCoursesScores(){
+        return $this->hasMany(Course::class)->where('in_transcript',1)->with('allScores');
+        // return $this->hasMany(Course::class)->with('scores')->with('students');
     }
     public function outcomes(){
         return $this->hasManyThrough(Outcome::class, KlassStudent::class,'klass_id', 'klass_student_id')->with('student');

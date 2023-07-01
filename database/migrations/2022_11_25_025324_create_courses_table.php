@@ -25,6 +25,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('score_column')->nullable();
             $table->string('score_scheme')->nullable();
+            $table->boolean('in_transcript');
             $table->tinyInteger('active');
             $table->timestamps();
             $table->unique(['klass_id','code'],'klass_id_code');

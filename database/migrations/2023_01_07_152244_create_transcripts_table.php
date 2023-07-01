@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('transcripts', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('klass_student_id')->on('klass_student')->onDelete('restrict')->onUpdate('cascade');
+            $table->bigInteger('course_id');
             $table->enum('column',['PSN','T1','T2','T3','T4','T1E','T1P','T1A','T2E','T2P','T2A','T3E','T3P','T3A','T4E','T4P','T4A','FIN']);
             $table->enum('category',['PERSONAL','SUBJECT','ATTITUDE','SUMMARY','GENERAL']);
             $table->string('field_name');
