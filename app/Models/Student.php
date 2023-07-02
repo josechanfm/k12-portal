@@ -20,7 +20,7 @@ class Student extends Model
         return $this->belongsToMany(Klass::class);
     }
     public function courses(){
-        return $this->belongsToMany(Course::class,'course_students');
+        return $this->belongsToMany(Course::class,'course_student');
     }
     public function coursesScores(){
         return $this->belongsToMany(Course::class,'course_students')->with('scores');

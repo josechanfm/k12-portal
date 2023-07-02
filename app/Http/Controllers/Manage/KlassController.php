@@ -16,11 +16,11 @@ class KLassController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
- 
+
     public function index()
     {
-        $klass=Klass::with('courses')->find(1);
-        $teacher=Teacher::with('courses')->find(1);
+        $klass = Klass::with('courses')->find(1);
+        $teacher = Teacher::with('courses')->find(1);
         return response($teacher);
         //return response($klass);
     }
@@ -54,17 +54,14 @@ class KLassController extends Controller
      */
     public function show(Klass $klass)
     {
-        $grade=$klass->grade;
-        $courses=Klass::find($klass->id)->courses;
-        $score_columns=Config::item('score_columns');
-        return Inertia::render('Manage/Klass',[
-            'grade'=>$grade,
-            'klass'=>$klass,
-            'courses'=>$courses,
+        $grade = $klass->grade;
+        $courses = Klass::find($klass->id)->courses;
+        return Inertia::render('Manage/Klass', [
+            'grade' => $grade,
+            'klass' => $klass,
+            'courses' => $courses,
             //'students'=>$students,
-            'score_columns'=>$score_columns
         ]);
-
     }
 
     /**
@@ -101,17 +98,25 @@ class KLassController extends Controller
         //
     }
 
-    public function klass_scores($klassId){
-        $scores=Klass::klass_scores($klassId);
+    public function klass_scores($klassId)
+    {
+        $scores = Klass::klass_scores($klassId);
         echo $scores;
     }
 
-    public function students(Klass $klass){
-        return Inertia::render('Manage/KlassStudents',[
-            'klass'=>$klass,
-            'students'=>$klass->students,
+    public function students(Klass $klass)
+    {
+        return Inertia::render('Manage/KlassStudents', [
+            'klass' => $klass,
+            'students' => $klass->students,
         ]);
     }
 
+    public function transcript(Klass $klass)
+    {
+        return Inertia::render('Manage/KlassTranscript', [
+            'klass' => $klass,
+            'transcript' => $klass->transcript(),
+        ]);
+    }
 }
-

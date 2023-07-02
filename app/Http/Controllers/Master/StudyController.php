@@ -23,7 +23,7 @@ class StudyController extends Controller
         return Inertia::render('Master/Study',[
             'studies'=>$studies,
             'studyStreams'=>Config::item('study_streams'),
-            'gradeCategories'=>Config::item('grade_categories'),
+            'gradeLevels'=>Config::item('grade_levels'),
             'versions'=>Study::versions()
             // 'versions'=>'[{value:1},{value:2}]'
         ]);

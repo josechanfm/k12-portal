@@ -38,7 +38,7 @@
                     <a-select
                         ref="select"
                         v-model:value="modal.data.grade"
-                        :options="gradeCategories"
+                        :options="gradeLevels"
                     />
                 </a-form-item>
                 <a-form-item label="版本" name="version">
@@ -84,7 +84,7 @@ export default {
     components: {
         AdminLayout,
     },
-    props: ['studies','studyStreams','gradeCategories','versions'],
+    props: ['studies','studyStreams','gradeLevels','versions'],
     data() {
         return {
             modal: {

@@ -110,7 +110,7 @@ export default {
         CheckSquareOutlined,
         StopOutlined
     },
-    props: ['years','year','grades','gradeCategories','gradeLevels'],
+    props: ['years','year','grades','gradeLevels'],
     data() {
         return {
             selectedYear:this.year.id,

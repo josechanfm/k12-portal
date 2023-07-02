@@ -29,8 +29,8 @@
                                     <th>學分欄名稱</th>
                                     <th>計算方式</th>
                                     <th>學期總分</th>
-                                    <th>操作</th>
                                     <th>分數合計</th>
+                                    <th>操作</th>
                                 </tr>
                         </thead>
                         <draggable tag="tbody" class="dragArea list-group w-full" :list="score_columns" @change="rowChange">
@@ -63,7 +63,7 @@
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <a-button type="primary" @click="saveScores">更新並保存</a-button>
                     <a-button @click="sampleData">Sample Data</a-button>
-                    <table id="scoreTable" ref="scoreTable">
+                    <table id="dataTable" ref="dataTable">
                         <thead>
                             <tr>
                                 <th width="100px">學生姓名</th>
@@ -234,32 +234,32 @@ export default {
         
     },
     mounted() {
-        this.$refs.scoreTable.addEventListener('click', (e) => {
+        this.$refs.dataTable.addEventListener('click', (e) => {
             this.tableCell.row=e.target.closest('tr').rowIndex;
             this.tableCell.col=e.target.closest('td').cellIndex;
         })
-        this.$refs.scoreTable.addEventListener('keydown', (e) => {
+        this.$refs.dataTable.addEventListener('keydown', (e) => {
             switch(e.key){
                 case 'ArrowUp':
                     this.tableCell.row>1?this.tableCell.row--:'';
                     break;
                 case 'ArrowDown':
-                    this.tableCell.row<(this.$refs.scoreTable.rows.length-1)?this.tableCell.row++:'';
+                    this.tableCell.row<(this.$refs.dataTable.rows.length-1)?this.tableCell.row++:'';
                     //this.tableCell.row<this.tableCell.maxRow?this.tableCell.row++:'';
                     break;
                 case 'ArrowLeft':
                     this.tableCell.col>1?this.tableCell.col--:'';
                     break;
                 case 'ArrowRight':
-                    this.tableCell.col<(this.$refs.scoreTable.rows[0].cells.length-1)?this.tableCell.col++:'';
+                    this.tableCell.col<(this.$refs.dataTable.rows[0].cells.length-1)?this.tableCell.col++:'';
                     break;
             }
-            var input =this.$refs.scoreTable.rows[this.tableCell.row].cells[this.tableCell.col].getElementsByTagName("input");
+            var input =this.$refs.dataTable.rows[this.tableCell.row].cells[this.tableCell.col].getElementsByTagName("input");
             if(input.length>0){
                 input[0].focus();
             }
         })
-        const inputs=this.$refs.scoreTable.getElementsByTagName("input");
+        const inputs=this.$refs.dataTable.getElementsByTagName("input");
         for(var i=0; i<inputs.length; i++){
             inputs[i].addEventListener("focus", (e) => {
                 this.tableCell.row=e.target.closest('tr').rowIndex;
@@ -487,6 +487,8 @@ export default {
             });            
         },
         sampleData(){
+            console.log(this.score_columns);
+            console.log(this.students_scores);
             const total=this.score_columns
             Object.entries(this.students_scores).forEach(([sid, student])=>{
                 this.score_columns.forEach(column=>{
@@ -559,15 +561,15 @@ export default {
 </script>
 
 <style>
-#scoreTable, #scoreTable td, #scoreTable th {
+#dataTable, #dataTable td, #dataTable th {
   border: 1px solid;
 }
 
-#scoreTable {
+#dataTable {
   width: 100%;
   border-collapse: collapse;
 }
-#scoreTable input{
+#dataTable input{
     text-align: center; 
 }
         /*定义要拖拽元素的样式*/

@@ -5,8 +5,10 @@
                 班別學生列表
             </h2>
         </template>
+
         <a-typography-title :level="3">課程代號: {{ course.code }}</a-typography-title>
         <a-typography-title :level="3">課程名稱: {{ course.title_zh }}</a-typography-title>
+        <a-button @click="createRecord()" type="primary">新增班別</a-button>
         <a-table :dataSource="students" :columns="columns">
             <template #bodyCell="{column, text, record, index}">
                 <template v-if="column.dataIndex=='subject'">
@@ -18,22 +20,13 @@
             </template>
         </a-table>
         <!-- Modal Start-->
-        <!--
         <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="60%" @update="updateRecord()" @onCancel="closeModal()">
-            <ol>
-                <li v-for="course in courses">
-                    <a-checkbox v-model:checked="course.selected">
-                        {{ course.code }} - {{ course.title_zh }} {{ course.stream}}
-                    </a-checkbox>
-                </li>
-            </ol>
             <template #footer>
                 <a-button key="back" @click="modalCancel">返回</a-button>
                 <a-button type="primary" @click="updateRecord()">更新</a-button>
             </template>
             
         </a-modal>    
-        -->
         <!-- Modal End-->
         <SyncCourseStudents :courses="courses" :student="selectedStudent"/>
     </AdminLayout>
@@ -54,10 +47,16 @@ export default {
         StopOutlined,
         SyncCourseStudents
     },
-    props: ['course','courses','klass','students'],
+    props: ['list','klass','course','courses','klass','students'],
     data() {
         return {
             selectedStudent:{},
+            modal: {
+                mode:null,
+                isOpen: false,
+                title:'Klasses',
+                data:{}
+            },
             columns:[
             {
                     title: '姓名(中文)',
@@ -111,17 +110,26 @@ export default {
         }
     },
     created(){
-        // this.subjects.map(subject=>{
-        //     this.courses.map(course=>{
-        //         if(course.code==subject.code){
-        //             subject.selected=true;
-        //         }
-        //     })
-        // })
-
     },
     methods: {
+        editRecord(record){
+            this.modal.data={...record};
+            this.modal.mode='EDIT';
+            this.modal.title="Edit";
+            this.modal.isOpen = true;
+        },
+        createRecord(){
+            this.modal.data={};
+            this.modal.mode='CREATE';
+            this.modal.title="Create klasses";
+            this.modal.isOpen = true;
+        },
+        modalCancel(){
+            this.modal.data={}
+            this.modal.isOpen=false
+        },
         selectedCourses(student){
+            console.log(student);
             this.courses.forEach((course1,index)=>{
                 course1.selected=false;
                 student.courses.forEach((course2,index)=>{

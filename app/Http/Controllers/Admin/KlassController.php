@@ -145,7 +145,33 @@ class KlassController extends Controller
         ]);
     }
     public function students(Klass $klass){
+        $klassStudents=$klass->students;
+        $courses=$klass->courses;
+        $coursesStudents=$klass->coursesStudents;
+        $dataTable=[];
+        $dataColumns=[];
+
+        //Create student course dataTable array table with initial value of false/0 and dataColumns header
+        foreach($courses as $course){
+            $dataColumns[]=[
+                'title'=>$course->title_zh,
+                'dataIndex'=>$course->id
+            ];
+            foreach($klassStudents as $student){
+                $dataTable[$student->id]['student_name']=$student->name_zh;
+                $dataTable[$student->id]['courses'][$course->id]=0;
+            }
+        }
+        //Assign value (True/1) to dataTable array 
+        foreach($coursesStudents as $course){
+            foreach($course->students as $student){
+                $dataTable[$student->id]['courses'][$course->id]=1;
+            }
+        }
+
         return Inertia::render('Admin/KlassStudents',[
+            'dataTable'=>$dataTable,
+            'dataColumns'=>$dataColumns,
             'klass'=>Klass::where('id',$klass->id)->with('courses')->first(),
             'students'=>$klass->students()->with('courses')->get(),
             'courses'=>$klass->courses

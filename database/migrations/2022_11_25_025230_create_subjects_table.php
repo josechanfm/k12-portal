@@ -23,7 +23,9 @@ return new class extends Migration
             $table->string('stream',6)->nullable();
             $table->string('elective',6)->nullable();
             $table->text('description')->nullable();
-            $table->integer('version')->nullable();
+            $table->boolean('in_transcript');
+            $table->tinyInteger('unit');
+            $table->tinyInteger('version')->nullable();
             $table->boolean('active');
             //$table->bigInteger('subject_template_id')->nullable();
             //$table->string('score_column_template')->nullable();
