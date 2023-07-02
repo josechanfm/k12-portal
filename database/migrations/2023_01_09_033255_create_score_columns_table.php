@@ -21,8 +21,8 @@ return new class extends Migration
             $table->string('column_letter');
             $table->string('field_name');
             $table->string('field_label');
-            $table->string('type')->nullable();
             $table->string('scheme')->nullable();
+            $table->string('formular')->nullable();
             $table->string('merge')->nullable();
             $table->string('description')->nullable();
             $table->boolean('is_total')->nullable(false);

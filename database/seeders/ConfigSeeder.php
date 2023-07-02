@@ -161,7 +161,7 @@ class ConfigSeeder extends Seeder
                     "label": "學年總分",
                     "term_id": 9,
                     "is_total": 0,
-                    "scheme": "=T1*.5+T2*.5"
+                    "formular": "=T1*.5+T2*.5"
                 }],
                 "comment": [{
                     "value": "comment",

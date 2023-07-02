@@ -21,7 +21,7 @@
                     <th class="text-left">Stream</th>
                     <th class="text-left">Elective</th>
                     <th class="text-left">Active</th>
-                    <th class="text-left">Score Scheme</th>
+                    <th class="text-left">Score</th>
                 </tr>
             </thead>
             <tbody>
@@ -57,11 +57,6 @@ export default {
     mounted() {
     },
     methods: {
-        modify_score_scheme(courseKey) {
-            this.course = { ...this.courses[courseKey] };
-            console.log(this.course);
-            this.modelScoreScheme = true;
-        },
         handleOk() {
 
         }

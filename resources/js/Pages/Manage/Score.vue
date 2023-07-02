@@ -39,7 +39,7 @@
                                 <td>{{record.column_letter}}</td>
                                 <td>{{ year_terms.find(t=>t.value==record.term_id).label }}</td>
                                 <td>{{record.field_label}}</td>
-                                <td>{{ record.scheme }}</td>
+                                <td>{{ record.formular }}</td>
                                 <td><span v-if="record.is_total">是</span>
                                     <!-- <a-switch v-model:checked="record.is_total" :checked-value="1" :un-checked-value="0" @click="onChangeTotalColumn(record)"/> -->
                                 </td>
@@ -69,9 +69,9 @@
                                 <th width="100px">學生姓名</th>
                                 <template v-for="(column,idx) in score_columns" >
                                     <th v-if="column.term_id==selectedTerm">
-                                        <span :title="column.scheme">
+                                        <span :title="column.formular">
                                             ( {{ column.column_letter }} ) {{ column.field_label }}
-                                            <span v-if="column.scheme">*</span>
+                                            <span v-if="column.formular">*</span>
                                         </span>
                                     </th>
                                 </template>
@@ -84,7 +84,7 @@
                                 <template v-for="column in score_columns">
                                     <template v-for="(score, cid) in student.scores">
                                         <td v-if="column.term_id==selectedTerm && column.id==cid" class="text-center">
-                                            <span v-if="column.merge || column.scheme">
+                                            <span v-if="column.merge || column.formular">
                                                 {{score.point}}
                                             </span>
                                             <span v-else>
@@ -123,8 +123,8 @@
                 <a-form-item label="序號" :name="['sequence']" >
                     <a-input v-model:value="modal.data.sequence"/> 
                 </a-form-item>
-                <a-form-item label="計算方式" :name="['scheme']">
-                    <a-input v-model:value="modal.data.scheme" @change="()=>{modal.data.scheme=modal.data.scheme.toUpperCase()}"/> 
+                <a-form-item label="計算方式" :name="['formular']">
+                    <a-input v-model:value="modal.data.formular" @change="()=>{modal.data.formular=modal.data.formular.toUpperCase()}"/> 
                 </a-form-item>
                 <a-form-item label="簡介" :name="['description']">
                     <a-input v-model:value="modal.data.description"/> 
@@ -218,7 +218,7 @@ export default {
                     dataIndex: 'type',
                 },{
                     title: '計算方式',
-                    dataIndex: 'scheme',
+                    dataIndex: 'formular',
                 },{
                     title: '排序',
                     dataIndex: 'sequence',
@@ -362,7 +362,7 @@ export default {
         },
         onScoreChange(student,columnId){
             var fields=[];
-            //change year total scheme formular
+            //change year total formular formular
             var termTotals=[];
             this.score_columns.forEach((column, idx)=>{
                 if(column.is_total==1){
@@ -370,7 +370,7 @@ export default {
                 }
                 if(column.term_id==9){
                     termTotals.forEach((t,i)=>{
-                        column.scheme=column.scheme.replace('T'+(i+1),termTotals[i])
+                        column.formular=column.formular.replace('T'+(i+1),termTotals[i])
                     })
                 }
             })
@@ -379,8 +379,8 @@ export default {
             this.score_columns.forEach(column=>{
                 var formular='';
                 fields[column.id]= {'point':'','letter':column.column_letter};
-                if(column.scheme!==null){
-                    formular=column.scheme;
+                if(column.formular!==null){
+                    formular=column.formular;
                     Object.entries(student.scores).forEach(([columnId,score])=>{
                         formular=formular.replace(score.column_letter, score.point);
                     })
@@ -418,24 +418,24 @@ export default {
                 }
             })
 
-            //change year total scheme formular
+            //change year total formular formular
             columns.forEach((column, idx)=>{
                 if(column.is_total==1){
                     termTotals.push(column.column_letter);
                 }
                 if(column.term_id==9){
                     termTotals.forEach((t,i)=>{
-                        //column.scheme=column.scheme.replace('T'+(i+1),termTotals[i])
+                        //column.formular=column.formular.replace('T'+(i+1),termTotals[i])
                     })
                 }
             })
 
             //loop through all score columns
             columns.forEach((column, idx)=>{
-                //if column scheme is not empty, meaning with formular
-                if(column.scheme!=null){
+                //if column formular is not empty, meaning with formular
+                if(column.formular!=null){
                     var fieldName=column.id;
-                    var formular=column.scheme;
+                    var formular=column.formular;
                     //remove "=" from the origianl formular
                     formular=formular.replace("=","");
                     //replace round as Math.round in the formular

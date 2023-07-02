@@ -46,7 +46,7 @@ class ScoreColumnController extends Controller
         $ScoreColumn->field_name=Str::uuid();
         $ScoreColumn->sequence=$request->sequence;
         $ScoreColumn->type=$request->type;
-        $ScoreColumn->scheme=$request->scheme;
+        $ScoreColumn->formular=$request->formular;
         $ScoreColumn->description=$request->description;
         $ScoreColumn->for_transcript=false;
         $ScoreColumn->save();
@@ -91,7 +91,7 @@ class ScoreColumnController extends Controller
         $ScoreColumn->field_name=Str::uuid()->toString();
         $ScoreColumn->sequence=$request->sequence;
         $ScoreColumn->type=$request->type;
-        $ScoreColumn->scheme=$request->scheme;
+        $ScoreColumn->formular=$request->formular;
         $ScoreColumn->merge=json_encode($request->merge);
         $ScoreColumn->description=$request->description;
         $ScoreColumn->for_transcript=false;
