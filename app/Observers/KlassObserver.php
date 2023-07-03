@@ -33,13 +33,15 @@ class KlassObserver
             $fields['type']=$subject->type;
             $fields['stream']=$subject->stream;
             $fields['elective']=$subject->elective;
+            $fields['in_transcript']=$subject->in_transcript;
+            $fields['unit']=$subject->unit;
             $fields['active']=true;
             $data[]=$fields;
         }
         Course::upsert(
             $data,
             ['klass_id','code'],
-            ['title_zh','title_en','type','stream','elective','active']
+            ['title_zh','title_en','type','stream','elective','in_transcript','unit','active']
         );
 
         $courses=Course::whereBelongsTo($klass)->get();

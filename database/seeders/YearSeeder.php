@@ -26,8 +26,8 @@ class YearSeeder extends Seeder
                 'active'=>0
             ]);
             $yearId = DB::getPdo()->lastInsertId();
-            //Kindergarten
 
+            //Kindergarten
             for($i=1;$i<=3;$i++){
                 DB::table('grades')->insert([
                         'year_id'=>$yearId,
@@ -36,6 +36,7 @@ class YearSeeder extends Seeder
                         'level'=>$i,
                         'tag'=>'K'.$i,
                         'version'=>1,
+                        'transcript_template_id'=>2,
                         'active'=>1
                 ]);
             }
@@ -49,6 +50,7 @@ class YearSeeder extends Seeder
                         'level'=>$i-3,
                         'tag'=>'P'.$i-3,
                         'version'=>1,
+                        'transcript_template_id'=>1,
                         'active'=>1
                 ]);
             }
@@ -61,6 +63,7 @@ class YearSeeder extends Seeder
                         'level'=>$i-9,
                         'tag'=>'SC'.$i-9,
                         'version'=>1,
+                        'transcript_template_id'=>1,
                         'active'=>1
                 ]);
             }
@@ -73,6 +76,7 @@ class YearSeeder extends Seeder
                         'level'=>$i-12,
                         'tag'=>'SG'.$i-12,
                         'version'=>1,
+                        'transcript_template_id'=>1,
                         'active'=>1
                 ]);
             }

@@ -33,13 +33,14 @@ class Score extends Model
             ['point']
         );
         
-        // check and proccede merge course scores
+        // check and proceed merge course scores
         $course=ScoreColumn::find($data[0]['score_column_id'])->course;
         Score::mergeCoursesScores($course);
 
         return count($data);
     }
 
+    //for course scores the come from ther course(s), based on the merge column in score_column table
     static function mergeCoursesScores($course){
         $allCourses=\App\Models\Klass::where('id',$course->klass_id)->first()->courses;
         $mergeCourses=[];
@@ -50,21 +51,13 @@ class Score extends Model
             }
         }
         foreach($mergeCourses as $courseColumns){
-            //echo json_encode($courseColumns);
             foreach($courseColumns as $column){
                 echo json_encode($column);
                 $merges=json_decode($column->merge);
-                //echo json_encode($merges);
-                //from1
                 $students=Course::find($column->course_id)->students;
-
                 foreach($students as $student){
                     $point=0;
-                    //dd($student);
-                    //echo $student->pivot->course_student_id.', ';
                     foreach($merges as $merge){
-                        // echo $merge->score_column_id;
-                        // echo '||';
                         $point+=Score::where('score_column_id',$merge->score_column_id)
                                     ->where('student_id',$student->id)->first()->point * $merge->percentage / 100;
                     }
@@ -72,8 +65,6 @@ class Score extends Model
                         ->where('student_id',$student->id)
                         ->update(['point'=>$point]);
                 }
-                
-                //echo json_encode($course);
             }
         }
 

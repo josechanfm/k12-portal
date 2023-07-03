@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('study_id')->nullable();
             $table->string('byname')->nullable();
             $table->string('room')->nullable();
+            $table->boolean('transcript_migrated')->nullable();
             $table->timestamps();
         });
     }

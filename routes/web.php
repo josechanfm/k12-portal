@@ -134,9 +134,9 @@ Route::prefix('manage/')->group(function(){
     
 
     Route::get('/course/{course}/scores',[App\Http\Controllers\Manage\CourseController::class,'scores'])->name('manage.course.scores');
-    Route::resource('/course/{course}/makeups',App\Http\Controllers\Manage\MakeupController::class)->names('manage.course.makeups');
-    Route::get('/klass/{klass}/transcript',[App\Http\Controllers\Manage\KlassController::class,'transcript'])->name('manage.klass.transcript');
-    
+    Route::get('/course/{course}/makeups',[App\Http\Controllers\Manage\CourseController::class,'makeups'])->name('manage.course.makeups');
+    Route::get('/klass/{klass}/final_scores',[App\Http\Controllers\Manage\KlassController::class,'finalScores'])->name('manage.klass.finalScores');
+    Route::get('/klass/{klass}/migrate_transcripts',[App\Http\Controllers\Manage\KlassController::class,'migrateTranscripts'])->name('manage.klass.migrateTranscripts');
 });
 
 Route::prefix('teacher/')->group(function(){

@@ -25,19 +25,31 @@ class TranscriptTemplateSeeder extends Seeder
             'issue_date'=>'簽發日期',
         ];
         $subject=[
-            'religion'=>'宗教',
-            'chinese_literature'=>'語文',
-            'common_sense'=>'常識',
-            'story'=>'故事',
-            'chinese_writing'=>'中寫',
-            'numeracy'=>'識數',
-            'english_reading'=>'讀本',
-            'english_writing'=>'英寫',
-            'computer'=>'電腦',
-            'mandarin'=>'普通話',
-            'art_craft'=>'美勞',
-            'playgroup'=>'唱遊',
-            'physical_fitness'=>'體能'
+            'REL'=>'宗教',
+            'PHY'=>'體能',
+            'CLT'=>'語文',
+            'ELT'=>'英文',
+            'EWR'=>'英寫',
+            'OCS'=>'常識',
+            'NUM'=>'識數',
+            'COM'=>'電腦',
+            'PLA'=>'唱遊',
+            'ART'=>'美勞',
+        ];
+        $summary=[
+            'total_score'=>'總分',
+            'average_score'=>'平均分',
+            'class_size'=>'全班人數',
+            'ranking'=>'考列名次',
+            'late'=>'遲到次數',
+            'absent'=>'缺席節數',
+        ];
+        $general=[
+            'comment'=>'評語',
+            'reward_punishment'=>'奬懲記錄',
+            'leisure_name'=>'餘暇活動名稱',
+            'leisure_performance'=>'餘暇活動表現',
+            'remark'=>'備註',
         ];
         $attitude=[
             'health_1'=>'衣服鞋襪整齊清潔',
@@ -57,67 +69,116 @@ class TranscriptTemplateSeeder extends Seeder
             'social_4'=>'會和別人分享及輪侯',
             'social_5'=>'誠實坦白肯認錯'
         ];
-        $summary=[
-            'total_score'=>'總分',
-            'average_score'=>'平均分',
-            'class_size'=>'全班人數',
-            'ranking'=>'考列名次',
-            'late'=>'遲到次數',
-            'absent'=>'缺席節數',
-        ];
-        $general=[
-            'comment'=>'評語',
-            'reward_punishment'=>'奬懲記錄',
-            'leisure_name'=>'餘暇活動名稱',
-            'leisure_performance'=>'餘暇活動表現',
-            'remark'=>'備註',
-        ];
+
+
+        //template 1
+        //primary to secondary grades
         //'title_zh'=>'學年評定',
         foreach($personal as $key=>$value){
             DB::table('transcript_templates')->insert([
+                'template_id'=>1,
                 'category'=>'PERSONAL',
-                'field_name'=>$key,
+                'reference_code'=>$key,
                 'title_zh'=>$value,
             ]);
         };
         foreach($subject as $key=>$value){
             DB::table('transcript_templates')->insert([
+                'template_id'=>1,
                 'category'=>'SUBJECT',
-                'field_name'=>$key,
-                'title_zh'=>$value,
-                'version'=>1,
-            ]);
-        };
-        foreach($attitude as $key=>$value){
-            DB::table('transcript_templates')->insert([
-                'category'=>'ATTITUDE',
-                'field_name'=>$key,
+                'reference_code'=>$key,
                 'title_zh'=>$value,
                 'version'=>1,
             ]);
         };
         foreach($summary as $key=>$value){
             DB::table('transcript_templates')->insert([
+                'template_id'=>1,
                 'category'=>'SUMMARY',
-                'field_name'=>$key,
+                'reference_code'=>$key,
                 'title_zh'=>$value,
                 'version'=>1,
             ]);
         };
         foreach($general as $key=>$value){
             DB::table('transcript_templates')->insert([
+                'template_id'=>1,
                 'category'=>'GENERAL',
-                'field_name'=>$key,
+                'reference_code'=>$key,
                 'title_zh'=>$value,
                 'version'=>1,
             ]);
         };
         DB::table('transcript_templates')->insert([
+            'template_id'=>1,
             'category'=>'GENERAL',
-            'field_name'=>'appraisal',
+            'reference_code'=>'appraisal',
             'title_zh'=>'學年評定',
             'version'=>1,
         ]);
+        DB::table('transcript_templates')->insert([
+            'template_id'=>1,
+            'category'=>'GENERAL',
+            'reference_code'=>'passing',
+            'title_zh'=>'合格分數',
+            'value'=>60,
+            'version'=>1,
+        ]);
+
+
+
+
+
+        //template 2
+        //kindergarden
+        //'title_zh'=>'學年評定',
+        foreach($personal as $key=>$value){
+            DB::table('transcript_templates')->insert([
+                'template_id'=>2,
+                'category'=>'PERSONAL',
+                'reference_code'=>$key,
+                'title_zh'=>$value,
+            ]);
+        };
+        foreach($attitude as $key=>$value){
+            DB::table('transcript_templates')->insert([
+                'template_id'=>2,
+                'category'=>'ATTITUDE',
+                'reference_code'=>$key,
+                'title_zh'=>$value,
+                'version'=>1,
+            ]);
+        };
+        foreach($summary as $key=>$value){
+            DB::table('transcript_templates')->insert([
+                'template_id'=>2,
+                'category'=>'SUMMARY',
+                'reference_code'=>$key,
+                'title_zh'=>$value,
+                'version'=>1,
+            ]);
+        };
+        foreach($general as $key=>$value){
+            DB::table('transcript_templates')->insert([
+                'template_id'=>2,
+                'category'=>'GENERAL',
+                'reference_code'=>$key,
+                'title_zh'=>$value,
+                'version'=>1,
+            ]);
+        };
+        DB::table('transcript_templates')->insert([
+            'template_id'=>2,
+            'category'=>'GENERAL',
+            'reference_code'=>'appraisal',
+            'title_zh'=>'學年評定',
+            'version'=>1,
+        ]);
+
+
+
+
+
 
         // 'code'=>'1', 'title_zh'=>'1', 'title_en'=>'PERSONAL', 'type'=> 'name_ch', 'stream'=>'姓名中文'
         // 'code'=>'2', 'title_zh'=>'1', 'title_en'=>'PERSONAL', 'type'=> 'name_fn', 'stream'=>'姓名外文'

@@ -31,6 +31,7 @@ class CourseSeeder extends Seeder
         //         ]);
         //     }
         // }
+        
         for($c=1;$c<=10;$c++){
             for($s=1;$s<=21;$s++){
                 DB::table('course_student')->insert([

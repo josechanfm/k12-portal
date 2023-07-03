@@ -27,7 +27,6 @@ class KlassStudentSeeder extends Seeder
             $klasses=Klass::where('grade_id',$grade->id)->get();
             // echo json_encode($klasses);
             foreach ($klasses as $klass) {
-                
                 for($i=1;$i<=21;$i++){
                     DB::table('klass_student')->insert([
                         'klass_id' => $klass->id,

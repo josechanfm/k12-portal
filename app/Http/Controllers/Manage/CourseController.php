@@ -121,7 +121,14 @@ class CourseController extends Controller
             'students_scores'=>$course->studentsScores(),
             'klass_courses'=>$klassCourses
         ]);
+    }
 
+    public function makeups(Course $course){
+        $course->klass;
+        return Inertia::render('Manage/Makeups',[
+            'course' => $course,
+            'students_makeups'=>$course->studentsMakeups()
+        ]);
 
     }
 

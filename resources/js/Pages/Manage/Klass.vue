@@ -12,6 +12,7 @@
         <inertia-link :href="route('manage.klass.outcomes', klass.id)" class="ant-btn">獎懲</inertia-link>
         <inertia-link :href="route('manage.klass.behaviours', klass.id)" class="ant-btn">行為表現</inertia-link>
         <inertia-link :href="route('manage.klass.students', klass.id)" class="ant-btn">學生名單</inertia-link>
+        <inertia-link :href="route('manage.klass.finalScores', klass.id)" class="ant-btn">期末成績</inertia-link>
         <p>&nbsp;</p>
         <table width="100%">
             <thead>
@@ -33,6 +34,7 @@
                     <td class="text-left">{{ course.active }}</td>
                     <th class="text-left">
                         <inertia-link :href="route('manage.course.scores', course.id)" class="ant-btn">學分</inertia-link>
+                        <inertia-link :href="route('manage.course.makeups', course.id)" class="ant-btn">補考</inertia-link>
                     </th>
                 </tr>
             </tbody>

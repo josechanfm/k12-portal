@@ -35,5 +35,20 @@ class Grade extends Model
             'id'
         )->with('theme');
     }
+    public function transcriptTemplates(){
+        $templates=TranscriptTemplate::where('template_id',$this->transcript_template_id)->get()->toArray();
+        return array_column($templates,null,'reference_code');
+        
+        //return $this->hasMany(TranscriptTemplate::class,'template_id','transcript_template_id');
+    }
+
+    public function passingScore(){
+        $template=TranscriptTemplate::where('template_id',$this->transcript_template_id)->where('reference_code','passing')->first();
+        if(isset($template) && isset($template->field_value)){
+            return $template->field_value;
+        }
+        return 60;
+
+    }
 
 }

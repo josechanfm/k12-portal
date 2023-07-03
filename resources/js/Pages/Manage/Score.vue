@@ -54,6 +54,7 @@
                             </transition-group>
                         </draggable>
                     </table>
+                    <p class="float-right pr-5">學年總分計算方式：{{ yearFinalFormular() }}</p>
                 </div>
             </div>
         </div>
@@ -552,9 +553,12 @@ export default {
                 return course.title_zh + ": "+scoreFieldLabel+" : " + item.percentage;
             }
             return 'NaN';
-
-
+        },
+        yearFinalFormular(){
+            const yearFinal = this.score_columns.find(c=>c.term_id==9)
+            return yearFinal?yearFinal.formular:'No year final formular';
         }
+
     },
 
 }

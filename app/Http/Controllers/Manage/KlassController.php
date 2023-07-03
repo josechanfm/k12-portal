@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use App\Models\Config;
 use App\Models\Klass;
 use App\Models\Teacher;
+use App\Models\Transcript;
 
 class KLassController extends Controller
 {
@@ -56,6 +57,7 @@ class KLassController extends Controller
     {
         $grade = $klass->grade;
         $courses = Klass::find($klass->id)->courses;
+        // dd($courses);
         return Inertia::render('Manage/Klass', [
             'grade' => $grade,
             'klass' => $klass,
@@ -112,11 +114,29 @@ class KLassController extends Controller
         ]);
     }
 
-    public function transcript(Klass $klass)
+    public function finalScores(Klass $klass)
     {
         return Inertia::render('Manage/KlassTranscript', [
             'klass' => $klass,
-            'transcript' => $klass->transcript(),
+            'transcriptTemplates' => $klass->grade->transcriptTemplates(),
+            'finalScores' => $klass->finalScores()
         ]);
     }
+    public function migrateTranscripts(Klass $klass){
+        $finalScores=$klass->finalScores();
+        $data=[];
+        foreach($finalScores['students'] as $student){
+            foreach($finalScores['score_columns'] as $column){
+                $data[]=[
+                    'klass_student_id'=>$student['klass_student_id'],
+                    'reference_code'=>$column->course_code,
+                    'value'=>$student['scores'][$column->id]
+                ];
+            }
+        }
+        Transcript::upsert($data, ['klass_student_id','reference_code'],['value']);
+        $klass->transcript_migrated=true;
+        $klass->save();
+        return redirect()->back();
+    }    
 }
