@@ -17,8 +17,9 @@ return new class extends Migration
             $table->id();
             $table->integer('template_id');
             $table->enum('category',['PERSONAL','SUBJECT','ATTITUDE','SUMMARY','GENERAL']);
-            $table->string('subject_code')->nullable();
-            $table->string('field_name');
+            $table->string('reference_code')->nullable();
+            //$table->string('field_name')->nullable();
+            $table->string('value')->nullable();
             $table->string('title_zh')->nullable();
             $table->string('title_en')->nullable();
             $table->text('remark')->nullable();

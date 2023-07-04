@@ -125,8 +125,12 @@ class Course extends Model
                 }
             }
         }
-
         return $table;
+    }
+
+    public function studentMakeup(Student $student){
+        $s=$this->students->where('id',$student->id)->first();
+        return Makeup::where('course_student_id',$s->pivot->course_student_id)->first();
     }
 
     // public static function students_outcomes($kid){

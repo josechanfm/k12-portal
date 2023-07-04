@@ -52,7 +52,7 @@ class Klass extends Model
         return $this->hasMany(Course::class)->with('students');
     }
     public function coursesScores(){
-        return $this->hasMany(Course::class)->with('all_scores');
+        return $this->hasMany(Course::class)->with('allScores');
     }
     public function transcriptCoursesScores(){
         return $this->hasMany(Course::class)->where('in_transcript',1)->with('allScores');
@@ -97,7 +97,7 @@ class Klass extends Model
                 'student_id' => $student->id,
                 'student_name' => $student->name_zh,
                 'klass_student_id' => $student->pivot->klass_student_id,
-                'fail_units'=>0
+                'fail_units'=>0,
             ];
             foreach ($courses as $course) {
                 $scoreColumn = $course->scoreColumns->where('term_id', 9)->first();
@@ -114,12 +114,12 @@ class Klass extends Model
                 $scoreColumn['course_code'] = $course->code;
                 $scoreColumn['course_title'] = $course->title_zh;
                 $scoreColumn['course_unit'] = $course->unit;
+                $scoreColumn['makeups']=$course->studentsMakeups();
                 $scoreColumns[$scoreColumn->id] = $scoreColumn;
             }
             $transcripts['students'][] = $tmp;
         }
         $transcripts['score_columns']=$scoreColumns;
-
         return $transcripts;
     }
 

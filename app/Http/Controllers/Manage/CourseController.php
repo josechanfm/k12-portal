@@ -114,7 +114,7 @@ class CourseController extends Controller
         // dd($scoreColumns);
         $klassCourses=Klass::find($course->klass_id)->courses;
         $course=Course::with('klass')->with('teachers')->find($course->id);
-        return Inertia::render('Manage/Score',[
+        return Inertia::render('Manage/CourseScores',[
             'year_terms'=>Config::item('year_terms'),
             'course'=>$course,
             'score_columns'=>$course->scoreColumns,
@@ -124,8 +124,9 @@ class CourseController extends Controller
     }
 
     public function makeups(Course $course){
+        // dd($course->studentsMakeups());
         $course->klass;
-        return Inertia::render('Manage/Makeups',[
+        return Inertia::render('Manage/CourseMakeups',[
             'course' => $course,
             'students_makeups'=>$course->studentsMakeups()
         ]);

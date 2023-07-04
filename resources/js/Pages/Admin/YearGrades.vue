@@ -29,7 +29,7 @@
                     <inertia-link :href="route('admin.grade.klasses',record.id)" class="ant-btn">班別</inertia-link>
                     <a-button @click="editRecord(record)">修改</a-button>
                     <a-button @click="deleteRecord(record)">刪除</a-button>
-
+                    <a-button @click="lockTranscript(record)">鎖定成積表</a-button>
                 </template>
                 <template v-if="column.dataIndex=='active'">
                     <check-square-outlined v-if="text=='1'" :style="{color:'green'}"/>
@@ -223,6 +223,17 @@ export default {
             console.log(tmp);
             this.modal.data.initial=tmp.initial;
             this.modal.data.level=tmp.level;
+        },
+        lockTranscript(record){
+            if(!confirm('鎖定成積表分數轉換功能，是不確定？')) return;
+            this.$inertia.get(route('admin.lockTranscripts'),{scope:'grade',id:record.id},{
+                onSuccess: (page)=>{
+                    console.log(page);
+                },
+                onError: (error)=>{
+                    console.log(error);
+                }
+            });
         }
     },
 }

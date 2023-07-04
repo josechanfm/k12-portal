@@ -17,6 +17,7 @@ use function GuzzleHttp\json_decode;
 class TranscriptController extends Controller
 {
     public function index(Klass $klass){
+        /*
         $coursesScores=$klass->transcriptCoursesScores;//all Courses in transcript with scores
         $students=$klass->students; //all student in the klass
         $courses=$klass->courses->where('in_transcript',1); //all Courses in the klass with score_columns
@@ -56,6 +57,7 @@ class TranscriptController extends Controller
             'transcript'=>$transcript,
             'score_columns'=>$scoreColumns
         ]);
+        */
     }
 
     public function KlassStudent($id){

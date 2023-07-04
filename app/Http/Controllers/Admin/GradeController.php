@@ -155,4 +155,5 @@ class GradeController extends Controller
             'topics'=>$grade->topics
         ]);
     }
+
 }

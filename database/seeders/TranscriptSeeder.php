@@ -25,8 +25,8 @@ class TranscriptSeeder extends Seeder
                 'klass_student_id'=>1,
                 'column'=>'T1',
                 'category'=>$p->category,
-                'field_name'=>$p->field_name,
-                'field_value'=>'TEST '.$p->field_name,
+                'reference_code'=>$p->reference_code,
+                'field_value'=>'TEST '.$p->reference_code,
             ]);
         };
         foreach($subject as $s){
@@ -34,7 +34,7 @@ class TranscriptSeeder extends Seeder
                 'klass_student_id'=>1,
                 'column'=>'T1E',
                 'category'=>$s->category,
-                'field_name'=>$s->field_name,
+                'reference_code'=>$s->reference_code,
                 'field_value'=>rand(1,100),
             ]);
         };
@@ -43,7 +43,7 @@ class TranscriptSeeder extends Seeder
                 'klass_student_id'=>1,
                 'column'=>'T1P',
                 'category'=>$s->category,
-                'field_name'=>$s->field_name,
+                'reference_code'=>$s->reference_code,
                 'field_value'=>rand(1,100),
             ]);
         };
@@ -52,7 +52,7 @@ class TranscriptSeeder extends Seeder
                 'klass_student_id'=>1,
                 'column'=>'T1A',
                 'category'=>$s->category,
-                'field_name'=>$s->field_name,
+                'reference_code'=>$s->reference_code,
                 'field_value'=>rand(1,100),
             ]);
         };
@@ -61,7 +61,7 @@ class TranscriptSeeder extends Seeder
                 'klass_student_id'=>1,
                 'column'=>'T2E',
                 'category'=>$s->category,
-                'field_name'=>$s->field_name,
+                'reference_code'=>$s->reference_code,
                 'field_value'=>rand(1,100),
             ]);
         };
@@ -70,7 +70,7 @@ class TranscriptSeeder extends Seeder
                 'klass_student_id'=>1,
                 'column'=>'T2P',
                 'category'=>$s->category,
-                'field_name'=>$s->field_name,
+                'reference_code'=>$s->reference_code,
                 'field_value'=>rand(1,100),
             ]);
         };
@@ -79,7 +79,7 @@ class TranscriptSeeder extends Seeder
                 'klass_student_id'=>1,
                 'column'=>'T2A',
                 'category'=>$s->category,
-                'field_name'=>$s->field_name,
+                'reference_code'=>$s->reference_code,
                 'field_value'=>rand(1,100),
             ]);
         };
@@ -88,7 +88,7 @@ class TranscriptSeeder extends Seeder
                 'klass_student_id'=>1,
                 'column'=>'FIN',
                 'category'=>$s->category,
-                'field_name'=>$s->field_name,
+                'reference_code'=>$s->reference_code,
                 'field_value'=>rand(50,100),
             ]);
         };
@@ -98,7 +98,7 @@ class TranscriptSeeder extends Seeder
                 'klass_student_id'=>1,
                 'column'=>'T1',
                 'category'=>$a->category,
-                'field_name'=>$a->field_name,
+                'reference_code'=>$a->reference_code,
                 'field_value'=>'A',
             ]);
         };
@@ -107,7 +107,7 @@ class TranscriptSeeder extends Seeder
                 'klass_student_id'=>1,
                 'column'=>'T2',
                 'category'=>$a->category,
-                'field_name'=>$a->field_name,
+                'reference_code'=>$a->reference_code,
                 'field_value'=>'B',
             ]);
         };
@@ -116,7 +116,7 @@ class TranscriptSeeder extends Seeder
                 'klass_student_id'=>1,
                 'column'=>'T1',
                 'category'=>$s->category,
-                'field_name'=>$s->field_name,
+                'reference_code'=>$s->reference_code,
                 'field_value'=>rand(1,100),
             ]);
         };
@@ -125,7 +125,7 @@ class TranscriptSeeder extends Seeder
                 'klass_student_id'=>1,
                 'column'=>'T2',
                 'category'=>$s->category,
-                'field_name'=>$s->field_name,
+                'reference_code'=>$s->reference_code,
                 'field_value'=>rand(1,100),
             ]);
         };
@@ -134,7 +134,7 @@ class TranscriptSeeder extends Seeder
                 'klass_student_id'=>1,
                 'column'=>'FIN',
                 'category'=>$s->category,
-                'field_name'=>$s->field_name,
+                'reference_code'=>$s->reference_code,
                 'field_value'=>rand(1,100),
             ]);
         };
@@ -142,84 +142,84 @@ class TranscriptSeeder extends Seeder
             'klass_student_id'=>1,
             'column'=>'T1',
             'category'=>'GENERAL',
-            'field_name'=>'comment',
+            'reference_code'=>'comment',
             'field_value'=>'T1 Comment',
         ]);
         DB::table('transcripts')->insert([
             'klass_student_id'=>1,
             'column'=>'T2',
             'category'=>'GENERAL',
-            'field_name'=>'comment',
+            'reference_code'=>'comment',
             'field_value'=>'T2 Coment',
         ]);
         DB::table('transcripts')->insert([
             'klass_student_id'=>1,
             'column'=>'T1',
             'category'=>'GENERAL',
-            'field_name'=>'reward_punishment',
+            'reference_code'=>'reward_punishment',
             'field_value'=>'T1 reward punishment',
         ]);
         DB::table('transcripts')->insert([
             'klass_student_id'=>1,
             'column'=>'T2',
             'category'=>'GENERAL',
-            'field_name'=>'reward_punishment',
+            'reference_code'=>'reward_punishment',
             'field_value'=>'T2 reward punishment',
         ]);
         DB::table('transcripts')->insert([
             'klass_student_id'=>1,
             'column'=>'T1',
             'category'=>'GENERAL',
-            'field_name'=>'leisure_name',
+            'reference_code'=>'leisure_name',
             'field_value'=>'T1 leisure name',
         ]);
         DB::table('transcripts')->insert([
             'klass_student_id'=>1,
             'column'=>'T2',
             'category'=>'GENERAL',
-            'field_name'=>'leisure_name',
+            'reference_code'=>'leisure_name',
             'field_value'=>'T2 leisure name',
         ]);
         DB::table('transcripts')->insert([
             'klass_student_id'=>1,
             'column'=>'T1',
             'category'=>'GENERAL',
-            'field_name'=>'leisure_performance',
+            'reference_code'=>'leisure_performance',
             'field_value'=>'T1 leisure performance',
         ]);
         DB::table('transcripts')->insert([
             'klass_student_id'=>1,
             'column'=>'T2',
             'category'=>'GENERAL',
-            'field_name'=>'leisure_performance',
+            'reference_code'=>'leisure_performance',
             'field_value'=>'T2 leisure performance',
         ]);
         DB::table('transcripts')->insert([
             'klass_student_id'=>1,
             'column'=>'T1',
             'category'=>'GENERAL',
-            'field_name'=>'remark',
+            'reference_code'=>'remark',
             'field_value'=>'T1 remark',
         ]);
         DB::table('transcripts')->insert([
             'klass_student_id'=>1,
             'column'=>'T2',
             'category'=>'GENERAL',
-            'field_name'=>'remark',
+            'reference_code'=>'remark',
             'field_value'=>'T2 remark',
         ]);
         DB::table('transcripts')->insert([
             'klass_student_id'=>1,
             'column'=>'FIN',
             'category'=>'GENERAL',
-            'field_name'=>'remark',
+            'reference_code'=>'remark',
             'field_value'=>'FIN remark',
         ]);
         DB::table('transcripts')->insert([
             'klass_student_id'=>1,
             'column'=>'FIN',
             'category'=>'GENERAL',
-            'field_name'=>'appraisal',
+            'reference_code'=>'appraisal',
             'field_value'=>'FIN Appraisal',
         ]);
 

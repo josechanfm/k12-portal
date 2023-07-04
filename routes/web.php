@@ -88,6 +88,7 @@ Route::prefix('admin')->group(function(){
     // Route::get('klasses/grade/{grade}',[App\Http\Controllers\Admin\KlassController::class,'admin.klasses.grade']);
     Route::resource('/courses',App\Http\Controllers\Admin\CourseController::class)->names('admin.courses');
     Route::resource('/students',App\Http\Controllers\Admin\StudentController::class)->names('admin.students');
+    Route::get('/lock_transcripts',[App\Http\Controllers\Admin\TranscriptController::class,'lockTranscripts'])->name('admin.lockTranscripts');
     
 });
 
@@ -124,7 +125,7 @@ Route::prefix('manage/')->group(function(){
 
     Route::get('/klass/{klass}/behaviours',[App\Http\Controllers\Manage\BehaviourController::class,'byKlass'])->name('manage.klass.behaviours');
 
-    Route::get('/transcript',[App\Http\Controllers\Manage\TranscriptController::class,'index']);
+    //Route::get('/transcript',[App\Http\Controllers\Manage\TranscriptController::class,'index']);
     Route::get('/transcript/klass_student/{id}',[App\Http\Controllers\Manage\TranscriptController::class,'klassStudent']);
     Route::get('/transcript/klass/{klass}',[App\Http\Controllers\Manage\TranscriptController::class,'klass']);
     // Route::get('/transcript/klass/{klass}/summary_table',[App\Http\Controllers\Manage\TranscriptController::class,'klass_summary_table']);
@@ -137,6 +138,8 @@ Route::prefix('manage/')->group(function(){
     Route::get('/course/{course}/makeups',[App\Http\Controllers\Manage\CourseController::class,'makeups'])->name('manage.course.makeups');
     Route::get('/klass/{klass}/final_scores',[App\Http\Controllers\Manage\KlassController::class,'finalScores'])->name('manage.klass.finalScores');
     Route::get('/klass/{klass}/migrate_transcripts',[App\Http\Controllers\Manage\KlassController::class,'migrateTranscripts'])->name('manage.klass.migrateTranscripts');
+    Route::post('/makeup/create_or_cancel',[App\Http\Controllers\Manage\MakeupController::class,'createOrCancel'])->name('manage.makeup.createOrCancel');
+    Route::post('/makeup/update',[App\Http\Controllers\Manage\MakeupController::class,'update'])->name('manage.makeup.update');
 });
 
 Route::prefix('teacher/')->group(function(){

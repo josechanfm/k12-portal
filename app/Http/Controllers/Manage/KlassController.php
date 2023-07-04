@@ -116,7 +116,8 @@ class KLassController extends Controller
 
     public function finalScores(Klass $klass)
     {
-        return Inertia::render('Manage/KlassTranscript', [
+        // dd($klass->finalScores());
+        return Inertia::render('Manage/KlassFinalScores', [
             'klass' => $klass,
             'transcriptTemplates' => $klass->grade->transcriptTemplates(),
             'finalScores' => $klass->finalScores()

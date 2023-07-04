@@ -1,0 +1,227 @@
+<template>
+    <AdminLayout title="Dashboard">
+        <template #header>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ klass.tag }}
+                {{ klass.transcript_migrated }}
+            </h2>
+        </template>
+        <a-button @click="migrateTranscripts" :disabled="klass.transcript_migrated == 9">
+            <span v-if="klass.transcript_migrated == 1">重新轉換成積表分數</span>
+            <span v-else>轉換成積表分數</span>
+        </a-button>
+        <div>
+            <div class="ant-table">
+                <div class="ant-table-container">
+                    <div class="ant-table-content">
+                        <table class="table-layout: auto;">
+                            <thead class="ant-table-thead">
+                                <tr>
+                                    <th>Student Name</th>
+                                    <th v-for="column in finalScores.score_columns">{{
+                                        transcriptTemplates[column.course_code].title_zh }}</th>
+                                    <th>不合格單位數</th>
+                                </tr>
+
+                            </thead>
+                            <tbody class="ant-table-tbody">
+                                <template v-for="student in finalScores.students">
+                                    <tr class="ant-table-row ant-table-row-level-0">
+                                        <td>{{ student.student_name }}</td>
+                                        <td v-for="column in finalScores.score_columns" class="text-center">
+                                            <span v-if="isPass(student['scores'][column.id])">
+                                                {{ student['scores'][column.id] }}
+                                            </span>
+                                            <span v-else>
+                                                <span @click="toMakeup(student, column)" class="text-red-500 font-bold">
+                                                    <span :class="column.makeups[student.student_id] ? 'p-1 rounded-full border-2 border-rose-300' : ''">
+                                                            {{ student['scores'][column.id] }}
+                                                        <span v-if="column.makeups[student.student_id] && column.makeups[student.student_id]['point']!==null">
+                                                            / {{ column.makeups[student.student_id]['point'] }}
+                                                        </span>
+                                                        
+                                                    </span>
+                                                </span>
+                                            </span>
+                                        </td>
+                                        <td class="text-center">{{ student.fail_units }}</td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Start-->
+        <a-modal v-model:visible="modal.isOpen" 
+            :title="modal.title" width="60%" 
+        >
+            <p>班級：{{ klass.tag }}</p>
+            <p>學生姓名：{{ modal.data.student.student_name}}</p>{{ modal.data.student.student_id }}
+            <p>課目：{{ modal.data.column.course_title}}</p>
+            <p>學年總分：{{ modal.data.student.scores[modal.data.column.id]}}</p>
+            <p>補考分數：
+                <span v-if="modal.data.column.makeups[modal.data.student.student_id]">
+                    <span v-if="modal.data.column.makeups[modal.data.student.student_id]['point']===null">
+                        --
+                        <a-button @click="makeupCancel">Cancel</a-button>
+                    </span>
+                    <span v-else>
+                        {{ modal.data.column.makeups[modal.data.student.student_id]['point'] }}
+                    </span>
+                </span>
+                <span v-else>
+                    未批准補考
+                    <a-button @click="makeupApprove">Apporve</a-button>
+                </span>
+            </p>
+            <template #footer>
+                <a-button key="back" @click="modalCancel">返回</a-button>
+            </template>
+        </a-modal>    
+        <!-- Modal End-->
+        
+
+    </AdminLayout>
+</template>
+
+<script>
+import AdminLayout from '@/Layouts/AdminLayout.vue';
+
+export default {
+    components: {
+        AdminLayout,
+    },
+    props: ['klass', 'transcriptTemplates', 'finalScores'],
+    data() {
+        return {
+            modal: {
+                mode:null,
+                isOpen: false,
+                title:'補考',
+                data:{}
+            },
+        }
+    },
+    created() {
+
+    },
+    mounted() {
+        // this.fields=this.transcriptTemplate.map((t)=>(
+        //     {[t.field_name]:t.title_zh}
+        // ));
+    },
+    methods: {
+        isPass(score) {
+            return score >= parseInt(this.transcriptTemplates['passing'].value)
+        },
+        migrateTranscripts() {
+            if (this.klass.transcript_migrated == 1) {
+                if (!confirm('成積表分數已經轉換，是不確定重新轉換？')) {
+                    return false;
+                }
+            } else {
+                if (!confirm('是不確定轉換成積表分數？')) {
+                    return false;
+                }
+            }
+            this.$inertia.get(route("manage.klass.migrateTranscripts",this.klass.id), {
+                onSuccess: (page) => {
+                        this.modal.isOpen=false;
+                        console.log('Cancelled')
+                    },
+                    onError: (error) => {
+                        console.log(error);
+                    }
+            })
+        },
+        toMakeup(student, column) {
+            this.modal.data.student=student;
+            this.modal.data.column=column;
+            this.modal.isOpen = true;
+        },
+        modalCancel(){
+            // this.modal.data.student={};
+            // this.modal.data.column={};
+            this.modal.isOpen=false;
+        },
+        makeupCancel(){
+            this.$inertia.post(route("manage.makeup.createOrCancel"),{
+                mode:'cancel',
+                student_id:this.modal.data.student.student_id,
+                course_id:this.modal.data.column.course_id
+            }, {
+                onSuccess: (page) => {
+                        this.modal.isOpen=false;
+                        console.log('Cancelled')
+                    },
+                    onError: (error) => {
+                        console.log(error);
+                    }
+            })
+        },
+        makeupApprove(){
+            this.$inertia.post(route("manage.makeup.createOrCancel"),{
+                mode:'approve',
+                student_id:this.modal.data.student.student_id,
+                course_id:this.modal.data.column.course_id
+            }, {
+                onSuccess: (page) => {
+                    this.modal.isOpen=false;
+                        console.log("approved")
+                    },
+                    onError: (error) => {
+                        console.log(error);
+                    }
+
+            })
+        }
+    }
+}
+</script>
+
+<style>
+.dataTable,
+.dataTable td,
+.dataTable th {
+    border: 1px solid;
+}
+
+.dataTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.dataTable input {
+    text-align: center;
+}
+
+/*定义要拖拽元素的样式*/
+table.itxst {
+    color: #333333;
+    border: #ddd solid 1px;
+    border-collapse: collapse;
+}
+
+table.itxst th {
+    border: #ddd solid 1px;
+    padding: 8px;
+    background-color: #fafafa;
+}
+
+table.itxst td {
+    border: #ddd solid 1px;
+    padding: 8px;
+    background-color: #ffffff;
+}
+
+table.itxst tr {
+    cursor: pointer;
+}
+
+table.itxst td.move:hover {
+    cursor: move;
+}
+</style>

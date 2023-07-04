@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Manage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Course;
+use App\Models\CourseStudent;
+use App\Models\Makeup;
 
 class MakeupController extends Controller
 {
@@ -14,78 +15,30 @@ class MakeupController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Course $course)
+    public function createOrCancel(Request $request)
     {
-        $course->klass;
-        return Inertia::render('Manage/Makeups',[
-            'course' => $course,
-            'students_makeups'=>$course->studentsMakeups()
-        ]);
+        $courseStudent=CourseStudent::where('course_id',$request->course_id)->where('student_id',$request->student_id)->first();
+        if($request->mode=='cancel'){
+            Makeup::where('course_student_id',$courseStudent->id)->delete();
+        }elseif($request->mode=='approve'){
+            Makeup::firstOrCreate(
+                ['course_student_id' => $courseStudent->id,],
+                ['course_student_id' => $courseStudent->id]
+            );
+        }
+        return redirect()->back();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+    public function update(Request $request){
+        
+        Makeup::upsert(
+            $request->data,
+            ['course_student_id'],
+            ['point']
+        );
+        // return response($request->klass_id);
+        // echo json_encode($request->all());
+        return redirect()->route('manage.klasses.show',$request->klass_id); 
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

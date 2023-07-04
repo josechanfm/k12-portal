@@ -215,5 +215,37 @@ class ConfigSeeder extends Seeder
                 {"value":"CREDIT_SMALL","label":"小功"},
                 {"value":"MERIT","label":"優點"}]'
         ]);
+
+        DB::table('configs')->insert([
+            'key'=>'grade_letters',
+            'value'=>'
+                [
+                    {
+                    "letter":"A",
+                    "min":90,
+                    "max":100
+                    },{
+                    "letter":"B",
+                    "min":80,
+                    "max":90
+                    },{
+                    "letter":"C",
+                    "min":70,
+                    "max":80
+                    },{
+                    "letter":"D",
+                    "min":60,
+                    "max":80
+                    },{
+                    "letter":"E",
+                    "min":50,
+                    "max":70
+                    },{
+                    "letter":"A",
+                    "min":40,
+                    "max":0
+                    }
+                ]'
+        ]);
     }
 }

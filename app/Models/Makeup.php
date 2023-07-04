@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Makeup extends Model
 {
     use HasFactory;
+    protected $fillable = ['course_student_id','point'];
 
     public function course(){
         return $this->belongsTo(Course::class);

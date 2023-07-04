@@ -14,6 +14,7 @@
                         <inertia-link :href="route('admin.year.grades',record.id)" class="ant-btn">Grades</inertia-link>
                         <a-button @click="editRecord(record)">Edit</a-button>
                         <a-button @click="deleteRecord(record)">Delete</a-button>
+                        <a-button @click="lockTranscript(record)">鎖定成積表</a-button>
                     </template>
                     <template v-else-if="column.dataIndex=='grade_group'">
                         <a-tag v-for="item in record[column.dataIndex]" 
@@ -166,28 +167,27 @@ export default {
                     title: 'Code',
                     dataIndex: 'code',
                     key: 'code',
-                },
-                {
+                },{
                     title: 'Title',
                     dataIndex: 'title',
                     key: 'title',
-                },
-                {
+                },{
                     title: 'Start',
                     dataIndex: 'start',
                     key: 'start',
-                },
-                {
+                },{
                     title: 'End',
                     dataIndex: 'end',
                     key: 'end',
-                },
-                {
+                },{
                     title: 'Grade Group',
                     dataIndex: 'grade_group',
                     key: 'grade_group',
-                },
-                {
+                },{
+                    title: 'Current Year',
+                    dataIndex: 'active',
+                    key: 'active',
+                },{
                     title: 'Operation',
                     dataIndex: 'operation',
                     key: 'operation',
@@ -372,7 +372,19 @@ export default {
         },
         onFinishFailed(errorInfo){
             console.log('errorInfo: '+errorInfo);
+        },
+        lockTranscript(record){
+            if(!confirm('鎖定成積表分數轉換功能，是不確定？')) return;
+            this.$inertia.get(route('admin.lockTranscripts'),{scope:'year',id:record.id},{
+                onSuccess: (page)=>{
+                    console.log(page);
+                },
+                onError: (error)=>{
+                    console.log(error);
+                }
+            });
         }
+
     },
 }
 </script>
