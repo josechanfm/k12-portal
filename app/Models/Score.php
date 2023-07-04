@@ -22,6 +22,7 @@ class Score extends Model
         return $this->belongsToMany(Student::class,'klass_student','student_id','klass_id');
     }
     static function updateScore($data){
+        
         foreach( $data as $i=>$d){
             if($d['point']==''){ // unsert record if point value is empty
                 unset($data[$i]);
@@ -34,8 +35,8 @@ class Score extends Model
         );
         
         // check and proceed merge course scores
-        $course=ScoreColumn::find($data[0]['score_column_id'])->course;
-        Score::mergeCoursesScores($course);
+        // $course=ScoreColumn::find($data[0]['score_column_id'])->course;
+        // Score::mergeCoursesScores($course);
 
         return count($data);
     }
@@ -52,7 +53,6 @@ class Score extends Model
         }
         foreach($mergeCourses as $courseColumns){
             foreach($courseColumns as $column){
-                echo json_encode($column);
                 $merges=json_decode($column->merge);
                 $students=Course::find($column->course_id)->students;
                 foreach($students as $student){

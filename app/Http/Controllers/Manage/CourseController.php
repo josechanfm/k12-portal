@@ -112,6 +112,7 @@ class CourseController extends Controller
 
         // $scoreColumns=$course->scoreColumns;
         // dd($scoreColumns);
+        // dd($course->studentsScores()[316]);
         $klassCourses=Klass::find($course->klass_id)->courses;
         $course=Course::with('klass')->with('teachers')->find($course->id);
         return Inertia::render('Manage/CourseScores',[

@@ -90,7 +90,7 @@ class ScoreColumnController extends Controller
         $ScoreColumn->field_label=$request->field_label;
         $ScoreColumn->field_name=Str::uuid()->toString();
         $ScoreColumn->sequence=$request->sequence;
-        $ScoreColumn->type=$request->type;
+        // $ScoreColumn->type=$request->type;
         $ScoreColumn->formular=$request->formular;
         $ScoreColumn->merge=json_encode($request->merge);
         $ScoreColumn->description=$request->description;

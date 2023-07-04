@@ -106,6 +106,8 @@ class ScoreController extends Controller
     {
         $data=$request->all();
         $updatedCount=Score::updateScore($data);
+        //return response($updatedCount);
+        //return response($data);
         return redirect()->back();
     }
 

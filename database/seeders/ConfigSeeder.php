@@ -217,7 +217,7 @@ class ConfigSeeder extends Seeder
         ]);
 
         DB::table('configs')->insert([
-            'key'=>'grade_letters',
+            'key'=>'score_letters',
             'value'=>'
                 [
                     {

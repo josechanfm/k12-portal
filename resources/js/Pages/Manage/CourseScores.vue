@@ -87,7 +87,7 @@
                                     <template v-for="(score, cid) in student.scores">
                                         <td v-if="column.term_id == selectedTerm && column.id == cid" class="text-center">
                                             <span v-if="column.merge || column.formular">
-                                                {{ score.point }}
+                                                {{ score.point }} 
                                             </span>
                                             <span v-else>
                                                 <a-input v-model:value="score.point" @blur="onScoreChange(student, cid)"
@@ -343,6 +343,7 @@ export default {
             //     .then(resp=> 
             //         console.log("update "+resp.data+" records")
             //     );
+            console.log(data);
             this.$inertia.post(route("manage.score.update"), data, {
                 onSuccess: (page) => {
                     console.log("update " + page)

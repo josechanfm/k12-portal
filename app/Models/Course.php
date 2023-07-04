@@ -64,9 +64,9 @@ class Course extends Model
     // }
 
     public function studentsScores(){
-        $terms=Config::item('year_terms');
         $students=$this->students;
         $scores=$this->allScores;
+        // dd($scores[2]);
         $scoreColumns=$this->scoreColumns;
         $table=[];
 

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->enum('category',['PERSONAL','SUBJECT','ATTITUDE','SUMMARY','GENERAL']);
             $table->string('reference_code')->nullable();
             //$table->string('field_name')->nullable();
-            $table->string('field_value');
+            $table->string('value');
             $table->timestamps();
             $table->unique(['klass_student_id','reference_code'],'klass_student_reference_code');
         });
