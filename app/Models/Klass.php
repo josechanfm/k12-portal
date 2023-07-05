@@ -123,5 +123,28 @@ class Klass extends Model
         return $transcripts;
     }
 
+    public function additives($category){
+        $students=$this->students;
+        $templates=AdditiveTemplate::where('category',$category)->get()->toArray();
+        $data=[];
+        foreach($students as $student){
+            $data['students'][$student->id]['name_zh']=$student->name_zh;
+            $data['students'][$student->id]['klass_student_id']=$student->pivot->klass_student_id;
+            foreach($templates as $template){
+                $data['students'][$student->id]['additives'][$template['reference_code']]=0;
+            }
+            $additives=Additive::where('klass_student_id',$student->pivot->klass_student_id)->get();
+            $data['students'][$student->id]['records']=$additives;
+            foreach($additives as $additive){
+                if(isset($data['students'][$student->id]['additives'][$additive->reference_code])){
+                    $data['students'][$student->id]['additives'][$additive->reference_code]+=$additive->value;
+                }
+            }
+        };
+        $data['templates']=array_column($templates,null,'reference_code'); 
+        // dd($data);
+        return $data;
+    }
+
 
 }

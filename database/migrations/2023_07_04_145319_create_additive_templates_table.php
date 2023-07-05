@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('scope');
             $table->string('category');
             $table->string('reference_code');
+            $table->integer('max')->nullable();
             $table->string('title_zh');
             $table->string('title_en')->nullable();
             $table->text('remark')->nullable();

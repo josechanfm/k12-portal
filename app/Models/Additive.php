@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Additive extends Model
 {
     use HasFactory;
+    protected $fillable=['klass_student_id','reference_code','value','remark'];
 }

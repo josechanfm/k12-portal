@@ -16,33 +16,33 @@ class AdditiveTemplateSeeder extends Seeder
     public function run()
     {
         $data=[
-            'behave'=>[
-                'attenance'=>[
-                    'late'=>'遲到次數',
-                    'forgot'=>'忘帶次數',
-                    'missing'=>'欠交功課',
-                    'leave'=>'請假節數',
-                    'absent'=>'曠課節數'
+            'BEHAVE'=>[
+                'ATTENDANCE'=>[
+                    'LATE'=>'遲到次數',
+                    'FORGOT'=>'忘帶次數',
+                    'MISSING'=>'欠交功課',
+                    'LEAVE'=>'請假節數',
+                    'ABSENT'=>'曠課節數'
                 ],
-                'perform'=>[
-                    'good'=>'優點',
-                    'great'=>'小功',
-                    'excellent'=>'大功',
-                    'leave'=>'缺點',
-                    'minor'=>'小過',
-                    'major'=>'大過',
-                    'warning'=>'警告',
-                    'honor'=>'光榮榜'
+                'PERFORM'=>[
+                    'GOOD'=>'優點',
+                    'GREAT'=>'小功',
+                    'EXCELENT'=>'大功',
+                    'FAULT'=>'缺點',
+                    'MINOR'=>'小過',
+                    'MAJOR'=>'大過',
+                    'WARNING'=>'警告',
+                    'HONOR'=>'光榮榜'
                 ],
-                'conduct'=>[
-                    'conduct'=>'操行',
+                'CONDUCT'=>[
+                    'CONDUCT'=>'操行',
                 ]
             ],
-            'remarks'=>[
-                'comments'=>[
-                    'comment_t1'=>'備註',
-                    'comment_t2'=>'備註',
-                    'comment_final'=>'備註',
+            'REMARK'=>[
+                'COMMENTS'=>[
+                    'COMMENT_T1'=>'備註',
+                    'COMMENT_T2'=>'備註',
+                    'COMMENT_FINAL'=>'備註',
                 ],
             ]
         ];

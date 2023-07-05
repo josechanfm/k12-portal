@@ -18,6 +18,7 @@ return new class extends Migration
             $table->bigInteger('klass_student_id');
             $table->string('reference_code');
             $table->integer('value');
+            $table->date('assign_at')->default(DB::raw('CURRENT_TIMESTAMP'));;
             $table->boolean('confimed')->default(false);
             $table->date('confirmed_at')->nullable();
             $table->bigInteger('user_id');

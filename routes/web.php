@@ -93,7 +93,7 @@ Route::prefix('admin')->group(function(){
 });
 
 Route::prefix('manage/')->group(function(){
-    Route::resource('/',App\Http\Controllers\Manage\DashboardController::class);
+    Route::get('/',[App\Http\Controllers\Manage\DashboardController::class,'index'])->name('manage');
     Route::resource('/grades',App\Http\Controllers\Manage\GradeController::class);
 
     Route::resource('/course',App\Http\Controllers\Manage\CourseController::class);
@@ -140,6 +140,9 @@ Route::prefix('manage/')->group(function(){
     Route::get('/klass/{klass}/migrate_transcripts',[App\Http\Controllers\Manage\KlassController::class,'migrateTranscripts'])->name('manage.klass.migrateTranscripts');
     Route::post('/makeup/create_or_cancel',[App\Http\Controllers\Manage\MakeupController::class,'createOrCancel'])->name('manage.makeup.createOrCancel');
     Route::post('/makeup/update',[App\Http\Controllers\Manage\MakeupController::class,'update'])->name('manage.makeup.update');
+
+    Route::resource('additives',App\Http\Controllers\Manage\AdditiveController::class)->names('manage.additives');
+    Route::get('klass/{klass}/additive/{category}',[App\Http\Controllers\Manage\AdditiveController::class,'scope'])->name('manage.klass.additive');
 });
 
 Route::prefix('teacher/')->group(function(){
