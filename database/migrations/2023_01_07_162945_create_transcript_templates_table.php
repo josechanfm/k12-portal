@@ -25,6 +25,8 @@ return new class extends Migration
             $table->text('remark')->nullable();
             $table->integer('version')->nullable();
             $table->timestamps();
+            $table->unique(['template_id','reference_code'],'template_id_reference_code');
+
         });
     }
 

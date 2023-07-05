@@ -26,202 +26,203 @@ class TranscriptSeeder extends Seeder
                 'column'=>'T1',
                 'category'=>$p->category,
                 'reference_code'=>$p->reference_code,
-                'field_value'=>'TEST '.$p->reference_code,
+                'value'=>'TEST '.$p->reference_code,
             ]);
         };
         foreach($subject as $s){
             DB::table('transcripts')->insert([
                 'klass_student_id'=>1,
+                'reference_code'=>$s->reference_code,
                 'column'=>'T1E',
                 'category'=>$s->category,
-                'reference_code'=>$s->reference_code,
-                'field_value'=>rand(1,100),
+                'value'=>rand(1,100),
             ]);
         };
         foreach($subject as $s){
             DB::table('transcripts')->insert([
                 'klass_student_id'=>1,
+                'reference_code'=>$s->reference_code,
                 'column'=>'T1P',
                 'category'=>$s->category,
-                'reference_code'=>$s->reference_code,
-                'field_value'=>rand(1,100),
+                'value'=>rand(1,100),
             ]);
         };
         foreach($subject as $s){
             DB::table('transcripts')->insert([
                 'klass_student_id'=>1,
+                'reference_code'=>$s->reference_code,
                 'column'=>'T1A',
                 'category'=>$s->category,
-                'reference_code'=>$s->reference_code,
-                'field_value'=>rand(1,100),
+                'value'=>rand(1,100),
             ]);
         };
         foreach($subject as $s){
             DB::table('transcripts')->insert([
                 'klass_student_id'=>1,
+                'reference_code'=>$s->reference_code,
                 'column'=>'T2E',
                 'category'=>$s->category,
-                'reference_code'=>$s->reference_code,
-                'field_value'=>rand(1,100),
+                'value'=>rand(1,100),
             ]);
         };
         foreach($subject as $s){
             DB::table('transcripts')->insert([
                 'klass_student_id'=>1,
+                'reference_code'=>$s->reference_code,
                 'column'=>'T2P',
                 'category'=>$s->category,
-                'reference_code'=>$s->reference_code,
-                'field_value'=>rand(1,100),
+                'value'=>rand(1,100),
             ]);
         };
         foreach($subject as $s){
             DB::table('transcripts')->insert([
                 'klass_student_id'=>1,
+                'reference_code'=>$s->reference_code,
                 'column'=>'T2A',
                 'category'=>$s->category,
-                'reference_code'=>$s->reference_code,
-                'field_value'=>rand(1,100),
+                'value'=>rand(1,100),
             ]);
         };
         foreach($subject as $s){
             DB::table('transcripts')->insert([
                 'klass_student_id'=>1,
+                'reference_code'=>$s->reference_code,
                 'column'=>'FIN',
                 'category'=>$s->category,
-                'reference_code'=>$s->reference_code,
-                'field_value'=>rand(50,100),
+                'value'=>rand(50,100),
             ]);
         };
 
         foreach($attitude as $a){
             DB::table('transcripts')->insert([
                 'klass_student_id'=>1,
+                'reference_code'=>$a->reference_code,
                 'column'=>'T1',
                 'category'=>$a->category,
-                'reference_code'=>$a->reference_code,
-                'field_value'=>'A',
+                'value'=>'A',
             ]);
         };
         foreach($attitude as $a){
             DB::table('transcripts')->insert([
                 'klass_student_id'=>1,
+                'reference_code'=>$a->reference_code,
                 'column'=>'T2',
                 'category'=>$a->category,
-                'reference_code'=>$a->reference_code,
-                'field_value'=>'B',
+                'value'=>'B',
             ]);
         };
         foreach($summary as $s){
             DB::table('transcripts')->insert([
                 'klass_student_id'=>1,
+                'reference_code'=>$s->reference_code,
                 'column'=>'T1',
                 'category'=>$s->category,
-                'reference_code'=>$s->reference_code,
-                'field_value'=>rand(1,100),
+                'value'=>rand(1,100),
             ]);
         };
         foreach($summary as $s){
             DB::table('transcripts')->insert([
                 'klass_student_id'=>1,
+                'reference_code'=>$s->reference_code,
                 'column'=>'T2',
                 'category'=>$s->category,
-                'reference_code'=>$s->reference_code,
-                'field_value'=>rand(1,100),
+                'value'=>rand(1,100),
             ]);
         };
         foreach($summary as $s){
             DB::table('transcripts')->insert([
                 'klass_student_id'=>1,
+                'reference_code'=>$s->reference_code,
                 'column'=>'FIN',
                 'category'=>$s->category,
-                'reference_code'=>$s->reference_code,
-                'field_value'=>rand(1,100),
+                'value'=>rand(1,100),
             ]);
         };
+        /*
         DB::table('transcripts')->insert([
             'klass_student_id'=>1,
+            'reference_code'=>'comment_t1',
             'column'=>'T1',
             'category'=>'GENERAL',
-            'reference_code'=>'comment',
-            'field_value'=>'T1 Comment',
+            'value'=>'T1 Comment',
         ]);
         DB::table('transcripts')->insert([
             'klass_student_id'=>1,
+            'reference_code'=>'comment_t2',
             'column'=>'T2',
             'category'=>'GENERAL',
-            'reference_code'=>'comment',
-            'field_value'=>'T2 Coment',
+            'value'=>'T2 Coment',
         ]);
         DB::table('transcripts')->insert([
             'klass_student_id'=>1,
+            'reference_code'=>'reward_punishment_t1',
             'column'=>'T1',
             'category'=>'GENERAL',
-            'reference_code'=>'reward_punishment',
-            'field_value'=>'T1 reward punishment',
+            'value'=>'T1 reward punishment',
         ]);
         DB::table('transcripts')->insert([
             'klass_student_id'=>1,
+            'reference_code'=>'reward_punishment_t2',
             'column'=>'T2',
             'category'=>'GENERAL',
-            'reference_code'=>'reward_punishment',
-            'field_value'=>'T2 reward punishment',
+            'value'=>'T2 reward punishment',
         ]);
         DB::table('transcripts')->insert([
             'klass_student_id'=>1,
+            'reference_code'=>'leisure_name_1',
             'column'=>'T1',
             'category'=>'GENERAL',
-            'reference_code'=>'leisure_name',
-            'field_value'=>'T1 leisure name',
+            'value'=>'T1 leisure name',
         ]);
         DB::table('transcripts')->insert([
             'klass_student_id'=>1,
+            'reference_code'=>'leisure_name_2',
             'column'=>'T2',
             'category'=>'GENERAL',
-            'reference_code'=>'leisure_name',
-            'field_value'=>'T2 leisure name',
+            'value'=>'T2 leisure name',
         ]);
         DB::table('transcripts')->insert([
             'klass_student_id'=>1,
+            'reference_code'=>'leisure_performance_1',
             'column'=>'T1',
             'category'=>'GENERAL',
-            'reference_code'=>'leisure_performance',
-            'field_value'=>'T1 leisure performance',
+            'value'=>'T1 leisure performance',
         ]);
         DB::table('transcripts')->insert([
             'klass_student_id'=>1,
+            'reference_code'=>'leisure_performance_2',
             'column'=>'T2',
             'category'=>'GENERAL',
-            'reference_code'=>'leisure_performance',
-            'field_value'=>'T2 leisure performance',
+            'value'=>'T2 leisure performance',
         ]);
         DB::table('transcripts')->insert([
             'klass_student_id'=>1,
+            'reference_code'=>'remark_t1',
             'column'=>'T1',
             'category'=>'GENERAL',
-            'reference_code'=>'remark',
-            'field_value'=>'T1 remark',
+            'value'=>'T1 remark',
         ]);
         DB::table('transcripts')->insert([
             'klass_student_id'=>1,
+            'reference_code'=>'remark_t2',
             'column'=>'T2',
             'category'=>'GENERAL',
-            'reference_code'=>'remark',
-            'field_value'=>'T2 remark',
+            'value'=>'T2 remark',
         ]);
         DB::table('transcripts')->insert([
             'klass_student_id'=>1,
+            'reference_code'=>'remark_final',
             'column'=>'FIN',
             'category'=>'GENERAL',
-            'reference_code'=>'remark',
-            'field_value'=>'FIN remark',
+            'value'=>'FIN remark',
         ]);
         DB::table('transcripts')->insert([
             'klass_student_id'=>1,
-            'column'=>'FIN',
-            'category'=>'GENERAL',
             'reference_code'=>'appraisal',
-            'field_value'=>'FIN Appraisal',
+            'column'=>'FIN',
+            'category'=>'GENERAL',
+            'value'=>'FIN Appraisal',
         ]);
-
+    */
     }
 }
