@@ -143,6 +143,7 @@ Route::prefix('manage/')->group(function(){
 
     Route::resource('additives',App\Http\Controllers\Manage\AdditiveController::class)->names('manage.additives');
     Route::get('klass/{klass}/additive/{category}',[App\Http\Controllers\Manage\AdditiveController::class,'scope'])->name('manage.klass.additive');
+    Route::resource('makeups',App\Http\Controllers\Manage\MakeupController::class)->names('manage.makeups');
 });
 
 Route::prefix('teacher/')->group(function(){

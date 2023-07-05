@@ -15,6 +15,12 @@ class MakeupController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function index(){
+        echo '全年所有級/班補考人名單總表<br>';
+        echo '入分及結果, 不合格名單<br>';
+        echo 'makeup index<br>';
+        echo '大粒總表定升,留,補考,';
+    }
     public function createOrCancel(Request $request)
     {
         $courseStudent=CourseStudent::where('course_id',$request->course_id)->where('student_id',$request->student_id)->first();

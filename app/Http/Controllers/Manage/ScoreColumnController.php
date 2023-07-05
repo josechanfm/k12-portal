@@ -45,10 +45,12 @@ class ScoreColumnController extends Controller
         $ScoreColumn->field_label=$request->field_label;
         $ScoreColumn->field_name=Str::uuid();
         $ScoreColumn->sequence=$request->sequence;
-        $ScoreColumn->type=$request->type;
+        $ScoreColumn->column_letter='k';
+        //$ScoreColumn->type=$request->type;
         $ScoreColumn->formular=$request->formular;
         $ScoreColumn->description=$request->description;
         $ScoreColumn->for_transcript=false;
+        $ScoreColumn->is_total=false;
         $ScoreColumn->save();
         return redirect()->back();
     }
@@ -90,11 +92,13 @@ class ScoreColumnController extends Controller
         $ScoreColumn->field_label=$request->field_label;
         $ScoreColumn->field_name=Str::uuid()->toString();
         $ScoreColumn->sequence=$request->sequence;
+        $ScoreColumn->column_letter='k';
         // $ScoreColumn->type=$request->type;
         $ScoreColumn->formular=$request->formular;
         $ScoreColumn->merge=json_encode($request->merge);
         $ScoreColumn->description=$request->description;
         $ScoreColumn->for_transcript=false;
+        $ScoreColumn->is_total=false;
         $ScoreColumn->save();
         return redirect()->back();
     }
