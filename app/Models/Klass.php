@@ -45,7 +45,10 @@ class Klass extends Model
         return $this->belongsToMany(Student::class,'klass_student','promote_to','student_id')->withPivot(['id as pivot_klass_student_id','student_number','stream','state','promote','promote_to','id as pivot_klass_id']);
     }
     public function courses(){
-        return $this->hasMany(Course::class)->with('scoreColumns');
+        return $this->hasMany(Course::class)->with('teachers')->with('scoreColumns');
+    }
+    public function head(){
+        return (object)["head"=>"123","subject_head"=>"567"];
     }
 
     public function coursesStudents(){
@@ -133,7 +136,7 @@ class Klass extends Model
             foreach($templates as $template){
                 $data['students'][$student->id]['additives'][$template['reference_code']]=0;
             }
-            $additives=Additive::where('klass_student_id',$student->pivot->klass_student_id)->get();
+            $additives=Additive::where('klass_student_id',$student->pivot->klass_student_id)->whereIn('reference_code',array_keys($data['students'][$student->id]['additives']))->get();
             $data['students'][$student->id]['records']=$additives;
             foreach($additives as $additive){
                 if(isset($data['students'][$student->id]['additives'][$additive->reference_code])){
@@ -141,6 +144,7 @@ class Klass extends Model
                 }
             }
         };
+        //$templates=AdditiveTemplate::all()->toArray();
         $data['templates']=array_column($templates,null,'reference_code'); 
         // dd($data);
         return $data;

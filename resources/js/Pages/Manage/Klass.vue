@@ -13,10 +13,10 @@
         <inertia-link :href="route('manage.klass.behaviours', klass.id)" class="ant-btn">行為表現</inertia-link>
         <inertia-link :href="route('manage.klass.students', klass.id)" class="ant-btn">學生名單</inertia-link>
         <inertia-link :href="route('manage.klass.finalScores', klass.id)" class="ant-btn">期末成績</inertia-link>
-        <inertia-link :href="route('manage.klass.additive', [klass.id,'attendance'])" class="ant-btn">Attendance</inertia-link>
-        <inertia-link :href="route('manage.klass.additive', [klass.id,'perform'])" class="ant-btn">Performance</inertia-link>
-        <inertia-link :href="route('manage.klass.additive', [klass.id,'conduct'])" class="ant-btn">Conduct</inertia-link>
-        <inertia-link :href="route('manage.klass.additive', [klass.id,'comments'])" class="ant-btn">comments</inertia-link>
+        <inertia-link :href="route('manage.klass.additive', [klass.id,'attendance'])" class="ant-btn">考勤</inertia-link>
+        <inertia-link :href="route('manage.klass.additive', [klass.id,'perform'])" class="ant-btn">功過</inertia-link>
+        <inertia-link :href="route('manage.klass.additive', [klass.id,'conduct'])" class="ant-btn">操行</inertia-link>
+        <inertia-link :href="route('manage.klass.additive', [klass.id,'comments'])" class="ant-btn">評語</inertia-link>
         <p>&nbsp;</p>
         <table width="100%">
             <thead>

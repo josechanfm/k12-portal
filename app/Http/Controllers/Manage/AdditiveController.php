@@ -18,6 +18,10 @@ class AdditiveController extends Controller
      */
     public function index()
     {
+        $additive=Additive::find(1)->template();
+        dd(class_basename($additive));
+
+        dd(Additive::find(1)->template());
         dd(AdditiveTemplate::all());
     }
 
@@ -46,6 +50,7 @@ class AdditiveController extends Controller
             $additive->reference_code=$d['reference_code'];
             $additive->value=$d['value'];
             $additive->remark=isset($d['remark'])?$d['remark']:null;
+            $additive->submit_at=date('Y-m-d');
             $additive->user_id=auth()->user()->id;
             $additive->save();
         }

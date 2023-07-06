@@ -40,7 +40,7 @@ class Course extends Model
         return $this->belongsToMany(Student::class,'course_student')->withPivot('id as pivot_course_student_id');
     }
     public function teachers(){
-        return $this->belongsToMany(Teacher::class)->withPivot('is_head');
+        return $this->belongsToMany(Teacher::class)->withPivot(['is_head','is_subject_head']);
     }
     // // public function subject(){
     // //     return $this->belongsTo(Subject::class);

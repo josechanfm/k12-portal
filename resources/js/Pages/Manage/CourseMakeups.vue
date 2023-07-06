@@ -6,7 +6,6 @@
                 <br/>
                 <span v-for="teacher in course.teachers">
                     {{ teacher.name_zh }} 
-                    <span v-if="teacher.pivot.is_head">(Head)</span>
                     &nbsp;
                 </span>
             </h2>

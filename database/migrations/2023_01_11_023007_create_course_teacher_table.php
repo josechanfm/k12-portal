@@ -18,6 +18,7 @@ return new class extends Migration
             $table->bigInteger('course_id');
             $table->bigInteger('teacher_id');
             $table->boolean('is_head');
+            $table->boolean('is_subject_head');
             $table->timestamps();
         });
     }

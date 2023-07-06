@@ -10,6 +10,8 @@ use App\Models\Klass;
 use App\Observers\KlassObserver;
 use App\Models\Course;
 use App\Observers\CourseObserver;
+use App\Models\Additive;
+use App\Observers\AdditiveObserver;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -33,6 +35,7 @@ class EventServiceProvider extends ServiceProvider
     {
         Klass::observe(KlassObserver::class);
         Course::observe(CourseObserver::class);
+        Additive::observe(AdditiveObserver::class);
 
     }
 

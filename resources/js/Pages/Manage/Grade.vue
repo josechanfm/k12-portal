@@ -83,9 +83,7 @@
                                 </ul>
                             </td>
                             <td class="text-left">
-                                <template v-for="teacher in course.teachers" >
-                                    <span v-if="teacher.pivot.is_head">{{teacher.name_zh}}</span>
-                                </template>
+                                Head teacher
                             </td>
                             <td class="text-left">
                                 <inertia-link :href="route('manage.klass.habits',course.klass_id)" :style="'Link'" type="Link">生活</inertia-link>

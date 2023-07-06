@@ -9,6 +9,7 @@
         <a-typography-title :level="4">年級:{{ grade.tag }}</a-typography-title>
         <inertia-link v-for="g in grades" :href="route('admin.grade.klasses',g.id)" class="px-3 py-2 mr-2 rounded text-white text-sm font-bold whitespace-no-wrap bg-blue-600 hover:bg-blue-800" >{{ g.tag }}</inertia-link>
         <a-button @click="createRecord()" type="primary">新增班別</a-button>
+        {{ klasses[0]['courses'][0] }}
         <a-table :dataSource="klasses" :columns="columns">
             <template #bodyCell="{column, text, record, index}">
                 <template v-if="column.dataIndex=='operation'">
@@ -20,6 +21,7 @@
                 </template>
                 <template v-else-if="column.dataIndex=='stream'">
                         {{ getStream(text) }}
+                        {{record.courses[0].teachers}}
                 </template>
                 <template v-else-if="column.dataIndex=='study_id'">
                     <span v-if="text!=''">
