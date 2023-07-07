@@ -10,6 +10,8 @@ use App\Models\Grade;
 use App\Models\Klass;
 use App\Models\Config;
 use App\Models\Study;
+use App\Models\User;
+use App\Models\Additive;
 
 class GradeController extends Controller
 {
@@ -134,11 +136,31 @@ class GradeController extends Controller
 
 
     public function klasses(Grade $grade){
+        $additive=Additive::find(1);
+        $klass=Klass::where('id',$additive->klassStudent->klass_id)->first();
+
+        $heads=$klass->courses->whereNotNull('subject_head_ids')->pluck('subject_heads');
+        echo json_encode($heads);
+
+        $allHeads=collect(); 
+        foreach($heads as $head){
+            $allHeads=$allHeads->concat($head);
+        }
+        dd($allHeads);
+        $users=[];
+        $users=array_merge($users,$klass->klass_heads->toArray());
+        dd($users[0]);
+
+        $courses=$klass->courses->whereNotNull('subject_head_ids');
+        dd($courses);
+        //dd($klasses[0]->head_teachers->pluck('id'));
+        //dd($additive->klassStudent);
+
+        $users=Klass::whereNotNull('klass_head_ids')->get();
+        dd($users);
         //if grade not found return some kind of error...
         $grades=Grade::where('year_id',$grade->year_id)->get();
-        $klasses=Klass::with('courses')->with('students')->with('grade')->whereBelongsTo($grade)->get();
-        $g=Grade::where('id',1)->with('klasses.courses')->first();
-        dd($g->klasses[0]->courses);
+        $klasses=Klass::with('grade')->whereBelongsTo($grade)->get();
         $studies=Study::where('active',1)->get();
         return Inertia::render('Admin/GradeKlasses',[
             'year'=>$grade->year,

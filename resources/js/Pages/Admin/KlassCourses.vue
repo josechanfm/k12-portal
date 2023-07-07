@@ -10,8 +10,12 @@
             <a-table :dataSource="courses" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='students'">
-                        <inertia-link :href="route('admin.course.students',record.id)">Students</inertia-link>
+                        
+                        <inertia-link :href="route('admin.course.students',record.id)" class="ant-btn">Students</inertia-link>
                     </template>
+                    <template v-else-if="column.dataIndex=='subject_heads'">
+                        {{ record.subject_heads.map(t=>t.name_zh).toString() }}
+                    </template>                    
                     <template v-else>
                         {{record[column.dataIndex]}}
                     </template>
@@ -61,6 +65,9 @@ export default {
                 },{
                     title: '有效',
                     dataIndex: 'active',
+                },{
+                    title: '科組長',
+                    dataIndex: 'subject_heads',
                 },{
                     title: '學生',
                     dataIndex: 'students',

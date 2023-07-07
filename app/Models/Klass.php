@@ -16,15 +16,23 @@ class Klass extends Model
     //     return $this->belongsToMany(Subject::class);
     // }
    
-    protected $appends= ['student_count','promoted_count','year_code','grade_year'];
+    protected $appends= ['klass_heads','course_count','student_count','promoted_count','year_code','grade_year'];
     
+    public function getKlassHeadsAttribute(){
+        $teachers=explode(',',$this->klass_head_ids);
+        if(count($teachers)>0){
+            return Teacher::whereIn('id',$teachers)->get();
+        }
+    }
     public function getGradeYearAttribute(){
         return Grade::find($this->grade_id)->grade_year;
     }
     public function getYearCodeAttribute(){
         return Grade::find($this->grade_id)->year->code;
     }
-
+    public function getCourseCountAttribute(){
+        return Course::where('klass_id',$this->id)->count();
+    }
     public function getStudentCountAttribute(){
         return KlassStudent::where('klass_id',$this->id)->count();
     }
@@ -47,7 +55,7 @@ class Klass extends Model
     public function courses(){
         return $this->hasMany(Course::class)->with('teachers')->with('scoreColumns');
     }
-    public function head(){
+    public function info(){
         return (object)["head"=>"123","subject_head"=>"567"];
     }
 

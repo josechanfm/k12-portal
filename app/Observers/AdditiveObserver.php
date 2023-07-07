@@ -6,6 +6,8 @@ use App\Models\Additive;
 use App\Models\Procedure;
 use App\Models\Workflow;
 use App\Models\Task;
+use App\Models\User;
+use App\Models\Klass;
 
 class AdditiveObserver
 {
@@ -18,21 +20,43 @@ class AdditiveObserver
     public function created(Additive $additive)
     {
         $template=$additive->template();
+        $additive->workflow->create([
+            'processes'=>$template->processes
+        ]);
+        $workflow=new Workflow();
+        $workflow->workflowable->associate($additive);
+        $workflow->save();
+
         if($template->procedure_id !=null){
             $procedure=Procedure::find($template->procedure_id);
-            $tasks=json_decode($procedure->tasks,false);
-            $workflow=Workflow::create([
-                    'model'=>class_basename($additive),
-                    'model_id'=>$additive->id
-                ]);
-            foreach($tasks as $task){
-                Task::create([
-                    'workflow_id'=>$workflow->id,
-                    'start_date'=>$additive->submit_at,
-                    'due_date'=>null,
-                    'user_role'=>$task->user_role,
-                    'user_id'=>$task->user_id,
-                ]);
+            $processes=json_decode($procedure->porcesses,false);
+            foreach($processes as $process){
+                switch($process->user_role){
+                    case 'DIRECTOR':
+                        $users=User::role('director')->get();
+                        break;
+                    case 'KLASS_HEAD':
+                        $klass=Klass::where('id',$additive->klassStudent->klass_id)->first();
+                        $users=$klass->klass_heads;
+                        break;
+                    case 'SUBJECT_HEAD':
+                        $klass=Klass::where('id',$additive->klassStudent->klass_id)->first();
+                        $heads=$klass->courses->whereNotNull('subject_head_ids')->pluck('subject_heads');
+                        $users=collect(); 
+                        foreach($heads as $head){
+                            $users=$users->concat($head);
+                        }
+                        break;
+                }
+                foreach($users as $user){
+                    Task::create([
+                        'workflow_id'=>$workflow->id,
+                        'start_date'=>$additive->submit_at,
+                        'due_date'=>null,
+                        'user_role'=>null,
+                        'user_id'=>$user->id,
+                    ]);
+                }
             }
         }
         

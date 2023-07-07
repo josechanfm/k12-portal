@@ -8,11 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class Course extends Model
 {
     use HasFactory;
-    // protected $appends=['student_count'];
+    protected $appends=['student_count','subject_heads'];
 
-    // public function getStudentCountAttribute(){
-    //     return $this->students->count();
-    // }
+    public function getStudentCountAttribute(){
+        return $this->students->count();
+    }
+    public function getSubjectHeadsAttribute(){
+        $teachers=explode(',',$this->subject_head_ids);
+        if(count($teachers)>0){
+            return Teacher::whereIn('id',$teachers)->get();
+        }
+    }
     public function klass(){
         return $this->belongsTo(Klass::class);
     }
@@ -40,7 +46,7 @@ class Course extends Model
         return $this->belongsToMany(Student::class,'course_student')->withPivot('id as pivot_course_student_id');
     }
     public function teachers(){
-        return $this->belongsToMany(Teacher::class)->withPivot(['is_head','is_subject_head']);
+        return $this->belongsToMany(Teacher::class);
     }
     // // public function subject(){
     // //     return $this->belongsTo(Subject::class);

@@ -137,7 +137,6 @@ class KlassController extends Controller
     public function courses(Klass $klass){
         //$klass=Klass::find($klassId);
         $courses=Course::whereBelongsTo($klass)->get();
-        $subjects=Subject::all();
         return Inertia::render('Admin/KlassCourses',[
             'klass'=>$klass,
             'courses'=>$courses,
