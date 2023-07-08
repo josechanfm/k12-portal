@@ -20,45 +20,51 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $masterRole=Role::create(['name'=>'master']);
-        $adminRole=Role::create(['name'=>'admin']);
-        $teacherRole=Role::create(['name'=>'teacher']);
+        // $masterRole=Role::create(['name'=>'master']);
+        // $adminRole=Role::create(['name'=>'admin']);
+        // $directoRole=Role::create(['name'=>'director']);
+        // $klassHeadRole=Role::create(['name'=>'klass_head']);
+        // $subjectHeadRole=Role::create(['name'=>'subject_head']);
+        // $teacherRole=Role::create(['name'=>'teacher']);
+        // $assistantRole=Role::create(['name'=>'assistant']);
 
-        $user=User::create([
-            'name' => 'Master',
-            'email' => 'master@example.com',
-            'password' => Hash::make('password'),
-        ]);
-        $user->assignRole('master');
-        $user->ownedTeams()->save(Team::forceCreate([
-            'user_id' => $user->id,
-            'name' => explode(' ', $user->name, 2)[0]."'s Team",
-            'personal_team' => true,
-        ]));
+        // $user=User::create([
+        //     'name' => 'Master',
+        //     'email' => 'master@example.com',
+        //     'password' => Hash::make('password'),
+        // ]);
+        // $user->assignRole('master');
+        // $user->ownedTeams()->save(Team::forceCreate([
+        //     'user_id' => $user->id,
+        //     'name' => explode(' ', $user->name, 2)[0]."'s Team",
+        //     'personal_team' => true,
+        // ]));
 
-        $user=User::create([
-            'name' => 'Admin',
-            'email' => 'admin@example.com',
-            'password' => Hash::make('password'),
-        ]);
-        $user->assignRole('admin');
-        $user->ownedTeams()->save(Team::forceCreate([
-            'user_id' => $user->id,
-            'name' => explode(' ', $user->name, 2)[0]."'s Team",
-            'personal_team' => true,
-        ]));
+        // $user=User::create([
+        //     'name' => 'Admin',
+        //     'email' => 'admin@example.com',
+        //     'password' => Hash::make('password'),
+        // ]);
+        // $user->assignRole('admin');
+        // $user->ownedTeams()->save(Team::forceCreate([
+        //     'user_id' => $user->id,
+        //     'name' => explode(' ', $user->name, 2)[0]."'s Team",
+        //     'personal_team' => true,
+        // ]));
 
-        $user=User::create([
-            'name' => 'Teacher',
-            'email' => 'teacher@example.com',
-            'password' => Hash::make('password'),
-        ]);
-        $user->assignRole('teacher');
-        $user->ownedTeams()->save(Team::forceCreate([
-            'user_id' => $user->id,
-            'name' => explode(' ', $user->name, 2)[0]."'s Team",
-            'personal_team' => true,
-        ]));
+        // $user=User::create([
+        //     'name' => 'Teacher',
+        //     'email' => 'teacher@example.com',
+        //     'password' => Hash::make('password'),
+        // ]);
+        // $user->assignRole('teacher');
+        // $user->ownedTeams()->save(Team::forceCreate([
+        //     'user_id' => $user->id,
+        //     'name' => explode(' ', $user->name, 2)[0]."'s Team",
+        //     'personal_team' => true,
+        // ]));
+
+        User::factory()->count(100)->create();
 
     }
 }

@@ -48,7 +48,7 @@ class AdditiveController extends Controller
             $additive=new Additive();
             $additive->klass_student_id=$d['klass_student_id'];
             $additive->reference_code=$d['reference_code'];
-            $additive->value=$d['value'];
+            $additive->value=$d['value']??NULL;
             $additive->remark=isset($d['remark'])?$d['remark']:null;
             $additive->submit_at=date('Y-m-d');
             $additive->user_id=auth()->user()->id;

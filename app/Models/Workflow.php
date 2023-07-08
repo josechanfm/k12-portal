@@ -9,8 +9,9 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 class Workflow extends Model
 {
     use HasFactory;
+    protected $fillable=['processes'];
 
-    public function workflowable():MorphTo{
+    public function workflowable() : MorphTo {
         return $this->morphTo();
     }
 

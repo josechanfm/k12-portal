@@ -20,16 +20,18 @@ class AdditiveObserver
     public function created(Additive $additive)
     {
         $template=$additive->template();
-        $additive->workflow->create([
-            'processes'=>$template->processes
-        ]);
+        // dd(json_encode($template->procedure->processes));
+        // $additive->workflow()->create([
+        //     'processes'=>json_encode($template->procedure->processes)
+        // ]);
         $workflow=new Workflow();
-        $workflow->workflowable->associate($additive);
+        $workflow->workflowable()->associate($additive);
+        $workflow->processes=json_encode($template->procedure->processes);
         $workflow->save();
-
+        
         if($template->procedure_id !=null){
             $procedure=Procedure::find($template->procedure_id);
-            $processes=json_decode($procedure->porcesses,false);
+            $processes=$procedure->processes;
             foreach($processes as $process){
                 switch($process->user_role){
                     case 'DIRECTOR':

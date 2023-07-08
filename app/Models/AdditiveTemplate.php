@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class AdditiveTemplate extends Model
 {
     use HasFactory;
+
+    public function procedure(){
+        return $this->belongsTo(Procedure::class);
+    }
 }
