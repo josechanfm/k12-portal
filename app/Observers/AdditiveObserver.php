@@ -19,14 +19,18 @@ class AdditiveObserver
      */
     public function created(Additive $additive)
     {
+        $klassStudent=$additive->klassStudent;
+        //dd($klassStudent->klass->tag.", ".$klassStudent->student->name_zh."(".$klassStudent->student_number.")");
         $template=$additive->template();
+        
         // dd(json_encode($template->procedure->processes));
         // $additive->workflow()->create([
         //     'processes'=>json_encode($template->procedure->processes)
         // ]);
         $workflow=new Workflow();
         $workflow->workflowable()->associate($additive);
-        $workflow->processes=json_encode($template->procedure->processes);
+        $workflow->processes=$template->procedure->processes;
+        $workflow->title_zh=$template->title_zh;
         $workflow->save();
         
         if($template->procedure_id !=null){
@@ -53,10 +57,13 @@ class AdditiveObserver
                 foreach($users as $user){
                     Task::create([
                         'workflow_id'=>$workflow->id,
+                        'description'=>$klassStudent->klass->tag.", ".$klassStudent->student->name_zh."(".$klassStudent->student_number.")",
                         'start_date'=>$additive->submit_at,
                         'due_date'=>null,
-                        'user_role'=>null,
+                        'user_role'=>$process->user_role,
                         'user_id'=>$user->id,
+                        'state'=>0,
+                        'actions'=>$template->procedure->actions
                     ]);
                 }
             }

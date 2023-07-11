@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Manage;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use App\Models\Task;
 use App\Models\Additive;
+use App\Models\Student;
 
 class TaskController extends Controller
 {
@@ -16,13 +18,19 @@ class TaskController extends Controller
      */
     public function index()
     {
-        
-        $tasks=Task::whereBelongsTo(auth()->user())->with('workflow')->get();
-        echo json_encode(auth()->user());
-        dd($tasks);
 
-        $additive=Additive::find(1);
-        dd($additive->workflow);
+        // $additive=Additive::find(2);
+        // dd($additive->klassStudent);
+
+        $tasks=Task::where('state',0)->whereBelongsTo(auth()->user())->with('workflow')->get();
+        // echo json_encode(auth()->user());
+            // dd($tasks);
+
+        // $additive=Additive::find(1);
+        // dd($additive->workflow);
+        return Inertia::render('Manage/Tasks',[
+            'tasks' => $tasks
+        ]);
 
     }
 
@@ -76,9 +84,25 @@ class TaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Task $task)
     {
-        //
+        // return response($task);
+
+        // $tmp=$request->all();
+        // return response($tmp);
+        // dd($task->workflow->processes);
+
+        $task->status=strtoupper($request->response);
+        if(isset($request->comments)){
+            $task->comments=$request->comments;
+        }
+        $task->save();
+
+        $modelId=$request->workflow['workflowable_id'];
+        $model=$request->workflow['workflowable_type'];
+        $response=$request->response;
+        $model::find($modelId)->$response($request->all());
+        return redirect()->back();
     }
 
     /**

@@ -9,15 +9,16 @@ class Course extends Model
 {
     use HasFactory;
     protected $appends=['student_count','subject_heads'];
+    protected $casts=['subject_head_ids'=>'array'];
 
     public function getStudentCountAttribute(){
         return $this->students->count();
     }
     public function getSubjectHeadsAttribute(){
-        $teachers=explode(',',$this->subject_head_ids);
-        if(count($teachers)>0){
-            return Teacher::whereIn('id',$teachers)->get();
-        }
+        if(is_array($this->subject_head_ids)){
+            return Staff::whereIn('id',$this->subject_head_ids)->get();
+        };
+        return null;
     }
     public function klass(){
         return $this->belongsTo(Klass::class);
@@ -46,7 +47,7 @@ class Course extends Model
         return $this->belongsToMany(Student::class,'course_student')->withPivot('id as pivot_course_student_id');
     }
     public function teachers(){
-        return $this->belongsToMany(Teacher::class);
+        return $this->belongsToMany(Staff::class,'course_teacher','staff_id','course_id');
     }
     // // public function subject(){
     // //     return $this->belongsTo(Subject::class);

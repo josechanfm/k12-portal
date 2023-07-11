@@ -74,6 +74,7 @@ Route::middleware([
 
     Route::prefix('admin')->group(function(){
         Route::resource('/',App\Http\Controllers\Admin\DashboardController::class)->names('admin');
+        Route::resource('staffs',App\Http\Controllers\Admin\StaffController::class)->names('admin.staffs');
         Route::resource('years',App\Http\Controllers\Admin\YearController::class)->names('admin.years');
         Route::get('year/{year}/grades',[App\Http\Controllers\Admin\YearController::class,'grades'])->name('admin.year.grades');
         Route::resource('/grades',App\Http\Controllers\Admin\GradeController::class)->names('admin.grades');
@@ -86,6 +87,7 @@ Route::middleware([
         Route::get('klass/{klass}/students',[App\Http\Controllers\Admin\KlassController::class,'students'])->name('admin.klass.students');
         Route::post('student/sync_courses',[App\Http\Controllers\Admin\StudentController::class,'syncCourses'])->name('admin.klass.syncCourses');
         Route::get('course/{course}/students',[App\Http\Controllers\Admin\CourseController::class,'students'])->name('admin.course.students');
+        Route::put('course/{course}/update_subject_heads',[App\Http\Controllers\Admin\CourseController::class,'updateSubjectHeads'])->name('admin.course.updateSubjectHeads');
 
         // Route::get('grades/year/{year}',[App\Http\Controllers\Admin\GradeController::class,'admin.grades.year']);
         Route::resource('/klasses',App\Http\Controllers\Admin\KlassController::class)->names('admin.klasses');

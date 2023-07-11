@@ -8,9 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class Staff extends Model
 {
     use HasFactory;
+    protected $appends=['username'];
     protected $table='staffs';
     
-    public function teacher(){
-        return $this->hasOne(Teacher::class);
+    public function getUsernameAttribute(){
+        return User::find($this->user_id)->username??'';
     }
+    public function user(){
+        return $this->belongsto(User::class);
+    }
+
+    public static function teachers(){
+        return Staff::where('is_teacher', true)->get();
+    }
+
 }

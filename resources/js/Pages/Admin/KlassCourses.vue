@@ -7,14 +7,24 @@
         </template>
         <a-typography-title :level="3">年級: {{ klass.tag }}</a-typography-title>
         <a-typography-title :level="3">年級全稱: {{ klass.title_zh }}</a-typography-title>
+        
+            <a-switch v-model:checked="assignSubjectHead" :checkedValue="1" :uncheckedValue="0"/>
+                
             <a-table :dataSource="courses" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='students'">
-                        
                         <inertia-link :href="route('admin.course.students',record.id)" class="ant-btn">Students</inertia-link>
                     </template>
                     <template v-else-if="column.dataIndex=='subject_heads'">
-                        {{ record.subject_heads.map(t=>t.name_zh).toString() }}
+                        <div v-if="assignSubjectHead">
+                            <a-select v-model:value="record.subject_head_ids" placeholder="請選擇..." 
+                                style="width:200px" :options="teachers" mode="multiple"
+                                :field-names="{ label: 'name_zh', value: 'id' }" @change="record.subject_head_changed=true"></a-select>
+                            <a-button @click="updateSubjectHead(record)" v-show="record.subject_head_changed">Save</a-button>
+                        </div>
+                        <div v-else>
+                            {{ record.subject_heads.map(t=>t.name_zh).toString() }}
+                        </div>
                     </template>                    
                     <template v-else>
                         {{record[column.dataIndex]}}
@@ -37,7 +47,7 @@ export default {
         CheckSquareOutlined,
         StopOutlined
     },
-    props: ['klass','courses','subjects'],
+    props: ['klass','courses','subjects','teachers'],
     data() {
         return {
             modal: {
@@ -49,6 +59,7 @@ export default {
             selectedSubjects:[],
             selectAll:false,
             dataSource:[],
+            assignSubjectHead:false,
             columns:[
                 {
                     title: '學科代號',
@@ -127,6 +138,20 @@ export default {
 
     },
     methods: {
+        updateSubjectHead(record){
+            //this.$inertia.post(route('admin.course.updateSubjectHeads',record.id), record, {
+            this.$inertia.put(route('admin.course.updateSubjectHeads',record.id), record, {
+                    onSuccess: (page) => {
+                        console.log(page);
+                    },
+                    onError: (err) => {
+                        console.log(err);
+                    }
+                });
+
+            record.subject_head_changed=false;
+            console.log(record);
+        }
     },
 }
 </script>

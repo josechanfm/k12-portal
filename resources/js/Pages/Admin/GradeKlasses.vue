@@ -22,12 +22,11 @@
                     <a-button @click="lockTranscript(record)">鎖定成積表</a-button>
                 </template>
                 <template v-else-if="column.dataIndex == 'head_teacher'">
-                    {{ record.head_teachers.map(t=>t.name_zh).toString() }}
+                    <!-- {{ record.klass_heads }} -->
+                    {{ record.klass_heads.map(t=>t.name_zh).toString() }}
                 </template>
-                <template v-else-if="column.dataIndex == 'study_id'">
-                    <span v-if="text != ''">
-                        {{ getStudyPlan(text) }}
-                    </span>
+                <template v-else-if="column.dataIndex == 'room'">
+                    {{ record.courses.teachers }}
                 </template>
                 <template v-else-if="column.dataIndex == 'courses'">
                     {{ record.course_count }}
@@ -120,6 +119,11 @@
                 <a-form-item label="教室編號" name="room">
                     <a-input v-model:value="modal.data.room" />
                 </a-form-item>
+                <a-form-item label="班主任" name="klass_head_ids">
+                    <a-select v-model:value="modal.data.klass_head_ids" style="with:100%" placeholder="請選擇..."
+                        max-tag-count="responsive" :options="teachers" mode="multiple"
+                        :field-names="{ label: 'name_zh', value: 'id' }"></a-select>
+                </a-form-item>
             </a-form>
             <template #footer>
                 <a-button v-if="modal.mode == 'EDIT'" key="Update" type="primary" @click="updateRecord()">Update</a-button>
@@ -139,7 +143,7 @@ export default {
         AdminLayout,
         ButtonLink,
     },
-    props: ['year', 'grades', 'grade', 'klasses', 'klassLetters', 'studyStreams', 'studies'],
+    props: ['grades', 'grade', 'klasses', 'klassLetters', 'studyStreams', 'studies','teachers'],
     data() {
         return {
             gradeSelected: 1,

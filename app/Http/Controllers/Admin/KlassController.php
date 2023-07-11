@@ -12,7 +12,7 @@ use App\Models\Klass;
 use App\Models\Year;
 use App\Models\Grade;
 use App\Models\Study;
-use App\Models\Subject;
+use App\Models\Staff;
 use App\Models\Student;
 use Illuminate\Support\Facades\Validator;
 
@@ -100,6 +100,7 @@ class KlassController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         Validator::make($request->all(), [
             'grade_id' => ['required'],
             'letter' => ['required'],
@@ -112,6 +113,7 @@ class KlassController extends Controller
             $klass->stream=$request->stream;
             $klass->room=$request->room;
             $klass->tag=Grade::find($request->grade_id)->tag.$request->letter;
+            $klass->klass_head_ids=$request->klass_head_ids;
             $klass->save();
             return redirect()->back();
         }else{
@@ -140,6 +142,7 @@ class KlassController extends Controller
         return Inertia::render('Admin/KlassCourses',[
             'klass'=>$klass,
             'courses'=>$courses,
+            'teachers'=>Staff::teachers()
             //'subjects'=>$subjects
         ]);
     }

@@ -191,6 +191,17 @@ export default {
             this.modal.mode='EDIT';
             this.modal.isOpen = true;
         },
+        onClickDelete(recordId){
+            if (!confirm('是否確定刪除?')) return;
+            this.$inertia.delete('/admin/gradeSubjects/' + recordId,{
+                onSuccess: (page)=>{
+                    console.log(page);
+                },
+                onError: (error)=>{
+                    console.log(error);
+                }
+            });
+        },
         storeRecord(){
             this.$inertia.post('/admin/gradeSubjects/', {
                 selectedSubjects:this.selectedSubjects,
@@ -220,17 +231,6 @@ export default {
                 console.log("error", err);
             });
            
-        },
-        onClickDelete(recordId){
-            if (!confirm('是否確定刪除?')) return;
-            this.$inertia.delete('/admin/gradeSubjects/' + recordId,{
-                onSuccess: (page)=>{
-                    console.log(page);
-                },
-                onError: (error)=>{
-                    console.log(error);
-                }
-            });
         },
         modalCancel(){
             this.modal.data={}

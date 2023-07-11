@@ -16,7 +16,7 @@ class Additive extends Model
         return AdditiveTemplate::where('reference_code',$this->reference_code)->first();
     }
     public function klassStudent(){
-        return $this->belongsTo(KlassStudent::class);
+        return $this->belongsTo(KlassStudent::class,'klass_student_id')->with('student')->with('klass');
     }
 
     public function workflow(): MorphOne{
@@ -24,12 +24,27 @@ class Additive extends Model
     }
 
     public function approved($data=null){
-
+        $this->approved=true;
+        if(isset($data['remark'])){
+            $this->remark=$data['remark'];
+        }
+        $this->save();
+        return true;
     }
-    public function reject($data=null){
-        
+    public function rejected($data=null){
+        $this->approved=false;
+        if(isset($data['remark'])){
+            $this->remark=$data['remark'];
+        }
+        $this->save();
+        return true;
     }
-    public function rework($data=null){
-        
+    public function reworked($data=null){
+        $this->approved=false;
+        if(isset($data['remark'])){
+            $this->remark=$data['remark'];
+        }
+        $this->save();
+        return true;
     }
 }

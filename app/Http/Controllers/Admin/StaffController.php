@@ -5,11 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Klass;
-use App\Models\Course;
-use App\Models\Student;
+use App\Models\Staff;
 
-class CourseController extends Controller
+class StaffController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,7 +16,10 @@ class CourseController extends Controller
      */
     public function index()
     {
-        echo 'courses';
+        $staffs=Staff::with('user')->paginate(request('per_page'));
+        return Inertia::render('Admin/Staffs',[
+            'staffs'=>$staffs,
+        ]);
     }
 
     /**
@@ -39,7 +40,20 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name_zh' => 'required',
+            'gender' => 'required',
+            'mobile' => 'required'
+        ]);
+        $staff=new Staff();
+        $staff->name_zh=$request->name_zh;
+        $staff->name_fn=$request->name_fn;
+        $staff->gender=$request->gender;
+        $staff->mobile=$request->mobile;
+        $staff->sector=$request->sector;
+        $staff->is_teacher=$request->is_teacher??false;
+        $staff->save();
+        return response($request->all());
     }
 
     /**
@@ -71,17 +85,21 @@ class CourseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Staff $staff)
     {
-        //return response()->json($request->all());
-        Course::upsert(
-            $request->all(),
-            ['klass_id','code'],
-            ['title_zh','title_en','type','stream','elective']
-        );
-
-        Course::whereNotIn('code',array_column($request->all(),'code'))->where('klass_id',$id)->delete();
-        return response()->json(["result"=>"done"]);
+        $request->validate([
+            'name_zh' => 'required',
+            'gender' => 'required',
+            'mobile' => 'required'
+        ]);
+        $staff->name_zh=$request->name_zh;
+        $staff->name_fn=$request->name_fn;
+        $staff->gender=$request->gender;
+        $staff->mobile=$request->mobile;
+        $staff->sector=$request->sector;
+        $staff->is_teacher=$request->is_teacher;
+        $staff->save();
+        return response($request->all());
     }
 
     /**
@@ -94,21 +112,4 @@ class CourseController extends Controller
     {
         //
     }
-
-    public function students(Course $course){
-
-        return Inertia::render('Admin/CourseStudents',[
-            'course'=>$course,
-            'courses'=>$course->klass->courses()->get(),
-            'students'=>$course->students()->with('courses')->get(),
-        ]);
-    }
-
-    public function updateSubjectHeads(Course $course, Request $request){
-        $course->subject_head_ids=$request->subject_head_ids;
-        $course->save();
-        return redirect()->back();
-    }
-
- 
 }

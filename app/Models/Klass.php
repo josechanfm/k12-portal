@@ -11,7 +11,7 @@ class Klass extends Model
 
     use HasFactory;
     protected $fillable=['grade_id','initial','tag','room'];
-    
+    protected $casts=['klass_head_ids'=>'array'];
     // public function subjects(){
     //     return $this->belongsToMany(Subject::class);
     // }
@@ -19,10 +19,10 @@ class Klass extends Model
     protected $appends= ['klass_heads','course_count','student_count','promoted_count','year_code','grade_year'];
     
     public function getKlassHeadsAttribute(){
-        $teachers=explode(',',$this->klass_head_ids);
-        if(count($teachers)>0){
-            return Teacher::whereIn('id',$teachers)->get();
-        }
+        if(is_array($this->klass_head_ids)){
+            return Staff::whereIn('id',$this->klass_head_ids)->get();
+        };
+        return [];
     }
     public function getGradeYearAttribute(){
         return Grade::find($this->grade_id)->grade_year;
@@ -46,14 +46,11 @@ class Klass extends Model
         return $this->belongsToMany(Student::class)
                 ->withPivot(['id as pivot_klass_student_id','student_number','stream','state','promote','promote_to']);
     }
-    public function teachers(){
-        return $this->belongsToMany(Teacher::class,'klass_teacher','klass_id','teacher_id');
-    }
     public function promoteTo(){
         return $this->belongsToMany(Student::class,'klass_student','promote_to','student_id')->withPivot(['id as pivot_klass_student_id','student_number','stream','state','promote','promote_to','id as pivot_klass_id']);
     }
     public function courses(){
-        return $this->hasMany(Course::class)->with('teachers')->with('scoreColumns');
+        return $this->hasMany(Course::class)->with('scoreColumns');
     }
     public function info(){
         return (object)["head"=>"123","subject_head"=>"567"];

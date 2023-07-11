@@ -23,6 +23,7 @@ return new class extends Migration
             $table->date('dob')->nullable();
             $table->string('mobile')->nullable();
             $table->string('sector')->nullable();
+            $table->boolean('is_teacher')->nullable();
             $table->timestamps();
         });
     }

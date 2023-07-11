@@ -10,6 +10,7 @@ class Workflow extends Model
 {
     use HasFactory;
     protected $fillable=['processes'];
+    protected $casts=['processes'=>'json'];
 
     public function workflowable() : MorphTo {
         return $this->morphTo();
