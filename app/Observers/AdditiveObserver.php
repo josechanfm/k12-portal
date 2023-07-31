@@ -27,6 +27,9 @@ class AdditiveObserver
         // $additive->workflow()->create([
         //     'processes'=>json_encode($template->procedure->processes)
         // ]);
+        if(empty($template->procedure)){
+            return true;
+        }
         $workflow=new Workflow();
         $workflow->workflowable()->associate($additive);
         $workflow->processes=$template->procedure->processes;

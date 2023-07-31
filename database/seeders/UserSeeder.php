@@ -55,7 +55,7 @@ class UserSeeder extends Seeder
         ]));
 
         $user=User::create([
-            'name' => 'teacher',
+            'username' => 'teacher',
             'name' => 'Teacher',
             'email' => 'teacher@example.com',
             'password' => Hash::make('password'),
@@ -69,7 +69,7 @@ class UserSeeder extends Seeder
 
         User::factory()->count(100)->create();
 
-        User::whereIsNull('username')->update(['username'=>DB::row("'user'+id")]);
+        User::whereNull('username')->update(['username'=>DB::raw("concat('user',id)")]);
 
     }
 }

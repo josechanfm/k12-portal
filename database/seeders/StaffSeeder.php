@@ -16,5 +16,6 @@ class StaffSeeder extends Seeder
     public function run()
     {
         Staff::factory()->count(100)->create();
+        Staff::where('id','<=','50')->update(['is_teacher'=>true]);
     }
 }

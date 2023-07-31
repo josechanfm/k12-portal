@@ -26,6 +26,7 @@
                     <th class="text-left">Stream</th>
                     <th class="text-left">Elective</th>
                     <th class="text-left">Active</th>
+                    <th class="text-left">Units</th>
                     <th class="text-left">Score</th>
                 </tr>
             </thead>
@@ -36,6 +37,7 @@
                     <td class="text-left">{{ course.stream }}</td>
                     <td class="text-left">{{ course.elective }}</td>
                     <td class="text-left">{{ course.active }}</td>
+                    <td class="text-left">{{ course.unit }}</td>
                     <th class="text-left">
                         <inertia-link :href="route('manage.course.scores', course.id)" class="ant-btn">學分</inertia-link>
                         <inertia-link :href="route('manage.course.makeups', course.id)" class="ant-btn">補考</inertia-link>

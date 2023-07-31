@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('workflowable_type');
             $table->bigInteger('workflowable_id');
             $table->json('processes');
+            $table->text('title_zh');
             $table->timestamps();
         });
     }

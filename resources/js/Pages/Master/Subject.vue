@@ -5,15 +5,19 @@
                 學年級別學科列表
             </h2>
         </template>
+        {{ study.grade }}- {{ study.title_zh }}<br>
+        {{ study.stream }}<br>
+        <br>
         <button @click="onClickCreate()"
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">新增學年級別學科</button>
-            <a-table :dataSource="subjects" :columns="columns" :pagination="pagination" @change="onPaginationChange" ref="dataTable">
+            <a-table :dataSource="study.subjects" :columns="columns" :pagination="pagination" @change="onPaginationChange" ref="dataTable">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
                         <ButtonLink @click="onClickEdit(record)" :style="'Edit'">修改</ButtonLink>
                         <ButtonLink @click="onClickDelete(record)" :style="'Delete'">刪除</ButtonLink>
                     </template>
                     <template v-if="column.dataIndex=='active'">
+                        {{ record }}
                         <check-square-outlined v-if="text=='1'" :style="{color:'green'}"/>
                         <stop-outlined v-else :style="{color:'red'}"/>
                     </template>
@@ -25,11 +29,11 @@
 
         <!-- Modal Start-->
         <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="60%" @update="updateRecord()" @onCancel="closeModal()">
-            <a-checkbox-group v-if="modal.mode=='CREATE'"
+            <!-- <a-checkbox-group v-if="modal.mode=='CREATE'"
                 v-model:value="selectedSubjects" 
                 name="checkboxgroup" 
                 :options="subjectTemplates.map(subject=>({value:subject.code,label:subject.title_zh+' ('+subject.stream+')'}))" 
-            />
+            /> -->
             <a-form
                 v-if="modal.mode=='EDIT'"
                 :model="modal.data"
@@ -66,6 +70,9 @@
                 <a-form-item label="簡介" name="description">
                     <a-textarea v-model:value="modal.data.description" placeholder="textarea with clear icon" allow-clear />
                 </a-form-item>
+                <a-form-item label="Subjtect Heads" name="subject_head_ids">
+                    <a-select v-model:value="modal.data.subject_head_ids" :options="staffs" :fieldNames="{value:'id',label:'name_zh'}"/>
+                </a-form-item>
                 <a-form-item label="有效" name="active">
                     <a-switch v-model:checked="modal.data.active" :checkedValue="1" :uncheckedValue="0"/>
                 </a-form-item>
@@ -94,7 +101,7 @@ export default {
         CheckSquareOutlined,
         StopOutlined
     },
-    props: ['subjects','subjectTemplates'],
+    props: ['study','staffs'],
     data() {
         return {
             modal: {
@@ -104,9 +111,9 @@ export default {
                 data:{}
             },
             pagination:{
-                total: this.subjects.total,
-                current:this.subjects.current_page,
-                pageSize:this.subjects.per_page,
+                total: this.study.subjects.total,
+                current:this.study.subjects.current_page,
+                pageSize:this.study.subjects.per_page,
             },
             selectedSubjects:[],
             selectAll:false,
@@ -183,7 +190,7 @@ export default {
     },
     methods: {
         onClickCreate(record){
-            this.selectedSubjects=this.subjects.map(subject=>subject.code);
+            this.selectedSubjects=this.study.subjects.map(subject=>subject.code);
             this.modal.title="Edit Subject";
             this.modal.mode='CREATE';
             this.modal.isOpen = true;
@@ -195,7 +202,7 @@ export default {
             this.modal.isOpen = true;
         },
         storeRecord(){
-            this.$inertia.post('/admin/gradeSubjects/', {
+            this.$inertia.post('/master/gradeSubjects/', {
                 selectedSubjects:this.selectedSubjects,
                 grade_id:this.grade.id
             },{
@@ -209,8 +216,9 @@ export default {
             });
         },
         updateRecord(){
+            console.log(this.modal.data);
             this.$refs.modalRef.validateFields().then(()=>{
-                this.$inertia.put('/admin/gradeSubjects/' + this.modal.data.id, this.modal.data,{
+                this.$inertia.put(route('master.studySubjects.update',this.modal.data.id), this.modal.data,{
                     onSuccess:(page)=>{
                         console.log(page);
                         this.modal.isOpen=false;

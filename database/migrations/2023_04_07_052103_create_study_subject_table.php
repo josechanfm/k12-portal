@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('study_id');
             $table->bigInteger('subject_id');
+            $table->string('subject_head_ids')->nullable();
             $table->timestamps();
         });
     }

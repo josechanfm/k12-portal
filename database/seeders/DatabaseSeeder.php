@@ -37,6 +37,8 @@ class DatabaseSeeder extends Seeder
             //TranscriptSeeder::class,
             ScoreColumnSeeder::class,
             //ScoreSeeder::class,
+            AdditiveTemplateSeeder::class,
+            ProcedureSeeder::class
         ]);
         // \App\Models\User::factory(10)->create();
 

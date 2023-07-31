@@ -107,7 +107,7 @@ class AdditiveController extends Controller
         if(!in_array(strtoupper($category),$categories)){
             return redirect()->route('manage');
         }
-        return Inertia::render('Manage/KlassBehaves',[
+        return Inertia::render('Manage/KlassAdditives',[
             'additives'=>$klass->additives($category),
             'additiveTemplates'=>AdditiveTemplate::all(),
         ]);

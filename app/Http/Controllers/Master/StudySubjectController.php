@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Master;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Staff;
 use App\Models\Study;
 use App\Models\Subject;
 use App\Models\StudySubject;
@@ -80,7 +81,8 @@ class StudySubjectController extends Controller
         // return;
         return Inertia::render('Master/Subject',[
             'study'=>$study,
-            'subjects'=>$subjects
+            //'subjects'=>$subjects,
+            'staffs'=>Staff::all()
         ]);
     }
 
@@ -109,22 +111,24 @@ class StudySubjectController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $data = array_map(function($d) use ($id){
-            return array(
-                'study_id'=>$id,
-                'subject_id'=>$d['id'],
-                'stream'=>$d['stream'],
-                'elective'=>$d['elective']
-            );
-        }, $request->all());
-        StudySubject::upsert(
-            $data,
-            ['study_id','subject_id'],
-            ['stream','elective']
-        );
+        dd($id);
+        dd($request->all());
+        // $data = array_map(function($d) use ($id){
+        //     return array(
+        //         'study_id'=>$id,
+        //         'subject_id'=>$d['id'],
+        //         'stream'=>$d['stream'],
+        //         'elective'=>$d['elective']
+        //     );
+        // }, $request->all());
+        // StudySubject::upsert(
+        //     $data,
+        //     ['study_id','subject_id'],
+        //     ['stream','elective']
+        // );
 
-        StudySubject::whereNotIn('subject_id',array_column($data,'subject_id'))->where('study_id',$id)->delete();
-        return response()->json($data);
+        // StudySubject::whereNotIn('subject_id',array_column($data,'subject_id'))->where('study_id',$id)->delete();
+        // return response()->json($data);
         //return response()->json($request->all());
     }
 

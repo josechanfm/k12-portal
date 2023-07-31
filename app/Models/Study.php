@@ -10,7 +10,7 @@ class Study extends Model
     use HasFactory;
 
     public function subjects(){
-        return $this->belongsToMany(Subject::class);
+        return $this->belongsToMany(Subject::class)->withPivot('subject_head_ids');
     }
     static function versions(){
         //$versions=Study::select('version as value','version as label')->groupBy('version')->get();

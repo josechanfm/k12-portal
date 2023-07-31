@@ -23,7 +23,9 @@
                             <a-button @click="updateSubjectHead(record)" v-show="record.subject_head_changed">Save</a-button>
                         </div>
                         <div v-else>
-                            {{ record.subject_heads.map(t=>t.name_zh).toString() }}
+                            <ol>
+                                <li v-for="head in record.subject_heads">{{ head.name_zh }}</li>
+                            </ol>
                         </div>
                     </template>                    
                     <template v-else>

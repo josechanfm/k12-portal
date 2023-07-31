@@ -64,7 +64,7 @@ Route::middleware([
 ])->group(function () {
     Route::prefix('master')->group(function(){
         Route::resource('/studies',App\Http\Controllers\Master\StudyController::class);
-        Route::resource('/study/subjects',App\Http\Controllers\Master\StudySubjectController::class);
+        Route::resource('/study/subjects',App\Http\Controllers\Master\StudySubjectController::class)->names('master.studySubjects');
         Route::resource('/subjects',App\Http\Controllers\Master\SubjectController::class);
         Route::resource('/configs',App\Http\Controllers\Master\ConfigController::class);
         Route::resource('/transcriptTemplate',App\Http\Controllers\Master\TranscriptTemplateController::class);

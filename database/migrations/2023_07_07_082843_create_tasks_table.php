@@ -16,12 +16,14 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('workflow_id');
+            $table->text('description');
             $table->date('start_date');
             $table->date('due_date')->nullable();
             $table->string('user_role')->nullable();
             $table->bigInteger('user_id')->nullable();
             $table->string('actions')->nullable();
             $table->string('status')->nullable();
+            $table->string('state')->nullable();
             $table->timestamps();
         });
 
