@@ -8,7 +8,7 @@
         <a-typography-title :level="3">年級: {{ klass.tag }}</a-typography-title>
         <a-typography-title :level="3">年級全稱: {{ klass.title_zh }}</a-typography-title>
         
-            <a-switch v-model:checked="assignSubjectHead" :checkedValue="1" :uncheckedValue="0"/>
+            <a-switch v-model:checked="toAssignTeachers" :checkedValue="1" :uncheckedValue="0"/>
                 
             <a-table :dataSource="courses" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
@@ -16,7 +16,7 @@
                         <inertia-link :href="route('admin.course.students',record.id)" class="ant-btn">Students</inertia-link>
                     </template>
                     <template v-else-if="column.dataIndex=='subject_heads'">
-                        <div v-if="assignSubjectHead">
+                        <div v-if="toAssignTeachers">
                             <a-select v-model:value="record.subject_head_ids" placeholder="請選擇..." 
                                 style="width:200px" :options="teachers" mode="multiple"
                                 :field-names="{ label: 'name_zh', value: 'id' }" @change="record.subject_head_changed=true"></a-select>
@@ -25,6 +25,19 @@
                         <div v-else>
                             <ol>
                                 <li v-for="head in record.subject_heads">{{ head.name_zh }}</li>
+                            </ol>
+                        </div>
+                    </template>                    
+                    <template v-else-if="column.dataIndex=='course_teachers'">
+                        <div v-if="toAssignTeachers">
+                            <a-select v-model:value="record.teacher_ids" placeholder="請選擇..." 
+                                style="width:200px" :options="teachers" mode="multiple"
+                                :field-names="{ label: 'name_zh', value: 'id' }" @change="record.course_teacher_changed=true"></a-select>
+                            <a-button @click="updateCourseTeachers(record)" v-show="record.course_teacher_changed">Save</a-button>
+                        </div>
+                        <div v-else>
+                            <ol>
+                                <li v-for="teacher in record.teachers">{{ teacher.name_zh }}</li>
                             </ol>
                         </div>
                     </template>                    
@@ -61,7 +74,7 @@ export default {
             selectedSubjects:[],
             selectAll:false,
             dataSource:[],
-            assignSubjectHead:false,
+            toAssignTeachers:false,
             columns:[
                 {
                     title: '學科代號',
@@ -81,6 +94,12 @@ export default {
                 },{
                     title: '科組長',
                     dataIndex: 'subject_heads',
+                },{
+                    title: '老師',
+                    dataIndex: 'course_teachers',
+                },{
+                    title: '評操行',
+                    dataIndex: 'behaviours',
                 },{
                     title: '學生',
                     dataIndex: 'students',
@@ -151,7 +170,10 @@ export default {
                     }
                 });
 
-            record.subject_head_changed=false;
+            //record.subject_head_changed=false;
+            console.log(record);
+        },
+        updateCourseTeachers(record){
             console.log(record);
         }
     },

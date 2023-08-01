@@ -28,7 +28,7 @@ return new class extends Migration
             $table->boolean('in_transcript');
             $table->tinyInteger('unit');
             $table->boolean('active');
-            $table->string('subject_head_ids')->nullable();
+            $table->string('subject_head_ids')->default('[]');
             $table->timestamps();
             $table->unique(['klass_id','code'],'klass_id_code');
         });

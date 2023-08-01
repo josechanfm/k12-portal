@@ -17,6 +17,8 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('course_id');
             $table->bigInteger('staff_id');
+            $table->boolean('behaviour');
+            $table->text('behaviour_exception');
             $table->timestamps();
         });
     }

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('value');
             $table->date('assign_at')->default(DB::raw('CURRENT_TIMESTAMP'));;
             $table->boolean('confimed')->default(false);
+            $table->date('submit_at')->nullable();
             $table->date('confirmed_at')->nullable();
             $table->bigInteger('user_id');
             $table->text('remark')->nullable();
