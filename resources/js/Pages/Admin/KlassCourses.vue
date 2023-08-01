@@ -7,12 +7,11 @@
         </template>
         <a-typography-title :level="3">年級: {{ klass.tag }}</a-typography-title>
         <a-typography-title :level="3">年級全稱: {{ klass.title_zh }}</a-typography-title>
-        
             <a-switch v-model:checked="toAssignTeachers" :checkedValue="1" :uncheckedValue="0"/>
-                
             <a-table :dataSource="courses" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='students'">
+                        <a-button @click="changeTeachers(record)">Teachers</a-button>
                         <inertia-link :href="route('admin.course.students',record.id)" class="ant-btn">Students</inertia-link>
                     </template>
                     <template v-else-if="column.dataIndex=='subject_heads'">
@@ -27,7 +26,7 @@
                                 <li v-for="head in record.subject_heads">{{ head.name_zh }}</li>
                             </ol>
                         </div>
-                    </template>                    
+                    </template>
                     <template v-else-if="column.dataIndex=='course_teachers'">
                         <div v-if="toAssignTeachers">
                             <a-select v-model:value="record.teacher_ids" placeholder="請選擇..." 
@@ -41,13 +40,79 @@
                             </ol>
                         </div>
                     </template>                    
+                    <template v-else-if="column.dataIndex=='behaviours'">
+                        <ol>
+                            <template v-for="teacher in record.teachers">
+                                <li v-if="teacher.pivot.behaviour">{{ teacher.name_zh }}</li>
+                            </template>
+                            
+                        </ol>
+                    </template>                    
                     <template v-else>
                         {{record[column.dataIndex]}}
                     </template>
                 </template>
             </a-table>
-    </AdminLayout>
 
+        <!-- Modal Start-->
+        <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="60%" @update="updateRecord()" @onCancel="closeModal()">
+            <a-form
+                :model="modal.data"
+                name="modalCourse"
+                ref="modalRef"
+                :rules="rules"
+                :validate-messages="validateMessages"
+            >
+                <a-form-item label="科目代號" name="code">
+                    {{ modal.data.code }}
+                </a-form-item>
+                <a-form-item label="科目名稱 (中文)" name="title_zh">
+                    <a-input v-bind:value="modal.data.title_zh" />
+                </a-form-item>
+                <a-form-item label="科目名稱 (英文)" name="title_en">
+                    <a-input v-bind:value="modal.data.title_en" />
+                </a-form-item>
+                <a-form-item label="專業方向" name="stream">
+                    <a-radio-group v-bind:value="modal.data.stream" button-style="solid">
+                        <a-radio-button value="LIB">Liberal Studies</a-radio-button>
+                        <a-radio-button value="SCI">Science</a-radio-button>
+                        <a-radio-button value="ART">Liberal Arts</a-radio-button>
+                    </a-radio-group>
+                </a-form-item>
+                <a-form-item label="必修/選修" name="elective">
+                    <a-radio-group v-bind:value="modal.data.elective" button-style="solid">
+                        <a-radio-button value="COP">Compulsary</a-radio-button>
+                        <a-radio-button value="ELE">Elective</a-radio-button>
+                    </a-radio-group>
+                </a-form-item>
+                <a-form-item label="有效" name="active">
+                    <a-switch v-bind:checked="modal.data.active" :checkedValue="1" :uncheckedValue="0"/>
+                </a-form-item>
+                <a-form-item label="科組長" name="subject_head_ids">
+                    <a-select v-model:value="modal.data.subject_head_ids" :options="teachers" :fieldNames="{value:'id',label:'name_zh'}"  mode="multiple"/>
+                </a-form-item>
+                <a-form-item label="科任老師" name="teachers_ids">
+                    <a-select v-model:value="modal.data.teacher_ids" :options="teachers" :fieldNames="{value:'id',label:'name_zh'}"  mode="multiple"/>
+                </a-form-item>
+                <a-form-item label="評操行" name="teachers_ids">
+                    <a-checkbox-group :key="modal.data.teacher_ids" name="canGiveBehaviours" v-model:value="modal.data.canGivebehaviours">
+                        <template v-for="teacherId in modal.data.teacher_ids">
+                            <a-checkbox :value="teacherId">
+                                {{teachers.find(t=>t.id==teacherId).name_zh}}
+                            </a-checkbox>
+                        </template>
+                    </a-checkbox-group>
+                </a-form-item>
+
+            </a-form>
+        <template #footer>
+            <a-button key="back" @click="modalCancel">Return</a-button>
+            <a-button v-if="modal.mode=='EDIT'" key="Update" type="primary" @click="updateTeachers()">Update</a-button>
+        </template>
+    </a-modal>    
+    <!-- Modal End-->
+
+    </AdminLayout>
 </template>
 
 <script>
@@ -174,7 +239,23 @@ export default {
             console.log(record);
         },
         updateCourseTeachers(record){
+            this.$inertia.put(route('admin.course.updateCourseTeachers',record.id), record, {
+                    onSuccess: (page) => {
+                        console.log(page);
+                    },
+                    onError: (err) => {
+                        console.log(err);
+                    }
+                });
             console.log(record);
+        },
+        changeTeachers(record){
+            this.modal.data={...record}
+            this.modal.isOpen=true
+            this.modal.mode='EDIT'
+        },
+        updateTeachers(){
+            console.log(this.modal.data);
         }
     },
 }

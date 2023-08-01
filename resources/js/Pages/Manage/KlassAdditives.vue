@@ -166,7 +166,6 @@ export default {
 
         },
         getRecordItem(record){
-            console.log(record);
             if(this.additives.templates[record.reference_code].format=='TEXT'){
                 //return record
                 return this.additives.templates[record.reference_code].title_zh + " : " + record.remark + " @" + record.submit_at    

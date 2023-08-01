@@ -88,6 +88,7 @@ Route::middleware([
         Route::post('student/sync_courses',[App\Http\Controllers\Admin\StudentController::class,'syncCourses'])->name('admin.klass.syncCourses');
         Route::get('course/{course}/students',[App\Http\Controllers\Admin\CourseController::class,'students'])->name('admin.course.students');
         Route::put('course/{course}/update_subject_heads',[App\Http\Controllers\Admin\CourseController::class,'updateSubjectHeads'])->name('admin.course.updateSubjectHeads');
+        Route::put('course/{course}/update_curse_teachers',[App\Http\Controllers\Admin\CourseController::class,'updateCourseTeachers'])->name('admin.course.updateCourseTeachers');
 
         // Route::get('grades/year/{year}',[App\Http\Controllers\Admin\GradeController::class,'admin.grades.year']);
         Route::resource('/klasses',App\Http\Controllers\Admin\KlassController::class)->names('admin.klasses');

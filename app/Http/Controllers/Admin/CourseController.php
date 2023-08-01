@@ -107,7 +107,14 @@ class CourseController extends Controller
     public function updateSubjectHeads(Course $course, Request $request){
         $course->subject_head_ids=$request->subject_head_ids;
         $course->save();
+        $course->teachers()->sync($request->teacher_ids);
         return redirect()->back();
+    }
+    public function updateCourseTeachers(Course $course, Request $request){
+        return response()->json($request->all());
+        // $course->subject_head_ids=$request->subject_head_ids;
+        // $course->save();
+        // return redirect()->back();
     }
 
  
