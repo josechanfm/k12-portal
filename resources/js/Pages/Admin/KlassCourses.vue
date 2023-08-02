@@ -90,9 +90,10 @@
                     <a-select v-model:value="modal.data.teacher_ids" :options="teachers" :fieldNames="{value:'id',label:'name_zh'}"  mode="multiple"/>
                 </a-form-item>
                 <a-form-item label="評操行" name="behaviour">
+                    {{this.modal.data.canGivebehaviours}}
                     <a-checkbox-group :key="modal.data.teacher_ids" name="canGiveBehaviours" v-model:value="modal.data.canGivebehaviours">
                         <template v-for="teacherId in modal.data.teacher_ids">
-                            <a-checkbox :value="teacherId">
+                            <a-checkbox :value="teacherId" >
                                 {{teachers.find(t=>t.id==teacherId).name_zh}}
                             </a-checkbox>
                         </template>
@@ -253,7 +254,9 @@ export default {
             this.modal.data={...record}
             this.modal.isOpen=true
             this.modal.mode='EDIT'
-            this.modal.data.canGivebehaviours=this.modal.data.teaching.map(t=>t.id)
+            this.modal.data.canGivebehaviours=this.modal.data.teaching.filter(
+                t=>(t.pivot.behaviour==true)
+            ).map(t=>t.id);
             //this.modal.data.canGivebehaviours=[3,2]
         },
         updateTeachers(){
