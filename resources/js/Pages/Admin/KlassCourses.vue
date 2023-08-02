@@ -36,17 +36,12 @@
                         </div>
                         <div v-else>
                             <ol>
-                                <li v-for="teacher in record.teachers">{{ teacher.name_zh }}</li>
+                                <li v-for="teacher in record.staffs">
+                                    {{ teacher.name_zh }}
+                                    <eye-outlined v-if="teacher.pivot.behaviour==true"/>
+                                </li>
                             </ol>
                         </div>
-                    </template>                    
-                    <template v-else-if="column.dataIndex=='behaviours'">
-                        <ol>
-                            <template v-for="teacher in record.teachers">
-                                <li v-if="teacher.pivot.behaviour">{{ teacher.name_zh }}</li>
-                            </template>
-                            
-                        </ol>
                     </template>                    
                     <template v-else>
                         {{record[column.dataIndex]}}
@@ -94,7 +89,7 @@
                 <a-form-item label="科任老師" name="teachers_ids">
                     <a-select v-model:value="modal.data.teacher_ids" :options="teachers" :fieldNames="{value:'id',label:'name_zh'}"  mode="multiple"/>
                 </a-form-item>
-                <a-form-item label="評操行" name="teachers_ids">
+                <a-form-item label="評操行" name="behaviour">
                     <a-checkbox-group :key="modal.data.teacher_ids" name="canGiveBehaviours" v-model:value="modal.data.canGivebehaviours">
                         <template v-for="teacherId in modal.data.teacher_ids">
                             <a-checkbox :value="teacherId">
@@ -118,14 +113,16 @@
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
-import {CheckSquareOutlined, StopOutlined} from '@ant-design/icons-vue';
+import {CheckSquareOutlined, ConsoleSqlOutlined, StopOutlined} from '@ant-design/icons-vue';
+import { EyeOutlined } from '@ant-design/icons-vue';
 
 export default {
     components: {
         AdminLayout,
         ButtonLink,
         CheckSquareOutlined,
-        StopOutlined
+        StopOutlined,
+        EyeOutlined
     },
     props: ['klass','courses','subjects','teachers'],
     data() {
@@ -134,7 +131,9 @@ export default {
                 mode:null,
                 isOpen: false,
                 title:'Subjects',
-                data:{}
+                data:{
+                    canGivebehaviours:[2,3]
+                }
             },
             selectedSubjects:[],
             selectAll:false,
@@ -162,9 +161,6 @@ export default {
                 },{
                     title: '老師',
                     dataIndex: 'course_teachers',
-                },{
-                    title: '評操行',
-                    dataIndex: 'behaviours',
                 },{
                     title: '學生',
                     dataIndex: 'students',
@@ -224,6 +220,9 @@ export default {
 
     },
     methods: {
+        modalCancel(){
+            this.modal.isOpen=false;
+        },
         updateSubjectHead(record){
             //this.$inertia.post(route('admin.course.updateSubjectHeads',record.id), record, {
             this.$inertia.put(route('admin.course.updateSubjectHeads',record.id), record, {
@@ -250,12 +249,29 @@ export default {
             console.log(record);
         },
         changeTeachers(record){
+            console.log(record);
             this.modal.data={...record}
             this.modal.isOpen=true
             this.modal.mode='EDIT'
+            this.modal.data.canGivebehaviours=this.modal.data.teaching.map(t=>t.id)
+            //this.modal.data.canGivebehaviours=[3,2]
         },
         updateTeachers(){
-            console.log(this.modal.data);
+            console.log(this.modal.data)
+            this.modal.data.syncCourseTeacher={}
+            this.modal.data.teacher_ids.forEach(t=>{
+                this.modal.data.syncCourseTeacher[t]={
+                    "behaviour":this.modal.data.canGivebehaviours?this.modal.data.canGivebehaviours.includes(t):false}
+            })
+            console.log(this.modal.data.syncCourseTeacher);
+            this.$inertia.put(route('admin.course.updateCourseTeachers',this.modal.data.id), this.modal.data, {
+                    onSuccess: (page) => {
+                        console.log(page);
+                    },
+                    onError: (err) => {
+                        console.log(err);
+                    }
+                });
         }
     },
 }
