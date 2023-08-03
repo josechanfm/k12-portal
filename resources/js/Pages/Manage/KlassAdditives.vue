@@ -5,8 +5,6 @@
                 Teacher
             </h2>
         </template>
-        <p>操行多人入,另選介面</p>
-        <p>Comment one input only</p>
         <p></p>
         <div>
             <div class="ant-table">
@@ -15,13 +13,15 @@
                         <table class="table-layout: auto;">
                             <thead class="ant-table-thead">
                                 <tr>
-                                    <td>Student Name</td>
-                                    <td v-for="column in additives.templates">{{ column.title_zh }}</td>
+                                    <th>調整</th>
+                                    <th>學生姓名</th>
+                                    <th v-for="column in additives.templates">{{ column.title_zh }}</th>
                                 </tr>
                             </thead>
                             <tbody class="ant-table-tbody">
                                 <tr v-for="student in additives.students">
-                                    <td @click="onClickStudent(student)">
+                                    <td class="w-24"><a-button @click="onClickStudent(student)">變更</a-button></td>
+                                    <td>
                                         {{ student.name_zh }}
                                     </td>
                                     <td v-for="column in additives.templates">

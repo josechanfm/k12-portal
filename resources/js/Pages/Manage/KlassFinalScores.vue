@@ -6,6 +6,7 @@
                 {{ klass.transcript_migrated }}
             </h2>
         </template>
+        <p>點擊紅色不合格分數批准補考</p>
         <a-button @click="migrateTranscripts" :disabled="klass.transcript_migrated == 9">
             <span v-if="klass.transcript_migrated == 1">重新轉換成積表分數</span>
             <span v-else>轉換成積表分數</span>
@@ -17,12 +18,11 @@
                         <table class="table-layout: auto;">
                             <thead class="ant-table-thead">
                                 <tr>
-                                    <th>Student Name</th>
+                                    <th>學生姓名</th>
                                     <th v-for="column in finalScores.score_columns">{{
                                         transcriptTemplates[column.course_code].title_zh }}</th>
                                     <th>不合格單位數</th>
                                 </tr>
-
                             </thead>
                             <tbody class="ant-table-tbody">
                                 <template v-for="student in finalScores.students">

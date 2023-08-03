@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Manage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Teacher;
+use App\Models\Staff;
 
 class TeacherController extends Controller
 {
@@ -16,8 +16,8 @@ class TeacherController extends Controller
      */
     public function index()
     {
-        $teachers=Teacher::with('courses')->get();
-        return Inertia::render('Manage/Teacher',[
+        $teachers=Staff::with('courses')->get();
+        return Inertia::render('Manage/Teachers',[
             'teachers' => $teachers,
         ]);
     }
@@ -89,7 +89,7 @@ class TeacherController extends Controller
     }
 
     public function teaching($teacherId){
-        $teacher=Teacher::with('courses')->find($teacherId);
+        $teacher=Staff::with('courses')->find($teacherId);
         // echo json_encode($teacher);
         // return;
         return Inertia::render('Manage/Teaching',[

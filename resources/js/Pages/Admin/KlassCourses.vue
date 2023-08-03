@@ -5,9 +5,14 @@
                 學年級別學科列表
             </h2>
         </template>
-        <a-typography-title :level="3">年級: {{ klass.tag }}</a-typography-title>
-        <a-typography-title :level="3">年級全稱: {{ klass.title_zh }}</a-typography-title>
-            <a-switch v-model:checked="toAssignTeachers" :checkedValue="1" :uncheckedValue="0"/>
+            <a-typography-title :level="3">班級: {{ klass.tag }} - {{ klass.title_zh }}</a-typography-title>
+            <a-typography-title :level="3">
+                班主任: <span v-for="teacher in klass.klass_heads">{{ teacher.name_zh }}, </span>
+            </a-typography-title>
+            <div>
+                <a-switch v-model:checked="toAssignTeachers" :checkedValue="1" :uncheckedValue="0"/>&nbsp;調整老師
+            </div>
+            
             <a-table :dataSource="courses" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='students'">
@@ -18,8 +23,10 @@
                         <div v-if="toAssignTeachers">
                             <a-select v-model:value="record.subject_head_ids" placeholder="請選擇..." 
                                 style="width:200px" :options="teachers" mode="multiple"
-                                :field-names="{ label: 'name_zh', value: 'id' }" @change="record.subject_head_changed=true"></a-select>
-                            <a-button @click="updateSubjectHead(record)" v-show="record.subject_head_changed">Save</a-button>
+                                :field-names="{ label: 'name_zh', value: 'id' }" 
+                                @change="updateCourseTeachers(record)"
+                            />
+                            <!-- <a-button @click="updateSubjectHead(record)" v-show="record.subject_head_changed">Save</a-button> -->
                         </div>
                         <div v-else>
                             <ol>
@@ -31,8 +38,10 @@
                         <div v-if="toAssignTeachers">
                             <a-select v-model:value="record.teacher_ids" placeholder="請選擇..." 
                                 style="width:200px" :options="teachers" mode="multiple"
-                                :field-names="{ label: 'name_zh', value: 'id' }" @change="record.course_teacher_changed=true"></a-select>
-                            <a-button @click="updateCourseTeachers(record)" v-show="record.course_teacher_changed">Save</a-button>
+                                :field-names="{ label: 'name_zh', value: 'id' }" 
+                                @change="updateCourseTeachers(record)"
+                            />
+                            <!-- <a-button @click="updateCourseTeachers(record)" v-show="record.course_teacher_changed">Save</a-button> -->
                         </div>
                         <div v-else>
                             <ol>
@@ -90,7 +99,6 @@
                     <a-select v-model:value="modal.data.teacher_ids" :options="teachers" :fieldNames="{value:'id',label:'name_zh'}"  mode="multiple"/>
                 </a-form-item>
                 <a-form-item label="評操行" name="behaviour">
-                    {{this.modal.data.canGivebehaviours}}
                     <a-checkbox-group :key="modal.data.teacher_ids" name="canGiveBehaviours" v-model:value="modal.data.canGivebehaviours">
                         <template v-for="teacherId in modal.data.teacher_ids">
                             <a-checkbox :value="teacherId" >
@@ -224,33 +232,34 @@ export default {
         modalCancel(){
             this.modal.isOpen=false;
         },
-        updateSubjectHead(record){
-            //this.$inertia.post(route('admin.course.updateSubjectHeads',record.id), record, {
-            this.$inertia.put(route('admin.course.updateSubjectHeads',record.id), record, {
-                    onSuccess: (page) => {
-                        console.log(page);
-                    },
-                    onError: (err) => {
-                        console.log(err);
-                    }
-                });
+        // updateSubjectHeads(record){
+        //     console.log('chnage')
+        //     console.log(record)
+        //     //this.$inertia.post(route('admin.course.updateSubjectHeads',record.id), record, {
+        //     this.$inertia.put(route('admin.course.updateSubjectHeads',record.id), record, {
+        //             onSuccess: (page) => {
+        //                 console.log(page);
+        //             },
+        //             onError: (err) => {
+        //                 console.log(err);
+        //             }
+        //         });
 
-            //record.subject_head_changed=false;
-            console.log(record);
-        },
+        //     //record.subject_head_changed=false;
+        //     console.log(record);
+        // },
         updateCourseTeachers(record){
             this.$inertia.put(route('admin.course.updateCourseTeachers',record.id), record, {
                     onSuccess: (page) => {
+                        this.modal.data.isOpen=false
                         console.log(page);
                     },
                     onError: (err) => {
                         console.log(err);
                     }
                 });
-            console.log(record);
         },
         changeTeachers(record){
-            console.log(record);
             this.modal.data={...record}
             this.modal.isOpen=true
             this.modal.mode='EDIT'
@@ -260,7 +269,6 @@ export default {
             //this.modal.data.canGivebehaviours=[3,2]
         },
         updateTeachers(){
-            console.log(this.modal.data)
             this.modal.data.syncCourseTeacher={}
             this.modal.data.teacher_ids.forEach(t=>{
                 this.modal.data.syncCourseTeacher[t]={
@@ -269,7 +277,8 @@ export default {
             console.log(this.modal.data.syncCourseTeacher);
             this.$inertia.put(route('admin.course.updateCourseTeachers',this.modal.data.id), this.modal.data, {
                     onSuccess: (page) => {
-                        console.log(page);
+                        // console.log(page)
+                        this.modal.isOpen=false
                     },
                     onError: (err) => {
                         console.log(err);

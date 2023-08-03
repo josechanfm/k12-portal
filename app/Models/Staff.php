@@ -18,6 +18,10 @@ class Staff extends Model
         return $this->belongsto(User::class);
     }
 
+    public function courses(){
+        return $this->belongsToMany(Course::class)->with('klass');
+    }
+
     public static function teachers(){
         return Staff::where('is_teacher', true)->get();
     }

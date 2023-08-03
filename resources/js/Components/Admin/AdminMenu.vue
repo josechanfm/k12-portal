@@ -118,7 +118,7 @@
     },{
       key: '2.2',
       title: '教師',
-      url:'/manage/teacher',
+      url:'/manage/teachers',
     },{
       key: '2.3',
       title: '升班預處理',

@@ -62,12 +62,22 @@ class UserSeeder extends Seeder
         ]);
         $user->assignRole('teacher');
         $user->ownedTeams()->save(Team::forceCreate([
-            'user_id' => $user->id,
+            'user_id' => $user->id, 
             'name' => explode(' ', $user->name, 2)[0]."'s Team",
             'personal_team' => true,
         ]));
 
         User::factory()->count(100)->create();
+        
+        $users=User::whereNull('username')->get();
+        foreach($users as $user){
+            $user->ownedTeams()->save(Team::forceCreate([
+                'user_id' => $user->id,
+                'name' => explode(' ', $user->name, 2)[0]."'s Team",
+                'personal_team' => true,
+            ]));
+    
+        }
 
         User::whereNull('username')->update(['username'=>DB::raw("concat('user',id)")]);
 

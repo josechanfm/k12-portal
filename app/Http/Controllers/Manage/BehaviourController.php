@@ -63,7 +63,7 @@ class BehaviourController extends Controller
         $behaviour->description=$request->description;
         $behaviour->remark=$request->remark;
         $behaviour->save();
-    return response($behaviour);
+        return response($behaviour);
     }
 
     /**

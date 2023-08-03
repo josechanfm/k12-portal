@@ -66,9 +66,9 @@ class Klass extends Model
         return $this->hasMany(Course::class)->where('in_transcript',1)->with('allScores');
         // return $this->hasMany(Course::class)->with('scores')->with('students');
     }
-    public function outcomes(){
-        return $this->hasManyThrough(Outcome::class, KlassStudent::class,'klass_id', 'klass_student_id')->with('student');
-    }
+    // public function outcomes(){
+    //     return $this->hasManyThrough(Outcome::class, KlassStudent::class,'klass_id', 'klass_student_id')->with('student');
+    // }
     public function students_abilities(){
         return $this->belongsToMany(Student::class)->with('abilities')->withPivot('id as pivot_klass_student_id');
     }

@@ -87,7 +87,7 @@ Route::middleware([
         Route::get('klass/{klass}/students',[App\Http\Controllers\Admin\KlassController::class,'students'])->name('admin.klass.students');
         Route::post('student/sync_courses',[App\Http\Controllers\Admin\StudentController::class,'syncCourses'])->name('admin.klass.syncCourses');
         Route::get('course/{course}/students',[App\Http\Controllers\Admin\CourseController::class,'students'])->name('admin.course.students');
-        Route::put('course/{course}/update_subject_heads',[App\Http\Controllers\Admin\CourseController::class,'updateSubjectHeads'])->name('admin.course.updateSubjectHeads');
+        //Route::put('course/{course}/update_subject_heads',[App\Http\Controllers\Admin\CourseController::class,'updateSubjectHeads'])->name('admin.course.updateSubjectHeads');
         Route::put('course/{course}/update_curse_teachers',[App\Http\Controllers\Admin\CourseController::class,'updateCourseTeachers'])->name('admin.course.updateCourseTeachers');
 
         // Route::get('grades/year/{year}',[App\Http\Controllers\Admin\GradeController::class,'admin.grades.year']);
@@ -104,7 +104,7 @@ Route::middleware([
         Route::resource('/grades',App\Http\Controllers\Manage\GradeController::class);
 
         Route::resource('/course',App\Http\Controllers\Manage\CourseController::class);
-        Route::get('/courses/get_by_klass_id/{klassId}',[App\Http\Controllers\Manage\CourseController::class, 'getByKlassId']);
+        //Route::get('/courses/get_by_klass_id/{klassId}',[App\Http\Controllers\Manage\CourseController::class, 'getByKlassId']);
         // Route::get('/course/{course}/scores',[App\Http\Controllers\Manage\ScoreController::class,'byCourse'])->name('manage.course.scores');
 
         Route::resource('/student',App\Http\Controllers\Manage\StudentController::class);
@@ -127,17 +127,17 @@ Route::middleware([
         Route::get('/klass/{klass}/habits',[App\Http\Controllers\Manage\HabitController::class,'byKlass'])->name('manage.klass.habits');
         Route::put('/klass/{klass}/habits',[App\Http\Controllers\Manage\HabitController::class,'update'])->name('manage.klass.habits.update');
 
-        Route::get('/klass/{klass}/outcomes',[App\Http\Controllers\Manage\OutcomeController::class,'byKlass'])->name('manage.klass.outcomes');
-        Route::post('/klass/{klass}/outcomes',[App\Http\Controllers\Manage\OutcomeController::class,'update'])->name('manage.klass.outcomes.update');
+        // Route::get('/klass/{klass}/outcomes',[App\Http\Controllers\Manage\OutcomeController::class,'byKlass'])->name('manage.klass.outcomes');
+        // Route::post('/klass/{klass}/outcomes',[App\Http\Controllers\Manage\OutcomeController::class,'update'])->name('manage.klass.outcomes.update');
 
-        Route::get('/klass/{klass}/behaviours',[App\Http\Controllers\Manage\BehaviourController::class,'byKlass'])->name('manage.klass.behaviours');
+        //Route::get('/klass/{klass}/behaviours',[App\Http\Controllers\Manage\BehaviourController::class,'byKlass'])->name('manage.klass.behaviours');
 
         //Route::get('/transcript',[App\Http\Controllers\Manage\TranscriptController::class,'index']);
         Route::get('/transcript/klass_student/{id}',[App\Http\Controllers\Manage\TranscriptController::class,'klassStudent']);
         Route::get('/transcript/klass/{klass}',[App\Http\Controllers\Manage\TranscriptController::class,'klass']);
         // Route::get('/transcript/klass/{klass}/summary_table',[App\Http\Controllers\Manage\TranscriptController::class,'klass_summary_table']);
 
-        Route::resource('/teacher',App\Http\Controllers\Manage\TeacherController::class);
+        Route::resource('/teachers',App\Http\Controllers\Manage\TeacherController::class);
         Route::get('teaching/{teacherId}',[App\Http\Controllers\Manage\TeacherController::class,'teaching']);   
         
 

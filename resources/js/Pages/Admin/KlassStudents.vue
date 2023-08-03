@@ -12,12 +12,16 @@
                     <table style="table-layout: auto;">
                         <thead class="ant-table-thead">
                             <tr>
-                                <th>Student Name</th>
+                                <th>選科</th>
+                                <th>學生姓名</th>
                                 <th v-for="column in dataColumns">{{ column.title }}</th>
                             </tr>
                         </thead>
                         <tbody class="ant-table-tbody">
-                            <tr v-for="student in dataTable">
+                            <tr v-for="(student, studentId) in dataTable">
+                                <td>
+                                    <a-button @click="selectedCourses(studentId)">選科</a-button>
+                                </td>
                                 <td>{{ student.student_name }}</td>
                                 <td v-for="(course, idx) in student.courses" class="text-center">
                                     <span v-if="course == 1" class="flex justify-center items-center">
@@ -41,16 +45,6 @@
             </div>
         </div>
 
-        <a-table :dataSource="students" :columns="columns">
-            <template #bodyCell="{ column, text, record, index }">
-                <template v-if="column.dataIndex == 'subject'">
-                    <a-button @click="selectedCourses(record)">選科</a-button>
-                </template>
-                <template v-else>
-                    {{ record[column.dataIndex] }}
-                </template>
-            </template>
-        </a-table>
         <!-- Modal Start-->
         <!--
         <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="60%" @update="updateRecord()" @onCancel="closeModal()">
@@ -90,65 +84,6 @@ export default {
     data() {
         return {
             selectedStudent: {},
-            columns: [
-                {
-                    title: '姓名(中文)',
-                    dataIndex: 'name_zh',
-                }, {
-                    title: '姓名(外文)',
-                    dataIndex: 'name_fn',
-                }, {
-                    title: '性別',
-                    dataIndex: 'gender',
-                }, {
-                    title: '有效',
-                    dataIndex: 'active',
-                }, {
-                    title: '選科',
-                    dataIndex: 'subject',
-                }
-            ],
-            rules: {
-                code: {
-                    required: true,
-                },
-                title_zh: {
-                    required: true,
-                },
-                title_en: {
-                    required: true,
-                },
-                stream: {
-                    required: true,
-                },
-                eletive: {
-                    required: true,
-                },
-            },
-            validateMessages: {
-                required: '${label} is required!',
-                types: {
-                    email: '${label} is not a valid email!',
-                    number: '${label} is not a valid number!',
-                },
-                number: {
-                    range: '${label} must be between ${min} and ${max}',
-                },
-            },
-            labelCol: {
-                style: {
-                    width: '150px',
-                },
-            },
-            layout2col: {
-                labelCol: {
-                    span: 8,
-                },
-                wrapperCol: {
-                    span: 20,
-                },
-            }
-
         }
     },
     created() {
@@ -162,7 +97,8 @@ export default {
 
     },
     methods: {
-        selectedCourses(student) {
+        selectedCourses(studentId) {
+            var student=this.students.find(s=>s.id==studentId)
             this.klass.courses.forEach((course1, index) => {
                 course1.selected = false;
                 student.courses.forEach((course2, index) => {

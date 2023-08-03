@@ -2,7 +2,7 @@
     <AdminLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                 {{ course.klass.tag }} {{ course.title_zh }}科 學分管理
+                 {{ course.klass.tag }} {{ course.title_zh }}科 補考名單
                 <br/>
                 <span v-for="teacher in course.teachers">
                     {{ teacher.name_zh }} 
@@ -20,8 +20,8 @@
                                 <table ref="dataTable" style="table-layout: auto; width:auto">
                                     <thead class="ant-table-thead">
                                         <tr>
-                                            <th width="100px">學生姓名</th>
-                                            <th>Point</th>
+                                            <th class="w-64">學生姓名</th>
+                                            <th class="w-24">Point</th>
                                         </tr>
                                     </thead>
                                     <tbody class="ant-table-tbody">
@@ -35,6 +35,7 @@
                                         </template>
                                     </tbody>
                                 </table>
+                                <p>*可在期末成績人設不合格學生進入補考名單</p>
                             <!-- </div>
                         </div> -->
                     </div>
