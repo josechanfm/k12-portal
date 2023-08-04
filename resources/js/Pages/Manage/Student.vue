@@ -7,15 +7,15 @@
         </template>
         <div>
             <a-table :dataSource="students.data" :columns="columns">
-            <template #bodyCell="{column, text, record, index}">
-                <template v-if="column.dataIndex=='operation'">
-                    <Link :href="'student/'+record.id " method="get" as="button" type="button">Profile</Link>
+                <template #bodyCell="{ column, text, record, index }">
+                    <template v-if="column.dataIndex == 'operation'">
+                        <Link :href="'student/' + record.id" method="get" as="button" type="button">Profile</Link>
+                    </template>
+                    <template v-else>
+                        {{ record[column.dataIndex] }}
+                    </template>
                 </template>
-                <template v-else>
-                    {{record[column.dataIndex]}}
-                </template>
-            </template>
-        </a-table>
+            </a-table>
 
         </div>
     </AdminLayout>
@@ -32,17 +32,17 @@ export default {
     props: ['students'],
     data() {
         return {
-            columns:[
+            columns: [
                 {
                     title: 'Name zh',
                     dataIndex: 'name_zh',
-                },{
+                }, {
                     title: 'Name fn',
                     dataIndex: 'name_fn',
-                },{
+                }, {
                     title: 'Gender',
                     dataIndex: 'gender',
-                },{
+                }, {
                     title: 'Operation',
                     dataIndex: 'operation',
                 }

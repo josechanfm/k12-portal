@@ -9,21 +9,24 @@
             <p>The collection of route "teacher" is for the general operation management such as serach and preview, which
                 not included setup of year, class or subject etc.</p>
             <a-typography-title :level="4">{{ teacher.name_zh }}</a-typography-title>
+            
             <div class="ant-table">
                 <div class="ant-table-container">
                     <div class="ant-table-content">
                         <table style="table-layout: auto;">
                             <thead class="ant-table-thead">
                                 <tr>
-                                    <td>班級代號</td>
-                                    <td>科目名稱</td>
-                                    <td>班主任</td>
-                                    <td>科代表</td>
-                                    <td>學生人數</td>
+                                    <th>班級代號</th>
+                                    <th>科目名稱</th>
+                                    <th>班主任</th>
+                                    <th>科代表</th>
+                                    <th>學生人數</th>
+                                    <th>操作</th>
                                 </tr>
                             </thead>
                             <tbody class="ant-table-tbody">
-                                <tr v-for="course in teacher.courses">
+                                <template v-for="course in teacher.courses">
+                                <tr>
                                     <td>{{ course.klass.tag }}</td>
                                     <td>{{ course.code }}{{ course.title_zh }}</td>
                                     <td>
@@ -37,7 +40,22 @@
                                         </ol>
                                     </td>
                                     <td>{{ course.student_count }}</td>
+                                    <td>
+                                        <inertia-link :href="route('manage.course.scores',course.id)" class="ant-btn">學分</inertia-link>
+                                        <a-button @click="course.operation=!course.operation">其他</a-button>
+                                    </td>
                                 </tr>
+                                <tr class="ant-table-expanded-row ant-table-expanded-row-level-1" :style="course.operation==true?'display:true':'display:none'">
+                                    <td colspan="7" class="ant-table-cell text-right">
+                                        <inertia-link :href="route('manage.klass.students', course.klass.id)" class="ant-btn">學生名單</inertia-link>
+                                        <inertia-link :href="route('manage.klass.finalScores', course.klass.id)" class="ant-btn">期末成績</inertia-link>
+                                        <inertia-link :href="route('manage.klass.additive', [course.klass.id, 'attendance'])" class="ant-btn">考勤</inertia-link>
+                                        <inertia-link :href="route('manage.klass.additive', [course.klass.id, 'perform'])" class="ant-btn">功過</inertia-link>
+                                        <inertia-link :href="route('manage.klass.additive', [course.klass.id, 'conduct'])" class="ant-btn">操行</inertia-link>
+                                        <inertia-link :href="route('manage.klass.additive', [course.klass.id, 'comments'])" class="ant-btn">評語</inertia-link>
+                                    </td>
+                                </tr>
+                                </template>
                             </tbody>
                         </table>
                     </div>
@@ -57,9 +75,35 @@ export default {
     props: ['teacher'],
     data() {
         return {
+            columns: [
+                {
+                    title: '班級代號',
+                    dataIndex: 'klass_tag',
+                }, {
+                    title: '科目名稱',
+                    dataIndex: 'course_title',
+                }, {
+                    title: '班主任',
+                    dataIndex: 'klass_heads',
+                }, {
+                    title: '科代表',
+                    dataIndex: 'subject_heads',
+                }, {
+                    title: '學生人數',
+                    dataIndex: 'student_count',
+                }, {
+                    title: '操作',
+                    dataIndex: 'operation',
+                }
+            ]
+
         }
     },
     methods: {
+        onClickShowExpended(course){
+            course.operation=true;
+            console.log(course);
+        }
     },
 }
 </script>

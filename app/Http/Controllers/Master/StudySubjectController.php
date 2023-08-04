@@ -81,8 +81,8 @@ class StudySubjectController extends Controller
         // return;
         return Inertia::render('Master/Subject',[
             'study'=>$study,
-            //'subjects'=>$subjects,
-            'staffs'=>Staff::all()
+            'subjects'=>$subjects,
+            'teachers'=>Staff::teachers()
         ]);
     }
 
@@ -95,10 +95,12 @@ class StudySubjectController extends Controller
     public function edit($id)
     {
         $study=Study::with('subjects')->find($id);
-        $subjects=Subject::where('active',1)->get();
+        $subjects=Subject::where('active',1)->with('study')->get();
+        //dd($subjects[0]->study);
         return Inertia::render('Master/StudySubjectEdit',[
             'study'=>$study,
-            'subjects'=>$subjects
+            'subjects'=>$subjects,
+            'teachers'=>Staff::teachers()
         ]);
     }
 
@@ -109,10 +111,12 @@ class StudySubjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $studyId)
     {
-        dd($id);
-        dd($request->all());
+        //dd($studyId);
+        //dd($request->all());
+        Study::find($studyId)->subjects()->sync($request->all());
+        //dd($request->all());
         // $data = array_map(function($d) use ($id){
         //     return array(
         //         'study_id'=>$id,

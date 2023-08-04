@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Master;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Staff;
 use App\Models\Study;
 use App\Models\Subject;
 use App\Models\StudySubject;
@@ -21,11 +22,14 @@ class SubjectController extends Controller
      */
     public function index(Request $request)
     {
-        
-        return Inertia::render('Master/Subject',[
+        //dd(Subject::all());
+        //dd(Config::item('subject_types'));
+        //dd(Config::item('study_streams'));
+        return Inertia::render('Master/Subjects',[
             'subjects'=>Subject::all(),
             'subjectTypes'=>Config::item('subject_types'),
             'studyStreams'=>Config::item('study_streams'),
+            'teachers'=>Staff::teachers()
         ]);
     }
 

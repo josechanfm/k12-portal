@@ -2,22 +2,21 @@
     <AdminLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                學年級別學科列表
+                學科列表
             </h2>
         </template>
-        {{ study.grade }}- {{ study.title_zh }}<br>
-        {{ study.stream }}<br>
+        <!-- {{ study.grade }}- {{ study.title_zh }}<br>
+        {{ study.stream }}<br> -->
         <br>
         <button @click="onClickCreate()"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">新增學年級別學科</button>
-            <a-table :dataSource="study.subjects" :columns="columns" :pagination="pagination" @change="onPaginationChange" ref="dataTable">
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">新增學科</button>
+            <a-table :dataSource="subjects" :columns="columns" @change="onPaginationChange" ref="dataTable">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
                         <ButtonLink @click="onClickEdit(record)" :style="'Edit'">修改</ButtonLink>
                         <ButtonLink @click="onClickDelete(record)" :style="'Delete'">刪除</ButtonLink>
                     </template>
                     <template v-if="column.dataIndex=='active'">
-                        {{ record }}
                         <check-square-outlined v-if="text=='1'" :style="{color:'green'}"/>
                         <stop-outlined v-else :style="{color:'red'}"/>
                     </template>
@@ -71,7 +70,7 @@
                     <a-textarea v-model:value="modal.data.description" placeholder="textarea with clear icon" allow-clear />
                 </a-form-item>
                 <a-form-item label="Subjtect Heads" name="subject_head_ids">
-                    <a-select v-model:value="modal.data.subject_head_ids" :options="staffs" :fieldNames="{value:'id',label:'name_zh'}"/>
+                    <a-select v-model:value="modal.data.subject_head_ids" :options="teachers" :fieldNames="{value:'id',label:'name_zh'}"/>
                 </a-form-item>
                 <a-form-item label="有效" name="active">
                     <a-switch v-model:checked="modal.data.active" :checkedValue="1" :uncheckedValue="0"/>
@@ -101,7 +100,7 @@ export default {
         CheckSquareOutlined,
         StopOutlined
     },
-    props: ['study','staffs'],
+    props: ['subjects','subjectTypes','studyStreams','teachers'],
     data() {
         return {
             modal: {
@@ -110,11 +109,11 @@ export default {
                 title:'Subjects',
                 data:{}
             },
-            pagination:{
-                total: this.study.subjects.total,
-                current:this.study.subjects.current_page,
-                pageSize:this.study.subjects.per_page,
-            },
+            // pagination:{
+            //     total: this.study.subjects.total,
+            //     current:this.study.subjects.current_page,
+            //     pageSize:this.study.subjects.per_page,
+            // },
             selectedSubjects:[],
             selectAll:false,
             dataSource:[],
@@ -191,13 +190,13 @@ export default {
     methods: {
         onClickCreate(record){
             this.selectedSubjects=this.study.subjects.map(subject=>subject.code);
-            this.modal.title="Edit Subject";
+            this.modal.title="新增學科";
             this.modal.mode='CREATE';
             this.modal.isOpen = true;
         },
         onClickEdit(record){
             this.modal.data={...record};
-            this.modal.title="Edit Subject";
+            this.modal.title="修改學科";
             this.modal.mode='EDIT';
             this.modal.isOpen = true;
         },
@@ -218,7 +217,7 @@ export default {
         updateRecord(){
             console.log(this.modal.data);
             this.$refs.modalRef.validateFields().then(()=>{
-                this.$inertia.put(route('master.studySubjects.update',this.modal.data.id), this.modal.data,{
+                this.$inertia.put(route('master.subjects.update',this.modal.data.id), this.modal.data,{
                     onSuccess:(page)=>{
                         console.log(page);
                         this.modal.isOpen=false;

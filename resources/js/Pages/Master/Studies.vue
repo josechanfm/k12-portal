@@ -2,17 +2,17 @@
     <AdminLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                總科目列表
+                年級學習計劃
             </h2>
         </template>
             <button @click="onClickCreate()"
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Create Subject template</button>
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">新增年級</button>
             <a-table :dataSource="studies" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
-                        <a-button :href="'study/subjects/'+record.id+'/edit'">Edit Subjects</a-button>
-                        <a-button @click="onClickEdit(record)">Edit</a-button>
-                        <a-button @click="onClickDelete(record.id)">Delete</a-button>
+                        <inertia-link :href="route('master.studySubjects.edit',record.id)" class="ant-btn">選擇學科</inertia-link>
+                        <a-button @click="onClickEdit(record)">修改</a-button>
+                        <a-button @click="onClickDelete(record.id)">刪除</a-button>
                     </template>
                     <template v-else-if="column.dataIndex=='courses'">
                         <ul>
@@ -95,19 +95,19 @@ export default {
             },
             columns:[
                 {
-                    title: 'Version',
+                    title: '版本',
                     dataIndex: 'version',
                 },{
-                    title: 'Title Zh',
-                    dataIndex: 'title_zh',
-                },{
-                    title: 'Stream',
-                    dataIndex: 'stream',
-                },{
-                    title: 'grade',
+                    title: '年級代號',
                     dataIndex: 'grade',
                 },{
-                    title: 'Operation',
+                    title: '年級名稱',
+                    dataIndex: 'title_zh',
+                },{
+                    title: '專業方向',
+                    dataIndex: 'stream',
+                },{
+                    title: '操作',
                     dataIndex: 'operation',
                 },
             ],
@@ -163,13 +163,13 @@ export default {
     methods: {
         onClickCreate(record){
             this.modal.data={active:0};
-            this.modal.title="Edit Subject";
+            this.modal.title="新增學科";
             this.modal.mode='CREATE';
             this.modal.isOpen = true;
         },
         onClickEdit(record){
             this.modal.data={...record};
-            this.modal.title="Edit Subject";
+            this.modal.title="修改學科";
             this.modal.mode='EDIT';
             this.modal.isOpen = true;
         },

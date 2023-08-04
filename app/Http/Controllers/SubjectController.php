@@ -17,7 +17,7 @@ class SubjectController extends Controller
     {
         $data = Subject::paginate(5);
         //return response()->json($data);
-        return Inertia::render('Admin/Subjects',['subjects'=>$data]);
+        return Inertia::render('Master/Subjects',['subjects'=>$data]);
     }
 
     /**

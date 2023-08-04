@@ -12,10 +12,15 @@ use App\Models\Course;
 class DashboardController extends Controller
 {
     public function index(){
-        $staff=Staff::where('user_id',auth()->user()->id)->with('courses')->first();
+        $teacher=Staff::where('user_id',auth()->user()->id)->with('courses')->first();
         //$teacher=Teacher::with('courses')->whereBelongsTo($staff)->first();
+        if(empty($teacher)){
+            return redirect()->route('dashboard');
+        }
         return Inertia::render('Teacher/Dashboard',[
-            'teacher'=>$staff
+            'teacher'=>$teacher
         ]);
     }
+
+
 }

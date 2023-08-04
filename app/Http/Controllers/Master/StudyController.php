@@ -20,7 +20,7 @@ class StudyController extends Controller
     public function index()
     {
         $studies=Study::all();
-        return Inertia::render('Master/Study',[
+        return Inertia::render('Master/Studies',[
             'studies'=>$studies,
             'studyStreams'=>Config::item('study_streams'),
             'gradeLevels'=>Config::item('grade_levels'),

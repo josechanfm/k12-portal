@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Manage;
+namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-use App\Models\Staff;
+use App\Models\Course;
 
-class TeacherController extends Controller
+class CourseController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,10 +15,7 @@ class TeacherController extends Controller
      */
     public function index()
     {
-        $teachers=Staff::with('courses')->get();
-        return Inertia::render('Manage/Teachers',[
-            'teachers' => $teachers,
-        ]);
+        //
     }
 
     /**
@@ -49,9 +45,9 @@ class TeacherController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Course $course)
     {
-        //
+        dd($course);
     }
 
     /**
@@ -86,12 +82,5 @@ class TeacherController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    public function teaching($teacherId){
-        $teacher=Staff::with('courses')->find($teacherId);
-        return Inertia::render('Manage/Teaching',[
-            'teacher'=>$teacher
-        ]);
     }
 }

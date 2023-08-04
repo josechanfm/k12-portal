@@ -31,7 +31,7 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-});
+})->name('/');
 
 Route::middleware([
     'auth:sanctum',
@@ -49,9 +49,6 @@ Route::middleware([
     
 });
 
-Route::get('/test',function(){
-    return Inertia::render('Welcome');
-});
 
 Route::resource('/payments',PaymentSpaController::class);
 Route::resource('/subjects',SubjectController::class);
@@ -64,8 +61,8 @@ Route::middleware([
 ])->group(function () {
     Route::prefix('master')->group(function(){
         Route::resource('/studies',App\Http\Controllers\Master\StudyController::class);
-        Route::resource('/study/subjects',App\Http\Controllers\Master\StudySubjectController::class)->names('master.studySubjects');
-        Route::resource('/subjects',App\Http\Controllers\Master\SubjectController::class);
+        Route::resource('/study_subjects',App\Http\Controllers\Master\StudySubjectController::class)->names('master.studySubjects');
+        Route::resource('/subjects',App\Http\Controllers\Master\SubjectController::class)->names('master.subjects');
         Route::resource('/configs',App\Http\Controllers\Master\ConfigController::class);
         Route::resource('/transcriptTemplate',App\Http\Controllers\Master\TranscriptTemplateController::class);
         Route::resource('/roles',App\Http\Controllers\Master\RoleController::class);
@@ -138,7 +135,7 @@ Route::middleware([
         // Route::get('/transcript/klass/{klass}/summary_table',[App\Http\Controllers\Manage\TranscriptController::class,'klass_summary_table']);
 
         Route::resource('/teachers',App\Http\Controllers\Manage\TeacherController::class);
-        Route::get('teaching/{teacherId}',[App\Http\Controllers\Manage\TeacherController::class,'teaching']);   
+        Route::get('teaching/{teacherId}',[App\Http\Controllers\Manage\TeacherController::class,'teaching'])->name('manage.teaching');   
         
 
         Route::get('/course/{course}/scores',[App\Http\Controllers\Manage\CourseController::class,'scores'])->name('manage.course.scores');
@@ -156,6 +153,7 @@ Route::middleware([
 
     Route::prefix('teacher/')->group(function(){
         Route::resource('/',App\Http\Controllers\Teacher\DashboardController::class);
+        Route::resource('/course',App\Http\Controllers\Teacher\CourseController::class)->names('teacher.course');
     });
 });
 
