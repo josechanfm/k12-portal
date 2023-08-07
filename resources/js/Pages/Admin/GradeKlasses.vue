@@ -252,14 +252,14 @@ export default {
         editRecord(record) {
             this.modal.data = { ...record };
             this.modal.mode = 'EDIT';
-            this.modal.title = "Edit klasses ";
+            this.modal.title = "修改班別";
             this.modal.isOpen = true;
         },
         createRecord() {
             this.modal.data = {};
             this.modal.data.grade_id = this.grade.id;
             this.modal.mode = 'CREATE';
-            this.modal.title = "Create klasses";
+            this.modal.title = "新增班別";
             this.modal.isOpen = true;
             this.klasses.forEach(klass => {
                 this.klassLetters.forEach((kl, idx) => {

@@ -116,6 +116,7 @@ class StudySubjectController extends Controller
         //dd($studyId);
         //dd($request->all());
         Study::find($studyId)->subjects()->sync($request->all());
+        return redirect()->back();
         //dd($request->all());
         // $data = array_map(function($d) use ($id){
         //     return array(

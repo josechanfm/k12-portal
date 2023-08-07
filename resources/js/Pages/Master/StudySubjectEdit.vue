@@ -13,12 +13,11 @@
                         <a-checkbox v-model:checked="record.selected" />
                     </template>
                     <template v-else-if="column.dataIndex=='subject_heads'">
-                            <a-select v-model:value="record.subject_head_ids" placeholder="請選擇..." 
-                                style="width:200px" :options="teachers" mode="multiple"
-                                :field-names="{ label: 'name_zh', value: 'id' }" 
-                                @change="updateCourseTeachers(record)"
-                            />
-                            <!-- <a-button @click="updateSubjectHead(record)" v-show="record.subject_head_changed">Save</a-button> -->
+                        <a-select v-model:value="record.subject_head_ids" placeholder="請選擇..." 
+                            style="width:200px" :options="teachers" mode="multiple"
+                            :field-names="{ label: 'name_zh', value: 'id' }" 
+                            :disabled="!record.selected"
+                        />
                     </template>
                     <template v-else>
                         {{record[column.dataIndex]}}
@@ -118,9 +117,19 @@ export default {
         //         return subject.id==ss.id
         //     })!==undefined;
         // } )
+        
         this.subjects.forEach(subject=>{
-            subject.selected='a'
-            subject.ids='b'
+            // subject.selected=this.study.subjects.find(s=>{
+            //     return subject.id==s.id
+            // })!==undefined;
+            subject.selected=false
+            //subject.subject_head_ids=[]
+            this.study.subjects.forEach(s=>{
+                if(subject.id===s.id){
+                    subject.selected=true
+                    subject.subject_head_ids=JSON.parse(s.pivot.subject_head_ids)
+                }
+            })
         })
         console.log(this.subjects);
     },
@@ -130,15 +139,13 @@ export default {
             var data={}
             subjects.forEach(s=>{
                 if(s.subject_head_ids){
-                    data[s.id]={subject_head_ids:s.subject_head_ids}
+                    data[s.id]={subject_head_ids:JSON.stringify(s.subject_head_ids)}
                 }else{
                     data[s.id]={subject_head_ids:'[]'}
                 }
                 
             })
             console.log(data)
-            //this.$inertia.put('/master/study/subjects/' + this.study.id, subjects,{
-            //axios.put('/master/study/subjects/' + this.study.id, subjects,{
             this.$inertia.put(route('master.studySubjects.update',this.study.id),data,{
                 onSuccess:(page)=>{
                     console.log(page);
@@ -148,9 +155,6 @@ export default {
                     console.log(error);
                 }
             });
-        },
-        updateCourseTeachers(record){
-
         }
     },
 }

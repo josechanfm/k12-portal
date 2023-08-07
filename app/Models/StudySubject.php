@@ -9,4 +9,5 @@ class StudySubject extends Model
 {
     use HasFactory;
     protected $table='study_subject';
+    protected $casts=['subject_head_ids'=>'array'];
 }

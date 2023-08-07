@@ -5,6 +5,7 @@
                 Manage Dashboard
             </h2>
         </template>
+        {{ $page.props.user }}
         <div>
             <p>The collection of route "manage" is for the general operation management such as serach and preview, which not included setup of year, class or subject etc.</p>
         </div>

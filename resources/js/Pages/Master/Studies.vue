@@ -61,6 +61,10 @@
                 <a-form-item label="簡介" name="description">
                     <a-textarea v-model:value="modal.data.description" placeholder="textarea with clear icon" allow-clear />
                 </a-form-item>
+                <a-form-item label="Klass Heads" name="subject_head_ids">
+                    <a-select v-model:value="modal.data.klass_head_ids" :options="teachers" :fieldNames="{value:'id',label:'name_zh'}"/>
+                </a-form-item>
+
                 <a-form-item label="有效" name="active">
                     <a-switch v-model:checked="modal.data.active" :checkedValue="1" :uncheckedValue="0"/>
                 </a-form-item>

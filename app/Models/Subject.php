@@ -11,8 +11,6 @@ class Subject extends Model
 
     use HasFactory;
     
-    protected $casts=['subject_head_ids'=>'array'];
-
     public function grade(){
         return $this->belongsTo(Grade::class);
     }
