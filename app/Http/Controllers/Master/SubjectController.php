@@ -117,6 +117,7 @@ class SubjectController extends Controller
         Validator::make($request->all(), [
             'code' => ['required'],
         ])->validate();
+        
         if($request->has('id')){
             $subject=Subject::find($id);
             $subject->code=$request->code;

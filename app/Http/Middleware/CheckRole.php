@@ -16,13 +16,10 @@ class CheckRole
      */
     public function handle($request, Closure $next, $role)
     {
-        //dd($role);
         $requiredRoles=explode('|',$role);
         foreach($requiredRoles as $r){
             if ($request->user()->hasRole($role)) {
                 return $next($request);
-                //return redirect()->route('/');
-                // Redirect...
             }
         }
         return redirect()->route('dashboard');

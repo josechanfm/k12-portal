@@ -55,15 +55,15 @@
                 </a-form-item>
                 <a-form-item label="專業方向" name="stream">
                     <a-radio-group v-model:value="modal.data.stream" button-style="solid">
-                        <a-radio-button value="LIB">Liberal Studies</a-radio-button>
-                        <a-radio-button value="SCI">Science</a-radio-button>
-                        <a-radio-button value="ART">Liberal Arts</a-radio-button>
+                        <template v-for="stream in studyStreams">
+                            <a-radio-button :value="stream.value">{{stream.label}}</a-radio-button>    
+                        </template>
                     </a-radio-group>
                 </a-form-item>
                 <a-form-item label="必修/選修" name="elective">
                     <a-radio-group v-model:value="modal.data.elective" button-style="solid">
-                        <a-radio-button value="COP">Compulsary</a-radio-button>
-                        <a-radio-button value="ELE">Elective</a-radio-button>
+                        <a-radio-button value="COP">必修</a-radio-button>
+                        <a-radio-button value="ELE">選修</a-radio-button>
                     </a-radio-group>
                 </a-form-item>
                 <a-form-item label="簡介" name="description">
@@ -78,9 +78,9 @@
             </a-form>
         <template #footer>
             <a-checkbox v-if="modal.mode=='CREATE'" class="float-left" v-model:checked="selectAll" @change="onChangeSelectAll">SelectAll</a-checkbox>
-            <a-button key="back" @click="modalCancel">Return</a-button>
-            <a-button v-if="modal.mode=='EDIT'" key="Update" type="primary" @click="updateRecord()">Update</a-button>
-            <a-button v-if="modal.mode=='CREATE'"  key="Store" type="primary" @click="storeRecord()">Create</a-button>
+            <a-button key="back" @click="modalCancel">反回</a-button>
+            <a-button v-if="modal.mode=='EDIT'" key="Update" type="primary" @click="updateRecord()">更新</a-button>
+            <a-button v-if="modal.mode=='CREATE'"  key="Store" type="primary" @click="storeRecord()">新增</a-button>
         </template>
     </a-modal>    
     <!-- Modal End-->
