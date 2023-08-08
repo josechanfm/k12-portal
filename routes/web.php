@@ -59,7 +59,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::prefix('master')->group(function(){
+    Route::prefix('master')->middleware([ 'checkRole:master'])->group(function(){
         Route::resource('/studies',App\Http\Controllers\Master\StudyController::class);
         Route::resource('/study_subjects',App\Http\Controllers\Master\StudySubjectController::class)->names('master.studySubjects');
         Route::resource('/subjects',App\Http\Controllers\Master\SubjectController::class)->names('master.subjects');
@@ -69,7 +69,7 @@ Route::middleware([
         Route::resource('/users',App\Http\Controllers\Master\UserController::class);
     });
 
-    Route::prefix('admin')->group(function(){
+    Route::prefix('admin')->middleware([ 'checkRole:master|admin'])->group(function(){
         Route::resource('/',App\Http\Controllers\Admin\DashboardController::class)->names('admin');
         Route::resource('staffs',App\Http\Controllers\Admin\StaffController::class)->names('admin.staffs');
         Route::resource('years',App\Http\Controllers\Admin\YearController::class)->names('admin.years');
@@ -96,7 +96,7 @@ Route::middleware([
         
     });
 
-    Route::prefix('manage/')->group(function(){
+    Route::prefix('manage/')->middleware([ 'checkRole:master|admin|director|teacher'])->group(function(){
         Route::get('/',[App\Http\Controllers\Manage\DashboardController::class,'index'])->name('manage');
         Route::resource('/grades',App\Http\Controllers\Manage\GradeController::class);
 

@@ -9,7 +9,6 @@
             <p>The collection of route "teacher" is for the general operation management such as serach and preview, which
                 not included setup of year, class or subject etc.</p>
             <a-typography-title :level="4">{{ teacher.name_zh }}</a-typography-title>
-            
             <div class="ant-table">
                 <div class="ant-table-container">
                     <div class="ant-table-content">

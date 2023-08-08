@@ -1,10 +1,10 @@
 <script setup>
-import AppLayout from '@/Layouts/AppLayout.vue';
+import AdminLayout from '@/Layouts/AdminLayout.vue';
 import Welcome from '@/Components/Welcome.vue';
 </script>
 
 <template>
-    <AppLayout title="Dashboard">
+    <AdminLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Dashboard..
@@ -12,8 +12,7 @@ import Welcome from '@/Components/Welcome.vue';
         </template>
 
         <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+                <div class="p-5 bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <p>This Dashboard page is not for production, it's to descripting the system structure and design.</p>
                     <a-typography-title :level="3">Year</a-typography-title>
                     <a-typography-title :level="5">Appended Column</a-typography-title>
@@ -58,7 +57,7 @@ import Welcome from '@/Components/Welcome.vue';
                         <p>belongsto('staff')</p>
                     <a-typography-title :level="3">Staff</a-typography-title>
                 </div>
-            </div>
+
         </div>
-    </AppLayout>
+    </AdminLayout>
 </template>

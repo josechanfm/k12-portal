@@ -18,6 +18,12 @@ class Klass extends Model
    
     protected $appends= ['klass_heads','course_count','student_count','promoted_count','year_code','grade_year'];
     
+    public function hasRight(){
+        if(auth()->user()->hasRole('master') || auth()->user()->hasRole('admin')){
+            return true;
+        }
+        return false;
+    }
     public function getKlassHeadsAttribute(){
         if(is_array($this->klass_head_ids)){
             return Staff::whereIn('id',$this->klass_head_ids)->get();

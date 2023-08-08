@@ -14,9 +14,15 @@ function checkPermission(el, binding) {
 }
 
 const hasRole = (role) => {
-    const roles = usePage().props.value.currentUserRoles
+    const userRoles=usePage().props.value.user.roles.map(u=>u.name);
+    if(Array.isArray(role)){
+         return role.some(r=>{
+            return userRoles.includes(r)
+         })
+    }else{
+        return userRoles.includes(role)
+    }
 
-    return roles.includes(role)
 }
 
 

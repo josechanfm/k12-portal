@@ -1,6 +1,6 @@
 <template>
     <a-layout>
-        <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>
+        <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible >
             <div class="logo" >MPU</div>
             <AdminMenu />
         </a-layout-sider>
@@ -10,7 +10,7 @@
                 <menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)" />
             </a-layout-header>
             <a-layout-content :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }">
-            <header v-if="$slots.header" class="bg-white shadow">
+            <header v-if="$slots.header" class="bg-white shadow sm:rounded-lg">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                     <slot name="header" />
                 </div>
@@ -54,9 +54,7 @@
     });
   };
   
-  const logout = () => {
-    Inertia.post(route('logout'));
-  };
+// 
   </script>
     
   <style>
@@ -80,6 +78,12 @@
   
   .site-layout .site-layout-background {
     background: #fff;
+  }
+  .ant-layout-sider{
+    background: #fff;
+  }
+  .ant-layout-content{
+    background: #f0f2f5!important;
   }
   </style>
   

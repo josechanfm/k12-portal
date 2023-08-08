@@ -8,6 +8,8 @@ use Inertia\Inertia;
 use App\Models\Staff;
 use App\Models\Teacher;
 use App\Models\Course;
+use Illuminate\Support\Facades\Auth;
+
 
 class DashboardController extends Controller
 {

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Klass;
 use App\Models\Course;
-use App\Models\Score;
+use App\Models\Staff;
 use App\Models\Config;
 use Inertia\Inertia;
 
@@ -109,10 +109,7 @@ class CourseController extends Controller
     // }
 
     public function scores(Course $course){
-
-        // $scoreColumns=$course->scoreColumns;
-        // dd($scoreColumns);
-        // dd($course->studentsScores()[316]);
+        $this->authorize('scores',$course);
         $klassCourses=Klass::find($course->klass_id)->courses;
         $course=Course::with('klass')->find($course->id);
         return Inertia::render('Manage/CourseScores',[

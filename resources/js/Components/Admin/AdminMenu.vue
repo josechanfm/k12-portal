@@ -1,13 +1,12 @@
 <template>
-    <div id="main_menu">
+    <div id="main_menu" >
       <a-menu
         v-model:openKeys="openKeys"
         v-model:selectedKeys="selectedKeys"
         mode="inline"
-        theme="dark"
+        theme="light"
         :inline-collapsed="collapsed"
       >
-
         <template v-for="item in list" :key="item.key">
           <template v-if="!item.children">
             <a-menu-item :key="item.key">
@@ -18,11 +17,14 @@
             </a-menu-item>
           </template>
           <template v-else>
-            <sub-menu :key="item.key" :menu-info="item" />
+            <span  v-role="item.roles">
+              <sub-menu :key="item.key" :menu-info="item" />
+            </span>
+             
           </template>
         </template>
         <a-menu-item>
-          <a @click.prevent='logout'>Logout</a>
+          <a @click='logout'>Logout</a>
         </a-menu-item>
       </a-menu>
     </div>
@@ -33,6 +35,12 @@
   import { Link } from '@inertiajs/inertia-vue3';
   import { Inertia } from '@inertiajs/inertia';
 
+  const logout = () => {
+      if(confirm('Sure to logout?')){
+        Inertia.post(route('logout'));
+      }
+  };
+
   const SubMenu = {
     name: 'SubMenu',
     props: {
@@ -42,7 +50,7 @@
       },
     },
     template: `
-      <a-sub-menu :key="menuInfo.key">
+      <a-sub-menu :key="menuInfo.key" >
         <template #icon><MailOutlined /></template>
         <template #title>{{ menuInfo.title }}</template>
         <template v-for="item in menuInfo.children" :key="item.key">
@@ -70,11 +78,13 @@
   };
   const list = [{
     key: '0',
+    roles:['master'],
     title: '系統管理',
     children: [{
       key: '0.1',
       title: '全校學科總表',
       url:'/master/subjects',
+      route:'master.subjects'
     },{
       key: '0.2',
       title: '學習計劃',
@@ -94,6 +104,7 @@
     }],
   },{
     key: '1',
+    roles:['master','admin'],
     title: '行政管理',
     children: [{
       key: '1.2',
@@ -110,6 +121,7 @@
     }],
   },{
     key: '2',
+    roles:['master','admin','director'],
     title: '班級管理',
     children: [{
       key: '2.1',
@@ -126,6 +138,7 @@
     }],
   },{
     key: '3',
+    roles:['teacher'],
     title: '教師',
     children: [{
       key: '3.1',
@@ -134,6 +147,7 @@
     }],
   },{
     key: '4',
+    roles:[],
     title: 'Navigation 4',
     children: [{
       key: '4.1',
@@ -144,6 +158,9 @@
       }],
     }],
   }];
+
+
+
   export default defineComponent({
     components: {
       'sub-menu': SubMenu,
@@ -165,6 +182,7 @@
         toggleCollapsed,
         selectedKeys: ref(['']),
         openKeys: ref(['']),
+        logout
       };
     },
   
