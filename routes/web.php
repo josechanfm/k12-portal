@@ -93,7 +93,7 @@ Route::middleware([
         Route::resource('/courses',App\Http\Controllers\Admin\CourseController::class)->names('admin.courses');
         Route::resource('/students',App\Http\Controllers\Admin\StudentController::class)->names('admin.students');
         Route::get('/lock_transcripts',[App\Http\Controllers\Admin\TranscriptController::class,'lockTranscripts'])->name('admin.lockTranscripts');
-        
+        Route::resource('extracurriculars',App\Http\Controllers\Admin\ExtracurricularController::class)->names('admin.extracurriculars');
     });
 
     Route::prefix('manage/')->middleware([ 'checkRole:master|admin|director|teacher'])->group(function(){
@@ -149,6 +149,7 @@ Route::middleware([
         Route::get('klass/{klass}/additive/{category}',[App\Http\Controllers\Manage\AdditiveController::class,'scope'])->name('manage.klass.additive');
         Route::resource('makeups',App\Http\Controllers\Manage\MakeupController::class)->names('manage.makeups');
         Route::resource('tasks',App\Http\Controllers\Manage\TaskController::class)->names('manage.tasks');
+        Route::resource('activities',App\Http\Controllers\Manage\ActivityController::class)->names('manage.activities');
     });
 
     Route::prefix('teacher/')->group(function(){

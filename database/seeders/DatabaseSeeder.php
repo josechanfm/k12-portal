@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Extracurricular;
 use App\Models\Subject;
 use Illuminate\Database\Seeder;
 
@@ -38,7 +39,8 @@ class DatabaseSeeder extends Seeder
             ScoreColumnSeeder::class,
             //ScoreSeeder::class,
             AdditiveTemplateSeeder::class,
-            ProcedureSeeder::class
+            ProcedureSeeder::class,
+            ExtracurricularSeeder::class
         ]);
         // \App\Models\User::factory(10)->create();
 
