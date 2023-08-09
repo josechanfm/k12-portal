@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Manage;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -8,7 +8,6 @@ use Inertia\Inertia;
 use App\Models\Config;
 use App\Models\Activity;
 use App\Models\Staff;
-use App\Models\Student;
 use App\Models\Extracurricular;
 use Illuminate\Support\Facades\Validator;
 
@@ -21,13 +20,11 @@ class ActivityController extends Controller
      */
     public function index()
     {
-        $students=Activity::studentsOf();
-        dd($students);
-        return Inertia::render('Manage/Activities',[
+        return Inertia::render('Admin/Activities',[
             'terms'=>Config::item('year_terms'),
             'staffs'=>Staff::all(),
             'extracurriculars'=>Extracurricular::where('active',true)->get(),
-            'activities'=>Activity::with('students')->get()
+            'activities'=>Activity::all()
         ]);
     }
 

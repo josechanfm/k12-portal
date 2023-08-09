@@ -17,6 +17,8 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('activity_id');
             $table->bigInteger('student_id');
+            $table->bigInteger('klass_id');
+            $table->string('score',12)->nullable();
             $table->timestamps();
         });
     }

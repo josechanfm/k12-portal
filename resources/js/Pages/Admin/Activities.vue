@@ -5,6 +5,7 @@
                 課外活動
             </h2>
         </template>
+        <a-button @click="createRecord" type="primary">開設課外活動</a-button>
         <a-table :dataSource="activities" :columns="columns">
             <template #bodyCell="{column, text, record, index}">
                 <template v-if="column.dataIndex == 'operation'">
@@ -19,12 +20,25 @@
 
         <!-- Modal Start-->
         <a-modal :model="modal.data" v-model:visible="modal.isOpen" :title="modal.title" width="60%" okText="Save" @ok="onFinish">
-            <table>
-                <tr v-for="student in modal.data.students">
-                    <td>{{student}}</td>
-                </tr>
-            </table>
             <a-form ref="modalForm" :model="modal.data" layout="vertical" @finish="onFinish" id="modalForm">
+                <a-form-item label="學期" name="term_id" :rules="[{required:true}]" >
+                    <a-select v-model:value="modal.data.term_id" :options="terms"/>
+                </a-form-item>
+                <a-form-item label="活動主題" name="title_zh" :rules="[{required:true}]" >
+                    <a-select v-model:value="modal.data.title_zh" :options="extracurriculars" :fieldNames="{value:'title_zh'}"/>
+                </a-form-item>
+                <a-form-item label="活動簡介" name="description">
+                    <a-textarea v-model:value="modal.data.description" placeholder="textarea with clear icon" allow-clear />
+                </a-form-item>
+                <a-form-item label="開始日期" name="date_start" >
+                    <a-date-picker v-model:value="modal.data.date_start" :format="dateFormat" :valueFormat="dateFormat"/>
+                </a-form-item>
+                <a-form-item label="結束日期" name="date_end"  >
+                    <a-date-picker v-model:value="modal.data.date_end"  :format="dateFormat" :valueFormat="dateFormat"/>
+                </a-form-item>
+                <a-form-item label="負責老師" name="staff_id">
+                    <a-select v-model:value="modal.data.staff_id" :options="staffs" :fieldNames="{value:'id',label:'name_zh'}"/>
+                </a-form-item>
             </a-form>
             <!-- <template #footer>
                 <a-button key="back" @click="handleCancel">Return</a-button>

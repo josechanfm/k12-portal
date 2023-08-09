@@ -94,6 +94,7 @@ Route::middleware([
         Route::resource('/students',App\Http\Controllers\Admin\StudentController::class)->names('admin.students');
         Route::get('/lock_transcripts',[App\Http\Controllers\Admin\TranscriptController::class,'lockTranscripts'])->name('admin.lockTranscripts');
         Route::resource('extracurriculars',App\Http\Controllers\Admin\ExtracurricularController::class)->names('admin.extracurriculars');
+        Route::resource('activities',App\Http\Controllers\Admin\ActivityController::class)->names('admin.activities');
     });
 
     Route::prefix('manage/')->middleware([ 'checkRole:master|admin|director|teacher'])->group(function(){

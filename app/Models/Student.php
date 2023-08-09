@@ -59,6 +59,8 @@ class Student extends Model
     public function abilities(){
         return $this->hasManyThrough(Ability::class, KlassStudent::class, 'student_id','klass_student_id')->with('topic');
     }
-
+    public function activities(){
+        return $this->belongsToMany(Student::class);
+    }
 
 }
