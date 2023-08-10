@@ -17,12 +17,12 @@ class Activity extends Model
     }
 
     public static function studentsOf(){
-        $activities=Activity::with('students')->get();
+        $activities=Activity::where('active',true)->with('students')->get();
         foreach($activities as $activity){
-            foreach($students as $student){
+            foreach($activity->students as $student){
                 $student->klass=Klass::find($student->pivot->klass_id);
             }
         }
-        return $students;
+        return $activities;
     }
 }

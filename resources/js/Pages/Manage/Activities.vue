@@ -13,15 +13,22 @@
                 <template v-else>
                     {{record[column.dataIndex]}}
                 </template>
-                
             </template>
         </a-table>
 
         <!-- Modal Start-->
-        <a-modal :model="modal.data" v-model:visible="modal.isOpen" :title="modal.title" width="60%" okText="Save" @ok="onFinish">
+        <a-modal :model="modal.data" v-model:visible="modal.isOpen" :title="modal.title" width="100%" okText="Save" @ok="onFinish">
+            <template v-for="grade in grades">
+                <a-button :value="grade.id" type="primary" class="mr-3 w-15" @click="selectedGrade=grade.id">{{ grade.tag }}</a-button>
+            </template>
+            <p>&nbsp;</p>
+            <template v-for="klass in klasses">
+                <a-button v-if="klass.grade_id==selectedGrade" :value="klass.id" type="primary" class="mr-3 w-15" @click="getStudents(klass)">{{ klass.tag }}</a-button>
+            </template>
             <table>
-                <tr v-for="student in modal.data.students">
-                    <td>{{student}}</td>
+                <tr v-for="student in students">
+                    <td>{{student.name_zh}}</td>
+                    <td>{{student.pivot.score}}</td>
                 </tr>
             </table>
             <a-form ref="modalForm" :model="modal.data" layout="vertical" @finish="onFinish" id="modalForm">
@@ -40,6 +47,7 @@
 
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
+import { affixProps } from 'ant-design-vue/lib/affix';
 import dayjs from 'dayjs';
 
 export default {
@@ -47,10 +55,12 @@ export default {
         AdminLayout,
         dayjs,
     },
-    props: ['terms','staffs','extracurriculars','activities'],
+    props: ['terms','staffs','extracurriculars','activities','klasses','grades'],
     data() {
         return {
             dateFormat:'YYYY-MM-DD',
+            selectedGrade:4,
+            students:[],
             modal: {
                 mode: null,
                 isOpen: false,
@@ -83,6 +93,21 @@ export default {
     },
 
     methods: {
+        getStudents(klass){
+            axios.get(route('manage.students.getByKlassId',klass.id),{
+                klass:klass.id
+            }).then(res=>{
+                this.students=res.data;
+            })
+            // this.$inertia.get(route('manage.getByKlassId',klass.id), {
+            //     onSuccess: (students) => {
+            //         console.log(students)
+            //     },
+            //     onError: (error) => {
+            //         console.log(error);
+            //     }
+            // });
+        },
         closeModal() {
             this.isOpen = false;
             this.reset();

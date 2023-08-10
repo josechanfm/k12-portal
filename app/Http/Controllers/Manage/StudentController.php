@@ -93,9 +93,9 @@ class StudentController extends Controller
         //
     }
 
-    public function getByKlassId($klassId){
-        $students=Klass::find($klassId)->students;
-        echo $students;
+    public function getByKlassId(Klass $klass){
+        $students=$klass->students;
+        return response()->json($students);
     }
 
 }
