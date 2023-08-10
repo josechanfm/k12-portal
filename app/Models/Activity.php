@@ -10,7 +10,7 @@ class Activity extends Model
 {
     use HasFactory;
 
-    protected $fillable=['term_id','title_zh','title_en','description','date_start','date_end','staff_id'];
+    protected $fillable=['term_id','title_zh','title_en','description','date_start','date_end','staff_id','active'];
 
     public function students(){
         return $this->belongsToMany(Student::class)->withPivot(['klass_id','score']);

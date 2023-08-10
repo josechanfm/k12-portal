@@ -39,6 +39,9 @@
                 <a-form-item label="負責老師" name="staff_id">
                     <a-select v-model:value="modal.data.staff_id" :options="staffs" :fieldNames="{value:'id',label:'name_zh'}"/>
                 </a-form-item>
+                <a-form-item label="有效" name="active">
+                    <a-switch v-model:checked="modal.data.active" :checkedValue="1" :uncheckedValue="0"/>
+                </a-form-item>
             </a-form>
             <!-- <template #footer>
                 <a-button key="back" @click="handleCancel">Return</a-button>
@@ -85,7 +88,10 @@ export default {
                     title: '結束日期',
                     dataIndex: 'date_end',
                 },{
-                    title: 'Operation',
+                    title: '有效',
+                    dataIndex: 'active',
+                },{
+                    title: '操作',
                     dataIndex: 'operation',
                 }
             ],
