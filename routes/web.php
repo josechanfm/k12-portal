@@ -107,6 +107,7 @@ Route::middleware([
 
         Route::resource('/student',App\Http\Controllers\Manage\StudentController::class);
         Route::get('/students/get_by_klass_id/{klass}',[App\Http\Controllers\Manage\StudentController::class,'getByKlassId'])->name('manage.students.getByKlassId');
+        Route::post('/students/get_by_names',[App\Http\Controllers\Manage\StudentController::class,'getByNames'])->name('manage.students.getByNames');
 
         Route::resource('/klasses',App\Http\Controllers\Manage\KlassController::class)->names('manage.klasses');
         Route::get('/klass_scores/{klassId}',[App\Http\Controllers\Manage\KlassController::class,'klass_scores']);

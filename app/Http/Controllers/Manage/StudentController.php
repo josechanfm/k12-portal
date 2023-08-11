@@ -97,5 +97,9 @@ class StudentController extends Controller
         $students=$klass->students;
         return response()->json($students);
     }
+    public function getByNames(Request $request){
+        $students=Student::whereIn('name_zh',$request->all())->get();
+        return response()->json($students);
+    }
 
 }
