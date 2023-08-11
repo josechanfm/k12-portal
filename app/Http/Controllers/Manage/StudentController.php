@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Student;
 use App\Models\Klass;
+use App\Models\Grade;
+use App\Models\Year;
 
 class StudentController extends Controller
 {
@@ -94,11 +96,33 @@ class StudentController extends Controller
     }
 
     public function getByKlassId(Klass $klass){
+        $year=Year::currentYear();
+        $students=Year::currentYear()->students->where('name_zh','陳大文');
+        foreach($students as $i=>$student){
+            $students[$i]->klass=$student->klasses()->latest()->first();
+        }
+        dd($students);
+
+        // $grade=Grade::find(4);
+        // dd($grade->students());
+
+        // $student=Student::where('id',1)->first();
+        // $student->klasses;
+        // dd($student);
+        // $students=Student::where('id','<','10')->get();
+        // foreach($students as $i=>$student){
+        //     $students[$i]=$student->with('klasses')->latest()->first();
+        // }
+        // dd($students);
         $students=$klass->students;
         return response()->json($students);
     }
     public function getByNames(Request $request){
-        $students=Student::whereIn('name_zh',$request->all())->get();
+        //$students=Student::whereIn('name_zh',$request->all())->get();
+        $students=Year::currentYear()->students->where('name_zh','陳大文');
+        foreach($students as $i=>$student){
+            $students[$i]->klass=$student->klasses()->latest()->first();
+        }
         return response()->json($students);
     }
 

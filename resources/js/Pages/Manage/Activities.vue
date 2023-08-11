@@ -35,6 +35,7 @@
 
             <a-row class="pt-10">
                 <a-col :span="10">
+                    {{students}}
                     <label>名單</label>
                     <div class="h-full overflow-y-scroll border box-border px-2">
                         <template v-if="searchMultiple">
@@ -62,11 +63,12 @@
                 <a-col :span="10">
                     <label>已選</label>
                     <div class="h-full overflow-y-scroll border box-border px-2">
+                        {{modal.data.students}}
                         <table>
                             <tr v-for="student in modal.data.students">
-                                <td>{{ student.klass.tag }}</td>
+                                <!-- <td>{{ student.klass.tag }}</td> -->
                                 <td>{{ student.name_zh }}</td>
-                                <td>{{ student.pivot.score }}</td>
+                                <!-- <td>{{ student.pivot.score }}</td> -->
                             </tr>
                         </table>
                     </div>
@@ -203,6 +205,7 @@ export default {
         },
         moveAll(){
             console.log('move all')
+            Object.assign(this.modal.data.students, this.students)
         }
 
     },

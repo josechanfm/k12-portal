@@ -14,6 +14,14 @@ class Grade extends Model
     public function klasses(){
         return $this->hasMany(Klass::class);
     }
+    public function students(){
+        $klasses=$this->klasses;
+        $students=new \Illuminate\Database\Eloquent\Collection;;
+        foreach($klasses as $klass){
+            $students=$students->merge($klass->students);
+        }
+        return $students;
+    }
     public function year(){
         return $this->belongsTo(Year::class);
     }

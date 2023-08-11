@@ -34,7 +34,7 @@ class Year extends Model
         return $this->hasManyThrough(Course::class, Klass::class);
     }
     public function students(){
-        return $this->grades->with('klasses');
+        return $this->hasManyDeepFromRelations($this->klasses(),(new Klass())->students());
     }
 
     
