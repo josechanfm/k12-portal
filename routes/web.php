@@ -152,6 +152,7 @@ Route::middleware([
         Route::resource('makeups',App\Http\Controllers\Manage\MakeupController::class)->names('manage.makeups');
         Route::resource('tasks',App\Http\Controllers\Manage\TaskController::class)->names('manage.tasks');
         Route::resource('activities',App\Http\Controllers\Manage\ActivityController::class)->names('manage.activities');
+        Route::resource('activity/{activity}/students',App\Http\Controllers\Manage\ActivityStudentController::class)->names('manage.activityStudents');
     });
 
     Route::prefix('teacher/')->group(function(){

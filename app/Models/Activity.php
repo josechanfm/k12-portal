@@ -16,6 +16,14 @@ class Activity extends Model
         return $this->belongsToMany(Student::class)->withPivot(['klass_id','score']);
     }
 
+    public function studentsWithKlass(){
+        $students=$this->students;
+        foreach($students as $student){
+            $student->klass=Klass::find($student->pivot->klass_id);
+        }
+        return $students;
+    }
+
     public static function studentsOf(){
         $activities=Activity::where('active',true)->with('students')->get();
         foreach($activities as $activity){

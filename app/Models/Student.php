@@ -62,9 +62,6 @@ class Student extends Model
     public function activities(){
         return $this->belongsToMany(Student::class);
     }
-    public function currentKlass(){
-        
-    }
 
 
 }

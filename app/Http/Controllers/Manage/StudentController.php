@@ -96,30 +96,32 @@ class StudentController extends Controller
     }
 
     public function getByKlassId(Klass $klass){
-        $year=Year::currentYear();
-        $students=Year::currentYear()->students->where('name_zh','陳大文');
+        // //dd(Year::currentYear()->students[3]);
+        // $tmpStudents=Year::currentYear()->students->whereIn('name_zh',['李四','黃五']);
+        // foreach($tmpStudents as $std){
+        //     $students[]=$std;
+        // }
+        // //dd($students);
+        // foreach($students as $i=>$student){
+        //     $students[$i]->klass=$student->klasses()->latest()->first();
+        // }
+        // dd($students);
+
+
+        $students=$klass->students;
         foreach($students as $i=>$student){
             $students[$i]->klass=$student->klasses()->latest()->first();
         }
-        dd($students);
-
-        // $grade=Grade::find(4);
-        // dd($grade->students());
-
-        // $student=Student::where('id',1)->first();
-        // $student->klasses;
-        // dd($student);
-        // $students=Student::where('id','<','10')->get();
-        // foreach($students as $i=>$student){
-        //     $students[$i]=$student->with('klasses')->latest()->first();
-        // }
-        // dd($students);
-        $students=$klass->students;
         return response()->json($students);
     }
     public function getByNames(Request $request){
         //$students=Student::whereIn('name_zh',$request->all())->get();
-        $students=Year::currentYear()->students->where('name_zh','陳大文');
+        //return response()->json($request->all());
+        $tmpStudents=Year::currentYear()->students->whereIn('name_zh',$request->all());
+        //dd($students);
+        foreach($tmpStudents as $std){
+            $students[]=$std;
+        }
         foreach($students as $i=>$student){
             $students[$i]->klass=$student->klasses()->latest()->first();
         }
