@@ -5,6 +5,7 @@
                 課外活動
             </h2>
         </template>
+            <br>
             <template v-for="grade in grades">
                 <a-button :value="grade.id" type="primary" class="mr-3 w-15" @click="selectedGrade = grade.id">
                     {{ grade.tag}}
@@ -17,7 +18,8 @@
             </template>
             <a-input-search placeholder="Student name" style="width: 200px" @search="onSearch" />
             <label class="pr-1 pl-5">滙入模式</label>
-            <a-switch v-model:checked="searchMultiple" @click="">By List</a-switch><br>
+            <a-switch v-model:checked="searchMultiple" @click="">By List</a-switch>
+            <a-button class="ml-5" @click="saveSelected">Save Selected</a-button>
             <a-divider></a-divider>
             <a-row class="bg-white">
                 <a-col :span="10">
@@ -28,11 +30,9 @@
                         </template>
                         <template v-else>
                             <div>
-                                <a-checkbox-group v-model:value="fromSelected">
-                                    <template v-for="student in fromStudents">
-                                        <a-checkbox :value="student.id">{{ student.name_zh }}</a-checkbox><br>
-                                    </template>
-                                </a-checkbox-group>
+                                <template v-for="student in fromStudents">
+                                    <a-checkbox v-model:checked="student.selected">{{ student.name_zh }}</a-checkbox><br>
+                                </template>
                             </div>
                         </template>
                     </div>
@@ -51,11 +51,9 @@
                     <label>已選</label>
                     <div class="h-full overflow-y-scroll border box-border px-2">
                         <div>
-                            <a-checkbox-group v-model:value="toSelected">
-                                <template v-for="student in toStudents">
-                                    <a-checkbox :value="student.id">{{ student.name_zh }}</a-checkbox><br>
-                                </template>
-                            </a-checkbox-group>
+                            <template v-for="student in toStudents">
+                                <a-checkbox v-model:checked="student.selected">{{ student.name_zh }}</a-checkbox><br>
+                            </template>
                         </div>
                     </div>
                 </a-col>
@@ -74,7 +72,7 @@ export default {
         AdminLayout,
         dayjs,
     },
-    props: ['terms', 'staffs', 'extracurriculars', 'activities', 'klasses', 'grades','activityStudents'],
+    props: ['activity', 'klasses', 'grades','activityStudents'],
     data() {
         return {
             dateFormat: 'YYYY-MM-DD',
@@ -84,8 +82,6 @@ export default {
             importStudents:'',
             fromStudents: {},
             toStudents:{},
-            fromSelected:[],
-            toSelected:[],
             modal: {
                 mode: null,
                 isOpen: false,
@@ -118,15 +114,18 @@ export default {
     },
     mounted(){
         this.activityStudents.forEach(std=>{
+            std.selected=false
             this.toStudents[std.id]=std
         })
-
     },
     methods: {
-        onFinish(values) {
-            console.log('finished')
-            // if (this.modal.mode == 'EDIT') {
-            this.$inertia.put(route('admin.activities.update', this.modal.data.id), this.modal.data, {
+        saveSelected(){
+            var data={}
+            Object.entries(this.toStudents).forEach(([key,std])=>{
+                data[std.id]={klass_id:std.klass.id};
+            })
+            console.log('hihih');
+            this.$inertia.put(route('manage.activityStudents.update', {activity:1,student:1}), data, {
                 onSuccess: (page) => {
                     this.modal.isOpen = false;
                 },
@@ -134,24 +133,12 @@ export default {
                     console.log(error);
                 }
             });
-            // }
-            // if (this.modal.mode == 'CREATE') {
-            //     this.$inertia.post(route('admin.activities.store'), this.modal.data, {
-            //         onSuccess: (page) => {
-            //             this.modal.isOpen = false;
-            //         },
-            //         onError: (error) => {
-            //             console.log(error);
-            //         }
-            //     });
-            // }
         },
         onSearch(value) {
             this.getStudentByNames(value.split());
         },
         onSearchImport() {
             var items = this.importStudents.split(/[',|;|\r|\n']/).filter(i => i !== '')
-            console.log(items);
             this.getStudentByNames(items);
         },
         getStudentsByKlass(klass) {
@@ -160,45 +147,56 @@ export default {
             axios.get(route('manage.students.getByKlassId', klass.id), {
                 klass: klass.id
             }).then(res => {
-                this.fromStudents = res.data
+                this.fromStudents={}
+                res.data.forEach(std=>{
+                    this.fromStudents[std.id]=std
+                })
                 this.searchMultiple = false
             })
         },
         getStudentByNames(items) {
-            this.activityStudents.selectedStudents = []
             axios.post(route('manage.students.getByNames'), items).then(res => {
-                this.students = res.data
+                this.fromStudents={}
+                res.data.forEach(std=>{
+                    this.fromStudents[std.id]=std
+                })
                 this.searchMultiple = false
             })
         },
         moveSelected(){
-            this.fromStudents.forEach(std=>{
-                if(this.fromSelected.includes(std.id)){
-                     this.toStudents[std.id]=std
+            Object.entries(this.fromStudents).forEach(([key,std])=>{
+                if(std.selected){
+                    std.selected=false
+                    this.toStudents[std.id]={...std}
+                    //this.fromStudents[std]
+                    delete this.fromStudents[key]
                 }
             })
         },
         moveAll(){
-            this.fromStudents.forEach(std=>{
-                this.toStudents[std.id]=std
+            Object.entries(this.fromStudents).forEach(([key,std])=>{
+                this.toStudents[std.id]={...std}
             })
-
+            this.fromStudents={}
         },
         removeSelected(){
-            console.log(this.toStudents);
-            if(!this.modal.data.unselectedStudents || this.modal.data.unselectedStudents.length==0) return true;
-            Object.entries(this.modal.data.students).forEach(([key,std])=>{
-                console.log(key)
-                if(this.modal.data.unselectedStudents.includes(std.id)){
-                    delete this.modal.data.students[key]
+            Object.entries(this.toStudents).forEach(([key,std])=>{
+                console.log(std)
+                if(std.selected==true){
+                    std.selected=false
+                    this.fromStudents[std.id]={...std}
+                    delete this.toStudents[std.id]
                 }
             })
-            this.modal.data.unselectedStudents=[]
         },
         removeAllSelected(){
-            this.modal.data.students={};
-            this.modal.data.unselectedStudents=[]
+            Object.entries(this.toStudents).forEach(([key,std])=>{
+                std.selected=false
+                this.fromStudents[std.id]={...std}
+            })
+            this.toStudents={}
         },
     },
 }
 </script>
+

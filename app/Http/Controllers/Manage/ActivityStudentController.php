@@ -9,8 +9,10 @@ use App\Models\Config;
 use App\Models\Activity;
 use App\Models\Staff;
 use App\Models\Year;
+use App\Models\Student;
 use App\Models\Extracurricular;
 use Illuminate\Support\Facades\Validator;
+
 class ActivityStudentController extends Controller
 {
     /**
@@ -23,14 +25,16 @@ class ActivityStudentController extends Controller
         //$activityStudents=$activity->studentsWithKlass();
         //dd($activityStudents);
         return Inertia::render('Manage/ActivityStudents',[
-            'terms'=>Config::item('year_terms'),
-            'staffs'=>Staff::all(),
-            'extracurriculars'=>Extracurricular::where('active',true)->get(),
-            'activities'=>Activity::studentsOf(),
-            'activityStudents'=>$activity->studentsWithKlass(),
+            // 'terms'=>Config::item('year_terms'),
+            // 'staffs'=>Staff::all(),
+            // 'extracurriculars'=>Extracurricular::where('active',true)->get(),
+            // 'activities'=>Activity::studentsOf(),
             'klasses'=>Year::currentYear()->klasses,
-            'grades'=>Year::currentYear()->grades
-        ]);    }
+            'grades'=>Year::currentYear()->grades,
+            'activity'=>$activity,
+            'activityStudents'=>$activity->studentsWithKlass(),
+        ]);
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -82,9 +86,12 @@ class ActivityStudentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Activity $activity, Student $student)
     {
-        //
+        $activity->students()->sync($request->all());
+        return redirect()->back();
+
+        //return response()->json($request->all());
     }
 
     /**
