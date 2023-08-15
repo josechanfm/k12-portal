@@ -55,7 +55,6 @@ class KLassController extends Controller
      */
     public function show(Klass $klass)
     {
-        dd($klass->hasRight());
         $grade = $klass->grade;
         $courses = Klass::find($klass->id)->courses;
         // dd($courses);

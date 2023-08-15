@@ -8,7 +8,9 @@
         <a-table :dataSource="activities" :columns="columns">
             <template #bodyCell="{ column, text, record, index }">
                 <template v-if="column.dataIndex == 'operation'">
-                    <inertia-link :href="route('manage.activityStudents.index',record.id)" class="ant-btn">學生名單</inertia-link>
+                    <inertia-link :href="route('manage.activity.students',record.id)" class="ant-btn">學生名單</inertia-link>
+                    <inertia-link :href="route('manage.activity.students.scores',record.id)" class="ant-btn">Scores</inertia-link>
+                    <a-button>Report</a-button>
                 </template>
                 <template v-else>
                     {{ record[column.dataIndex] }}

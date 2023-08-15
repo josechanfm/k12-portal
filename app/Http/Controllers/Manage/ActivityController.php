@@ -3,14 +3,17 @@
 namespace App\Http\Controllers\Manage;
 
 use App\Http\Controllers\Controller;
+use App\Models\Ability;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Config;
 use App\Models\Activity;
+use App\Models\ActivityStudent;
 use App\Models\Staff;
 use App\Models\Year;
 use App\Models\Extracurricular;
 use Illuminate\Support\Facades\Validator;
+use PDF;
 
 class ActivityController extends Controller
 {
@@ -106,4 +109,41 @@ class ActivityController extends Controller
     {
         //
     }
+
+    public function students(Activity $activity){
+        $activity->studentsWithKlass();
+        return Inertia::render('Manage/ActivityStudents',[
+            'klasses'=>Year::currentYear()->klasses,
+            'grades'=>Year::currentYear()->grades,
+            'activity'=>$activity,
+        ]);
+    }
+
+    public function studentsScores(Activity $activity){
+        $activity->studentsWithKlass();
+        return Inertia::render('Manage/ActivityStudentsScores',[
+            'klasses'=>Year::currentYear()->klasses,
+            'grades'=>Year::currentYear()->grades,
+            'activity'=>$activity,
+        ]);
+    }
+    public function scoreReport(Activity $activity){
+        //https://cooltext.com/Fonts-Unicode-Chinese
+        //$pdf= PDF::loadHTML('<h1>Hello World!</h1>');
+        //return view('pdf.activityScores',['students'=>$activity->studentsWithKlass()]);
+        $pdf=PDF::loadView('pdf.activityScores',['students'=>$activity->studentsWithKlass()]);
+        return $pdf->stream();
+    }
+
+    public function studentsScoresUpdate(Request $request){
+        ActivityStudent::upsert($request->all(),['activity_id','student_id','klass_id'],['score']);
+        return redirect()->back();
+    }
+
+    public function studentsSync(Request $request, Activity $activity)
+    {
+        $activity->students()->sync($request->all());
+        return redirect()->back();
+    }
+
 }

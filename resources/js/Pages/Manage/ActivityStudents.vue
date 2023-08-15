@@ -18,14 +18,15 @@
             </template>
             <a-input-search placeholder="Student name" style="width: 200px" @search="onSearch" />
             <label class="pr-1 pl-5">滙入模式</label>
-            <a-switch v-model:checked="searchMultiple" @click="">By List</a-switch>
+            <a-switch v-model:checked="importMode">By List</a-switch>
             <a-button class="ml-5" @click="saveSelected">Save Selected</a-button>
+            <inertia-link :href="route('manage.activities.index')" class="ant-btn">Back</inertia-link>
             <a-divider></a-divider>
             <a-row class="bg-white">
                 <a-col :span="10">
-                    <label>名單</label>
+                    <label>名單<span>{{  }}</span></label>
                     <div class="h-full overflow-y-scroll border box-border px-2">
-                        <template v-if="searchMultiple">
+                        <template v-if="importMode">
                             <a-textarea v-model:value="importStudents" :rows="20">aa</a-textarea>
                         </template>
                         <template v-else>
@@ -44,7 +45,7 @@
                         <a-button @click="moveSelected" block class="mb-4">已選人參加 =&gt;</a-button><br>
                         <a-button @click="removeSelected" block class="mb-4"> &lt;= 已選人不參加</a-button><br>
                         <a-button @click="removeAllSelected" block class="mb-4"> &lt;= 全部人不參加</a-button><br>
-                        <a-button v-if="searchMultiple" @click="onSearchImport" block>滙入</a-button><br>
+                        <a-button v-if="importMode" @click="onSearchImport" block>滙入</a-button><br>
                     </span>
                 </a-col>
                 <a-col :span="10">
@@ -72,22 +73,14 @@ export default {
         AdminLayout,
         dayjs,
     },
-    props: ['activity', 'klasses', 'grades','activityStudents'],
+    props: ['klasses', 'grades','activity'],
     data() {
         return {
-            dateFormat: 'YYYY-MM-DD',
-            searchMultiple: false,
             selectedGrade: 4,
-            //selectedStudents: [],
+            importMode: false,
             importStudents:'',
             fromStudents: {},
             toStudents:{},
-            modal: {
-                mode: null,
-                isOpen: false,
-                title: '課外活動',
-                data: {}
-            },
             columns: [
                 {
                     title: '學期',
@@ -113,7 +106,7 @@ export default {
         // dayjs.locale('en');
     },
     mounted(){
-        this.activityStudents.forEach(std=>{
+        this.activity.students.forEach(std=>{
             std.selected=false
             this.toStudents[std.id]=std
         })
@@ -124,10 +117,9 @@ export default {
             Object.entries(this.toStudents).forEach(([key,std])=>{
                 data[std.id]={klass_id:std.klass.id};
             })
-            console.log('hihih');
-            this.$inertia.put(route('manage.activityStudents.update', {activity:1,student:1}), data, {
+            this.$inertia.put(route('manage.activity.students.sync', {activity:1,student:1}), data, {
                 onSuccess: (page) => {
-                    this.modal.isOpen = false;
+                    console.log(page);
                 },
                 onError: (error) => {
                     console.log(error);
@@ -142,7 +134,7 @@ export default {
             this.getStudentByNames(items);
         },
         getStudentsByKlass(klass) {
-            this.modal.data.selectedStudents = []
+            //this.modal.data.selectedStudents = []
             this.student=[];
             axios.get(route('manage.students.getByKlassId', klass.id), {
                 klass: klass.id
@@ -151,7 +143,7 @@ export default {
                 res.data.forEach(std=>{
                     this.fromStudents[std.id]=std
                 })
-                this.searchMultiple = false
+                this.importMode = false
             })
         },
         getStudentByNames(items) {
@@ -160,7 +152,7 @@ export default {
                 res.data.forEach(std=>{
                     this.fromStudents[std.id]=std
                 })
-                this.searchMultiple = false
+                this.importMode = false
             })
         },
         moveSelected(){
