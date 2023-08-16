@@ -76,25 +76,19 @@ Route::middleware([
         Route::get('year/{year}/grades',[App\Http\Controllers\Admin\YearController::class,'grades'])->name('admin.year.grades');
         Route::resource('/grades',App\Http\Controllers\Admin\GradeController::class)->names('admin.grades');
         Route::get('grade/{grade}/klasses',[App\Http\Controllers\Admin\GradeController::class,'klasses'])->name('admin.grade.klasses');
-
         Route::get('/grade/{grade}/themes',[App\Http\Controllers\Admin\GradeController::class, 'themes'])->name('admin.grade.themes');
-
-
         Route::get('klass/{klass}/courses',[App\Http\Controllers\Admin\KlassController::class,'courses'])->name('admin.klass.courses');
         Route::get('klass/{klass}/students',[App\Http\Controllers\Admin\KlassController::class,'students'])->name('admin.klass.students');
         Route::post('student/sync_courses',[App\Http\Controllers\Admin\StudentController::class,'syncCourses'])->name('admin.klass.syncCourses');
         Route::get('course/{course}/students',[App\Http\Controllers\Admin\CourseController::class,'students'])->name('admin.course.students');
-        //Route::put('course/{course}/update_subject_heads',[App\Http\Controllers\Admin\CourseController::class,'updateSubjectHeads'])->name('admin.course.updateSubjectHeads');
         Route::put('course/{course}/update_curse_teachers',[App\Http\Controllers\Admin\CourseController::class,'updateCourseTeachers'])->name('admin.course.updateCourseTeachers');
-
-        // Route::get('grades/year/{year}',[App\Http\Controllers\Admin\GradeController::class,'admin.grades.year']);
         Route::resource('/klasses',App\Http\Controllers\Admin\KlassController::class)->names('admin.klasses');
-        // Route::get('klasses/grade/{grade}',[App\Http\Controllers\Admin\KlassController::class,'admin.klasses.grade']);
         Route::resource('/courses',App\Http\Controllers\Admin\CourseController::class)->names('admin.courses');
         Route::resource('/students',App\Http\Controllers\Admin\StudentController::class)->names('admin.students');
         Route::get('/lock_transcripts',[App\Http\Controllers\Admin\TranscriptController::class,'lockTranscripts'])->name('admin.lockTranscripts');
         Route::resource('extracurriculars',App\Http\Controllers\Admin\ExtracurricularController::class)->names('admin.extracurriculars');
         Route::resource('activities',App\Http\Controllers\Admin\ActivityController::class)->names('admin.activities');
+        Route::resource('certificates',App\Http\Controllers\Admin\CertificateController::class)->names('admin.certificates');
     });
 
     Route::prefix('manage/')->middleware([ 'checkRole:master|admin|director|teacher'])->group(function(){
@@ -138,7 +132,7 @@ Route::middleware([
         Route::put('activity/{activity}/students/scores/update',[App\Http\Controllers\Manage\ActivityController::class,'studentsScoresUpdate'])->name('manage.activity.students.scores.update');
         Route::get('activity/{activity}/students/scores/report',[App\Http\Controllers\Manage\ActivityController::class,'scoreReport'])->name('manage.activity.students.scores.report');
         Route::resource('certificates',App\Http\Controllers\Manage\CertificateController::class)->names('manage.certificates');
-        
+        Route::get('certificate/get_by_conditions',[App\Http\Controllers\Manage\CertificateController::class,'getByConditions'])->name('manage.certificate.getByConditions');
     });
 
     Route::prefix('teacher/')->group(function(){

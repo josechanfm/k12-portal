@@ -96,18 +96,6 @@ class StudentController extends Controller
     }
 
     public function getByKlassId(Klass $klass){
-        // //dd(Year::currentYear()->students[3]);
-        // $tmpStudents=Year::currentYear()->students->whereIn('name_zh',['李四','黃五']);
-        // foreach($tmpStudents as $std){
-        //     $students[]=$std;
-        // }
-        // //dd($students);
-        // foreach($students as $i=>$student){
-        //     $students[$i]->klass=$student->klasses()->latest()->first();
-        // }
-        // dd($students);
-
-
         $students=$klass->students;
         foreach($students as $i=>$student){
             $students[$i]->klass=$student->klasses()->latest()->first();

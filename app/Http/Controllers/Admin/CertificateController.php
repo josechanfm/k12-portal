@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Manage;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Certificate;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Config;
-use App\Models\Year;
 
 class CertificateController extends Controller
 {
@@ -18,14 +16,9 @@ class CertificateController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Manage/Certificates',[
-            'years'=>Year::all(),
-            'terms'=>Config::item('year_terms'),
-            'grades'=>Year::currentYear()->grades,
-            'klasses'=>Year::currentYear()->klasses,
-            'certificateTemplates'=>Config::item('certificates')
+        return Inertia::render('Admin/Certificates',[
+            'certificates'=>Certificate::all(),
         ]);
-
     }
 
     /**
@@ -57,8 +50,7 @@ class CertificateController extends Controller
      */
     public function show($id)
     {
-        $certificates=Certificate::all();
-        return response()->json($certificates);
+        //
     }
 
     /**
@@ -81,14 +73,7 @@ class CertificateController extends Controller
      */
     public function update(Request $request, $id)
     {
-        Certificate::upsert(
-            $request->all(),
-            ['certificate_type','year_id','term_id','student_id'],
-            ['name_display','extra']
-        );
-        //return response()->json($request->all());
-        //return response()->json($id);
-        return redirect()->back();
+        //
     }
 
     /**
@@ -100,18 +85,5 @@ class CertificateController extends Controller
     public function destroy($id)
     {
         //
-    }
-    public function getByConditions(Request $request){
-        $conditions=$request->all();
-        if($conditions['year_id']==0){
-            $conditions['year_id']=Year::currentYear()->id;
-        };
-        $certificates=Certificate::where($conditions)->with('student')->get();
-
-        foreach($certificates as $i=>$certificate){
-            $certificates[$i]->student->klass=$certificate->student->klasses()->latest()->first();
-        }
-
-        return response()->json($certificates);
     }
 }

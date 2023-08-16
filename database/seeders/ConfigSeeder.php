@@ -247,5 +247,74 @@ class ConfigSeeder extends Seeder
                     }
                 ]'
         ]);
+        DB::table('configs')->insert([
+            'key'=>'score_letters',
+            'value'=>'[{
+                "value": "C1",
+                "label": "服務獎",
+                "category": null
+            }, {
+                "value": "C2",
+                "label": "風紀服務獎",
+                "category": [{
+                    "value": "C2-1",
+                    "label": "隊長"
+                }, {
+                    "value": "C2-2",
+                    "label": "副隊長"
+                }, {
+                    "value": "C2-3",
+                    "label": "隊員"
+                }]
+            }, {
+                "value": "C3",
+                "label": "領袖生服務獎",
+                "category": null
+            }, {
+                "value": "C4",
+                "label": "操行獎",
+                "category": null
+            }, {
+                "value": "C5",
+                "label": "學業獎",
+                "category": [{
+                    "value": "C5-1",
+                    "label": "壹"
+                }, {
+                    "value": "C5-2",
+                    "label": "貳"
+                }, {
+                    "value": "C5-3",
+                    "label": "叁"
+                }, {
+                    "value": "C5-4",
+                    "label": "肆"
+                }, {
+                    "value": "C5-5",
+                    "label": "伍"
+                }]
+            }, {
+                "value": "C6",
+                "label": "循序獎",
+                "category": null
+            }, {
+                "value": "C7",
+                "label": "學生自治會服務獎",
+                "category": [{
+                    "value": "C7-1",
+                    "label": "會長"
+                }, {
+                    "value": "C7-2",
+                    "label": "副會長"
+                }, {
+                    "value": "C7-3",
+                    "label": "幹事"
+                }]
+            }, {
+                "value": "C8",
+                "label": "飛躍進步獎",
+                "category": null
+            }]'
+        ])
     }
 }
