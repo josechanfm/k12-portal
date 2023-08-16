@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Certificate;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use PDF;
 
 class CertificateController extends Controller
 {
@@ -86,4 +87,15 @@ class CertificateController extends Controller
     {
         //
     }
+
+    public function print(Request $request){
+        $certificates=Certificate::whereIn('id',$request->all())->get();
+        $pdf=PDF::loadView('pdf.generalCertificate',['students'=>'abc123']);
+        return $pdf->stream();
+        //return response()->json($certificates);
+
+        // $pdf=PDF::loadView('pdf.activityScores',['students'=>$activity->studentsWithKlass()]);
+        // return $pdf->stream();
+    }
+
 }

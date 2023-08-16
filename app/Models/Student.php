@@ -17,7 +17,7 @@ class Student extends Model
     //     return $this->hasManyThrough(Score::class, KlassStudent::class);
     // }
     public function klasses(){
-        return $this->belongsToMany(Klass::class);
+        return $this->belongsToMany(Klass::class)->withPivot('student_number');
     }
     public function courses(){
         return $this->belongsToMany(Course::class,'course_student');

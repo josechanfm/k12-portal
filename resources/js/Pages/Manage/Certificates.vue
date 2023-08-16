@@ -5,6 +5,7 @@
                 課外活動
             </h2>
         </template>
+        {{toStudents}}
         <div class="w-full mt-5 p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <a-radio-group v-model:value="selectedGradeId" button-style="solid" @change="onChangeGrade">
                 <template v-for="grade in grades">
@@ -55,6 +56,8 @@
                                         <tr>
                                             <th>Term</th>
                                             <th>Name</th>
+                                            <th>Cert Date</th>
+                                            <th>Cert Number</th>
                                             <th>Extra</th>
                                         </tr>
                                     </thead>
@@ -64,7 +67,14 @@
                                                 <td>{{ termLabel(student.term_id) }}</td>
                                                 <td>{{ student.name_display }}</td>
                                                 <td>
+                                                    <a-date-picker v-model:value="student.issue_date" :format="dateFormat" :valueFormat="dateFormat"/>
+                                                </td>
+                                                <td>
+                                                    <a-input v-model:value="student.issue_number"/>
+                                                </td>
+                                                <td>
                                                     <a-input v-model:value="student.extra"/>
+                                                    {{student}}
                                                 </td>
                                             </tr>
                                         </template>
@@ -169,6 +179,8 @@ export default {
             }).then(res=>{
                 this.toStudents={}
                 res.data.forEach(std=>{
+                    std.student.issue_date=std.issue_date
+                    std.student.issue_number=std.issue_number
                     std.student.extra=std.extra
                     std.student.name_display=std.name_display
                     std.student.term_id=std.term_id
@@ -206,19 +218,26 @@ export default {
             this.toStudents[student.id]['term_id']=this.selectedTermId
         },
         saveSelecedStudents(){
+            console.log(this.toStudents)
             var data=[]
             Object.entries(this.toStudents).forEach(([key,std])=>{
+                console.log(std)
                 data.push({
                     certificate_type:this.selectedCertificateType,
                     certificate_meta:JSON.stringify(this.certificateTemplates.find(cert=>cert.value==this.selectedCertificateType)),
+                    issue_date:std.issue_date,
+                    issue_number:std.issue_number,
                     year_id:this.selectedGrade.year_id,
                     term_id:this.selectedTermId,
                     student_id:std.id,
+                    student_number:std.klass.pivot.student_number,
                     klass_id:std.klass.id,
+                    klass_tag:std.klass.tag,
                     name_display:std.name_zh,
                     extra:std.extra
                 })
             })
+            console.log(data)
             this.$inertia.put(route('manage.certificates.update', this.selectedCertificateType), data, {
                 onSuccess: (page) => {
                     console.log(page);

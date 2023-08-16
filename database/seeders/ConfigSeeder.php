@@ -248,7 +248,7 @@ class ConfigSeeder extends Seeder
                 ]'
         ]);
         DB::table('configs')->insert([
-            'key'=>'score_letters',
+            'key'=>'certificates',
             'value'=>'[{
                 "value": "C1",
                 "label": "服務獎",
@@ -315,6 +315,6 @@ class ConfigSeeder extends Seeder
                 "label": "飛躍進步獎",
                 "category": null
             }]'
-        ])
+        ]);
     }
 }

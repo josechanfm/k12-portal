@@ -89,6 +89,7 @@ Route::middleware([
         Route::resource('extracurriculars',App\Http\Controllers\Admin\ExtracurricularController::class)->names('admin.extracurriculars');
         Route::resource('activities',App\Http\Controllers\Admin\ActivityController::class)->names('admin.activities');
         Route::resource('certificates',App\Http\Controllers\Admin\CertificateController::class)->names('admin.certificates');
+        Route::post('certificate/print',[App\Http\Controllers\Admin\CertificateController::class,'print'])->name('admin.certificate.print');
     });
 
     Route::prefix('manage/')->middleware([ 'checkRole:master|admin|director|teacher'])->group(function(){

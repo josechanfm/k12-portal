@@ -59,7 +59,7 @@
                     <a-input-number v-model:value="modal.data.qty" :min="1" :max="100"/> 
                 </a-form-item>
                 <a-form-item label="日期" :name="['date']">
-                    <a-date-picker v-model:value="modal.data.date" format="YYYY-MM-DD"/> 
+                    <a-date-picker v-model:value="modal.data.date" format="YYYY-MM-DD" valueFormat="YYYY-MM-DD" /> 
                 </a-form-item>
                 <a-form-item label="描述" :name="['description']">
                     <a-input v-model:value="modal.data.description"/> 

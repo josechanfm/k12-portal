@@ -84,7 +84,7 @@ class CertificateController extends Controller
         Certificate::upsert(
             $request->all(),
             ['certificate_type','year_id','term_id','student_id'],
-            ['name_display','extra']
+            ['issue_date','issue_number','name_display','extra']
         );
         //return response()->json($request->all());
         //return response()->json($id);

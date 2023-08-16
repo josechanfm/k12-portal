@@ -6,30 +6,39 @@
             </h2>
         </template>
         <a-button @click="createRecord" type="primary">開設課外活動</a-button>
-        <a-table :dataSource="certificates" :columns="columns">
-            <template #bodyCell="{column, text, record, index}">
-                <template v-if="column.dataIndex == 'operation'">
-                    <a-button @click="editRecord(record)">Edit</a-button>
-                </template>
-                <template v-else-if="column.dataIndex == 'title'">
-                    {{ record.certificate_meta.label }}
-                </template>
-                <template v-else-if="column.dataIndex == 'year'">
-                    {{ record.year_id }}
-                </template>
-                <template v-else-if="column.dataIndex == 'term'">
-                    {{ record.term_id }}
-                </template>
-                <template v-else-if="column.dataIndex == 'klass'">
-                    {{ record.klass_id }}
-                </template>
-                <template v-else>
-                    {{record[column.dataIndex]}}
-                </template>
-                
-            </template>
-        </a-table>
+        <div>
+            <div class="ant-table">
+                <div class="ant-table-container">
+                    <div class="ant-table-content">
+                        <table style="table-layout: auto;" id="dataTable" ref="dataTable">
+                            <thead class="ant-table-thead">
+                                <tr>
+                                    <th>Cert title</th>
+                                    <th>Student Name</th>
+                                    <th>Issue Date</th>
+                                    <th>Issue Number</th>
+                                    <th>Klass</th>
+                                    <th>Student number</th>
+                                    <th>Print</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="cert in certificates">
+                                    <td>{{cert.certificate_meta.label}}</td>
+                                    <td>{{cert.name_display}}</td>
+                                    <td>{{cert.issue_date}}</td>
+                                    <td>{{cert.issue_number}}</td>
+                                    <td>{{cert.klass_tag}}</td>
+                                    <td>{{cert.student_number}}</td>
+                                    <td><a-button @click="printCertificate(cert)">Print</a-button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
+        </div>
 
     </AdminLayout>
 
@@ -54,28 +63,6 @@ export default {
                 title: '課外活動',
                 data: {}
             },
-            columns:[
-                {
-                    title: 'Certi title',
-                    dataIndex: 'title',
-                },{
-                    title: 'Student name display',
-                    dataIndex: 'name_display',
-                },{
-                    title: 'Year',
-                    dataIndex: 'year',
-                },{
-                    title: 'Term',
-                    dataIndex: 'term',
-                },{
-                    title: 'Klass',
-                    dataIndex: 'klass',
-                },{
-                    title: '操作',
-                    dataIndex: 'operation',
-                }
-            ],
-
         }
     },
     created(){
@@ -83,6 +70,18 @@ export default {
     },
 
     methods: {
+        printCertificate(cert){
+            var data=[11,12]
+            this.$inertia.post(route('admin.certificate.print'),data, {
+                onSuccess: (page) => {
+                    console.log(page)
+                },
+                onError: (error) => {
+                    console.log(error);
+                }
+            });
+            console.log(cert)
+        },
         closeModal() {
             this.isOpen = false;
             this.reset();
