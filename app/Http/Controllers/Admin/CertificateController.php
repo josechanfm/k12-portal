@@ -87,11 +87,15 @@ class CertificateController extends Controller
     {
         //
     }
-
     public function print(Request $request){
-        $certificates=Certificate::whereIn('id',$request->all())->get();
-        $pdf=PDF::loadView('pdf.generalCertificate',['students'=>'abc123']);
-        return $pdf->stream();
+        //dd($request->certificateIds);
+        //$certificates=Certificate::whereIn('id',$request->certificateIds)->get();
+        $certificates=Certificate::where('id',$request->cert)->get();
+        //dd($certificates);
+        $pdf=PDF::loadView('pdf.generalCertificate',['certificates'=>$certificates]);
+        $pdf->render();
+        return $pdf->stream('test.pdf',array('Attachment'=>false));
+
         //return response()->json($certificates);
 
         // $pdf=PDF::loadView('pdf.activityScores',['students'=>$activity->studentsWithKlass()]);
