@@ -9,6 +9,7 @@ use App\Models\Config;
 use App\Models\Klass;
 use App\Models\Teacher;
 use App\Models\Transcript;
+use App\Models\AdditiveTemplate;
 
 class KLassController extends Controller
 {
@@ -55,14 +56,18 @@ class KLassController extends Controller
      */
     public function show(Klass $klass)
     {
-        $grade = $klass->grade;
-        $courses = Klass::find($klass->id)->courses;
+        $klass->grade;
+        $klass->courses;
+        //$courses = Klass::find($klass->id)->courses;
+        $klass->students;
+
         // dd($courses);
-        return Inertia::render('Manage/Klass', [
-            'grade' => $grade,
+        return Inertia::render('Manage/Klasses', [
+            //'grade' => $grade,
             'klass' => $klass,
-            'courses' => $courses,
+            //'courses' => $courses,
             //'students'=>$students,
+            'additiveTemplates'=>AdditiveTemplate::all()
         ]);
     }
 

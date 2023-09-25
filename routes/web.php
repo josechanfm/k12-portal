@@ -60,7 +60,8 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::prefix('master')->middleware([ 'checkRole:master'])->group(function(){
-        Route::resource('/studies',App\Http\Controllers\Master\StudyController::class);
+        Route::resource('/manuals',App\Http\Controllers\Master\ManualController::class)->names('master.manuals');
+        Route::resource('/studies',App\Http\Controllers\Master\StudyController::class)->names('master.stuties');
         Route::resource('/study_subjects',App\Http\Controllers\Master\StudySubjectController::class)->names('master.studySubjects');
         Route::resource('/subjects',App\Http\Controllers\Master\SubjectController::class)->names('master.subjects');
         Route::resource('/configs',App\Http\Controllers\Master\ConfigController::class);
@@ -111,8 +112,8 @@ Route::middleware([
         Route::post('/klass/{klass}/abilities/update',[App\Http\Controllers\Manage\AbilityController::class,'update'])->name('manage.klass.abilities.update');
         Route::get('/klass/{klass}/habits',[App\Http\Controllers\Manage\HabitController::class,'byKlass'])->name('manage.klass.habits');
         Route::put('/klass/{klass}/habits',[App\Http\Controllers\Manage\HabitController::class,'update'])->name('manage.klass.habits.update');
-        Route::get('/transcript/klass_student/{id}',[App\Http\Controllers\Manage\TranscriptController::class,'klassStudent']);
-        Route::get('/transcript/klass/{klass}',[App\Http\Controllers\Manage\TranscriptController::class,'klass']);
+        Route::get('/klass/{klass}/transcript',[App\Http\Controllers\Manage\TranscriptController::class,'klass'])->name('manage.klass.transcript');
+        Route::get('/klass/student/{klassStudent}/transcript',[App\Http\Controllers\Manage\TranscriptController::class,'klassStudent'])->name('manage.klass.student.transcript');
         Route::resource('/teachers',App\Http\Controllers\Manage\TeacherController::class);
         Route::get('teaching/{teacherId}',[App\Http\Controllers\Manage\TeacherController::class,'teaching'])->name('manage.teaching');   
         Route::get('/course/{course}/scores',[App\Http\Controllers\Manage\CourseController::class,'scores'])->name('manage.course.scores');
@@ -124,6 +125,7 @@ Route::middleware([
 
         Route::resource('additives',App\Http\Controllers\Manage\AdditiveController::class)->names('manage.additives');
         Route::get('klass/{klass}/additive/{category}',[App\Http\Controllers\Manage\AdditiveController::class,'scope'])->name('manage.klass.additive');
+        Route::get('klass/{klass}/additive_page',[App\Http\Controllers\Manage\AdditiveController::class,'page'])->name('manage.klass.additive.page');
         Route::resource('makeups',App\Http\Controllers\Manage\MakeupController::class)->names('manage.makeups');
         Route::resource('tasks',App\Http\Controllers\Manage\TaskController::class)->names('manage.tasks');
         Route::resource('activities',App\Http\Controllers\Manage\ActivityController::class)->names('manage.activities');

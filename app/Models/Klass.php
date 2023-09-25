@@ -137,9 +137,14 @@ class Klass extends Model
         return $transcripts;
     }
 
-    public function additives($category){
+    public function additives($category=null){
         $students=$this->students;
-        $templates=AdditiveTemplate::where('category',$category)->get()->toArray();
+        if($category==null){
+            $templates=AdditiveTemplate::all()->toArray();
+        }else{
+            $templates=AdditiveTemplate::where('category',$category)->get()->toArray();
+        }
+        
         $data=[];
         foreach($students as $student){
             $data['students'][$student->id]['name_zh']=$student->name_zh;

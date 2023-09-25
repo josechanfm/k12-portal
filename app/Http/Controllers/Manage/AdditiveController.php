@@ -112,4 +112,20 @@ class AdditiveController extends Controller
             'additiveTemplates'=>AdditiveTemplate::all(),
         ]);
     }
+
+    public function page(Klass $klass){
+        $klass->grade;
+        $klass->courses;
+        //$courses = Klass::find($klass->id)->courses;
+        $klass->students;
+
+        // dd($courses);
+        return Inertia::render('Manage/KlassAdditives2', [
+            'klass' => $klass,
+            'additiveTemplates'=>AdditiveTemplate::all(),
+            'additives'=>$klass->additives()
+
+        ]);
+
+    }
 }

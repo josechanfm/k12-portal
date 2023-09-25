@@ -17,51 +17,17 @@ use function GuzzleHttp\json_decode;
 class TranscriptController extends Controller
 {
     public function index(Klass $klass){
-        /*
-        $coursesScores=$klass->transcriptCoursesScores;//all Courses in transcript with scores
-        $students=$klass->students; //all student in the klass
-        $courses=$klass->courses->where('in_transcript',1); //all Courses in the klass with score_columns
-        //rebuild all scores in an array, index with student_id, course_id and score_column_id
-        $tmpScores=[];
-        foreach($coursesScores as $course){
-            foreach($course->allScores as $score){
-                $tmpScores[$score->student_id][$course->id][$score->score_column_id]=$score->point;
-            }
-        }
-        //generate student list with personal info required in transcript
-        //loop all scores in term_id==9 in all courses and put it in student array list
-        $transcript=[];
-        $scoreColumns=[];
-        foreach($students as $student){
-            $tmp=[
-                'student_id'=>$student->id,
-                'student_name'=>$student->name_zh,
-                'klass_student_id'=>$student->pivot->klass_student_id
-            ];
-            foreach($courses as $course){
-                $scoreColumn=$course->scoreColumns->where('term_id',9)->first();
-                //$transcript[]['scores'][$scoreColumnId]=$tmpScores[$student->id][$course->id][$scoreColumnId];
-                if(isset($tmpScores[$student->id][$course->id])){
-                    $tmp['scores'][$scoreColumn->id]=$tmpScores[$student->id][$course->id][$scoreColumn->id];
-                }else{
-                    $tmp['scores'][$scoreColumn->id]='--';
-                }
-                $scoreColumn['course_code']=$course->code;
-                $scoreColumn['course_title']=$course->title_zh;
-                $scoreColumns[$scoreColumn->id]=$scoreColumn;
-        }
-            $transcript[]=$tmp;
-        }
-        return Inertia::render('Manage/Transcript',[
-            'klass'=>$klass,
-            'transcript'=>$transcript,
-            'score_columns'=>$scoreColumns
-        ]);
-        */
+
     }
 
-    public function KlassStudent($id){
-        $klassStudent=KlassStudent::find($id);
+    public function KlassStudent(KlassStudent $klassStudent){
+        dd($klassStudent->student);
+        $klassStudent=KlassStudent::find($klassStudentId);
+        dd($klassStudent);
+        return Inertia::render('Manage/Transcript',[
+            'transcriptTemplate'=>$id,
+            'student'=>$klassStudent
+        ]);
         return response($klassStudent);
 
     }
