@@ -15,13 +15,17 @@
         <inertia-link :href="route('manage.klass.finalScores', klass.id)" class="ant-btn">期末成績</inertia-link>
         <inertia-link :href="route('manage.klass.transcript', klass.id)" class="ant-btn">成積總表</inertia-link>
         <a-divider type="vertical" />
-        <inertia-link :href="route('manage.klass.additive', [klass.id, 'attendance'])" class="ant-btn">考勤</inertia-link>
-        <inertia-link :href="route('manage.klass.additive', [klass.id, 'perform'])" class="ant-btn">獎懲</inertia-link>
-        <inertia-link :href="route('manage.klass.additive', [klass.id, 'conduct'])" class="ant-btn">操行</inertia-link>
-        <inertia-link :href="route('manage.klass.additive', [klass.id, 'comments'])" class="ant-btn">評語</inertia-link>
-        <inertia-link :href="route('manage.klass.additive', [klass.id, 'violation'])" class="ant-btn">違規</inertia-link>
-        <a-divider type="vertical" />
-        <inertia-link :href="route('manage.klass.additive.page', klass.id)" class="ant-btn">行為</inertia-link>
+        <template v-if="additiveStyle=='default'">
+            <template v-for="group in additiveGroups">
+                <inertia-link :href="route('manage.klass.additive',[klass.id,group.category.toLowerCase()])" class="ant-btn">{{group.label}}</inertia-link>
+            </template>
+        </template>
+        <template v-else-if="additiveStyle=='page'">
+            <inertia-link :href="route('manage.klass.additive.page', klass.id)" class="ant-btn">單頁模式</inertia-link>
+        </template>
+        <template v-else-if="additiveStyle=='direct'">
+            <inertia-link :href="route('manage.klass.additive.direct', klass.id)" class="ant-btn">直接輸入</inertia-link>
+        </template>
         <p>&nbsp;</p>
 
         <div class="ant-table">
@@ -71,7 +75,7 @@ export default {
     components: {
         AdminLayout
     },
-    props: ['klass','additiveTemplates'],
+    props: ['klass','additiveTemplates','additiveStyle','additiveGroups'],
     data() {
         return {
             course: {}

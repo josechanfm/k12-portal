@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Manage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Config;
 use App\Models\Klass;
 use App\Models\Additive;
 use App\Models\AdditiveTemplate;
@@ -120,12 +121,37 @@ class AdditiveController extends Controller
         $klass->students;
 
         // dd($courses);
-        return Inertia::render('Manage/KlassAdditives2', [
+        return Inertia::render('Manage/KlassAdditivesPage', [
             'klass' => $klass,
-            'additiveTemplates'=>AdditiveTemplate::all(),
-            'additives'=>$klass->additives()
-
+            'additives'=>$klass->additives(),
+            'additiveGroups'=>Config::item('additive_groups')
         ]);
-
     }
+
+    public function direct(Klass $klass){
+        $klass->grade;
+        $klass->courses;
+        //$courses = Klass::find($klass->id)->courses;
+        $klass->students;
+
+        // dd($courses);
+        return Inertia::render('Manage/KlassAdditivesDirect', [
+            'klass' => $klass,
+            'additives'=>$klass->additives(),
+            'additiveGroups'=>Config::item('additive_groups')
+        ]);
+    }
+
+    public function directInput(Klass $klass, Request $request){
+        if(isset($request->value)){
+            Additive::updateOrCreate(
+                ['klass_student_id'=>$request->klass_student_id, 'reference_code'=>$request->reference_code],
+                ['value'=>$request->value,'user_id'=>auth()->user()->id]
+            );
+        }else{
+            Additive::where('klass_student_id',$request->klass_student_id)->where('reference_code',$request->reference_code)->delete();
+        }
+        return redirect()->back();
+    }
+
 }

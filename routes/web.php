@@ -110,6 +110,7 @@ Route::middleware([
         Route::get('/klass/{klass}/courses',[App\Http\Controllers\Manage\CourseController::class,'byKlass'])->name('manage.klass.courses');
         Route::get('/klass/{klass}/abilities',[App\Http\Controllers\Manage\AbilityController::class,'byKlass'])->name('manage.klass.abilities');
         Route::post('/klass/{klass}/abilities/update',[App\Http\Controllers\Manage\AbilityController::class,'update'])->name('manage.klass.abilities.update');
+        Route::resource('/klass/{klass}/behaviours',App\Http\Controllers\Manage\BehaviourController::class)->names('manage.klass.behaviours');
         Route::get('/klass/{klass}/habits',[App\Http\Controllers\Manage\HabitController::class,'byKlass'])->name('manage.klass.habits');
         Route::put('/klass/{klass}/habits',[App\Http\Controllers\Manage\HabitController::class,'update'])->name('manage.klass.habits.update');
         Route::get('/klass/{klass}/transcript',[App\Http\Controllers\Manage\TranscriptController::class,'klass'])->name('manage.klass.transcript');
@@ -126,6 +127,8 @@ Route::middleware([
         Route::resource('additives',App\Http\Controllers\Manage\AdditiveController::class)->names('manage.additives');
         Route::get('klass/{klass}/additive/{category}',[App\Http\Controllers\Manage\AdditiveController::class,'scope'])->name('manage.klass.additive');
         Route::get('klass/{klass}/additive_page',[App\Http\Controllers\Manage\AdditiveController::class,'page'])->name('manage.klass.additive.page');
+        Route::get('klass/{klass}/additive_direct',[App\Http\Controllers\Manage\AdditiveController::class,'direct'])->name('manage.klass.additive.direct');
+        Route::post('klass/{klass}/additive_direct_input',[App\Http\Controllers\Manage\AdditiveController::class,'directInput'])->name('manage.klass.additive.directInput');
         Route::resource('makeups',App\Http\Controllers\Manage\MakeupController::class)->names('manage.makeups');
         Route::resource('tasks',App\Http\Controllers\Manage\TaskController::class)->names('manage.tasks');
         Route::resource('activities',App\Http\Controllers\Manage\ActivityController::class)->names('manage.activities');

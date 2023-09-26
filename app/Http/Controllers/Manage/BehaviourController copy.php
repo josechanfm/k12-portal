@@ -17,11 +17,22 @@ class BehaviourController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Klass $klass)
+    public function index(Request $request)
     {
-        return Inertia::render('Manage/Behaviours',[
-            'students'=>$klass->students
+        $ksid=$request->ksid;
+        $klassStudent=KlassStudent::with('student')->with('behaviours')->with('klass')->find($ksid);
+        $behaviours=Config::item('behaviour_genres');
+        $terms=Config::item('year_terms');
+        // $klass=Klass::with('students')->find($kid);
+        // $terms=Config::item('year_terms');
+        // $habitColumns=Config::item('behaviour_genres');
+        // $habits=Behaviour::byKlassId($kid);
+        return Inertia::render('Manage/Behaviour',[
+            'klassStudent'=>$klassStudent,
+            'behaviours'=>$behaviours,
+            'terms'=>$terms,
         ]);
+        
     }
 
     /**

@@ -67,7 +67,9 @@ class KLassController extends Controller
             'klass' => $klass,
             //'courses' => $courses,
             //'students'=>$students,
-            'additiveTemplates'=>AdditiveTemplate::all()
+            'additiveTemplates'=>AdditiveTemplate::all(),
+            'additiveStyle'=>Config::item('additive_style'),
+            'additiveGroups'=>Config::item('additive_groups')
         ]);
     }
 

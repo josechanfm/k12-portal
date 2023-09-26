@@ -5,9 +5,8 @@
                 生活習慣和態度
             </h2>
         </template>
-        <a-typography-title :level="3">{{ klassStudent.klass.tag }} : {{ klassStudent.student.name_zh }}</a-typography-title>
         <a-button type="primary" @click="createBehaviour">更新並保存</a-button>
-        
+        {{students}}
         <div class="py-12">
             <div>
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -16,13 +15,13 @@
                             <th style="width:100px">
                                 學生姓名
                             </th>
-                            <th v-for="row in terms">
-                                {{ row.label }}
+                            <th>
+                                11
                             </th>
                         </tr>
-                        <tr v-for="row in behaviours">
-                           <td>{{ row.label }}</td> 
-                           <th v-for="row in terms">
+                        <tr v-for="student in students">
+                           <td>{{ student.name_zh }}</td> 
+                           <th>
                                 -
                             </th>
                         </tr>
@@ -83,7 +82,7 @@ export default {
         AdminLayout,
         dayjs,
     },
-    props: ['klassStudent','behaviours','terms'],
+    props: ['students'],
     data() {
         return {
             modal: {

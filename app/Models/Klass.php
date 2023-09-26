@@ -150,12 +150,12 @@ class Klass extends Model
             $data['students'][$student->id]['name_zh']=$student->name_zh;
             $data['students'][$student->id]['klass_student_id']=$student->pivot->klass_student_id;
             foreach($templates as $template){
-                $data['students'][$student->id]['additives'][$template['reference_code']]=0;
+                $data['students'][$student->id]['additives'][$template['reference_code']]=null;
             }
             $additives=Additive::where('klass_student_id',$student->pivot->klass_student_id)->whereIn('reference_code',array_keys($data['students'][$student->id]['additives']))->get();
             $data['students'][$student->id]['records']=$additives;
             foreach($additives as $additive){
-                if(isset($data['students'][$student->id]['additives'][$additive->reference_code])){
+                if(array_key_exists($additive->reference_code, $data['students'][$student->id]['additives'])){
                     $data['students'][$student->id]['additives'][$additive->reference_code]+=$additive->value;
                 }
             }
