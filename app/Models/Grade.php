@@ -52,11 +52,10 @@ class Grade extends Model
 
     public function passingScore(){
         $template=TranscriptTemplate::where('template_id',$this->transcript_template_id)->where('reference_code','passing')->first();
-        if(isset($template) && isset($template->field_value)){
-            return $template->field_value;
+        if(isset($template) && isset($template->value)){
+            return $template->value;
         }
         return 60;
-
     }
 
 }

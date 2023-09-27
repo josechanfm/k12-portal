@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Config;
+use App\Models\Year;
 use App\Models\Klass;
 use App\Models\Teacher;
 use App\Models\Transcript;
@@ -60,10 +61,11 @@ class KLassController extends Controller
         $klass->courses;
         //$courses = Klass::find($klass->id)->courses;
         $klass->students;
-
+        
         // dd($courses);
         return Inertia::render('Manage/Klasses', [
             //'grade' => $grade,
+            'currentTerm'=>Year::currentTerm(),
             'klass' => $klass,
             //'courses' => $courses,
             //'students'=>$students,
@@ -132,6 +134,8 @@ class KLassController extends Controller
     }
     public function migrateTranscripts(Klass $klass){
         $finalScores=$klass->finalScores();
+        return response()->json($finalScores);
+
         $data=[];
         foreach($finalScores['students'] as $student){
             foreach($finalScores['score_columns'] as $column){
@@ -145,6 +149,8 @@ class KLassController extends Controller
         Transcript::upsert($data, ['klass_student_id','reference_code'],['value']);
         $klass->transcript_migrated=true;
         $klass->save();
+        return response()->json($data);
+        
         return redirect()->back();
     }    
 }

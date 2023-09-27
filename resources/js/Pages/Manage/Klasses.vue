@@ -7,6 +7,7 @@
         </template>
         <p>Klass: {{ klass.tag }}</p>
         <p>Students: {{ klass.student_count }}</p>
+        <p>Current Term: {{currentTerm.label}}</p>
         <template v-if="klass.grade_year<=3">
             <inertia-link :href="route('manage.klass.habits', klass.id)" class="ant-btn">生活習摜</inertia-link>
             <inertia-link :href="route('manage.klass.abilities', klass.id)" class="ant-btn">學習主題</inertia-link>
@@ -26,6 +27,8 @@
         <template v-else-if="additiveStyle=='direct'">
             <inertia-link :href="route('manage.klass.additive.direct', klass.id)" class="ant-btn">直接輸入</inertia-link>
         </template>
+
+
         <p>&nbsp;</p>
 
         <div class="ant-table">
@@ -75,7 +78,7 @@ export default {
     components: {
         AdminLayout
     },
-    props: ['klass','additiveTemplates','additiveStyle','additiveGroups'],
+    props: ['currentTerm','klass','additiveTemplates','additiveStyle','additiveGroups'],
     data() {
         return {
             course: {}

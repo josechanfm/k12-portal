@@ -91,6 +91,7 @@ class Klass extends Model
     //     return $students;
     // }
     public function finalScores(){
+        //passing score with reference_code "passing" in transcript_templates
         $passing=$this->grade->passingScore();
         $coursesScores = $this->transcriptCoursesScores; //all Courses in transcript with scores
         $students = $this->students; //all student in the klass
@@ -137,7 +138,7 @@ class Klass extends Model
         return $transcripts;
     }
 
-    public function additives($category=null){
+    public function additives($category=null,$termId=null){
         $students=$this->students;
         if($category==null){
             $templates=AdditiveTemplate::all()->toArray();
@@ -152,7 +153,9 @@ class Klass extends Model
             foreach($templates as $template){
                 $data['students'][$student->id]['additives'][$template['reference_code']]=null;
             }
-            $additives=Additive::where('klass_student_id',$student->pivot->klass_student_id)->whereIn('reference_code',array_keys($data['students'][$student->id]['additives']))->get();
+            $additives=Additive::where('klass_student_id',$student->pivot->klass_student_id)
+                                ->whereIn('reference_code',array_keys($data['students'][$student->id]['additives']))
+                                ->get();
             $data['students'][$student->id]['records']=$additives;
             foreach($additives as $additive){
                 if(array_key_exists($additive->reference_code, $data['students'][$student->id]['additives'])){

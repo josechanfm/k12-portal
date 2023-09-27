@@ -11,7 +11,7 @@ class Year extends Model
     use HasFactory;
     use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
-    protected $fillable=['abbr','title','description','meta','start','end'];
+    protected $fillable=['code','title','description','meta','start','end','current_term','active'];
     protected $appends=['grade_group'];
     
     public function getGradeGroupAttribute(){
@@ -29,6 +29,10 @@ class Year extends Model
     }
     public static function currentYear(){
         return Year::where('active',1)->orderBy('start','DESC')->first();
+    }
+    public static function currentTerm(){
+        $yearTerms=array_column(Config::item('year_terms'),null,'value');
+        return $yearTerms[Year::currentYear()->current_term];
     }
     public function courses(){
         return $this->hasManyThrough(Course::class, Klass::class);

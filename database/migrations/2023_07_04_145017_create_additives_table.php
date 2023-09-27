@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('additives', function (Blueprint $table) {
             $table->id();
+            $table->integer('term_id');
             $table->bigInteger('klass_student_id');
             $table->string('reference_code');
             $table->integer('value');
