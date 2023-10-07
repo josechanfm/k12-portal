@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Manage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Year;
 use App\Models\Config;
 use App\Models\Klass;
 use App\Models\Additive;
@@ -47,6 +48,7 @@ class AdditiveController extends Controller
         $data=$request->all();
         foreach($data as $d){
             $additive=new Additive();
+            $additive->term_id=$d['term_id'];
             $additive->klass_student_id=$d['klass_student_id'];
             $additive->reference_code=$d['reference_code'];
             $additive->value=$d['value']??NULL;
@@ -111,6 +113,7 @@ class AdditiveController extends Controller
         return Inertia::render('Manage/KlassAdditives',[
             'additives'=>$klass->additives($category,'2'),
             'additiveTemplates'=>AdditiveTemplate::all(),
+            'currentTerm'=>Year::currentTerm()
         ]);
     }
 
@@ -124,7 +127,8 @@ class AdditiveController extends Controller
         return Inertia::render('Manage/KlassAdditivesPage', [
             'klass' => $klass,
             'additives'=>$klass->additives(),
-            'additiveGroups'=>Config::item('additive_groups')
+            'additiveGroups'=>Config::item('additive_groups'),
+            'currentTerm'=>Year::currentTerm()
         ]);
     }
 

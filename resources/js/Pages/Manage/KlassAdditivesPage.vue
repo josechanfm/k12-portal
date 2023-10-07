@@ -5,8 +5,9 @@
                 班別管理
             </h2>
         </template>
-        <p>Klass: {{ klass.tag }}</p>
-        <p>Students: {{ klass.student_count }}</p>
+        <p>班別: {{ klass.tag }}</p>
+        <p>學生人數: {{ klass.student_count }}</p>
+        <p>當前學段: {{currentTerm.label}}</p>
         <a-radio-group v-model:value="additiveSelected">
             <template v-for="group in additiveGroups">
                 <a-radio-button :value="group.category">{{group.label}}</a-radio-button>
@@ -48,14 +49,15 @@
             </div>
         </div>
         <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="100%" >
-            {{klass.tag}}
-            {{modal.data.name_zh}}
+            <p>班別:{{klass.tag}}</p>
+            <p>學生名稱:{{modal.data.name_zh}}</p>
             <div class="ant-table">
                 <div class="ant-table-container">
                     <div class="ant-table-content">
                         <table style="table-layout: auto;">
                             <thead class="ant-table-thead">
                                 <tr>
+                                    <th>學段</th>
                                     <th>分類</th>
                                     <th>數量</th>
                                     <th>日期</th>
@@ -66,6 +68,7 @@
                             </thead>
                             <tbody class="ant-table-tbody">
                                 <tr v-for="record in modal.data.records">
+                                    <td>{{record.term_id}}</td>
                                     <td>{{additives.templates[record.reference_code].title_zh}}</td>
                                     <td>{{record.value}}</td>
                                     <td>{{record.assign_at}}</td>
@@ -78,12 +81,18 @@
                     </div>
                 </div>
             </div>
-            <a-form :model="modal.data" layout="vertical" >
+            <a-form :model="modal.data" layout="vertical" @finish="onFinish">
+                <a-form-item label="term_id" name="term_id" hidden>
+                    <a-input v-model:value="modal.data.term_id" />
+                </a-form-item>
+                <a-form-item label="klass_student_id" name="klass_student_id" hidden>
+                    <a-input v-model:value="modal.data.klass_student_id" />
+                </a-form-item>
                 <a-row>
                     <a-col>
-                        <a-form-item label="分類" name="additive">
+                        <a-form-item label="分類" name="reference_code">
                             <a-select 
-                                v-model:value="modal.data.additive" 
+                                v-model:value="modal.data.reference_code" 
                                 :options="defaultTemplates"
                                     style="width:150px"
                             />
@@ -103,9 +112,9 @@
                         v-model:value="modal.data.remark"
                     ></a-input>
                 </a-form-item>
-                <a-form-item>
-                    <a-button type="submit">Add</a-button>
-                </a-form-item>
+                <div>
+                    <a-button type="default" html-type="submit">新增</a-button>
+                </div>
             </a-form>
             <p>Demo only the submission not yet implement.</p>
         </a-modal>
@@ -120,7 +129,7 @@ export default {
     components: {
         AdminLayout
     },
-    props: ['klass','additiveTemplates','additives','additiveGroups'],
+    props: ['klass','additives','additiveGroups','currentTerm'],
     data() {
         return {
             modal: {
@@ -149,11 +158,12 @@ export default {
     methods: {
         showHistory(std){
             this.modal.data={...std}
+            this.modal.data.reference_code=this.defaultTemplates[0].value
+            this.modal.data.term_id=this.currentTerm.value
+            this.modal.data.value=1
             this.modal.isOpen=true
         },
         additiveSum(student, additive){
-            //return additive.reference_code
-            //return student.records
             return student.additives[additive.reference_code]
         },
         getAdditivesTemplates(){
@@ -166,9 +176,18 @@ export default {
             })
             return templates
         },
-        handleOk() {
-
-        }
+        onFinish(values){
+            let data=[values];
+             this.$inertia.post(route("manage.additives.store"),data, {
+                onSuccess: (page) => {
+                    this.modal.data={}
+                    this.modal.isOpen=false;
+                },
+                onError: (error) => {
+                    console.log(error);
+                }
+            })
+        },
     },
 }
 </script>

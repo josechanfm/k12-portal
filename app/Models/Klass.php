@@ -24,6 +24,18 @@ class Klass extends Model
         }
         return false;
     }
+    public function isKlassHead(){
+        if(empty(auth()->user()->staff)){
+            return false;
+        }
+        if(is_array($this->klass_head_ids)){
+            return in_array(auth()->user()->staff->id,$this->klass_head_ids);
+        }else{
+            return false;
+        }
+        
+    }
+
     public function getKlassHeadsAttribute(){
         if(is_array($this->klass_head_ids)){
             return Staff::whereIn('id',$this->klass_head_ids)->get();
@@ -51,6 +63,88 @@ class Klass extends Model
     public function students(){
         return $this->belongsToMany(Student::class)
                 ->withPivot(['id as pivot_klass_student_id','student_number','stream','state','promote','promote_to']);
+    }
+    public function behaviours($actor='KLASS_HEAD'){
+        $students=$this->students;
+        $terms=Config::item('year_terms');
+        $staff=auth()->user()->staff;
+        //$actor="KLASS_HEAD";
+        $klass=$this;
+
+        $referenceId=$this->id;
+        collect($students)->map(function($student) use($terms,$staff,$klass, $referenceId, $actor){
+            //$klassStudentId=KlassStudent::where('klass_id',$klass->id)->where('student_id',$student->id)->pluck('id')->first();
+            $student->behaviours=$student->getBehaviours($student->pivot->klass_student_id, $staff, $terms, $referenceId , $actor);
+        });
+        return $students;
+    }
+    // public function behaviourSummary(){
+    //     $students=$this->students;
+    //     $courses=$this->courses;
+    //     dd($students);
+    //     return $students;
+    // }
+    public function behaviourSummary(){
+        $students=$this->students;
+        $allStaffs=0;
+        $terms=Config::item('year_terms');
+        $klass=$this;
+        //course teacher behaviours scores
+        $actor='SUBJECT';
+        foreach($students as $student){
+            $tmpTerms=[];
+            $tmp=[];
+            foreach($this->courses as $course){
+                $referenceId=$course->id;
+                $tmp[$course->id]=array_column(
+                    Behaviour::selectRaw('term_id, round(avg(score),0) as score_total')->where('klass_student_id',$student->pivot->klass_student_id)->where('actor',$actor)->where('reference_id',$course->id)->groupBy('term_id','reference_id')->get()->toArray(),
+                    null,
+                    'term_id'
+                );
+                // foreach($course->staffs as $staff){
+                //     $tmp[$course->id][]=$student->getBehaviours($student->pivot->klass_student_id, $staff, $terms, $referenceId , $actor);
+                //     $allStaffs++;
+                // }
+            };
+            $student->courseTeachers=$tmp;
+        }
+        //Klass Head behaviours scores
+        $actor='KLASS_HEAD';
+        foreach($students as $student){
+            $tmp=[];
+            $student->klassHeads=array_column(
+                Behaviour::selectRaw('term_id, round(avg(score),0) as score_total')->where('klass_student_id',$student->pivot->klass_student_id)->where('actor',$actor)->where('reference_id',$this->id)->groupBy('term_id','reference_id')->get()->toArray(),
+                null,
+                'term_id'
+            );
+        // foreach($this->klass_head_ids as $staffId){
+            //     $staff=Staff::find($staffId);
+            //     $tmp[]=$student->getBehaviours($student->pivot->klass_student_id, $staff, $terms, $referenceId , $actor);
+            //     $allStaffs++;
+            // }
+            //$student->klassHeads=$tmp;
+        }
+        $actor='DIRECTOR';
+        $referenceId=$this->id;
+        $staff=null;
+        foreach($students as $student){
+            // $tmp=[];
+            // $student->director=array_column(
+            //     Behaviour::selectRaw('term_id, round(avg(score),0) as score_total')->where('klass_student_id',$student->pivot->klass_student_id)->where('actor',$actor)->where('reference_id',$this->id)->groupBy('term_id','reference_id')->get()->toArray(),
+            //     null,
+            //     'term_id'
+            // );
+            // $staff=null;
+            // $tmp[]=$student->getBehaviours($student->pivot->klass_student_id, $staff, $terms, $referenceId , $actor);
+            $student->director=$student->getBehaviours($student->pivot->klass_student_id, $staff, $terms, $referenceId , $actor);
+        }
+        $actor='ADJUST';
+        $referenceId=$this->id;
+        $staff=null;
+        foreach($students as $student){
+            $student->adjust=$student->getBehaviours($student->pivot->klass_student_id, $staff, $terms, $referenceId , $actor);
+        }
+        return $students;
     }
     public function promoteTo(){
         return $this->belongsToMany(Student::class,'klass_student','promote_to','student_id')->withPivot(['id as pivot_klass_student_id','student_number','stream','state','promote','promote_to','id as pivot_klass_id']);

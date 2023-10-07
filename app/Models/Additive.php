@@ -10,7 +10,7 @@ use App\Models\AdditiveTemplate;
 class Additive extends Model
 {
     use HasFactory;
-    protected $fillable=['klass_student_id','reference_code','value','confirmed','user_id','remark'];
+    protected $fillable=['term_id','klass_student_id','reference_code','value','confirmed','user_id','remark'];
     protected $appends=['assign_user'];
 
     public function getAssignUserAttribute(){

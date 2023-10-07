@@ -6,17 +6,17 @@
             </h2>
         </template>
         <div>
-            <a-table :dataSource="year.klasses" :columns="columns">
-                <template #bodyCell="{column, text, record, index}">
-                    <template v-if="column.dataIndex == 'operation'">
-                        <inertia-link class="ant-btn">操行</inertia-link>
-                    </template>
-                    <template v-else>
-                        {{record[column.dataIndex]}}
-                    </template>
-                </template>
-            </a-table>
-
+            <p>The collection of route "teacher" is for the general operation management such as serach and preview, which
+                not included setup of year, class or subject etc.</p>
+            <a-typography-title :level="4">{{ staff.name_zh }}</a-typography-title>
+            <div v-if="course">
+                <p>{{course.klass.tag}}</p>
+                <p>{{course.code}}-{{course.title_zh}}</p>
+            </div>
+            <div v-else-if="klass">
+                <p>{{klass.tag}}</p>
+            </div>
+            <BehaviourTable :yearTerms="yearTerms" :currentTerm="currentTerm" :behaviours="behaviours"/>
         </div>
     </AdminLayout>
 </template>
@@ -30,26 +30,10 @@ export default {
         AdminLayout,
         BehaviourTable
     },
-    props: ['yearTerms','currentTerm','year'],
+    props: ['yearTerms','currentTerm','staff','course','klass','behaviours'],
     data() {
         return {
             tempBehaviour:null,
-            columns: [
-                {
-                    title: '學期',
-                    dataIndex: 'tag',
-                }, {
-                    title: '學期',
-                    dataIndex: 'student_count',
-                }, {
-                    title: '學期',
-                    dataIndex: 'promoted_count',
-                }, {
-                    title: 'Operation',
-                    dataIndex: 'operation',
-                }
-            ],
-
         }
     },
     mounted() {

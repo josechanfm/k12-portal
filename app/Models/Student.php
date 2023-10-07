@@ -63,5 +63,44 @@ class Student extends Model
         return $this->belongsToMany(Student::class);
     }
 
-
+    public static function getBehaviours($klassStudentId, $staff, $terms, $referenceId,$actor='SUBJECT'){
+        $behaviours=[];
+        foreach($terms as $term){
+            if($staff==null){ //if director
+                $tmp=Behaviour::where('klass_student_id',$klassStudentId)
+                ->where('term_id',$term->value)
+                ->where('actor',$actor)->first();
+                if(empty($tmp)){
+                    // dd('is empty'.$klassStudentId.$term->value);
+                    $tmp=Behaviour::make([
+                        'klass_student_id'=>$klassStudentId,
+                        'staff_id'=>null,
+                        'term_id'=>$term->value,
+                        'reference_id'=>$referenceId,
+                        'actor'=>$actor,
+                        'score'=>null
+                    ]);
+                }
+                }else{ //include course teachers and klass head teachers
+                $tmp=Behaviour::where('klass_student_id',$klassStudentId)
+                ->where('staff_id',$staff->id)
+                ->where('term_id',$term->value)
+                ->where('actor',$actor)->first();
+                if(empty($tmp)){
+                    // dd('is empty'.$klassStudentId.$term->value);
+                    $tmp=Behaviour::make([
+                        'klass_student_id'=>$klassStudentId,
+                        'staff_id'=>$staff->id,
+                        'term_id'=>$term->value,
+                        'reference_id'=>$referenceId,
+                        'actor'=>$actor,
+                        'score'=>null
+                    ]);
+                }
+    
+            }
+            $behaviours[$term->value]=$tmp;
+        }
+        return $behaviours;
+    }
 }

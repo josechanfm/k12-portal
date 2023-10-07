@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Config;
 use App\Models\Klass;
 use App\Models\Behaviour;
-use App\Models\KlassStudent;
+use App\Models\Year;
 use Inertia\Inertia;
 
 class BehaviourController extends Controller
@@ -19,9 +19,28 @@ class BehaviourController extends Controller
      */
     public function index(Klass $klass)
     {
-        return Inertia::render('Manage/Behaviours',[
-            'students'=>$klass->students
+        
+        // $year=Year::find(Year::currentYear()->id);
+        // $year->grades;
+        // $year->klasses;
+        // return Inertia::render('Manage/Behaviours',[
+        //     'yearTerms'=>Config::item('year_terms'),
+        //     'currentTerm'=>Year::currentTerm(),
+        //     'year'=>$year
+        // ]);
+
+        $year=Year::find(Year::currentYear()->id);
+        $year->klasses;
+        $year->grades;
+        return Inertia::render('Manage/KlassBehaviours',[
+            'year'=>$year,
+            'yearTerms'=>Config::item('year_terms'),
+            'currentTerm'=>Year::currentTerm(),
+            'staff'=>auth()->user()->staff,
+            'klass'=>$klass,
+            'behaviours'=>$klass->behaviours('DIRECTOR')
         ]);
+
     }
 
     /**
@@ -31,7 +50,10 @@ class BehaviourController extends Controller
      */
     public function create()
     {
-        //
+        dd('ok created');
+    }
+    public function summary(Klass $klass){
+        dd($klass);
     }
 
     /**
@@ -61,9 +83,21 @@ class BehaviourController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Klass $klass, $id)
     {
-        //
+        //dd($klass->behaviourSummary()[0]);
+        $year=Year::find(Year::currentYear()->id);
+        $year->klasses;
+        $year->grades;
+        $klass->grade;
+        return Inertia::render('Manage/KlassBehaviourSummary',[
+            'year'=>$year,
+            'yearTerms'=>Config::item('year_terms'),
+            'currentTerm'=>Year::currentTerm(),
+            'staff'=>auth()->user()->staff,
+            'klass'=>$klass,
+            'behaviours'=>$klass->behaviourSummary()
+        ]);
     }
 
     /**
@@ -100,7 +134,4 @@ class BehaviourController extends Controller
         //
     }
 
-    public function byKlass(Klass $klass){
-        dd($klass);
-    }
 }

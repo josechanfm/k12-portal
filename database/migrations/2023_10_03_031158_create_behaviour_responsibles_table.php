@@ -13,14 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('behaviours', function (Blueprint $table) {
+        Schema::create('behaviour_responsibles', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('klass_student_id');
-            $table->integer('term_id');
+            $table->bigInteger('klass_id');
             $table->bigInteger('staff_id');
-            $table->string('responsible');
-            $table->string('weight_group');
-            $table->integer('score');
+            $table->integer('term_id');
+            $table->string('weight');
             $table->text('remark')->nullable();
             $table->timestamps();
         });
@@ -33,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('behaviours');
+        Schema::dropIfExists('behaviour_responsibles');
     }
 };

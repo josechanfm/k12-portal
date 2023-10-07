@@ -16,6 +16,9 @@
         <inertia-link :href="route('manage.klass.finalScores', klass.id)" class="ant-btn">期末成績</inertia-link>
         <inertia-link :href="route('manage.klass.transcript', klass.id)" class="ant-btn">成積總表</inertia-link>
         <a-divider type="vertical" />
+        <inertia-link :href="route('manage.klass.behaviours', klass.id)" class="ant-btn">操行</inertia-link>
+
+        <a-divider type="vertical" />
         <template v-if="additiveStyle=='default'">
             <template v-for="group in additiveGroups">
                 <inertia-link :href="route('manage.klass.additive',[klass.id,group.category.toLowerCase()])" class="ant-btn">{{group.label}}</inertia-link>

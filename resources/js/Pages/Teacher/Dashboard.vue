@@ -8,7 +8,7 @@
         <div>
             <p>The collection of route "teacher" is for the general operation management such as serach and preview, which
                 not included setup of year, class or subject etc.</p>
-            <a-typography-title :level="4">{{ teacher.name_zh }}</a-typography-title>
+            <a-typography-title :level="4">{{ staff.name_zh }}</a-typography-title>
             <div class="ant-table">
                 <div class="ant-table-container">
                     <div class="ant-table-content">
@@ -24,7 +24,7 @@
                                 </tr>
                             </thead>
                             <tbody class="ant-table-tbody">
-                                <template v-for="course in teacher.courses">
+                                <template v-for="course in staff.courses">
                                 <tr>
                                     <td>{{ course.klass.tag }}</td>
                                     <td>{{ course.code }}{{ course.title_zh }}</td>
@@ -40,6 +40,7 @@
                                     </td>
                                     <td>{{ course.student_count }}</td>
                                     <td>
+                                        <inertia-link :href="route('teacher.course.behaviours.index',course.id)" class="ant-btn">操行</inertia-link>
                                         <inertia-link :href="route('manage.course.scores',course.id)" class="ant-btn">學分</inertia-link>
                                         <a-button @click="course.operation=!course.operation">其他</a-button>
                                     </td>
@@ -60,6 +61,37 @@
                     </div>
                 </div>
             </div>
+            <p></p>
+            <div class="ant-table">
+                <div class="ant-table-container">
+                    <div class="ant-table-content">
+                        <table style="table-layout: auto;">
+                            <thead class="ant-table-thead">
+                                <tr>
+                                    <th>班級代號</th>
+                                    <th>學生人數</th>
+                                    <th>科目數</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody class="ant-table-tbody">
+                                <template v-for="klass in staff.klasses">
+                                <tr>
+                                    <td>{{ klass.tag }}</td>
+                                    <td>{{ klass.student_count}}</td>
+                                    <td>{{ klass.course_count}}</td>
+                                    <td>
+                                        <inertia-link :href="route('teacher.klass.behaviours',klass.id)" class="ant-btn">操行</inertia-link>
+                                    </td>
+                                </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            
         </div>
     </AdminLayout>
 </template>
@@ -71,7 +103,7 @@ export default {
     components: {
         AdminLayout
     },
-    props: ['teacher'],
+    props: ['staff'],
     data() {
         return {
             columns: [

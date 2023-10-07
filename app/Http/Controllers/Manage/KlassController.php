@@ -23,8 +23,8 @@ class KLassController extends Controller
     public function index()
     {
         $klass = Klass::with('courses')->find(1);
-        $teacher = Teacher::with('courses')->find(1);
-        return response($teacher);
+        //$teacher = Teacher::with('courses')->find(1);
+        return response()->json($klass);
         //return response($klass);
     }
 
@@ -153,4 +153,19 @@ class KLassController extends Controller
         
         return redirect()->back();
     }    
+
+    public function behaviours(Klass $klass){
+        // $year=Year::find(Year::currentYear()->id);
+        // $year->klasses;
+        // $year->grades;
+        // return Inertia::render('Manage/KlassBehaviours',[
+        //     'year'=>$year,
+        //     'yearTerms'=>Config::item('year_terms'),
+        //     'currentTerm'=>Year::currentTerm(),
+        //     'staff'=>auth()->user()->staff,
+        //     'klass'=>$klass,
+        //     'behaviours'=>$klass->behaviours('DIRECTOR')
+        // ]);
+
+    }
 }
