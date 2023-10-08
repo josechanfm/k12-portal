@@ -76,6 +76,12 @@
                     <a-form-item label="建立班別數" name="klass_num">
                         <a-input-number v-model:value="modal.data.klass_num" />
                     </a-form-item>
+                    <a-form-item label="成績表模版" name="transcript_template_id">
+                        <a-input-number v-model:value="modal.data.transcript_template_id" />
+                    </a-form-item>
+                    <a-form-item label="操行分比" name="behaviour_scheme_data">
+                        <a-textarea v-model:value="modal.data.behaviour_scheme_data" />
+                    </a-form-item>
                     <a-form-item label="版本" name="version">
                         <a-input v-model:value="modal.data.version" />
                     </a-form-item>
@@ -168,10 +174,11 @@ export default {
         },
         editRecord(record){
             this.modal.data={...record}
-            this.modal.isOpen = true;
-            this.modal.mode='EDIT';
+            this.modal.data.behaviour_scheme_data=JSON.stringify(this.modal.data.behaviour_scheme)
+            this.modal.isOpen = true
+            this.modal.mode='EDIT'
             this.modal.title='修改學年級別'
-            console.log(record);
+            console.log(record)
         },
         updateRecord(){
             this.$refs.modalRef.validateFields().then(()=>{

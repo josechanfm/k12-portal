@@ -51,7 +51,7 @@ class StaffController extends Controller
         $staff->gender=$request->gender;
         $staff->mobile=$request->mobile;
         $staff->sector=$request->sector;
-        $staff->is_teacher=$request->is_teacher??false;
+        //$staff->is_teacher=$request->is_teacher??false;
         $staff->save();
         return response($request->all());
     }
@@ -97,7 +97,7 @@ class StaffController extends Controller
         $staff->gender=$request->gender;
         $staff->mobile=$request->mobile;
         $staff->sector=$request->sector;
-        $staff->is_teacher=$request->is_teacher;
+        //$staff->is_teacher=$request->is_teacher;
         $staff->save();
         return response($request->all());
     }

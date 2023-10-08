@@ -81,7 +81,7 @@ class Student extends Model
                         'score'=>null
                     ]);
                 }
-                }else{ //include course teachers and klass head teachers
+            }else{ //include course teachers and klass head teachers
                 $tmp=Behaviour::where('klass_student_id',$klassStudentId)
                 ->where('staff_id',$staff->id)
                 ->where('term_id',$term->value)

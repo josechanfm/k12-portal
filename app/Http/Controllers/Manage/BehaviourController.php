@@ -12,6 +12,13 @@ use Inertia\Inertia;
 
 class BehaviourController extends Controller
 {
+
+    public function list(){
+        $year=Year::find(Year::currentYear()->id);
+        $grade=$year->grades->where('grade_year',4)->first();
+//        dd($grade->klasses->first()->id);     
+        return redirect()->route('manage.klass.behaviour.summary',$grade->klasses->first());   
+    }
     /**
      * Display a listing of the resource.
      *
@@ -19,7 +26,6 @@ class BehaviourController extends Controller
      */
     public function index(Klass $klass)
     {
-        
         // $year=Year::find(Year::currentYear()->id);
         // $year->grades;
         // $year->klasses;
@@ -28,7 +34,6 @@ class BehaviourController extends Controller
         //     'currentTerm'=>Year::currentTerm(),
         //     'year'=>$year
         // ]);
-
         $year=Year::find(Year::currentYear()->id);
         $year->klasses;
         $year->grades;
@@ -51,9 +56,6 @@ class BehaviourController extends Controller
     public function create()
     {
         dd('ok created');
-    }
-    public function summary(Klass $klass){
-        dd($klass);
     }
 
     /**
@@ -85,19 +87,8 @@ class BehaviourController extends Controller
      */
     public function show(Klass $klass, $id)
     {
+        //dd($id);
         //dd($klass->behaviourSummary()[0]);
-        $year=Year::find(Year::currentYear()->id);
-        $year->klasses;
-        $year->grades;
-        $klass->grade;
-        return Inertia::render('Manage/KlassBehaviourSummary',[
-            'year'=>$year,
-            'yearTerms'=>Config::item('year_terms'),
-            'currentTerm'=>Year::currentTerm(),
-            'staff'=>auth()->user()->staff,
-            'klass'=>$klass,
-            'behaviours'=>$klass->behaviourSummary()
-        ]);
     }
 
     /**
@@ -132,6 +123,21 @@ class BehaviourController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function summary(Klass $klass){
+        $year=Year::find(Year::currentYear()->id);
+        $year->klasses;
+        $year->grades;
+        $klass->grade;
+        return Inertia::render('Manage/KlassBehaviourSummary',[
+            'year'=>$year,
+            'yearTerms'=>Config::item('year_terms'),
+            'currentTerm'=>Year::currentTerm(),
+            'staff'=>auth()->user()->staff,
+            'klass'=>$klass,
+            'behaviours'=>$klass->behaviourSummary()
+        ]);
     }
 
 }

@@ -76,13 +76,13 @@ class BehaviourController extends Controller
      */
     public function store($id, Request $request)
     {
-        
+        //return response()->json($request->all());
         if(is_null($request->score)){
             return redirect()->back();
         };
         $data['klass_student_id']=$request->klass_student_id;
         $data['term_id']=$request->term_id;
-        $data['staff_id']=$request->staff_id??auth()->user()->staff->id;
+        $data['staff_id']=$request->staff_id;
         $data['reference_id']=$request->reference_id;
         $data['actor']=$request->actor;
         Behaviour::updateOrCreate(

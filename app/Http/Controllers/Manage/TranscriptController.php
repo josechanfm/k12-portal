@@ -8,16 +8,20 @@ use Inertia\Inertia;
 use App\Models\KlassStudent;
 use App\Models\Transcript;
 use App\Models\TranscriptTemplate;
+use App\Models\Year;
+use App\Models\Grade;
 use App\Models\Klass;
-use App\Models\Course;
 use App\Models\Config;
 
 use function GuzzleHttp\json_decode;
 
 class TranscriptController extends Controller
 {
-    public function index(Klass $klass){
-
+    public function yearTranscripts(Year $year){
+        dd($year->gradesKlasses[0]->klasses[0]);
+    }
+    public function gradeTranscripts(Grade $grade){
+        dd($grade);
     }
 
     public function KlassStudent(KlassStudent $klassStudent){
@@ -36,7 +40,6 @@ class TranscriptController extends Controller
         //convert students record to associative array and set Record Id as key
         $students=array_column($klass->students->map->only('id','name_zh')->toArray(),null,'id');
         $courses=$klass->courses;
-
         $scores=$students;
         //form score table
         //score array table: $scores[student_id][course_id][term_id][score_column_id]
@@ -52,14 +55,12 @@ class TranscriptController extends Controller
                             return $carry;
                     }, 0);
                     $term->total_column=0;
-                };
-                
+                };                
                 //create score array columns and init as empty value
                 //$scores[$sid]['terms']=$course['terms'];
                 //$scores[$sid]['terms'][$column->term_id]->score_columns[]=$column->id;
                 foreach($course->scoreColumns as $column){
                     $scores[$sid][$course->id][$column->id]=['point'=>0,'is_total'=>false,'term_id'=>$column->term_id];
-                    
                     if($column->is_total==1){
                         //$course['terms'][$column->term_id]->total_column=$column->id;
                         // $scores[$sid][$course->id]['terms'][$column->term_id]['score_columns'][]=$column->id;
@@ -75,7 +76,6 @@ class TranscriptController extends Controller
                 $scores[$s->student_id][$cs->id][$s->score_column_id]['point']=$s->point;
             }
         }
-
         if($request->get('type') && $request->get('type')=='summary'){
             return Inertia::render('Manage/ScoreSummary',[
                 'year_terms'=>Config::item('year_terms'),
@@ -89,9 +89,6 @@ class TranscriptController extends Controller
                 'courses'=>$klass->courses,
                 'scores'=>$scores
             ]);
-    
         }
     }
-
-
 }

@@ -16,10 +16,17 @@ class DashboardController extends Controller
     public function index(){
         //$staff=Staff::where('user_id',auth()->user()->id)->first();
         $staff=auth()->user()->staff;
+        if(empty($staff)){
+            return Inertia::render('Error',[
+                'message'=>"You don't have staff permission."
+            ]);
+            };
         $staff->courses;
+        //dd($staff->courses);
         
         //$klasses=Klass::whereRaw('json_contains(klass_head_ids,'.$staff->id.')')->get();
-        //$staff->klasses();
+        //dd($staff->klasses());
+
         $staff->klasses=$staff->klasses();
         
         return Inertia::render('Teacher/Dashboard',[

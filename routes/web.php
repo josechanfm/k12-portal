@@ -137,10 +137,16 @@ Route::group([
         Route::get('/klass/{klass}/abilities',[App\Http\Controllers\Manage\AbilityController::class,'byKlass'])->name('manage.klass.abilities');
         Route::post('/klass/{klass}/abilities/update',[App\Http\Controllers\Manage\AbilityController::class,'update'])->name('manage.klass.abilities.update');
         Route::resource('klass/{klass}/behaviours',App\Http\Controllers\Manage\BehaviourController::class)->names('manage.klass.behaviours');
+        Route::get('klass/{klass}/behaviour/summary',[App\Http\Controllers\Manage\BehaviourController::class,'summary'])->name('manage.klass.behaviour.summary');
+        Route::get('behaviours',[App\Http\Controllers\Manage\BehaviourController::class,'list'])->name('manage.behaviours');
+        
         Route::get('/klass/{klass}/habits',[App\Http\Controllers\Manage\HabitController::class,'byKlass'])->name('manage.klass.habits');
         Route::put('/klass/{klass}/habits',[App\Http\Controllers\Manage\HabitController::class,'update'])->name('manage.klass.habits.update');
         Route::get('/klass/{klass}/transcript',[App\Http\Controllers\Manage\TranscriptController::class,'klass'])->name('manage.klass.transcript');
         Route::get('/klass/student/{klassStudent}/transcript',[App\Http\Controllers\Manage\TranscriptController::class,'klassStudent'])->name('manage.klass.student.transcript');
+        Route::get('/year/{year}/transcripts',[App\Http\Controllers\Manage\TranscriptController::class,'yearTranscripts'])->name('manage.year.transcripts');
+        Route::get('/grade/{grade}/transcripts',[App\Http\Controllers\Manage\TranscriptController::class,'gradeTranscripts'])->name('manage.grade.transcripts');
+        
         Route::resource('/teachers',App\Http\Controllers\Manage\TeacherController::class);
         Route::get('teaching/{teacherId}',[App\Http\Controllers\Manage\TeacherController::class,'teaching'])->name('manage.teaching');   
         Route::get('/course/{course}/scores',[App\Http\Controllers\Manage\CourseController::class,'scores'])->name('manage.course.scores');

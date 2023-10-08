@@ -13,7 +13,7 @@
       <a-radio-group v-model:value="selectedKlassId" button-style="solid">
         <template v-for="klass in year.klasses">
           <a-radio-button v-if="klass.grade_id == selectedGradeId" :value="klass.id">
-            <inertia-link :href="route('manage.klass.behaviours.summary', klass.id)">
+            <inertia-link :href="route('manage.klass.behaviour.summary', klass.id)">
               {{ klass.tag }}
             </inertia-link>
           </a-radio-button>
@@ -44,23 +44,18 @@
               <thead class="ant-table-thead">
                 <tr>
                   <th>Student Name</th>
-                  <th>班主任</th>
                   <th>訓導</th>
                   <th>調整</th>
-                  <th>加總</th>
+                  <th>總分</th>
+                  <th>班主任</th>
                   <th v-for="c in klass.courses">
                     {{ c.code }}-{{ c.title_zh }}
                   </th>
                 </tr>
               </thead>
               <tr v-for="student in behaviours">
-                <td width="200px">{{ student.name_zh }}</td>
-                <td class="text-center">
-                    <span v-if="student.klassHeads[selectedTermId]">
-                        {{ student.klassHeads[selectedTermId].score_total }}
-                    </span>
-                </td>
-                <td width="80px">
+                <td width="150px">{{ student.name_zh }}</td>
+                <td width="50px">
                     <span v-if="student.director[selectedTermId]">
                         <a-input 
                             v-model:value="student.director[selectedTermId].score"
@@ -72,7 +67,7 @@
                         {{ student.director[selectedTermId].score_total }}
                     </span>
                 </td>
-                <td width="80px">
+                <td width="50px">
                     <span v-if="student.adjust[selectedTermId]">
                         <a-input 
                             v-model:value="student.adjust[selectedTermId].score"
@@ -84,7 +79,12 @@
                     </span>
                 </td>
                 <td class="text-center">
-                  {{getScoreTotal(student)}}
+                  {{ student.sumTerms[selectedTermId] }}
+                </td>
+                <td class="text-center">
+                    <span v-if="student.klassHeads[selectedTermId]">
+                        {{ student.klassHeads[selectedTermId].score_total }}
+                    </span>
                 </td>
                 <td v-for="c in klass.courses" class="text-center">
                     <span v-if="student.courseTeachers[c.id][selectedTermId]">
@@ -183,20 +183,22 @@ export default {
       this.tempBehaviour = { ...behaviour };
     },
     onBlurScoreInput(behaviour) {
+      console.log(behaviour);
       if (this.tempBehaviour.score === behaviour.score) { return false }
       axios.post(route("teacher.course.behaviours.store", behaviour.reference_id),behaviour)
            .then((resp) => console.log(resp.data) );
     },
     getScoreTotal(student) {
+      var sum=0;
       var courseScore=0;
       var headScore=0;
-      var directScore=;
+      var directScore=0;
       Object.values(student.courseTeachers).forEach(s=>{
         if(s[this.selectedTermId]){
           courseScore+=eval(s[this.selectedTermId].score_total);
         }
       })
-      courseScore=(courseScore /Object.keys(student.courseTeachers).length) *this.klass.grade.behaviour_scheme['SUBJECT']
+      //courseScore=(courseScore /Object.keys(student.courseTeachers).length) *this.klass.grade.behaviour_scheme['SUBJECT']
       if(student.klassHeads[this.selectedTermId]){
         headScore=student.klassHeads[this.selectedTermId].score_total
       }

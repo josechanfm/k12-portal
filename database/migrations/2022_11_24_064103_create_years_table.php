@@ -23,6 +23,7 @@ return new class extends Migration
             $table->date('start')->nullable();
             $table->date('end')->nullable();
             $table->boolean('active')->default(true);
+            $table->int('current_term');
             $table->timestamps();
             $table->unique('code');
         });

@@ -23,6 +23,9 @@ class Year extends Model
     public function klasses(){
         return $this->hasManyThrough(Klass::class, Grade::class);
     }
+    public function gradesklasses(){
+        return $this->hasMany(Grade::class)->with('klasses');
+    }
     public static function nextYear($yearId){
         $year=Year::find($yearId);
         return Year::where('start','>',$year->start)->orderBy('start','ASC')->first();

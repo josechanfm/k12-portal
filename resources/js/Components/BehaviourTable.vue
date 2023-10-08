@@ -11,6 +11,7 @@
               </template>
             </tr>
           </thead>
+
           <tbody class="ant-table-tbody">
             <tr v-for="student in behaviours">
               <td>

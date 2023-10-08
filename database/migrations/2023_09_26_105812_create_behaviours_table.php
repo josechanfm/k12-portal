@@ -18,9 +18,9 @@ return new class extends Migration
             $table->bigInteger('klass_student_id');
             $table->integer('term_id');
             $table->bigInteger('staff_id');
-            $table->string('responsible');
-            $table->string('weight_group');
-            $table->integer('score');
+            $table->string('reference_id')->nullable();
+            $table->string('actor')->nullable();
+            $table->integer('score')->nullable();
             $table->text('remark')->nullable();
             $table->timestamps();
         });

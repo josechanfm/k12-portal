@@ -11,7 +11,7 @@ class Klass extends Model
 
     use HasFactory;
     protected $fillable=['grade_id','initial','tag','room'];
-    protected $casts=['klass_head_ids'=>'array'];
+    protected $casts=['klass_head_ids'=>'json'];
     // public function subjects(){
     //     return $this->belongsToMany(Subject::class);
     // }
@@ -78,15 +78,8 @@ class Klass extends Model
         });
         return $students;
     }
-    // public function behaviourSummary(){
-    //     $students=$this->students;
-    //     $courses=$this->courses;
-    //     dd($students);
-    //     return $students;
-    // }
     public function behaviourSummary(){
         $students=$this->students;
-        $allStaffs=0;
         $terms=Config::item('year_terms');
         $klass=$this;
         //course teacher behaviours scores
@@ -101,10 +94,6 @@ class Klass extends Model
                     null,
                     'term_id'
                 );
-                // foreach($course->staffs as $staff){
-                //     $tmp[$course->id][]=$student->getBehaviours($student->pivot->klass_student_id, $staff, $terms, $referenceId , $actor);
-                //     $allStaffs++;
-                // }
             };
             $student->courseTeachers=$tmp;
         }
@@ -117,33 +106,48 @@ class Klass extends Model
                 null,
                 'term_id'
             );
-        // foreach($this->klass_head_ids as $staffId){
-            //     $staff=Staff::find($staffId);
-            //     $tmp[]=$student->getBehaviours($student->pivot->klass_student_id, $staff, $terms, $referenceId , $actor);
-            //     $allStaffs++;
-            // }
-            //$student->klassHeads=$tmp;
         }
+        //Director behaviours scores
         $actor='DIRECTOR';
         $referenceId=$this->id;
-        $staff=null;
+        $staff=auth()->user()->staff;
         foreach($students as $student){
-            // $tmp=[];
-            // $student->director=array_column(
-            //     Behaviour::selectRaw('term_id, round(avg(score),0) as score_total')->where('klass_student_id',$student->pivot->klass_student_id)->where('actor',$actor)->where('reference_id',$this->id)->groupBy('term_id','reference_id')->get()->toArray(),
-            //     null,
-            //     'term_id'
-            // );
-            // $staff=null;
-            // $tmp[]=$student->getBehaviours($student->pivot->klass_student_id, $staff, $terms, $referenceId , $actor);
             $student->director=$student->getBehaviours($student->pivot->klass_student_id, $staff, $terms, $referenceId , $actor);
         }
+        //Director behaviours adjustment
         $actor='ADJUST';
         $referenceId=$this->id;
-        $staff=null;
+        $staff=auth()->user()->staff;
         foreach($students as $student){
             $student->adjust=$student->getBehaviours($student->pivot->klass_student_id, $staff, $terms, $referenceId , $actor);
         }
+
+        foreach($students as $student){
+            foreach($terms as $term){
+                $termSum[$term->value]=0;
+                $coursesSum=0;
+                //dd($termSum);
+                foreach($student->courseTeachers as $course){
+                    if(isset($course[$term->value])){
+                        $coursesSum+=$course[$term->value]['score_total'];
+                    }
+                }
+                $termSum[$term->value]=$coursesSum*$this->grade->behaviour_scheme['SUBJECT'];
+
+                if(isset($student->klassHeads[$term->value])){
+                    $termSum[$term->value]+=$student->klassHeads[$term->value]['score_total']*$this->grade->behaviour_scheme['KLASS_HEAD'];
+                }
+                if(isset($student->director[$term->value])){
+                    $termSum[$term->value]+=$student->director[$term->value]['score']*$this->grade->behaviour_scheme['DIRECTOR'];
+                }
+                if(isset($student->adjust[$term->value])){
+                    $termSum[$term->value]+=$student->adjust[$term->value]['score']*$this->grade->behaviour_scheme['ADJUST'];
+                }
+            }
+            $student->sumTerms=$termSum;
+        }
+
+
         return $students;
     }
     public function promoteTo(){
