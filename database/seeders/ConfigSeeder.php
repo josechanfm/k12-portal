@@ -316,5 +316,29 @@ class ConfigSeeder extends Seeder
                 "category": null
             }]'
         ]);
+        DB::table('configs')->insert([
+            'key'=>'additive_style',
+            'value'=>'"default"',
+            'remark'=>'"default",
+            "direct",
+            "page"'
+        ]);
+
+        DB::table('configs')->insert([
+            'key'=>'additive_groups',
+            'value'=>'[{
+                "category": "ATTENDANCE",
+                "label": "出勤"
+            }, {
+                "category": "PERFORM",
+                "label": "獎懲"
+            }, {
+                "category": "COMMENT",
+                "label": "評語"
+            }, {
+                "category": "VIOLATION",
+                "label": "違規"
+            }]'
+        ]);
     }
 }

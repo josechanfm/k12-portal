@@ -13,17 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('additives', function (Blueprint $table) {
+        Schema::create('behaviours', function (Blueprint $table) {
             $table->id();
-            $table->integer('term_id');
             $table->bigInteger('klass_student_id');
-            $table->string('reference_code');
-            $table->integer('value');
-            $table->date('assign_at')->default(DB::raw('CURRENT_TIMESTAMP'));;
-            $table->boolean('confirmed')->default(false);
-            $table->date('submit_at')->nullable();
-            $table->date('confirmed_at')->nullable();
-            $table->bigInteger('user_id');
+            $table->integer('term_id');
+            $table->bigInteger('staff_id');
+            $table->string('reference_id')->nullable();
+            $table->string('actor')->nullable();
+            $table->integer('score')->nullable();
             $table->text('remark')->nullable();
             $table->timestamps();
         });
@@ -36,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('additives');
+        Schema::dropIfExists('behaviours');
     }
 };

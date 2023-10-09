@@ -51,7 +51,13 @@
             <a-form-item label="period" name="Period">
                 <a-range-picker v-model:value="modal.data.period" />
             </a-form-item>
-            
+            <a-form-item label="Current Term" name="current_term">
+                <a-radio-group v-model:value="modal.data.current_term">
+                    <template v-for="term in yearTerms">
+                        <a-radio-button :value="term.value">{{term.label}}</a-radio-button>
+                    </template>
+                </a-radio-group>
+            </a-form-item>
             <div v-if="modal.mode=='CREATE'">
                 <a-form-item label="Description" name="description">
                     <a-textarea v-model:value="modal.data.description" />
@@ -124,16 +130,13 @@
                     </a-col>
                 </a-row>
             </div>
-            
-
-
-
+        
 
 
         </a-form>
         <template #footer>
-            <a-button v-if="modal.mode=='EDIT'" key="Update" type="primary" :loading="loading" @click="updateRecord(modalForm)">Update</a-button>
-            <a-button v-if="modal.mode=='CREATE'"  key="Store" type="primary" :loading="loading" @click="storeRecord(modalForm)">Add</a-button>
+            <a-button v-if="modal.mode=='EDIT'" key="Update" type="primary"  @click="updateRecord(modalForm)">Update</a-button>
+            <a-button v-if="modal.mode=='CREATE'"  key="Store" type="primary"  @click="storeRecord(modalForm)">Add</a-button>
         </template>
     </a-modal>    
     <!-- Modal End-->
@@ -149,7 +152,7 @@ export default {
     components: {
         AdminLayout,
     },
-    props: ['years','param'],
+    props: ['years','param','yearTerms'],
     data() {
         return {
             kgrade:0,
@@ -183,6 +186,10 @@ export default {
                     title: 'Grade Group',
                     dataIndex: 'grade_group',
                     key: 'grade_group',
+                },{
+                    title: 'Current Term',
+                    dataIndex: 'current_term',
+                    key: 'active',
                 },{
                     title: 'Current Year',
                     dataIndex: 'active',
@@ -336,17 +343,18 @@ export default {
             });
         },
         updateRecord(data){
+            console.log(this.modal.data);
             this.$refs.modalRef.validateFields().then(()=>{
-                this.$inertia.put('/admin/years/' + data.id, data,{
+                this.$inertia.put('/admin/years/' + this.modal.data.id, this.modal.data,{
                     onSuccess:(page)=>{
                         this.modalVisible=false;
-                        this.ChangeModalMode('Close');
+                        //this.ChangeModalMode('Close');
                     },
                     onError:(error)=>{
                         console.log(error);
                     }
                 });
-                this.loading=false;                
+                //this.loading=false;                
             }).catch(err => {
                 console.log("error", err);
             });

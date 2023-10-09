@@ -61,6 +61,7 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
     public function staff(){
-        return Staff::where('user_id',$this->id)->first();
+        return $this->hasOne(Staff::class);
+        //return Staff::where('user_id',$this->id)->first();
     }
 }

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Staff;
+use App\Models\Manual;
 
-class StaffController extends Controller
+class ManualController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,9 +16,8 @@ class StaffController extends Controller
      */
     public function index()
     {
-        $staffs=Staff::with('user')->paginate(request('per_page'));
-        return Inertia::render('Admin/Staffs',[
-            'staffs'=>$staffs,
+        return Inertia::render('Master/Manuals',[
+            'manuals'=>Manual::all()
         ]);
     }
 
@@ -40,20 +39,7 @@ class StaffController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name_zh' => 'required',
-            'gender' => 'required',
-            'mobile' => 'required'
-        ]);
-        $staff=new Staff();
-        $staff->name_zh=$request->name_zh;
-        $staff->name_fn=$request->name_fn;
-        $staff->gender=$request->gender;
-        $staff->mobile=$request->mobile;
-        $staff->sector=$request->sector;
-        //$staff->is_teacher=$request->is_teacher??false;
-        $staff->save();
-        return response($request->all());
+        //
     }
 
     /**
@@ -85,21 +71,9 @@ class StaffController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Staff $staff)
+    public function update(Request $request, $id)
     {
-        $request->validate([
-            'name_zh' => 'required',
-            'gender' => 'required',
-            'mobile' => 'required'
-        ]);
-        $staff->name_zh=$request->name_zh;
-        $staff->name_fn=$request->name_fn;
-        $staff->gender=$request->gender;
-        $staff->mobile=$request->mobile;
-        $staff->sector=$request->sector;
-        //$staff->is_teacher=$request->is_teacher;
-        $staff->save();
-        return response($request->all());
+        //
     }
 
     /**

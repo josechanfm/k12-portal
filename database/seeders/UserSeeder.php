@@ -71,6 +71,7 @@ class UserSeeder extends Seeder
         
         $users=User::whereNull('username')->get();
         foreach($users as $user){
+            $user->assignRole('teacher');
             $user->ownedTeams()->save(Team::forceCreate([
                 'user_id' => $user->id,
                 'name' => explode(' ', $user->name, 2)[0]."'s Team",

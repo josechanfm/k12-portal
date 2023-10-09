@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use App\Models\Klass;
 use App\Models\Teacher;
 use App\Models\Transcript;
+use App\Models\AdditiveTemplate;
 
 class KlassController extends Controller
 {
@@ -20,8 +21,8 @@ class KlassController extends Controller
     public function index()
     {
         $klass = Klass::with('courses')->find(1);
-        $teacher = Teacher::with('courses')->find(1);
-        return response($teacher);
+        //$teacher = Teacher::with('courses')->find(1);
+        return response()->json($klass);
         //return response($klass);
     }
 
@@ -54,14 +55,21 @@ class KlassController extends Controller
      */
     public function show(Klass $klass)
     {
-        $grade = $klass->grade;
-        $courses = Klass::find($klass->id)->courses;
+        $klass->grade;
+        $klass->courses;
+        //$courses = Klass::find($klass->id)->courses;
+        $klass->students;
+        
         // dd($courses);
-        return Inertia::render('Manage/Klass', [
-            'grade' => $grade,
+        return Inertia::render('Manage/Klasses', [
+            //'grade' => $grade,
+            'currentTerm'=>Year::currentTerm(),
             'klass' => $klass,
-            'courses' => $courses,
+            //'courses' => $courses,
             //'students'=>$students,
+            'additiveTemplates'=>AdditiveTemplate::all(),
+            'additiveStyle'=>Config::item('additive_style'),
+            'additiveGroups'=>Config::item('additive_groups')
         ]);
     }
 
@@ -125,6 +133,8 @@ class KlassController extends Controller
     public function migrateTranscripts(Klass $klass)
     {
         $finalScores=$klass->finalScores();
+        return response()->json($finalScores);
+
         $data=[];
         foreach($finalScores['students'] as $student){
             foreach($finalScores['score_columns'] as $column){
@@ -138,6 +148,23 @@ class KlassController extends Controller
         Transcript::upsert($data, ['klass_student_id','reference_code'],['value']);
         $klass->transcript_migrated=true;
         $klass->save();
+        return response()->json($data);
+        
         return redirect()->back();
     }    
+
+    public function behaviours(Klass $klass){
+        // $year=Year::find(Year::currentYear()->id);
+        // $year->klasses;
+        // $year->grades;
+        // return Inertia::render('Manage/KlassBehaviours',[
+        //     'year'=>$year,
+        //     'yearTerms'=>Config::item('year_terms'),
+        //     'currentTerm'=>Year::currentTerm(),
+        //     'staff'=>auth()->user()->staff,
+        //     'klass'=>$klass,
+        //     'behaviours'=>$klass->behaviours('DIRECTOR')
+        // ]);
+
+    }
 }

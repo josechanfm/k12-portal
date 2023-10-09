@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('title_en')->nullable();
             $table->integer('klass_num')->default(0);
             $table->text('description')->nullable();
+            $table->text('behaviour_scheme')->nullable();
             $table->integer('transcript_template_id');
             $table->integer('version')->nullable();
             $table->boolean('active')->default(true);

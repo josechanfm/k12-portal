@@ -5,6 +5,7 @@
                 Teacher
             </h2>
         </template>
+        <p>當前學段: {{currentTerm.label}}</p>
         <p></p>
         <div>
             <div class="ant-table">
@@ -35,8 +36,12 @@
             </div>
         </div>
 
-        <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="800px" >
+        <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="800px" cancel-text="返回" :ok-button-props="{style:{ display:'none' }}">
+            <p>Current Term: {{currentTerm.label}}</p>
             <a-form :model="modal.data.newItem" layout="vertical" @finish="onFinish">
+                <a-form-item name="term_id">
+                    <a-input v-model:value="modal.data.newItem.term_id" :defaultValue="currentTerm.value" type="hidden"/>
+                </a-form-item>
                 <a-form-item name="selection" :rules="[{required:true}]">
                     <a-radio-group v-model:value="modal.data.newItem.selection" option-type="button" @change="onChangeSelection">
                         <a-radio-button v-for="column in additives.templates" :value="column.reference_code">{{ column.title_zh }}</a-radio-button>
@@ -60,12 +65,9 @@
                         </a-form-item>
                     </a-col>
                 </a-row>
-                <div class="flex">
-                    <a-button type="default" html-type="submit">Add</a-button>
-                    <span class="pull-right">
-                        <a-button @click="onClickSubmitAdditive" class="primary">Submit</a-button>
-                    </span>
-                    
+                <div>
+                    <a-button type="default" html-type="submit">新增</a-button>
+                    <a-button @click="onClickSubmitAdditive" type="primary" class="ml-3">保存</a-button>
                 </div>
             </a-form>
             <a-divider style="height: 2px; background-color: #7cb305" />
@@ -76,7 +78,6 @@
                     {{ item.remark }}
                 </li>
             </ol>            
-            
             <a-collapse accordion>
                 <a-collapse-panel key="1" header="歷史記錄">
                     <ol>
@@ -87,9 +88,7 @@
                     </ol>
                 </a-collapse-panel>
             </a-collapse>            
-
         </a-modal>
-
     </AdminLayout>
 </template>
 
@@ -101,7 +100,7 @@ export default {
     components: {
         AdminLayout, ButtonLink
     },
-    props: ['additives'],
+    props: ['currentTerm','additives'],
     data() {
         return {
             modal: {
@@ -132,14 +131,13 @@ export default {
             this.initModalNewItem()
         },
         initModalNewItem(student){
-
-            this.modal.data.newItem = {max:null,value:1}
+            this.modal.data.newItem = {term_id:this.currentTerm.value,max:null,value:1}
             this.modal.data.newItem.selection=Object.keys(this.additives.templates)[0]
         },
         onClickSubmitAdditive(){
             this.$inertia.post(route("manage.additives.store"),this.modal.data.list, {
                 onSuccess: (page) => {
-                    this.modal.newItem={max:null,value:1};
+                    this.modal.newItem={term_id:this.currentTerm.value,max:null,value:1};
                     this.modal.isOpen=false;
                     console.log('Cancelled')
                 },
@@ -147,16 +145,18 @@ export default {
                     console.log(error);
                 }
             })
-
         },
         //add item to modal.data.list
         onFinish(values){
+            console.log(this.modal.data);
             this.modal.data.list.push({
+                'term_id':this.modal.data.newItem.term_id,
                 'klass_student_id':this.modal.data.student.klass_student_id,
                 'reference_code':values.selection,
                 'value':values.value,
                 'remark':values.remark,
             })
+            console.log(this.modal.data.list);
             this.initModalNewItem()
         },
         onChangeSelection(event){

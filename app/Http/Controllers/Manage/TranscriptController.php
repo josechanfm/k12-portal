@@ -8,60 +8,30 @@ use Inertia\Inertia;
 use App\Models\KlassStudent;
 use App\Models\Transcript;
 use App\Models\TranscriptTemplate;
+use App\Models\Year;
+use App\Models\Grade;
 use App\Models\Klass;
-use App\Models\Course;
 use App\Models\Config;
 
 use function GuzzleHttp\json_decode;
 
 class TranscriptController extends Controller
 {
-    public function index(Klass $klass){
-        /*
-        $coursesScores=$klass->transcriptCoursesScores;//all Courses in transcript with scores
-        $students=$klass->students; //all student in the klass
-        $courses=$klass->courses->where('in_transcript',1); //all Courses in the klass with score_columns
-        //rebuild all scores in an array, index with student_id, course_id and score_column_id
-        $tmpScores=[];
-        foreach($coursesScores as $course){
-            foreach($course->allScores as $score){
-                $tmpScores[$score->student_id][$course->id][$score->score_column_id]=$score->point;
-            }
-        }
-        //generate student list with personal info required in transcript
-        //loop all scores in term_id==9 in all courses and put it in student array list
-        $transcript=[];
-        $scoreColumns=[];
-        foreach($students as $student){
-            $tmp=[
-                'student_id'=>$student->id,
-                'student_name'=>$student->name_zh,
-                'klass_student_id'=>$student->pivot->klass_student_id
-            ];
-            foreach($courses as $course){
-                $scoreColumn=$course->scoreColumns->where('term_id',9)->first();
-                //$transcript[]['scores'][$scoreColumnId]=$tmpScores[$student->id][$course->id][$scoreColumnId];
-                if(isset($tmpScores[$student->id][$course->id])){
-                    $tmp['scores'][$scoreColumn->id]=$tmpScores[$student->id][$course->id][$scoreColumn->id];
-                }else{
-                    $tmp['scores'][$scoreColumn->id]='--';
-                }
-                $scoreColumn['course_code']=$course->code;
-                $scoreColumn['course_title']=$course->title_zh;
-                $scoreColumns[$scoreColumn->id]=$scoreColumn;
-        }
-            $transcript[]=$tmp;
-        }
-        return Inertia::render('Manage/Transcript',[
-            'klass'=>$klass,
-            'transcript'=>$transcript,
-            'score_columns'=>$scoreColumns
-        ]);
-        */
+    public function yearTranscripts(Year $year){
+        dd($year->gradesKlasses[0]->klasses[0]);
+    }
+    public function gradeTranscripts(Grade $grade){
+        dd($grade);
     }
 
-    public function KlassStudent($id){
-        $klassStudent=KlassStudent::find($id);
+    public function KlassStudent(KlassStudent $klassStudent){
+        dd($klassStudent->student);
+        $klassStudent=KlassStudent::find($klassStudentId);
+        dd($klassStudent);
+        return Inertia::render('Manage/Transcript',[
+            'transcriptTemplate'=>$id,
+            'student'=>$klassStudent
+        ]);
         return response($klassStudent);
 
     }
@@ -70,7 +40,6 @@ class TranscriptController extends Controller
         //convert students record to associative array and set Record Id as key
         $students=array_column($klass->students->map->only('id','name_zh')->toArray(),null,'id');
         $courses=$klass->courses;
-
         $scores=$students;
         //form score table
         //score array table: $scores[student_id][course_id][term_id][score_column_id]
@@ -86,14 +55,12 @@ class TranscriptController extends Controller
                             return $carry;
                     }, 0);
                     $term->total_column=0;
-                };
-                
+                };                
                 //create score array columns and init as empty value
                 //$scores[$sid]['terms']=$course['terms'];
                 //$scores[$sid]['terms'][$column->term_id]->score_columns[]=$column->id;
                 foreach($course->scoreColumns as $column){
                     $scores[$sid][$course->id][$column->id]=['point'=>0,'is_total'=>false,'term_id'=>$column->term_id];
-                    
                     if($column->is_total==1){
                         //$course['terms'][$column->term_id]->total_column=$column->id;
                         // $scores[$sid][$course->id]['terms'][$column->term_id]['score_columns'][]=$column->id;
@@ -109,7 +76,6 @@ class TranscriptController extends Controller
                 $scores[$s->student_id][$cs->id][$s->score_column_id]['point']=$s->point;
             }
         }
-
         if($request->get('type') && $request->get('type')=='summary'){
             return Inertia::render('Manage/ScoreSummary',[
                 'year_terms'=>Config::item('year_terms'),
@@ -123,9 +89,6 @@ class TranscriptController extends Controller
                 'courses'=>$klass->courses,
                 'scores'=>$scores
             ]);
-    
         }
     }
-
-
 }

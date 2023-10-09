@@ -101,7 +101,7 @@ class CoursePolicy
         if(auth()->user()->hasRole('master') || auth()->user()->hasRole('admin')){
             return true;
         }
-        $staffId=auth()->user()->staff()->id;
+        $staffId=auth()->user()->staff->id;
         if(in_array($staffId,$course->subject_head_ids)){
             return true;
         }

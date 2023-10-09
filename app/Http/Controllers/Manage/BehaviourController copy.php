@@ -7,45 +7,32 @@ use Illuminate\Http\Request;
 use App\Models\Config;
 use App\Models\Klass;
 use App\Models\Behaviour;
-use App\Models\Year;
+use App\Models\KlassStudent;
 use Inertia\Inertia;
 
 class BehaviourController extends Controller
 {
-
-    public function list(){
-        $year=Year::find(Year::currentYear()->id);
-        $grade=$year->grades->where('grade_year',4)->first();
-//        dd($grade->klasses->first()->id);     
-        return redirect()->route('manage.klass.behaviour.summary',$grade->klasses->first());   
-    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Klass $klass)
+    public function index(Request $request)
     {
-        // $year=Year::find(Year::currentYear()->id);
-        // $year->grades;
-        // $year->klasses;
-        // return Inertia::render('Manage/Behaviours',[
-        //     'yearTerms'=>Config::item('year_terms'),
-        //     'currentTerm'=>Year::currentTerm(),
-        //     'year'=>$year
-        // ]);
-        $year=Year::find(Year::currentYear()->id);
-        $year->klasses;
-        $year->grades;
-        return Inertia::render('Manage/KlassBehaviours',[
-            'year'=>$year,
-            'yearTerms'=>Config::item('year_terms'),
-            'currentTerm'=>Year::currentTerm(),
-            'staff'=>auth()->user()->staff,
-            'klass'=>$klass,
-            'behaviours'=>$klass->behaviours('DIRECTOR')
+        $ksid=$request->ksid;
+        $klassStudent=KlassStudent::with('student')->with('behaviours')->with('klass')->find($ksid);
+        $behaviours=Config::item('behaviour_genres');
+        $terms=Config::item('year_terms');
+        // $klass=Klass::with('students')->find($kid);
+        // $terms=Config::item('year_terms');
+        // $habitColumns=Config::item('behaviour_genres');
+        // $habits=Behaviour::byKlassId($kid);
+        return Inertia::render('Manage/Behaviour',[
+            'klassStudent'=>$klassStudent,
+            'behaviours'=>$behaviours,
+            'terms'=>$terms,
         ]);
-
+        
     }
 
     /**
@@ -55,7 +42,7 @@ class BehaviourController extends Controller
      */
     public function create()
     {
-        dd('ok created');
+        //
     }
 
     /**
@@ -85,10 +72,9 @@ class BehaviourController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Klass $klass, $id)
+    public function show($id)
     {
-        //dd($id);
-        //dd($klass->behaviourSummary()[0]);
+        //
     }
 
     /**
@@ -125,19 +111,7 @@ class BehaviourController extends Controller
         //
     }
 
-    public function summary(Klass $klass){
-        $year=Year::find(Year::currentYear()->id);
-        $year->klasses;
-        $year->grades;
-        $klass->grade;
-        return Inertia::render('Manage/KlassBehaviourSummary',[
-            'year'=>$year,
-            'yearTerms'=>Config::item('year_terms'),
-            'currentTerm'=>Year::currentTerm(),
-            'staff'=>auth()->user()->staff,
-            'klass'=>$klass,
-            'behaviours'=>$klass->behaviourSummary()
-        ]);
+    public function byKlass(Klass $klass){
+        dd($klass);
     }
-
 }

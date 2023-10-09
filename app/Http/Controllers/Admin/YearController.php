@@ -25,7 +25,8 @@ class YearController extends Controller
         $param=Config::item('year_creation');
         return Inertia::render('Admin/Years',[
             'years'=>$years,
-            'param'=>$param
+            'param'=>$param,
+            'yearTerms'=>Config::item('year_terms')
         ]);
         //return response()->json($data);
     }
@@ -149,18 +150,19 @@ class YearController extends Controller
     public function update(Request $request, $id)
     {
         Validator::make($request->all(),[
-            'abbr' => ['required'],
             'title' => ['required'],
             'period'=> ['required'],
+            'current_term'=> ['required'],
         ])->validate();
         if($request->has('id')){
             $year=Year::find($request->input('id'));
-            $year->herit = $request->input('herit') ?? 0;
+            // $year->herit = $request->input('herit') ?? 0;
             $year->code = $request->input('code');
             $year->title = $request->input('title');
             $year->start = date('Y-m-d', strtotime($request->input('period')[0]));
             $year->end = date('Y-m-d', strtotime($request->input('period')[1]));
             $year->description= $request->input('description') ?? "";
+            $year->current_term=$request->current_term;
             $year->active=1;
             $year->save();
     

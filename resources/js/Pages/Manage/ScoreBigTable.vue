@@ -5,6 +5,10 @@
                 Teacher
             </h2>
         </template>
+        <div class="py-12">
+            <div class="mx-auto sm:px-6 lg:px-8">
+                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+
         <table width="100%" border="1" id="bigTable">
             <tr>
                 <td rowspan="3">Student Name</td>
@@ -37,6 +41,9 @@
             </tr>
 
         </table>
+                </div>
+            </div>
+        </div>
 
     </AdminLayout>
 </template>

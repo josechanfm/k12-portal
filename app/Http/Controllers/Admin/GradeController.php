@@ -137,38 +137,10 @@ class GradeController extends Controller
 
 
     public function klasses(Grade $grade){
-        // $additive=Additive::find(1);
-        // $klass=Klass::where('id',$additive->klassStudent->klass_id)->first();
-
-        // $heads=$klass->courses->whereNotNull('subject_head_ids')->pluck('subject_heads');
-        // echo json_encode($heads);
-
-        // $allHeads=collect(); 
-        // foreach($heads as $head){
-        //     $allHeads=$allHeads->concat($head);
-        // }
-        // dd($allHeads);
-        // $users=[];
-        // $users=array_merge($users,$klass->klass_heads->toArray());
-        // dd($users[0]);
-
-        // $courses=$klass->courses->whereNotNull('subject_head_ids');
-        // dd($courses);
-        // //dd($klasses[0]->head_teachers->pluck('id'));
-        // //dd($additive->klassStudent);
-
-        // $users=Klass::whereNotNull('klass_head_ids')->get();
-        // dd($users);
-        //if grade not found return some kind of error...
         $grade->year;
         $grades=Grade::where('year_id',$grade->year_id)->get();
-        //dd($grades);
-        //dd($grade->year);
         $klasses=Klass::with('grade')->with('courses')->whereBelongsTo($grade)->get();
         $studies=Study::where('active',1)->get();
-        //dd($studies);
-        // dd(Config::item('klass_letters'));
-        // dd(Config::item('klass_streams'));
         return Inertia::render('Admin/GradeKlasses',[
             'grade'=>$grade,
             'grades'=>$grades,

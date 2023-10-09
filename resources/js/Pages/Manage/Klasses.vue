@@ -7,16 +7,31 @@
         </template>
         <p>Klass: {{ klass.tag }}</p>
         <p>Students: {{ klass.student_count }}</p>
+        <p>Current Term: {{currentTerm.label}}</p>
         <template v-if="klass.grade_year<=3">
             <inertia-link :href="route('manage.klass.habits', klass.id)" class="ant-btn">生活習摜</inertia-link>
             <inertia-link :href="route('manage.klass.abilities', klass.id)" class="ant-btn">學習主題</inertia-link>
         </template>
         <inertia-link :href="route('manage.klass.students', klass.id)" class="ant-btn">學生名單</inertia-link>
         <inertia-link :href="route('manage.klass.finalScores', klass.id)" class="ant-btn">期末成績</inertia-link>
-        <inertia-link :href="route('manage.klass.additive', [klass.id, 'attendance'])" class="ant-btn">考勤</inertia-link>
-        <inertia-link :href="route('manage.klass.additive', [klass.id, 'perform'])" class="ant-btn">功過</inertia-link>
-        <inertia-link :href="route('manage.klass.additive', [klass.id, 'conduct'])" class="ant-btn">操行</inertia-link>
-        <inertia-link :href="route('manage.klass.additive', [klass.id, 'comments'])" class="ant-btn">評語</inertia-link>
+        <inertia-link :href="route('manage.klass.transcript', klass.id)" class="ant-btn">成積總表</inertia-link>
+        <a-divider type="vertical" />
+        <inertia-link :href="route('manage.klass.behaviours.index', klass.id)" class="ant-btn">操行</inertia-link>
+
+        <a-divider type="vertical" />
+        <template v-if="additiveStyle=='default'">
+            <template v-for="group in additiveGroups">
+                <inertia-link :href="route('manage.klass.additive',[klass.id,group.category.toLowerCase()])" class="ant-btn">{{group.label}}</inertia-link>
+            </template>
+        </template>
+        <template v-else-if="additiveStyle=='page'">
+            <inertia-link :href="route('manage.klass.additive.page', klass.id)" class="ant-btn">單頁模式</inertia-link>
+        </template>
+        <template v-else-if="additiveStyle=='direct'">
+            <inertia-link :href="route('manage.klass.additive.direct', klass.id)" class="ant-btn">直接輸入</inertia-link>
+        </template>
+
+
         <p>&nbsp;</p>
 
         <div class="ant-table">
@@ -35,7 +50,7 @@
                             </tr>
                         </thead>
                         <tbody class="ant-table-tbody">
-                            <tr v-for="(course, courseKey) in courses" :course_id="course.id">
+                            <tr v-for="(course, courseKey) in klass.courses" :course_id="course.id">
                                 <td class="text-left">{{ course.code }}</td>
                                 <td class="text-left">{{ course.title_zh }}</td>
                                 <td class="text-left">{{ course.stream }}</td>
@@ -54,6 +69,7 @@
                 </div>
             </div>
         </div>
+
     </AdminLayout>
 </template>
 
@@ -65,7 +81,7 @@ export default {
     components: {
         AdminLayout
     },
-    props: ['grade', 'klass', 'courses', 'students'],
+    props: ['currentTerm','klass','additiveTemplates','additiveStyle','additiveGroups'],
     data() {
         return {
             course: {}
@@ -74,6 +90,10 @@ export default {
     mounted() {
     },
     methods: {
+        showModal(){
+            console.log('showmodal')
+            this.modal.isOpen=true
+        },
         handleOk() {
 
         }

@@ -28,6 +28,24 @@ class Course extends Model
         };
         return null;
     }
+    public function isTeacher(){
+        if(empty(auth()->user()->staff)){
+            return false;
+        }
+        return in_array(auth()->user()->staff->id,$this->staffs->pluck('id')->toArray());
+    }
+    public function isSubjectHead(){
+        if(empty(auth()->user()->staff)){
+            return false;
+        }
+        return in_array(auth()->user()->staff->id,$this->subject_head_ids);
+    }
+    public function isKlassHead(){
+        if(empty(auth()->user()->staff)){
+            return false;
+        }
+        return in_array(auth()->user()->staff->id,$this->klass->klass_head_ids);
+    }
     public function klass(){
         return $this->belongsTo(Klass::class);
     }
@@ -60,27 +78,25 @@ class Course extends Model
     public function staffs(){
         return $this->belongsToMany(Staff::class)->withPivot(['behaviour','behaviour_exception']);
     }
-    // // public function subject(){
-    // //     return $this->belongsTo(Subject::class);
-    // // }
-    // // public static function gather_scores($courseId){
-    // //     $students=Course::find($courseId)->students;
-    // //     foreach($students as $student){
-    // //         $student->scores=Score::where('klass_student_id',$student->pivot->klass_student_id)->get();
-    // //     }
-    // //     return $students;
-    // // }
 
-    // //public static function students_scores($cid){
-    // public function students_scores(){
-    //     //$students=Course::find($this->id)->students;
-    //     $students=$this->students;
-    //     foreach($students as $student){
-    //         $student->scores=Score::where('course_student_id',$student->pivot->course_student_id)->get();
-    //     }
-    //     return $students;
+    // public function studentsBehaviours(){
+    //     return $this->belongsToMany(Student::class,'course_student')->withPivot('id as pivot_course_student_id');
+    //     //return $this->hasMany(Behaviour::class);
     // }
+    public function behaviours(){
+        $terms=Config::item('year_terms');
+        $staff=auth()->user()->staff;
+        $klass=$this->klass;
+        $students=$this->students;
+        $actor="SUBJECT";
+        $referenceId=$this->id;
 
+        collect($students)->map(function($student) use($terms,$staff,$klass, $referenceId, $actor){
+            $klassStudentId=KlassStudent::where('klass_id',$klass->id)->where('student_id',$student->id)->pluck('id')->first();
+            $student->behaviours=$student->getBehaviours($klassStudentId, $staff, $terms, $referenceId , $actor);
+        });
+        return $students;
+    }
     public function studentsScores(){
         $students=$this->students;
         $scores=$this->allScores;

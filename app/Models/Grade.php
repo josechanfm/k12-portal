@@ -10,6 +10,7 @@ class Grade extends Model
     use HasFactory;
 
     protected $fillable=['year_id','rank','initial','level','tag','title_zh','title_en','description','version','active'];
+    protected $casts=['behaviour_scheme'=>'json'];
 
     public function klasses(){
         return $this->hasMany(Klass::class);
@@ -52,11 +53,10 @@ class Grade extends Model
 
     public function passingScore(){
         $template=TranscriptTemplate::where('template_id',$this->transcript_template_id)->where('reference_code','passing')->first();
-        if(isset($template) && isset($template->field_value)){
-            return $template->field_value;
+        if(isset($template) && isset($template->value)){
+            return $template->value;
         }
         return 60;
-
     }
 
 }
