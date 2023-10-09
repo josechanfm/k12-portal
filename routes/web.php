@@ -31,7 +31,7 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-})->name('/');
+})->name('abc');
 
 Route::middleware([
     'auth:sanctum',

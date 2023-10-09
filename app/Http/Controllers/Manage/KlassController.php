@@ -5,12 +5,11 @@ namespace App\Http\Controllers\Manage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Config;
 use App\Models\Klass;
 use App\Models\Teacher;
 use App\Models\Transcript;
 
-class KLassController extends Controller
+class KlassController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -123,7 +122,8 @@ class KLassController extends Controller
             'finalScores' => $klass->finalScores()
         ]);
     }
-    public function migrateTranscripts(Klass $klass){
+    public function migrateTranscripts(Klass $klass)
+    {
         $finalScores=$klass->finalScores();
         $data=[];
         foreach($finalScores['students'] as $student){
