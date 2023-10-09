@@ -5,6 +5,21 @@
                 Teacher
             </h2>
         </template>
+
+        <a-radio-group v-model:value="selectedGradeId" button-style="solid">
+            <a-radio-button v-for="grade in year.grades" :value="grade.id">{{grade.tag}}</a-radio-button>
+        </a-radio-group>
+        <p></p>
+        <a-radio-group v-model:value="selectedKlassId" button-style="solid">
+            <template v-for="klass in year.klasses">
+                <a-radio-button v-if="klass.grade_id==selectedGradeId" :value="klass.id">
+                    <inertia-link :href="route('manage.klass.transcript',klass.id)">{{klass.tag}}</inertia-link>
+                </a-radio-button>
+            </template>
+        </a-radio-group>
+
+
+
         <div class="py-12">
             <div class="mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -56,9 +71,11 @@ export default {
     components: {
         AdminLayout, ButtonLink
     },
-    props: ['students_courses_scores','courses','scores'],
+    props: ['year','klass','students_courses_scores','courses','scores'],
     data() {
         return {
+            selectedGradeId:0,
+            selectedKlassId:0,
             columns:[
                 {
                     title: 'Staff #',
@@ -79,6 +96,11 @@ export default {
             ]
         }
     },
+    mounted() {
+        this.selectedGradeId=this.klass.grade_id
+        this.selectedKlassId=this.klass.id
+    },
+
     methods: {
     },
 }

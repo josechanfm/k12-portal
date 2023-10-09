@@ -9,6 +9,7 @@ use App\Models\Klass;
 use App\Models\Behaviour;
 use App\Models\Year;
 use Inertia\Inertia;
+use PDO;
 
 class BehaviourController extends Controller
 {
@@ -34,6 +35,14 @@ class BehaviourController extends Controller
         //     'currentTerm'=>Year::currentTerm(),
         //     'year'=>$year
         // ]);
+        if(empty(auth()->user()->staff)){
+            return Inertia::render('Error',[
+                'message'=>"You are not subject teacher."
+            ]);
+    
+        }
+        
+
         $year=Year::find(Year::currentYear()->id);
         $year->klasses;
         $year->grades;

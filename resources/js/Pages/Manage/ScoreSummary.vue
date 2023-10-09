@@ -5,6 +5,19 @@
                 Summary
             </h2>
         </template>
+        <KlassSelector routePath="'manage.klass.transcript'" :param="[klass.id,{type:'summary'}]"/>
+        <a-radio-group v-model:value="selectedGradeId" button-style="solid">
+            <a-radio-button v-for="grade in year.grades" :value="grade.id">{{grade.tag}}</a-radio-button>
+        </a-radio-group>
+        <p></p>
+        <a-radio-group v-model:value="selectedKlassId" button-style="solid">
+            <template v-for="klass in year.klasses">
+                <a-radio-button v-if="klass.grade_id==selectedGradeId" :value="klass.id">
+                    <inertia-link :href="route('manage.klass.transcript',[klass.id,{type:'summary'}])">{{klass.tag}}</inertia-link>
+                </a-radio-button>
+            </template>
+        </a-radio-group>
+
         <table width="100%" border="1" id="bigTable">
             <tr>
                 <td rowspan="2">Student Name</td>
@@ -38,14 +51,17 @@
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
+import KlassSelector from '@/Components/KlassSelector.vue';
 
 export default {
     components: {
-        AdminLayout, ButtonLink
+        AdminLayout, ButtonLink, KlassSelector
     },
-    props: ['year_terms','students_courses_scores','courses','scores'],
+    props: ['year','klass','year_terms','students_courses_scores','courses','scores'],
     data() {
         return {
+            selectedGradeId:0,
+            selectedKlassId:0,
             columns:[
                 {
                     title: 'Staff #',
@@ -65,6 +81,10 @@ export default {
                 }
             ]
         }
+    },
+    mounted() {
+        this.selectedGradeId=this.klass.grade_id
+        this.selectedKlassId=this.klass.id
     },
     methods: {
     },

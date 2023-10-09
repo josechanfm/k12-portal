@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Manage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Config;
+use App\Models\Year;
 use App\Models\Klass;
 use App\Models\Teacher;
 use App\Models\Transcript;
@@ -59,7 +61,7 @@ class KlassController extends Controller
         $klass->courses;
         //$courses = Klass::find($klass->id)->courses;
         $klass->students;
-        
+
         // dd($courses);
         return Inertia::render('Manage/Klasses', [
             //'grade' => $grade,
@@ -124,7 +126,12 @@ class KlassController extends Controller
     public function finalScores(Klass $klass)
     {
         // dd($klass->finalScores());
+        $year=Year::find(Year::currentYear()->id);
+        $year->klasses;
+        $year->grades;
+
         return Inertia::render('Manage/KlassFinalScores', [
+            'year'=>$year,
             'klass' => $klass,
             'transcriptTemplates' => $klass->grade->transcriptTemplates(),
             'finalScores' => $klass->finalScores()

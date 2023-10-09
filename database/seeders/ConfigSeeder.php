@@ -319,9 +319,7 @@ class ConfigSeeder extends Seeder
         DB::table('configs')->insert([
             'key'=>'additive_style',
             'value'=>'"default"',
-            'remark'=>'"default",
-            "direct",
-            "page"'
+            'remark'=>'"default","direct","page"'
         ]);
 
         DB::table('configs')->insert([

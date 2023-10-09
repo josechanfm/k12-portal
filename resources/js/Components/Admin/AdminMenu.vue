@@ -129,14 +129,10 @@
       url:'/manage/grades',
     },{
       key: '2.2',
-      title: '操行總覽',
-      url:'/manage/behaviours',
-    },{
-      key: '2.3',
       title: '教師',
       url:'/manage/teachers',
     },{
-      key: '2.4',
+      key: '2.3',
       title: '升班預處理',
       url:'/promote',
     }],

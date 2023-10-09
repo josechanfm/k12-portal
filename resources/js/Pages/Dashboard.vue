@@ -1,6 +1,8 @@
 <script setup>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import Welcome from '@/Components/Welcome.vue';
+
+
 </script>
 
 <template>
@@ -10,7 +12,6 @@ import Welcome from '@/Components/Welcome.vue';
                 Dashboard..
             </h2>
         </template>
-
         <div class="py-12">
                 <div class="p-5 bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <p>This Dashboard page is not for production, it's to descripting the system structure and design.</p>

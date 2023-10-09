@@ -76,8 +76,14 @@ class TranscriptController extends Controller
                 $scores[$s->student_id][$cs->id][$s->score_column_id]['point']=$s->point;
             }
         }
+        $year=Year::find(Year::currentYear()->id);
+        $year->klasses;
+        $year->grades;
+
         if($request->get('type') && $request->get('type')=='summary'){
             return Inertia::render('Manage/ScoreSummary',[
+                'year'=>$year,
+                'klass'=>$klass,
                 'year_terms'=>Config::item('year_terms'),
                 'students_courses_scores'=>$students,
                 'courses'=>$klass->courses,
@@ -85,6 +91,8 @@ class TranscriptController extends Controller
             ]);
         }else{
             return Inertia::render('Manage/ScoreBigTable',[
+                'year'=>$year,
+                'klass'=>$klass,
                 'students_courses_scores'=>$students,
                 'courses'=>$klass->courses,
                 'scores'=>$scores

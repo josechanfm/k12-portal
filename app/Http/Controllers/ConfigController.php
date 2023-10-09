@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Year;
 
-class Config extends Controller
+class ConfigController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -80,5 +81,13 @@ class Config extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function gradesKlasses(Request $request){
+        $year=Year::find(Year::currentYear()->id);
+        $year->grades;
+        $year->klasses;
+        $grade=$year->grades->where('grade_year',4)->first();
+        $grade->klasses->first();
+        return response()->json(['current_year'=>$year,'default_grade'=>$grade]);
     }
 }

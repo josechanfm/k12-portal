@@ -38,6 +38,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
+    Route::get('grades_klasses',[App\Http\Controllers\ConfigController::class,'gradesKlasses'])->name('gradesKlasses');
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
