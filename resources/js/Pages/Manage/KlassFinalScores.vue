@@ -2,6 +2,7 @@
     <AdminLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                成積總表
                 {{ klass.tag }}
                 {{ klass.transcript_migrated }}
             </h2>
@@ -11,19 +12,9 @@
             <span v-if="klass.transcript_migrated == 1">重新轉換成積表分數</span>
             <span v-else>轉換成積表分數</span>
         </a-button>
-        <p>&nbsp;</p>
-
-        <a-radio-group v-model:value="selectedGradeId" button-style="solid">
-                <a-radio-button v-for="grade in year.grades" :value="grade.id">{{grade.tag}}</a-radio-button>
-            </a-radio-group>
-            <p></p>
-            <a-radio-group v-model:value="selectedKlassId" button-style="solid">
-                <template v-for="klass in year.klasses">
-                    <a-radio-button v-if="klass.grade_id==selectedGradeId" :value="klass.id">
-                        <inertia-link :href="route('manage.klass.finalScores',klass.id)">{{klass.tag}}</inertia-link>
-                    </a-radio-button>
-                </template>
-            </a-radio-group>
+        <div class="py-5">
+            <KlassSelector routePath="manage.klass.finalScores" :param="{type:'summary'}" :currentKlass="klass"/>
+        </div>
 
         <div>
             <div class="ant-table">
@@ -103,16 +94,16 @@
 
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
+import KlassSelector from '@/Components/KlassSelector.vue';
 
 export default {
     components: {
         AdminLayout,
+        KlassSelector
     },
     props: ['year','klass', 'transcriptTemplates', 'finalScores'],
     data() {
         return {
-            selectedGradeId:0,
-            selectedKlassId:0,
             modal: {
                 mode:null,
                 isOpen: false,
@@ -125,12 +116,6 @@ export default {
 
     },
     mounted() {
-        // this.fields=this.transcriptTemplate.map((t)=>(
-        //     {[t.field_name]:t.title_zh}
-        // ));
-        this.selectedGradeId=this.klass.grade_id
-        this.selectedKlassId=this.klass.id
-
     },
     methods: {
         isPass(score) {

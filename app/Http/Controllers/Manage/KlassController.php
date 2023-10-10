@@ -137,30 +137,8 @@ class KlassController extends Controller
             'finalScores' => $klass->finalScores()
         ]);
     }
-    public function migrateTranscripts(Klass $klass)
-    {
-        $finalScores=$klass->finalScores();
-        return response()->json($finalScores);
 
-        $data=[];
-        foreach($finalScores['students'] as $student){
-            foreach($finalScores['score_columns'] as $column){
-                $data[]=[
-                    'klass_student_id'=>$student['klass_student_id'],
-                    'reference_code'=>$column->course_code,
-                    'value'=>$student['scores'][$column->id]
-                ];
-            }
-        }
-        Transcript::upsert($data, ['klass_student_id','reference_code'],['value']);
-        $klass->transcript_migrated=true;
-        $klass->save();
-        return response()->json($data);
-        
-        return redirect()->back();
-    }    
-
-    public function behaviours(Klass $klass){
+    //public function behaviours(Klass $klass){
         // $year=Year::find(Year::currentYear()->id);
         // $year->klasses;
         // $year->grades;
@@ -173,5 +151,5 @@ class KlassController extends Controller
         //     'behaviours'=>$klass->behaviours('DIRECTOR')
         // ]);
 
-    }
+    //}
 }

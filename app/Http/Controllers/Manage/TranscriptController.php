@@ -60,7 +60,7 @@ class TranscriptController extends Controller
                 //$scores[$sid]['terms']=$course['terms'];
                 //$scores[$sid]['terms'][$column->term_id]->score_columns[]=$column->id;
                 foreach($course->scoreColumns as $column){
-                    $scores[$sid][$course->id][$column->id]=['point'=>0,'is_total'=>false,'term_id'=>$column->term_id];
+                    $scores[$sid][$course->id][$column->id]=['point'=>0,'is_total'=>false,'term_id'=>$column->term_id,'field_name'=>$column->field_name];
                     if($column->is_total==1){
                         //$course['terms'][$column->term_id]->total_column=$column->id;
                         // $scores[$sid][$course->id]['terms'][$column->term_id]['score_columns'][]=$column->id;
@@ -76,10 +76,11 @@ class TranscriptController extends Controller
                 $scores[$s->student_id][$cs->id][$s->score_column_id]['point']=$s->point;
             }
         }
+
         $year=Year::find(Year::currentYear()->id);
         $year->klasses;
         $year->grades;
-
+        dd($scores);
         if($request->get('type') && $request->get('type')=='summary'){
             return Inertia::render('Manage/ScoreSummary',[
                 'year'=>$year,
@@ -87,16 +88,44 @@ class TranscriptController extends Controller
                 'year_terms'=>Config::item('year_terms'),
                 'students_courses_scores'=>$students,
                 'courses'=>$klass->courses,
-                'scores'=>$scores
+                'scores'=>$scores,
+                'behaviours'=>$klass->behaviourSummary()
             ]);
         }else{
             return Inertia::render('Manage/ScoreBigTable',[
                 'year'=>$year,
                 'klass'=>$klass,
+                'year_terms'=>Config::item('year_terms'),
                 'students_courses_scores'=>$students,
                 'courses'=>$klass->courses,
-                'scores'=>$scores
+                'scores'=>$scores,
+                'behaviours'=>$klass->behaviourSummary()
             ]);
         }
     }
+
+    public function migrate(Klass $klass)
+    {
+
+        $finalScores=$klass->finalScores();
+        $data=[];
+        //dd($finalScores);
+        foreach($finalScores['students'] as $student){
+            foreach($finalScores['score_columns'] as $column){
+                $data[]=[
+                    'klass_student_id'=>$student['klass_student_id'],
+                    'term_id'=>$column->term_id,
+                    'reference_code'=>$column->course_code,
+                    'value'=>$student['scores'][$column->id]
+                ];
+            }
+        }
+        Transcript::upsert($data, ['klass_student_id','reference_code'],['value']);
+        $klass->transcript_migrated=true;
+        $klass->save();
+        return response()->json($data);
+        
+        return redirect()->back();
+    }    
+
 }

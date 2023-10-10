@@ -1,33 +1,12 @@
 <template>
   <AdminLayout title="Dashboard">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">操作</h2>
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight">操行調整</h2>
     </template>
     <div>
-      <a-radio-group v-model:value="selectedGradeId" button-style="solid">
-        <a-radio-button v-for="grade in year.grades" :value="grade.id">
-            {{grade.tag}}
-        </a-radio-button>
-      </a-radio-group>
-      <p></p>
-      <a-radio-group v-model:value="selectedKlassId" button-style="solid">
-        <template v-for="klass in year.klasses">
-          <a-radio-button v-if="klass.grade_id == selectedGradeId" :value="klass.id">
-            <inertia-link :href="route('manage.klass.behaviour.summary', klass.id)">
-              {{ klass.tag }}
-            </inertia-link>
-          </a-radio-button>
-        </template>
-      </a-radio-group>
-
-      <a-divider type="vertical"/>
-
-      <a-radio-group v-model:value="selectedTermId" button-style="solid">
-        <template v-for="term in yearTerms">
-            <a-radio-button :value="term.value">{{term.label}}</a-radio-button>
-        </template>
-      </a-radio-group>
-
+      <div class="py-5">
+        <KlassSelector routePath="manage.klass.behaviour.adjust" :param="[]" :currentKlass="klass" showTerms="true" @changeTerm="changeSelectedTerm"/>
+      </div>
       <a-typography-title :level="4">{{ staff.name_zh }}</a-typography-title>
       <div v-if="course">
         <p>{{ course.klass.tag }}</p>
@@ -103,11 +82,13 @@
 <script>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import BehaviourTable from "@/Components/BehaviourTable.vue";
+import KlassSelector from '@/Components/KlassSelector.vue';
 
 export default {
   components: {
     AdminLayout,
     BehaviourTable,
+    KlassSelector
   },
   props: [
     "year",
@@ -122,8 +103,6 @@ export default {
     return {
       tempBehaviour: null,
       selectedGradeId: 0,
-      selectedKlassId: 0,
-      selectedTermId:0,
       keypressed: "",
       tableCell: {
           row: 0,
@@ -134,8 +113,6 @@ export default {
     };
   },
   mounted() {
-    this.selectedGradeId = this.klass.grade_id;
-    this.selectedKlassId = this.klass.id;
     this.selectedTermId = this.currentTerm.value;
         //add Click EventListenter to dataTable
         this.$refs.dataTable.addEventListener('click', (e) => {
@@ -206,7 +183,11 @@ export default {
       console.log(student.klassHeads[this.selectedTermId])
       sum=courseScore
       return sum
+    },
+    changeSelectedTerm(termId){
+      this.selectedTermId=termId
     }
+
   }
 };
 </script>

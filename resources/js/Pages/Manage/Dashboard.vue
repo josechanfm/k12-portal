@@ -6,7 +6,8 @@
             </h2>
         </template>
         <div>
-            <inertia-link :href="route('manage.klass.behaviour.summary',defaultKlass.id)" class="ant-btn">Behaviour summary</inertia-link>
+            <inertia-link :href="route('manage.klass.behaviours.index',defaultKlass.id)" class="ant-btn">Behaviours</inertia-link>
+            <inertia-link :href="route('manage.klass.behaviour.adjust',defaultKlass.id)" class="ant-btn">Behaviour adjust</inertia-link>
             <inertia-link :href="route('manage.klass.finalScores',defaultKlass.id)" class="ant-btn">Final Scores</inertia-link>
             <inertia-link :href="route('manage.klass.transcript',defaultKlass.id)" class="ant-btn">Transcript</inertia-link>
             <inertia-link :href="route('manage.klass.transcript',[defaultKlass.id,{type:'summary'}])" class="ant-btn">Transcript Summary</inertia-link>

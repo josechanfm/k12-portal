@@ -14,12 +14,14 @@ use PDO;
 class BehaviourController extends Controller
 {
 
+/*
     public function list(){
         $year=Year::find(Year::currentYear()->id);
         $grade=$year->grades->where('grade_year',4)->first();
 //        dd($grade->klasses->first()->id);     
         return redirect()->route('manage.klass.behaviour.summary',$grade->klasses->first());   
     }
+    */
     /**
      * Display a listing of the resource.
      *
@@ -134,12 +136,12 @@ class BehaviourController extends Controller
         //
     }
 
-    public function summary(Klass $klass){
+    public function adjust(Klass $klass){
         $year=Year::find(Year::currentYear()->id);
         $year->klasses;
         $year->grades;
         $klass->grade;
-        return Inertia::render('Manage/KlassBehaviourSummary',[
+        return Inertia::render('Manage/KlassBehaviourAdjust',[
             'year'=>$year,
             'yearTerms'=>Config::item('year_terms'),
             'currentTerm'=>Year::currentTerm(),

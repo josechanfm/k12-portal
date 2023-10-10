@@ -39,13 +39,14 @@ class ScoreColumnController extends Controller
     public function store(Request $request)
     {
         //dd($request);
+        $letter=ScoreColumn::where('course_id',$request->course_id)->orderBy('column_letter','DESC')->first()->column_letter;
         $ScoreColumn=new ScoreColumn;
         $ScoreColumn->term_id=$request->term_id;
         $ScoreColumn->course_id=$request->course_id;
         $ScoreColumn->field_label=$request->field_label;
         $ScoreColumn->field_name=Str::uuid();
         $ScoreColumn->sequence=$request->sequence;
-        $ScoreColumn->column_letter='k';
+        $ScoreColumn->column_letter=++$letter;
         //$ScoreColumn->type=$request->type;
         $ScoreColumn->formular=$request->formular;
         $ScoreColumn->description=$request->description;
@@ -92,7 +93,7 @@ class ScoreColumnController extends Controller
         $ScoreColumn->field_label=$request->field_label;
         $ScoreColumn->field_name=Str::uuid()->toString();
         $ScoreColumn->sequence=$request->sequence;
-        $ScoreColumn->column_letter='k';
+        $ScoreColumn->column_letter=$request->column_letter;
         // $ScoreColumn->type=$request->type;
         $ScoreColumn->formular=$request->formular;
         $ScoreColumn->merge=json_encode($request->merge);

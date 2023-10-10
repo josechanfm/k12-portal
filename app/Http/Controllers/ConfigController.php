@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Config;
 use App\Models\Year;
 
 class ConfigController extends Controller
@@ -86,6 +87,7 @@ class ConfigController extends Controller
         $year=Year::find(Year::currentYear()->id);
         $year->grades;
         $year->klasses;
+        $year->yearTerms=Config::item('year_terms');
         $grade=$year->grades->where('grade_year',4)->first();
         $grade->klasses->first();
         return response()->json(['current_year'=>$year,'default_grade'=>$grade]);
