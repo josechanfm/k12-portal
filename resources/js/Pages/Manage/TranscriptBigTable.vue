@@ -20,7 +20,7 @@
                         <thead>
                             <tr>
                                 <td rowspan="3">Student Name</td>
-                                <td v-for="course in courses" :colspan="course.score_columns.length" class="text-center">
+                                <td v-for="course in transcripts['courses']" :colspan="course.score_columns.length" class="text-center">
                                     {{ course.title_zh }}
                                 </td>
                                 <td colspan="2">
@@ -29,7 +29,7 @@
                             </tr>
                             <tr>
                                 <template v-for="course in transcripts['courses']">
-                                    <td v-for="term in course.terms" :colspan="term.column_count" class="text-center">
+                                    <td v-for="term in year_terms" :colspan="3" class="text-center">
                                         {{ term.label }}
                                     </td>
                                     <td></td>
@@ -51,12 +51,14 @@
                                 <td>{{ student.name_zh}}</td>
                                 <template v-for="course in transcripts['courses']">
                                     <td v-for="column in course.score_columns"  class="text-center">
-                                        <!-- {{ transcripts['scores'][ksid][course.id][column.id]['point'] }} -->
+                                        <span v-if="transcripts['scores'][ksid][course.id][column.id]">
+                                            {{ transcripts['scores'][ksid][course.id][column.id].point}}
+                                        </span>
                                     </td>
                                 </template>
                                 <template v-for="term in year_terms">
                                     <td>
-                                        <!-- {{ transcripts['behaviours'][ksid][term.value] }} -->
+                                        {{ transcripts['behaviours'][ksid][term.value] }}
                                     </td>
                                 </template>
                             </tr>

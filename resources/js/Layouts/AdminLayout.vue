@@ -1,7 +1,7 @@
 <template>
     <a-layout>
         <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible >
-            <div class="logo" >MPU</div>
+            <inertia-link :href="route('manage')"><div class="logo" >AIMS</div></inertia-link>
             <AdminMenu />
         </a-layout-sider>
         <a-layout>

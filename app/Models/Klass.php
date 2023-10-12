@@ -217,18 +217,29 @@ class Klass extends Model
     }
     public function transcripts(){
         $students=$this->students;
+        $yearTerms=Config::item('year_terms');
         $data=[];
         $data['courses']=$this->courses;
+        //dd($data['courses']);
+        // $coursesScores=$this->coursesScores;
+        // foreach($yearTerms as $term){
+        //     foreach($coursesScores as $course){
+        //         $data['courses'][$course->id]=array_column($course->scoreColumns->where('for_transcript',true)->toArray(),null,'id');
+        //     }
+        // }
         //dd($this->transcriptCoursesScores[0]['allScores'][0]);
         foreach($students as $student){
             $data['students'][$student->pivot->klass_student_id]=$student;
             foreach($this->courses as $course){
+                $courseStudentId=$course->students->where('id',$student->id)->first()->pivot->course_student_id;
                 foreach($course->scoreColumns as $column){
-                    $data['scores'][$student->pivot->klass_student_id][$course->id][$column->id]=0;
+                    $score=$course->allScores->where('course_student_id',$courseStudentId)->where('score_column_id',$column->id)->first();
+                    $data['scores'][$student->pivot->klass_student_id][$course->id][$column->id]=$score;
                 }
             }
         }
-        dd($data);
+        // dd($data['scores'][316][153][1051]);
+        $data['behaviours']=$this->behaviourSummary()['sumTerms'];
         return $data;
      return [
         'students'=>$this->students,
