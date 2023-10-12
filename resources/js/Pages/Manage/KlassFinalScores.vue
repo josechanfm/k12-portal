@@ -20,17 +20,34 @@
                             <thead class="ant-table-thead">
                                 <tr>
                                     <th>學生姓名</th>
-                                    <th v-for="column in finalScores.score_columns">{{
-                                        transcriptTemplates[column.course_code].title_zh }}</th>
+                                    <th v-for="column in finalScores.score_columns">
+                                        {{transcriptTemplates['SUBJECT'][column.course_code].title_zh}}
+                                    </th>
                                     <th>不合格單位數</th>
                                 </tr>
                             </thead>
                             <tbody class="ant-table-tbody">
-                                <template v-for="student in finalScores.students">
+                                <template v-for="(student, ksid) in finalScores['students']">
                                     <tr class="ant-table-row ant-table-row-level-0">
-                                        <td>{{ student.student_name }}</td>
+                                        <td>{{ student.name_zh }}</td>
                                         <td v-for="column in finalScores.score_columns" class="text-center">
-                                            <span v-if="isPass(student['scores'][column.id])">
+                                            <span v-if="isPassed(finalScores['scores'][ksid][column.id]['score'])">
+                                                {{finalScores['scores'][ksid][column.id]['score']}}
+                                            </span>
+                                            <span v-else>
+                                                <span @click="toMakeup(student, column)" class="text-red-500 font-bold">
+                                                    <span :class="column.makeups[student.student_id] ? 'p-1 rounded-full border-2 border-rose-300' : ''">
+                                                            {{finalScores['scores'][ksid][column.id]['score']}}
+                                                            makeup result to be enhance
+                                                        <!-- <span v-if="column.makeups[student.student_id] && column.makeups[student.student_id]['point']!==null">
+                                                            {{ column.makeups[student.student_id]['point'] }}
+                                                        </span> -->
+                                                        
+                                                    </span>
+                                                </span>
+
+                                            </span>
+                                            <!-- <span v-if="isPass(student['scores'][column.id])">
                                                 {{ student['scores'][column.id] }}
                                             </span>
                                             <span v-else>
@@ -43,7 +60,7 @@
                                                         
                                                     </span>
                                                 </span>
-                                            </span>
+                                            </span> -->
                                         </td>
                                         <td class="text-center">{{ student.fail_units }}</td>
                                     </tr>
@@ -116,6 +133,11 @@ export default {
     methods: {
         isPass(score) {
             return score >= parseInt(this.transcriptTemplates['passing'].value)
+        },
+        isPassed(value){
+            console.log(this.transcriptTemplates['GENERAL']['passing']);
+            //return true;
+            return value >= parseInt(this.transcriptTemplates['GENERAL']['passing'].value)
         },
         migrateTranscripts() {
             if (this.klass.transcript_migrated == 1) {

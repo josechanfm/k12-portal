@@ -129,35 +129,42 @@ class Klass extends Model
         $referenceId=$this->id;
         $staff=auth()->user()->staff;
         foreach($students as $student){
-            $data['addjust'][$student->pivot->klass_student_id]=$student->getBehaviours($student->pivot->klass_student_id, $staff, $terms, $referenceId , $actor);
+            $data['adjust'][$student->pivot->klass_student_id]=$student->getBehaviours($student->pivot->klass_student_id, $staff, $terms, $referenceId , $actor);
             $student->adjust=$student->getBehaviours($student->pivot->klass_student_id, $staff, $terms, $referenceId , $actor);
         }
         
         foreach($data['students'] as $ksid=>$student){
             foreach($terms as $term){
                 $coursesSum=0;
-                $termSum[$term->value]=0;
+                $data['sumTerms'][$ksid][$term->value]=null;
                 foreach($data['subjects'][$ksid] as $course){
                     if(isset($course[$term->value])){
                         $coursesSum+=$course[$term->value]['score_total'];
                     }
                 }
                 $data['sumCourse'][$ksid][$term->value]=$coursesSum;
+                $data['sumTerms'][$ksid][$term->value]=$coursesSum;
+
                 if(isset($data['klassHeads'][$ksid][$term->value])){
                     $data['sumKlassHeads'][$ksid][$term->value]=$data['klassHeads'][$ksid][$term->value]['score_total']*$this->grade->behaviour_scheme['KLASS_HEAD'];
+                    $data['sumTerms'][$ksid][$term->value]+=$data['klassHeads'][$ksid][$term->value]['score_total']*$this->grade->behaviour_scheme['KLASS_HEAD'];
                 }
                 
                 if(isset($data['director'][$ksid][$term->value])){
                     $data['sumDirector'][$ksid][$term->value]=$data['director'][$ksid][$term->value]['score']*$this->grade->behaviour_scheme['DIRECTOR'];
+                    $data['sumTerms'][$ksid][$term->value]+=$data['director'][$ksid][$term->value]['score']*$this->grade->behaviour_scheme['DIRECTOR'];
                 }
                 if(isset($data['adjust'][$ksid][$term->value])){
                     $data['sumAdjust'][$ksid][$term->value]=$data['adjust'][$ksid][$term->value]['score']*$this->grade->behaviour_scheme['ADJUST'];
+                    $data['sumTerms'][$ksid][$term->value]+=$data['adjust'][$ksid][$term->value]['score']*$this->grade->behaviour_scheme['ADJUST'];
                 }
+             
             }
             
         }
         
         return $data;
+        /*
         foreach($students as $student){
             foreach($terms as $term){
                 $termSum[$term->value]=0;
@@ -186,6 +193,7 @@ class Klass extends Model
 
         dd($data);
         return $students;
+        */
     }
     public function promoteTo(){
         return $this->belongsToMany(Student::class,'klass_student','promote_to','student_id')->withPivot(['id as pivot_klass_student_id','student_number','stream','state','promote','promote_to','id as pivot_klass_id']);
@@ -208,9 +216,25 @@ class Klass extends Model
         // return $this->hasMany(Course::class)->with('scores')->with('students');
     }
     public function transcripts(){
+        $students=$this->students;
+        $data=[];
+        $data['courses']=$this->courses;
+        //dd($this->transcriptCoursesScores[0]['allScores'][0]);
+        foreach($students as $student){
+            $data['students'][$student->pivot->klass_student_id]=$student;
+            foreach($this->courses as $course){
+                foreach($course->scoreColumns as $column){
+                    $data['scores'][$student->pivot->klass_student_id][$course->id][$column->id]=0;
+                }
+            }
+        }
+        dd($data);
+        return $data;
      return [
         'students'=>$this->students,
         'behaviours'=>$this->behaviourSummary(),
+        'courses'=>$this->courses,
+        'scores'=>$this->coursesScores
     ];
      return $this->students;   
     }
@@ -247,37 +271,48 @@ class Klass extends Model
         }
         //generate student list with personal info required in transcript
         //loop all scores in term_id==9 in all courses and put it in student array list
+        $data=[];
         $transcripts = [];
         $scoreColumns = [];
         foreach ($students as $student) {
-            $tmp = [
-                'student_id' => $student->id,
-                'student_name' => $student->name_zh,
-                'klass_student_id' => $student->pivot->klass_student_id,
-                'fail_units'=>0,
-            ];
+            $data['students'][$student->pivot->klass_student_id]=$student;
+            // $tmp = [
+            //     'student_id' => $student->id,
+            //     'student_name' => $student->name_zh,
+            //     'klass_student_id' => $student->pivot->klass_student_id,
+            //     'fail_units'=>0,
+            // ];
             foreach ($courses as $course) {
                 $scoreColumn = $course->scoreColumns->where('term_id', 9)->first();
                 //$transcript[]['scores'][$scoreColumnId]=$tmpScores[$student->id][$course->id][$scoreColumnId];
                 if (isset($tmpScores[$student->id][$course->id])) {
-                    $tmp['scores'][$scoreColumn->id] = $tmpScores[$student->id][$course->id][$scoreColumn->id];
+                    //$tmp['scores'][$scoreColumn->id] = $tmpScores[$student->id][$course->id][$scoreColumn->id];
+                    $data['scores'][$student->pivot->klass_student_id][$scoreColumn->id]['score']=$tmpScores[$student->id][$course->id][$scoreColumn->id];
                     //count number of failed units
+                    $data['scores'][$student->pivot->klass_student_id][$scoreColumn->id]['fail_units']=0;
                     if($tmpScores[$student->id][$course->id][$scoreColumn->id]<=$passing){
-                        $tmp['fail_units']++;
+                        //$tmp['fail_units']++;
+                        $data['scores'][$student->pivot->klass_student_id][$scoreColumn->id]['fail_units']++;
                     }
                 } else { //if the student is not in the course
-                    $tmp['scores'][$scoreColumn->id] = '--';
+                    //$tmp['scores'][$scoreColumn->id] = '--';
+                    $data['scores'][$student->pivot->klass_student_id][$scoreColumn->id]['score'] = '--';
                 }
+                $data['scores'][$student->pivot->klass_student_id][$scoreColumn->id]['makeups']=$course->studentsMakeups();
                 $scoreColumn['course_code'] = $course->code;
                 $scoreColumn['course_title'] = $course->title_zh;
                 $scoreColumn['course_unit'] = $course->unit;
                 $scoreColumn['makeups']=$course->studentsMakeups();
-                $scoreColumns[$scoreColumn->id] = $scoreColumn;
+                // $scoreColumns[$scoreColumn->id] = $scoreColumn;
+                $data['score_columns'][$scoreColumn->id]=$scoreColumn;
             }
-            $transcripts['students'][] = $tmp;
+            //$data['scores'][$student->pivot->klass_student_id]=$tmp['scores'];
+            //$data['fail_units'][$student->pivot->klass_student_id]=$tmp['fail_units'];
+            //$transcripts['students'][] = $tmp;
         }
-        $transcripts['score_columns']=$scoreColumns;
-        return $transcripts;
+        //$transcripts['score_columns']=$scoreColumns;
+        
+        return $data;
     }
 
     public function additives($category=null,$termId=null){

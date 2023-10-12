@@ -10,7 +10,7 @@
             <template #bodyCell="{column, text, record, index}">
                 <template v-if="column.dataIndex == 'action'">
                     <inertia-link 
-                    :href="route('manage.klass.student.transcript',
+                    :href="route('manage.klass.student.transcripts',
                             {klassStudent:record.pivot.klass_student_id})"
                             class="ant-btn">
                     成績表

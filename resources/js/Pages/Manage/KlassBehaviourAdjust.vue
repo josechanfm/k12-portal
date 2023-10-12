@@ -36,7 +36,6 @@
                 <td width="150px">{{ student.name_zh }}</td>
                 <td width="50px">
                   <span v-if="behaviours['director'][ksid][selectedTermId]">
-                    {{ behaviours['director'][ksid][selectedTermId].score }}
                     <a-input 
                             v-model:value="behaviours['director'][ksid][selectedTermId].score"
                             @focus="onFocusScoreInput(behaviours['director'][ksid][selectedTermId])"
@@ -45,8 +44,6 @@
                              class="text-center"
                         />
                   </span>
-                  
-
                     <!-- <span v-if="student.director[selectedTermId]">
                         <a-input 
                             v-model:value="student.director[selectedTermId].score"
@@ -59,28 +56,29 @@
                     </span> -->
                 </td>
                 <td width="50px">
-                    <!-- <span v-if="student.adjust[selectedTermId]">
+                    <span v-if="behaviours['adjust'][ksid][selectedTermId]">
                         <a-input 
-                            v-model:value="student.adjust[selectedTermId].score"
-                            @blur="onBlurScoreInput(student.adjust[selectedTermId])"
-                            @focus="onFocusScoreInput(student.adjust[selectedTermId])"
+                            v-model:value="behaviours['adjust'][ksid][selectedTermId].score"
+                            @blur="onBlurScoreInput(behaviours['adjust'][ksid][selectedTermId])"
+                            @focus="onFocusScoreInput(behaviours['adjust'][ksid][selectedTermId])"
                             @keyup.arrow-keys="onKeypressed"
                             class="text-center"
                         />
-                    </span> -->
+                    </span>
                 </td>
                 <td class="text-center">
+                  {{behaviours['sumTerms'][ksid][selectedTermId]}}
                   <!-- {{ student.sumTerms[selectedTermId] }} -->
                 </td>
                 <td class="text-center">
-                    <!-- <span v-if="student.klassHeads[selectedTermId]">
-                        {{ student.klassHeads[selectedTermId].score_total }}
-                    </span> -->
+                    <span v-if="behaviours['klassHeads'][ksid][selectedTermId]">
+                      {{behaviours['klassHeads'][ksid][selectedTermId].score_total}}
+                    </span>
                 </td>
                 <td v-for="c in klass.courses" class="text-center">
-                    <!-- <span v-if="student.courseTeachers[c.id][selectedTermId]">
-                      {{ student.courseTeachers[c.id][selectedTermId].score_total }}
-                    </span> -->
+                    <span v-if="behaviours['subjects'][ksid][c.id][selectedTermId]">
+                        {{behaviours['subjects'][ksid][c.id][selectedTermId].score_total}}
+                    </span>
                 </td>
               </tr>
             </table>

@@ -51,11 +51,13 @@
                                 <td>{{ student.name_zh}}</td>
                                 <template v-for="course in transcripts['courses']">
                                     <td v-for="column in course.score_columns"  class="text-center">
-                                        {{ transcripts['scores'][ksid][course.id][column.id]['point'] }}
+                                        <!-- {{ transcripts['scores'][ksid][course.id][column.id]['point'] }} -->
                                     </td>
                                 </template>
                                 <template v-for="term in year_terms">
-                                    <td>{{ transcripts['behaviours'][ksid][term.value] }}</td>
+                                    <td>
+                                        <!-- {{ transcripts['behaviours'][ksid][term.value] }} -->
+                                    </td>
                                 </template>
                             </tr>
                         </tbody>

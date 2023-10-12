@@ -132,6 +132,7 @@ class BehaviourController extends Controller
         $year->klasses;
         $year->grades;
         $klass->grade;
+        //dd($klass->behaviourSummary());
         return Inertia::render('Manage/KlassBehaviourAdjust',[
             'year'=>$year,
             'yearTerms'=>Config::item('year_terms'),

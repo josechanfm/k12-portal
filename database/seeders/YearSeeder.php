@@ -23,6 +23,7 @@ class YearSeeder extends Seeder
                 'title'=>$y.'-'.($y+1),
                 'start'=>$y.'-09-01',
                 'end'=>($y+1).'-07-30',
+                'current_term'=>1,
                 'active'=>0
             ]);
             $yearId = DB::getPdo()->lastInsertId();

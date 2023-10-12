@@ -12,7 +12,7 @@
     </a-radio-group>
     <template v-if="showTerms">
         <a-divider type="vertical" />
-        <a-radio-group v-model:value="selectedTermId" button-style="solid" v-on:click="$emit('changeTerm',selectedTermId)">
+        <a-radio-group v-model:value="selectedTermId" button-style="solid" v-on:change="$emit('changeTerm',selectedTermId)">
             <template v-for="term in currentYear.yearTerms">
                 <a-radio-button :value="term.value">{{term.label}}</a-radio-button>
             </template>
