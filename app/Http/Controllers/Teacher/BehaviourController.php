@@ -35,7 +35,6 @@ class BehaviourController extends Controller
         //dd($staff->coursesBehaviours[0]->studentsBehaviours);
         //dd(in_array(2,$course->subject_head_ids));
         // if($course->isTeacher() || $course->isSubjectHead()){
-        //dd($course->behaviours());
         
         if($course->isTeacher() ){
             return Inertia::render('Teacher/Behaviours',[

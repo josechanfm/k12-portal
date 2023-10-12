@@ -70,21 +70,24 @@ class Klass extends Model
         $staff=auth()->user()->staff;
         //$actor="KLASS_HEAD";
         $klass=$this;
-
+        $data=[];
         $referenceId=$this->id;
-        collect($students)->map(function($student) use($terms,$staff,$klass, $referenceId, $actor){
-            //$klassStudentId=KlassStudent::where('klass_id',$klass->id)->where('student_id',$student->id)->pluck('id')->first();
-            $student->behaviours=$student->getBehaviours($student->pivot->klass_student_id, $staff, $terms, $referenceId , $actor);
-        });
-        return $students;
+        foreach($students as $student){
+            $data['students'][$student->pivot->klass_student_id]=$student;
+            $data['scores'][$student->pivot->klass_student_id]=$student->getBehaviours($student->pivot->klass_student_id, $staff, $terms, $referenceId , $actor);
+        }
+        return $data;
+        //return $students;
     }
     public function behaviourSummary(){
         $students=$this->students;
         $terms=Config::item('year_terms');
         $klass=$this;
+        $data=[];
         //course teacher behaviours scores
         $actor='SUBJECT';
         foreach($students as $student){
+            $data['students'][$student->pivot->klass_student_id]=$student;
             $tmpTerms=[];
             $tmp=[];
             foreach($this->courses as $course){
@@ -95,12 +98,18 @@ class Klass extends Model
                     'term_id'
                 );
             };
+            $data['subjects'][$student->pivot->klass_student_id]=$tmp;
             $student->courseTeachers=$tmp;
         }
         //Klass Head behaviours scores
         $actor='KLASS_HEAD';
         foreach($students as $student){
             $tmp=[];
+            $data['klassHeads'][$student->pivot->klass_student_id]=array_column(
+                Behaviour::selectRaw('term_id, round(avg(score),0) as score_total')->where('klass_student_id',$student->pivot->klass_student_id)->where('actor',$actor)->where('reference_id',$this->id)->groupBy('term_id','reference_id')->get()->toArray(),
+                null,
+                'term_id'
+            );
             $student->klassHeads=array_column(
                 Behaviour::selectRaw('term_id, round(avg(score),0) as score_total')->where('klass_student_id',$student->pivot->klass_student_id)->where('actor',$actor)->where('reference_id',$this->id)->groupBy('term_id','reference_id')->get()->toArray(),
                 null,
@@ -112,6 +121,7 @@ class Klass extends Model
         $referenceId=$this->id;
         $staff=auth()->user()->staff;
         foreach($students as $student){
+            $data['director'][$student->pivot->klass_student_id]=$student->getBehaviours($student->pivot->klass_student_id, $staff, $terms, $referenceId , $actor);
             $student->director=$student->getBehaviours($student->pivot->klass_student_id, $staff, $terms, $referenceId , $actor);
         }
         //Director behaviours adjustment
@@ -119,14 +129,41 @@ class Klass extends Model
         $referenceId=$this->id;
         $staff=auth()->user()->staff;
         foreach($students as $student){
+            $data['addjust'][$student->pivot->klass_student_id]=$student->getBehaviours($student->pivot->klass_student_id, $staff, $terms, $referenceId , $actor);
             $student->adjust=$student->getBehaviours($student->pivot->klass_student_id, $staff, $terms, $referenceId , $actor);
         }
-
+        
+        foreach($data['students'] as $ksid=>$student){
+            foreach($terms as $term){
+                $coursesSum=0;
+                $termSum[$term->value]=0;
+                foreach($data['subjects'][$ksid] as $course){
+                    if(isset($course[$term->value])){
+                        $coursesSum+=$course[$term->value]['score_total'];
+                    }
+                }
+                $data['sumCourse'][$ksid][$term->value]=$coursesSum;
+                if(isset($data['klassHeads'][$ksid][$term->value])){
+                    $data['sumKlassHeads'][$ksid][$term->value]=$data['klassHeads'][$ksid][$term->value]['score_total']*$this->grade->behaviour_scheme['KLASS_HEAD'];
+                }
+                
+                if(isset($data['director'][$ksid][$term->value])){
+                    $data['sumDirector'][$ksid][$term->value]=$data['director'][$ksid][$term->value]['score']*$this->grade->behaviour_scheme['DIRECTOR'];
+                }
+                if(isset($data['adjust'][$ksid][$term->value])){
+                    $data['sumAdjust'][$ksid][$term->value]=$data['adjust'][$ksid][$term->value]['score']*$this->grade->behaviour_scheme['ADJUST'];
+                }
+            }
+            
+        }
+        
+        return $data;
         foreach($students as $student){
             foreach($terms as $term){
                 $termSum[$term->value]=0;
                 $coursesSum=0;
                 //dd($termSum);
+                
                 foreach($student->courseTeachers as $course){
                     if(isset($course[$term->value])){
                         $coursesSum+=$course[$term->value]['score_total'];
@@ -147,7 +184,7 @@ class Klass extends Model
             $student->sumTerms=$termSum;
         }
 
-
+        dd($data);
         return $students;
     }
     public function promoteTo(){
@@ -169,6 +206,13 @@ class Klass extends Model
     public function transcriptCoursesScores(){
         return $this->hasMany(Course::class)->where('in_transcript',1)->with('allScores');
         // return $this->hasMany(Course::class)->with('scores')->with('students');
+    }
+    public function transcripts(){
+     return [
+        'students'=>$this->students,
+        'behaviours'=>$this->behaviourSummary(),
+    ];
+     return $this->students;   
     }
     // public function outcomes(){
     //     return $this->hasManyThrough(Outcome::class, KlassStudent::class,'klass_id', 'klass_student_id')->with('student');
@@ -239,33 +283,32 @@ class Klass extends Model
     public function additives($category=null,$termId=null){
         $students=$this->students;
         if($category==null){
-            $templates=AdditiveTemplate::all()->toArray();
+            $templates=AdditiveTemplate::all();
         }else{
-            $templates=AdditiveTemplate::where('category',$category)->get()->toArray();
+            $templates=AdditiveTemplate::where('category',$category)->get();
         }
         
         $data=[];
         foreach($students as $student){
-            $data['students'][$student->id]['name_zh']=$student->name_zh;
-            $data['students'][$student->id]['klass_student_id']=$student->pivot->klass_student_id;
+            $data['students'][$student->pivot->klass_student_id]['name_zh']=$student->name_zh;
+            $data['students'][$student->pivot->klass_student_id]['klass_student_id']=$student->pivot->klass_student_id;
             foreach($templates as $template){
-                $data['students'][$student->id]['additives'][$template['reference_code']]=null;
+                $data['additives'][$student->pivot->klass_student_id][$template->reference_code]=null;
             }
             $additives=Additive::where('klass_student_id',$student->pivot->klass_student_id)
-                                ->whereIn('reference_code',array_keys($data['students'][$student->id]['additives']))
+                                ->whereIn('reference_code',array_keys($data['additives'][$student->pivot->klass_student_id]))
                                 ->get();
-            $data['students'][$student->id]['records']=$additives;
+            $data['records'][$student->pivot->klass_student_id]=$additives;
+            foreach($templates as $template){
+                $data['additives'][$student->pivot->klass_student_id][$template->reference_code]=null;
+            }
             foreach($additives as $additive){
-                if(array_key_exists($additive->reference_code, $data['students'][$student->id]['additives'])){
-                    $data['students'][$student->id]['additives'][$additive->reference_code]+=$additive->value;
-                }
+                    //$data['students'][$student->pivot->klass_student_id]['additives'][$additive->reference_code]+=$additive->value;
+                    $data['additives'][$student->pivot->klass_student_id][$additive->reference_code]+=$additive->value;
             }
         };
         //$templates=AdditiveTemplate::all()->toArray();
-        $data['templates']=array_column($templates,null,'reference_code'); 
-        // dd($data);
+        $data['templates']=array_column($templates->toArray(),null,'reference_code'); 
         return $data;
     }
-
-
 }

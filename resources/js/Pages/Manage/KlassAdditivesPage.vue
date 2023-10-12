@@ -29,7 +29,7 @@
                             </tr>
                         </thead>
                         <tbody class="ant-table-tbody">
-                            <template v-for="student in additives.students">
+                            <template v-for="(student,ksid) in additives.students">
                                 <tr>
                                     <th>
                                         <a @click="showHistory(student)">History
@@ -38,7 +38,7 @@
                                     </th>
                                     <template v-for="additive in additives.templates">
                                         <td v-if="additive.category==additiveSelected">
-                                            {{additiveSum(student,additive)}}
+                                            {{ additives.additives[ksid][additive.reference_code] }}
                                         </td>
                                     </template>
                                 </tr>
@@ -67,7 +67,7 @@
                                 </tr>
                             </thead>
                             <tbody class="ant-table-tbody">
-                                <tr v-for="record in modal.data.records">
+                                <tr v-for="record in additives.records[modal.data.klass_student_id]">
                                     <td>{{record.term_id}}</td>
                                     <td>{{additives.templates[record.reference_code].title_zh}}</td>
                                     <td>{{record.value}}</td>
@@ -162,9 +162,6 @@ export default {
             this.modal.data.term_id=this.currentTerm.value
             this.modal.data.value=1
             this.modal.isOpen=true
-        },
-        additiveSum(student, additive){
-            return student.additives[additive.reference_code]
         },
         getAdditivesTemplates(){
             var templates=[];

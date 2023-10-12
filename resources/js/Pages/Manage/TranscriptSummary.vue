@@ -11,8 +11,9 @@
         </a-button>
 
         <div class="py-5">
-            <KlassSelector routePath="manage.klass.transcript" :param="{type:'summary'}" :currentKlass="klass"/>
+            <KlassSelector routePath="manage.klass.transcripts" :param="{type:'summary'}" :currentKlass="klass"/>
         </div>
+
         <div class="py-12">
             <div class="mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-auto shadow-xl">
@@ -20,42 +21,35 @@
                         <thead>
                             <tr>
                                 <td rowspan="2">Student Name</td>
-                                <td v-for="course in courses" :colspan="year_terms.length" class="text-center">
+                                <td v-for="course in transcripts['courses']" :colspan="year_terms.length" class="text-center">
                                     {{course.title_zh}}
                                 </td>
                                 <td :colspan="year_terms.length" class="text-center">操行</td>
                             </tr>
                             <tr>
-                                <template v-for="course in courses">
-                                    <td v-for="term in year_terms" class="text-center">
-                                        {{term.label}}
-                                    </td>
+                                <template v-for="course in transcripts['courses']" :colspan="year_terms.length" class="text-center">
+                                    <td v-for="term in year_terms">{{ term.label }}</td>
                                 </template>
-                                <td v-for="term in year_terms" class="text-center">
-                                    {{term.label}}
-                                </td>
-                                
+                                <td v-for="term in year_terms">{{ term.label }}</td>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="score in scores">
-                                <td>{{score.name_zh}}</td>
-                                <template v-for="course in courses">
+                            <tr v-for="(student,ksid) in transcripts['students']">
+                                <td>{{student.name_zh}}</td>
+                                <template v-for="course in transcripts['courses']">
                                     <template v-for="column in course.score_columns">
-                                        <td v-if="column.is_total==1" class="text-center">
-                                            {{score[course.id][column.id]['point']}}
-                                        </td>
+                                        <template v-for="term in year_terms">
+                                            <td v-if="column.is_total==1 && column.term_id==term.value" class="text-center">
+                                                {{transcripts['scores'][ksid][course.id][column.id]['point']}}
+                                            </td>
+                                        </template>
                                     </template>
                                 </template>
-                                <template v-for="student in behaviours">
-                                    <template v-for="term in year_terms">
-                                        <td v-if="student.id==score.id" class="text-center">
-                                            {{ student.sumTerms[term.value] }}
-                                        </td>
-                                    </template>
+                                <template v-for="term in year_terms">
+                                    <td>{{ transcripts['behaviours'][ksid][term.value] }}</td>
                                 </template>
 
-                            </tr>
+                            </tr>                        
                         </tbody>
                     </table>
                 </div>
@@ -74,7 +68,7 @@ export default {
     components: {
         AdminLayout, ButtonLink, KlassSelector
     },
-    props: ['year','klass','year_terms','students_courses_scores','courses','scores','behaviours'],
+    props: ['year','klass','year_terms','transcripts'],
     data() {
         return {
             columns:[

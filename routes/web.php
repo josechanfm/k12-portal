@@ -143,17 +143,18 @@ Route::group([
         
         Route::get('/klass/{klass}/habits',[App\Http\Controllers\Manage\HabitController::class,'byKlass'])->name('manage.klass.habits');
         Route::put('/klass/{klass}/habits',[App\Http\Controllers\Manage\HabitController::class,'update'])->name('manage.klass.habits.update');
-        Route::get('/klass/{klass}/transcript',[App\Http\Controllers\Manage\TranscriptController::class,'klass'])->name('manage.klass.transcript');
-        Route::get('/klass/student/{klassStudent}/transcript',[App\Http\Controllers\Manage\TranscriptController::class,'klassStudent'])->name('manage.klass.student.transcript');
+
         Route::get('/year/{year}/transcripts',[App\Http\Controllers\Manage\TranscriptController::class,'yearTranscripts'])->name('manage.year.transcripts');
         Route::get('/grade/{grade}/transcripts',[App\Http\Controllers\Manage\TranscriptController::class,'gradeTranscripts'])->name('manage.grade.transcripts');
+        Route::get('/klass/{klass}/transcripts',[App\Http\Controllers\Manage\TranscriptController::class,'klass'])->name('manage.klass.transcripts');
+        Route::get('/klass/{klass}/transcripts/migrate',[App\Http\Controllers\Manage\TranscriptController::class,'migrate'])->name('manage.klass.transcripts.migrate');
+        Route::get('/klass/student/{klassStudent}/transcript',[App\Http\Controllers\Manage\TranscriptController::class,'klassStudent'])->name('manage.klass.student.transcripts');
         
         Route::resource('/teachers',App\Http\Controllers\Manage\TeacherController::class);
         Route::get('teaching/{teacherId}',[App\Http\Controllers\Manage\TeacherController::class,'teaching'])->name('manage.teaching');   
         Route::get('/course/{course}/scores',[App\Http\Controllers\Manage\CourseController::class,'scores'])->name('manage.course.scores');
         Route::get('/course/{course}/makeups',[App\Http\Controllers\Manage\CourseController::class,'makeups'])->name('manage.course.makeups');
         Route::get('/klass/{klass}/final_scores',[App\Http\Controllers\Manage\KlassController::class,'finalScores'])->name('manage.klass.finalScores');
-        Route::get('/klass/{klass}/transcript/migrate',[App\Http\Controllers\Manage\TranscriptController::class,'migrate'])->name('manage.klass.transcript.migrate');
         Route::post('/makeup/create_or_cancel',[App\Http\Controllers\Manage\MakeupController::class,'createOrCancel'])->name('manage.makeup.createOrCancel');
         Route::post('/makeup/update',[App\Http\Controllers\Manage\MakeupController::class,'update'])->name('manage.makeup.update');
 

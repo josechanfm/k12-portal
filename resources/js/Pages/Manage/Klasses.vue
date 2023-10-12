@@ -14,7 +14,7 @@
         </template>
         <inertia-link :href="route('manage.klass.students', klass.id)" class="ant-btn">學生名單</inertia-link>
         <inertia-link :href="route('manage.klass.finalScores', klass.id)" class="ant-btn">期末成績</inertia-link>
-        <inertia-link :href="route('manage.klass.transcript', klass.id)" class="ant-btn">成積總表</inertia-link>
+        <inertia-link :href="route('manage.klass.transcripts', klass.id)" class="ant-btn">成積總表</inertia-link>
         <a-divider type="vertical" />
         <inertia-link :href="route('manage.klass.behaviours.index', klass.id)" class="ant-btn">操行</inertia-link>
 

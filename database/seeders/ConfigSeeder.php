@@ -127,44 +127,44 @@ class ConfigSeeder extends Seeder
             'key' => 'score_template',
             'value' =>'{
                 "term": [{
-                    "value": "regular1",
+                    "value": "REGULAR",
                     "label": "平時",
                     "term_id": 1,
                     "is_total": 0
                 }, {
-                    "value": "term1",
+                    "value": "EXAM",
                     "label": "考試",
                     "term_id": 1,
                     "is_total": 0
                 }, {
-                    "value": "total1",
+                    "value": "YEAR",
                     "label": "總分",
                     "term_id": 1,
                     "is_total": 1
                 }, {
-                    "value": "regular2",
+                    "value": "REGULAR",
                     "label": "平時",
                     "term_id": 2,
                     "is_total": 0
                 }, {
-                    "value": "term2",
+                    "value": "EXAM",
                     "label": "考試",
                     "term_id": 2,
                     "is_total": 0
                 }, {
-                    "value": "total2",
+                    "value": "YEAR",
                     "label": "總分",
                     "term_id": 2,
                     "is_total": 1
                 }, {
-                    "value": "total2",
+                    "value": "FINAL",
                     "label": "學年總分",
                     "term_id": 9,
                     "is_total": 0,
                     "formular": "=T1*.5+T2*.5"
                 }],
                 "comment": [{
-                    "value": "comment",
+                    "value": "COMMENT",
                     "label": "描述"
                 }]
             }'

@@ -32,10 +32,22 @@
                   </th>
                 </tr>
               </thead>
-              <tr v-for="student in behaviours">
+              <tr v-for="(student,ksid) in behaviours['students']">
                 <td width="150px">{{ student.name_zh }}</td>
                 <td width="50px">
-                    <span v-if="student.director[selectedTermId]">
+                  <span v-if="behaviours['director'][ksid][selectedTermId]">
+                    {{ behaviours['director'][ksid][selectedTermId].score }}
+                    <a-input 
+                            v-model:value="behaviours['director'][ksid][selectedTermId].score"
+                            @focus="onFocusScoreInput(behaviours['director'][ksid][selectedTermId])"
+                            @blur="onBlurScoreInput(behaviours['director'][ksid][selectedTermId])"
+                            @keyup.arrow-keys="onKeypressed"
+                             class="text-center"
+                        />
+                  </span>
+                  
+
+                    <!-- <span v-if="student.director[selectedTermId]">
                         <a-input 
                             v-model:value="student.director[selectedTermId].score"
                             @blur="onBlurScoreInput(student.director[selectedTermId])"
@@ -44,10 +56,10 @@
                              class="text-center"
                         />
                         {{ student.director[selectedTermId].score_total }}
-                    </span>
+                    </span> -->
                 </td>
                 <td width="50px">
-                    <span v-if="student.adjust[selectedTermId]">
+                    <!-- <span v-if="student.adjust[selectedTermId]">
                         <a-input 
                             v-model:value="student.adjust[selectedTermId].score"
                             @blur="onBlurScoreInput(student.adjust[selectedTermId])"
@@ -55,20 +67,20 @@
                             @keyup.arrow-keys="onKeypressed"
                             class="text-center"
                         />
-                    </span>
+                    </span> -->
                 </td>
                 <td class="text-center">
-                  {{ student.sumTerms[selectedTermId] }}
+                  <!-- {{ student.sumTerms[selectedTermId] }} -->
                 </td>
                 <td class="text-center">
-                    <span v-if="student.klassHeads[selectedTermId]">
+                    <!-- <span v-if="student.klassHeads[selectedTermId]">
                         {{ student.klassHeads[selectedTermId].score_total }}
-                    </span>
+                    </span> -->
                 </td>
                 <td v-for="c in klass.courses" class="text-center">
-                    <span v-if="student.courseTeachers[c.id][selectedTermId]">
+                    <!-- <span v-if="student.courseTeachers[c.id][selectedTermId]">
                       {{ student.courseTeachers[c.id][selectedTermId].score_total }}
-                    </span>
+                    </span> -->
                 </td>
               </tr>
             </table>
@@ -103,6 +115,7 @@ export default {
     return {
       tempBehaviour: null,
       selectedGradeId: 0,
+      selectedTermId:0,
       keypressed: "",
       tableCell: {
           row: 0,
@@ -157,11 +170,14 @@ export default {
         this.keypressed = event.keyCode;
     },
     onFocusScoreInput(behaviour) {
+      console.log(behaviour)
       this.tempBehaviour = { ...behaviour };
     },
     onBlurScoreInput(behaviour) {
-      console.log(behaviour);
+      console.log('bb');
+
       if (this.tempBehaviour.score === behaviour.score) { return false }
+      console.log('aa');
       axios.post(route("teacher.course.behaviours.store", behaviour.reference_id),behaviour)
            .then((resp) => console.log(resp.data) );
     },

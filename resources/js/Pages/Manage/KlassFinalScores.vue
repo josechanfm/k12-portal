@@ -8,10 +8,6 @@
             </h2>
         </template>
         <p>點擊紅色不合格分數批准補考</p>
-        <a-button @click="migrateTranscripts" :disabled="klass.transcript_migrated == 9">
-            <span v-if="klass.transcript_migrated == 1">重新轉換成積表分數</span>
-            <span v-else>轉換成積表分數</span>
-        </a-button>
         <div class="py-5">
             <KlassSelector routePath="manage.klass.finalScores" :param="{type:'summary'}" :currentKlass="klass"/>
         </div>

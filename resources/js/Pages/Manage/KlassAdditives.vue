@@ -20,13 +20,13 @@
                                 </tr>
                             </thead>
                             <tbody class="ant-table-tbody">
-                                <tr v-for="student in additives.students">
+                                <tr v-for="(student, ksid) in additives.students">
                                     <td class="w-24"><a-button @click="onClickStudent(student)">變更</a-button></td>
                                     <td>
                                         {{ student.name_zh }}
                                     </td>
                                     <td v-for="column in additives.templates">
-                                        {{ student.additives[column.reference_code] }}
+                                        {{ additives['additives'][ksid][column.reference_code] }}
                                     </td>
                                 </tr>
                             </tbody>
@@ -47,7 +47,6 @@
                         <a-radio-button v-for="column in additives.templates" :value="column.reference_code">{{ column.title_zh }}</a-radio-button>
                     </a-radio-group>
                 </a-form-item>
-                
                 <div v-if="additives.templates[this.modal.data.newItem.selection].format=='TEXT'">
                     <a-form-item label="備註" name="remark" :rules="[{required:true}]"  >
                         <a-textarea v-model:value="modal.data.newItem.remark" :rows="3" />
@@ -77,15 +76,16 @@
                     {{ item.value }}
                     {{ item.remark }}
                 </li>
-            </ol>            
+            </ol>
             <a-collapse accordion>
                 <a-collapse-panel key="1" header="歷史記錄">
                     <ol>
-                        <li v-for="record in this.modal.data.student.records">
+                        <li v-for="record in additives['records'][modal.data.student.klass_student_id]">
                             {{ getRecordItem(record) }}
                             <!-- {{ additives.templates[record.reference_code].title_zh }} : {{ record.value }} - {{ record.submit_at }} -->
                         </li>
                     </ol>
+                    <hr>
                 </a-collapse-panel>
             </a-collapse>            
         </a-modal>
@@ -126,7 +126,7 @@ export default {
     methods: {
         onClickStudent(student){
             this.modal.isOpen = true
-            this.modal.data.student = student
+            this.modal.data.student = {...student}
             this.modal.data.list = []
             this.initModalNewItem()
         },

@@ -28,7 +28,7 @@
                             </tr>
                         </thead>
                         <tbody class="ant-table-tbody">
-                            <template v-for="student in additives.students">
+                            <template v-for="(student,ksid) in additives.students">
                                 <tr>
                                     <th>
                                         {{student.name_zh}}
@@ -36,8 +36,8 @@
                                     <template v-for="additive in additives.templates">
                                         <td v-if="additive.category==additiveSelected">
                                             <a-input 
-                                                v-model:value="student.additives[additive.reference_code]" 
-                                                @blur="inputOnBlue(student,additive.reference_code)"
+                                                v-model:value="additives.additives[ksid][additive.reference_code]" 
+                                                @blur="inputOnBlue(ksid,additive.reference_code,additives.additives[ksid])"
                                             />
                                         </td>
                                     </template>
@@ -87,14 +87,14 @@ export default {
             })
             return templates
         },
-        inputOnBlue(student,reference_code){
+        inputOnBlue(ksid,reference_code,additive){
             this.$inertia.post(route("manage.klass.additive.directInput",this.klass),{
-                klass_student_id:student.klass_student_id,
+                klass_student_id:ksid,
                 reference_code:reference_code,
-                value:student.additives[reference_code]
+                value:additive[reference_code]
             }, {
                 onSuccess: (page) => {
-                    this.modal.isOpen=false;
+                    console.log('input update success!');
                 },
                 onError: (error) => {
                     console.log(error);

@@ -147,10 +147,12 @@ class AdditiveController extends Controller
     }
 
     public function directInput(Klass $klass, Request $request){
+        //return response()->json($request->all());
         if(isset($request->value)){
+            //return response()->json($request->all());
             Additive::updateOrCreate(
                 ['klass_student_id'=>$request->klass_student_id, 'reference_code'=>$request->reference_code],
-                ['value'=>$request->value,'user_id'=>auth()->user()->id]
+                ['value'=>$request->value,'user_id'=>auth()->user()->id,'submit_at'=>date('Y-m-d')]
             );
         }else{
             Additive::where('klass_student_id',$request->klass_student_id)->where('reference_code',$request->reference_code)->delete();

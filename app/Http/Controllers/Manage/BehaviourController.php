@@ -29,25 +29,16 @@ class BehaviourController extends Controller
      */
     public function index(Klass $klass)
     {
-        // $year=Year::find(Year::currentYear()->id);
-        // $year->grades;
-        // $year->klasses;
-        // return Inertia::render('Manage/Behaviours',[
-        //     'yearTerms'=>Config::item('year_terms'),
-        //     'currentTerm'=>Year::currentTerm(),
-        //     'year'=>$year
-        // ]);
         if(empty(auth()->user()->staff)){
             return Inertia::render('Error',[
                 'message'=>"You are not subject teacher."
             ]);
     
         }
-        
-
         $year=Year::find(Year::currentYear()->id);
         $year->klasses;
         $year->grades;
+        //dd($klass->behaviours('DIRECTOR')['scores'][316][1]);
         return Inertia::render('Manage/KlassBehaviours',[
             'year'=>$year,
             'yearTerms'=>Config::item('year_terms'),

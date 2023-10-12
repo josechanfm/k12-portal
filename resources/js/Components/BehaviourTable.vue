@@ -13,7 +13,7 @@
           </thead>
 
           <tbody class="ant-table-tbody">
-            <tr v-for="student in behaviours">
+            <tr v-for="(student, ksid) in behaviours['students']">
               <td>
                 {{ student.name_zh }}
               </td>
@@ -21,15 +21,17 @@
                 <td>
                   <template v-if="term.value == currentTerm.value">
                     <a-input-number
-                      v-model:value="student.behaviours[term.value].score"
+                      v-model:value="behaviours['scores'][ksid][term.value]['score']"
                       :min="0"
                       :max="100"
-                      @blur="onBlurScoreInput(student.behaviours[term.value])"
-                      @focus="onFocusScoreInput(student.behaviours[term.value])"
+                      @focus="onFocusScoreInput(behaviours['scores'][ksid][term.value])"
+                      @blur="onBlurScoreInput(behaviours['scores'][ksid][term.value])"
                     />
                   </template>
+                  
                   <template v-else>
-                    {{ getBehaviourScore(student.behaviours, term.value) }}
+                    {{ behaviours['scores'][ksid][term.value]['score'] }}
+                    <!-- {{ getBehaviourScore(student.behaviours, term.value) }} -->
                   </template>
                 </td>
               </template>
@@ -48,24 +50,24 @@ export default {
   data() {
     return {
       tempBehaviour: null,
+      temp:null,
     };
   },
   mounted() {},
   methods: {
-    onFocusScoreInput(behaviour) {
-      this.tempBehaviour = { ...behaviour };
+    onFocusScoreInput(temp) {
+      this.temp = { ...temp };
     },
-    onBlurScoreInput(behaviour) {
-      console.log(behaviour);
-      if (this.tempBehaviour.score === behaviour.score) {
+    onBlurScoreInput(temp) {
+      console.log(temp.reference_id);
+      if (this.temp.score === temp.score) {
         console.log("same");
         return false;
       } else {
-        console.log(behaviour);
         axios
           .post(
-            route("teacher.course.behaviours.store", behaviour.reference_id),
-            behaviour
+            route("teacher.course.behaviours.store", temp.reference_id),
+            temp
           )
           .then((resp) => console.log(resp.data));
       }

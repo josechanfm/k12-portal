@@ -90,12 +90,18 @@ class Course extends Model
         $students=$this->students;
         $actor="SUBJECT";
         $referenceId=$this->id;
-
-        collect($students)->map(function($student) use($terms,$staff,$klass, $referenceId, $actor){
+        $data=[];
+        // collect($students)->map(function($student) use($terms,$staff,$klass, $referenceId, $actor){
+        //     $klassStudentId=KlassStudent::where('klass_id',$klass->id)->where('student_id',$student->id)->pluck('id')->first();
+        //     $student->behaviours=$student->getBehaviours($klassStudentId, $staff, $terms, $referenceId , $actor);
+        // });
+        foreach($students as $student){
             $klassStudentId=KlassStudent::where('klass_id',$klass->id)->where('student_id',$student->id)->pluck('id')->first();
-            $student->behaviours=$student->getBehaviours($klassStudentId, $staff, $terms, $referenceId , $actor);
-        });
-        return $students;
+            $data['students'][$klassStudentId]=$student;
+            $data['scores'][$klassStudentId]=$student->getBehaviours($klassStudentId, $staff, $terms, $referenceId , $actor);
+        }
+        return $data;
+        //return $students;
     }
     public function studentsScores(){
         $students=$this->students;

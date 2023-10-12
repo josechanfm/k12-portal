@@ -45,8 +45,19 @@ class Grade extends Model
         )->with('theme');
     }
     public function transcriptTemplates(){
-        $templates=TranscriptTemplate::where('template_id',$this->transcript_template_id)->get()->toArray();
-        return array_column($templates,null,'reference_code');
+        //$templateGroups=array_column(TranscriptTemplate::select('category')->where('template_id',$this->transcript_template_id)->groupBy('category')->get()->toArray(),null,'category');
+        $templateGroups=TranscriptTemplate::select('category')->where('template_id',$this->transcript_template_id)->groupBy('category')->get()->pluck('category')->mapWithKeys(function($item){
+            return [$item=>[]];
+        });
+        // dd($templateGroups['PERSONAL']);
+        foreach($templateGroups as $cat=>$value){
+            $templateGroups[$cat]=array_column(TranscriptTemplate::where('template_id',$this->transcript_template_id)->where('category',$cat)->get()->toArray(),null,'reference_code');
+
+        }
+        // $templates=TranscriptTemplate::where('template_id',$this->transcript_template_id)->get()->toArray();
+        return $templateGroups;
+        
+        return array_column($templates,null,'category');
         
         //return $this->hasMany(TranscriptTemplate::class,'template_id','transcript_template_id');
     }
