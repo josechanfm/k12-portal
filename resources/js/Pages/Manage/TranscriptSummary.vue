@@ -41,7 +41,12 @@
                                         <template v-for="term in year_terms">
                                             <td v-if="column.is_total==1 && column.term_id==term.value" class="text-center">
                                                 <span v-if="transcripts['scores'][ksid][course.id][column.id]">
-                                                    {{transcripts['scores'][ksid][course.id][column.id]['point']}}
+                                                        <span v-if="transcripts['scores'][ksid][course.id][column.id].point==null">
+                                                    --
+                                                </span>
+                                                <span v-else>
+                                                    {{ transcripts['scores'][ksid][course.id][column.id].point}}
+                                                </span>
                                             </span>
                                             </td>
                                         </template>

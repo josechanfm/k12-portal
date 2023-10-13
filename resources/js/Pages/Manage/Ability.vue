@@ -13,23 +13,24 @@
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <a-button type="primary" @click="saveAbilities">更新並保存</a-button>
                     <a-select
-                        v-model:value="selectedTheme"
+                        v-model:value="selectedThemeId"
                         :options="themes"
                         :field-names="{value:'id',label:'title'}"
                     ></a-select>
+                    <a-button v-for="term in yearTerms" @click="selectedTermId=term.value" class="ml-4" :type="selectedTermId==term.value?'primary':''">{{term.label}}</a-button>
 
                     <table id="abilityTable" ref="abilityTable">
                         <tr>
                             <th rowspan="2">Student name</th>
                             <template v-for="topic in topics"  >
-                                <th v-if="topic.theme_id==selectedTheme" class="text-center">
+                                <th v-if="topic.theme_id==selectedThemeId" class="text-center">
                                     {{ topic.section }} 
                                 </th>
                             </template>
                         </tr>
                         <tr>
                             <template v-for="topic in topics"  >
-                                <th v-if="topic.theme_id==selectedTheme" class="text-center">
+                                <th v-if="topic.theme_id==selectedThemeId" class="text-center">
                                     <a-tooltip>
                                         <template #title>[{{topic.theme.title}}]<br>{{ topic.title }}</template>
                                         {{ topic.abbr }} 
@@ -37,12 +38,12 @@
                                 </th>
                             </template>
                         </tr>
-                        <template v-for="(ability, key) in abilities">
+                        <template v-for="(student, ksid) in abilities['students']">
                             <tr>
-                                <td>{{ ability.student_name }}</td>
+                                <td>{{ student.name_zh }}</td>
                                 <template v-for="topic in topics">
-                                    <td v-if="topic.theme_id==selectedTheme">
-                                        <a-input v-model:value="ability.topics[topic.id]" 
+                                    <td v-if="topic.theme_id==selectedThemeId">
+                                        <a-input v-model:value="abilities['scores'][ksid][selectedTermId][topic.id].credit" 
                                             @keyup.arrow-keys="onKeypressed" 
                                             @click="onFocusInput($event)"
                                         />
@@ -65,12 +66,12 @@ export default {
     components: {
         AdminLayout
     },
-    props: ['terms','klass','themes', 'topics','students_abilities'],
+    props: ['yearTerms','klass','themes', 'topics','students_abilities','abilities'],
     data() {
         return {
             keypressed:"",
-            selectedTheme:this.themes[0].id,
-            abilities:[],
+            selectedTermId:1,
+            selectedThemeId:this.themes[0].id,
             tableCell:{
                 row:0,
                 col:0,
@@ -80,18 +81,6 @@ export default {
         }
     },
     created(){
-        this.students_abilities.forEach(student=>{
-            let temp={}
-            student.abilities.forEach(ability=>{
-                temp[ability.topic_id]=ability.credit
-            })
-            this.abilities.push({
-                klass_student_id:student.pivot.klass_student_id,
-                student_name:student.name_zh,
-                topics:temp
-            })
-        })
-        // console.log(this.abilities);
     },
     mounted() {
         this.$refs.abilityTable.addEventListener('keydown', (e) => {
@@ -129,16 +118,26 @@ export default {
         },
         saveAbilities(){
             var data=[];
-            this.abilities.forEach((ability)=>{
-                Object.entries(ability.topics).forEach(([k,v])=>{
-                    data.push({
-                        'klass_student_id':ability.klass_student_id,
-                        'topic_id':k,
-                        'credit':v
-                    });
-                })   
+            var topicList=[];
+            console.log(this.selectedThemeId);
+            Object.values(this.topics).forEach(topic=>{
+                if(topic.theme_id==this.selectedThemeId){
+                    topicList.push(topic.id)
+                }
             })
-            // console.log(data);
+            Object.values(this.abilities.scores).forEach((std)=>{
+                Object.entries(std).forEach(([termId,scores])=>{
+                    if(termId==this.selectedTermId){
+                        Object.values(scores).forEach(score=>{
+                            if(topicList.includes(score.topic_id)){
+                                delete score['created_at']
+                                delete score['updated_at']
+                                data.push(score)
+                            }
+                        })
+                    }
+                })
+            })
             axios.post   (route('manage.klass.abilities.update',this.klass.id),data)
                 .then(resp=> 
                     console.log(resp.data)

@@ -17,17 +17,22 @@ class HabitController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function byKlass(Klass $klass){
+    public function klass(Klass $klass){
+
         $klass=Klass::with('students')->find($klass->id);
         $terms=Config::item('year_terms');
         $habitColumns=Config::item('habit_columns');
-        $habits=Habit::byKlassId($klass->id);
-
+        //dd(Habit::byKlassId($klass->id));
+        
+        //$habits=Habit::byKlassId($klass->id);
+        $klass->habits;
+        $klass->students;
+        //dd($klass->habitsScores());
         return Inertia::render('Manage/Habit',[
             'klass'=>$klass,
-            'terms'=>$terms,
+            'yearTerms'=>$terms,
             'habitColumns'=>$habitColumns,
-            'habits'=>$habits
+            'habits'=>$klass->habitsScores()
         ]);
     }
 
@@ -99,12 +104,15 @@ class HabitController extends Controller
      */
     public function update(Request $request, $id)
     {
+
+        $data=$request->all();
+        //return response()->json($data);
         Habit::upsert(
-            $request->all(),
+            $data,
             ['klass_student_id','term_id'],
             array_column(Config::item('habit_columns'),'name')
         );
-        return $request->all();
+        return redirect()->back();
     }
 
     /**

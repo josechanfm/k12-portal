@@ -20,17 +20,25 @@
                             <thead class="ant-table-thead">
                                 <tr>
                                     <th>學生姓名</th>
-                                    <th v-for="column in finalScores.score_columns">
+                                    <th :colspan="yearTerms.length">Habits</th>
+                                    <th :colspan="yearTerms.length">Ability</th>
+                                    <!-- <th v-for="column in finalScores.score_columns">
                                         {{transcriptTemplates['SUBJECT'][column.course_code].title_zh}}
-                                    </th>
+                                    </th> -->
                                     <th>不合格單位數</th>
                                 </tr>
                             </thead>
                             <tbody class="ant-table-tbody">
-                                <template v-for="(student, ksid) in finalScores['students']">
+                                <template v-for="(student, ksid) in finalScoresK['students']">
                                     <tr class="ant-table-row ant-table-row-level-0">
                                         <td>{{ student.name_zh }}</td>
-                                        <td v-for="column in finalScores.score_columns" class="text-center">
+                                        <td v-for="term in yearTerms" class="text-center">
+                                            {{ parseFloat(finalScoresK['habits'][ksid][term.value]).toFixed(2) }}
+                                        </td>
+                                        <td v-for="term in yearTerms" class="text-center">
+                                            {{ parseFloat(finalScoresK['abilities'][ksid][term.value]).toFixed(2) }}
+                                        </td>
+                                        <!-- <td v-for="column in finalScores.score_columns" class="text-center">
                                             <span v-if="isPassed(finalScores['scores'][ksid][column.id]['score'])">
                                                 {{finalScores['scores'][ksid][column.id]['score']}}
                                             </span>
@@ -46,7 +54,7 @@
                                                 </span>
                                             </span>
                                         </td>
-                                        <td class="text-center">{{ finalScores['scores'][ksid]['fail_units'] }}</td>
+                                        <td class="text-center">{{ finalScores['scores'][ksid]['fail_units'] }}</td> -->
                                     </tr>
                                 </template>
                             </tbody>
@@ -103,7 +111,7 @@ export default {
         AdminLayout,
         KlassSelector
     },
-    props: ['year','klass', 'transcriptTemplates', 'finalScores'],
+    props: ['yearTerms','year','klass', 'transcriptTemplates', 'finalScoresK'],
     data() {
         return {
             modal: {

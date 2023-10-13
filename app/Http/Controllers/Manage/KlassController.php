@@ -123,13 +123,30 @@ class KlassController extends Controller
         ]);
     }
 
+    public function finalScoresK(Klass $klass){
+        $year=Year::find(Year::currentYear()->id);
+        $year->klasses;
+        $year->grades;
+        //  dd($klass->finalScoresK());
+        return Inertia::render('Manage/KlassFinalScoresK', [
+            'yearTerms'=>Config::item('year_terms'),
+            'year'=>$year,
+            'klass' => $klass,
+            'transcriptTemplates' => $klass->grade->transcriptTemplates(),
+            'finalScoresK' => $klass->finalScoresK()
+        ]);
+    }
     public function finalScores(Klass $klass)
     {
+        if($klass->grade->grade_year<=3){
+            return redirect()->route('manage.klass.finalScoresK',$klass);
+        }
         // dd($klass->finalScores());
         $year=Year::find(Year::currentYear()->id);
         $year->klasses;
         $year->grades;
         //dd($klass->finalScores());
+        //dd($klass->grade->transcriptTemplates());
         return Inertia::render('Manage/KlassFinalScores', [
             'year'=>$year,
             'klass' => $klass,

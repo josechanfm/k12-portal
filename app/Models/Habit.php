@@ -10,12 +10,12 @@ class Habit extends Model
 {
     use HasFactory;
 
-    static function byKlassId($kid){
-        $klass=Klass::with('students')->find($kid);
-        if(isset($klass->students)){
-            return Habit::whereIn('klass_student_id',$klass->students->pluck('pivot.klass_student_id'))->get();
-        }else{
-            return [];
-        }
-    }
+    // static function byKlassId($kid){
+    //     $klass=Klass::with('students')->find($kid);
+    //     if(isset($klass->students)){
+    //         return Habit::whereIn('klass_student_id',$klass->students->pluck('pivot.klass_student_id'))->get();
+    //     }else{
+    //         return [];
+    //     }
+    // }
 }

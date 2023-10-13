@@ -7,12 +7,13 @@
         </template>
         <a-typography-title :level="3">班別:{{klass.tag}}</a-typography-title>
         <a-typography-title :level="3">專業方向:{{klass.stream}}</a-typography-title>
+        {{ klass }}
 
         <div class="py-12">
             <div>
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <a-button type="primary" @click="saveScores">更新並保存</a-button>
-                    <a-button v-for="term in yearTerms" @click="selectedTermId=term.value" class="ml-4" :type="selectedTermId==term.value?'primary':''">{{term.label}}</a-button>
+                    <a-button v-for="term in terms" @click="selectedTerm=term.value" class="ml-4" :type="selectedTerm==term.value?'primary':''">{{term.label}}</a-button>
                     <p></p>
                     <table id="scoreTable" ref="scoreTable">
                         <tr>
@@ -32,10 +33,11 @@
                                 </a-tooltip>
                             </th>
                         </tr>
-                        <tr v-for="(student,ksid) in habits['students']" >
+                        <tr v-for="student in klass.students" >
                             <td>{{ student.name_zh }}</td>
                             <td v-for="column in habitColumns">
-                                <a-input v-model:value="habits['scores'][ksid][selectedTermId][column.name]"/>
+                                <a-input v-model:value="scores[student.pivot.klass_student_id][selectedTerm][column.name]"  
+                                />
                             </td>
                         </tr>
                     </table>
@@ -53,7 +55,7 @@ export default {
     components: {
         AdminLayout
     },
-    props: ['klass','yearTerms','habitColumns','habits'],
+    props: ['klass','terms','habitColumns','habits'],
     data() {
         return {
             keypressed:"",
@@ -63,25 +65,25 @@ export default {
                 maxRow:this.klass.students.length,
                 maxCol:this.habitColumns.length
             },
-            selectedTermId:1,
+            selectedTerm:1,
             scores:{},
         }
     },
     created(){
-        // this.klass.students.forEach(student=>{
-        //     this.scores[student.pivot.klass_student_id]={};
-        //     this.terms.forEach(term=>{
-        //         this.scores[student.pivot.klass_student_id][term.value]={klass_student_id:student.pivot.klass_student_id, term_id:term.value};
-        //         this.habitColumns.forEach(column=>{
-        //             this.scores[student.pivot.klass_student_id][term.value][column.name]='';
-        //         });
-        //     })
-        // });
-        // this.habits.forEach(habit=>{
-        //     this.habitColumns.forEach(column=>{
-        //         this.scores[habit.klass_student_id][habit.term_id][column.name]=habit[column.name];
-        //     });
-        // })
+        this.klass.students.forEach(student=>{
+            this.scores[student.pivot.klass_student_id]={};
+            this.terms.forEach(term=>{
+                this.scores[student.pivot.klass_student_id][term.value]={klass_student_id:student.pivot.klass_student_id, term_id:term.value};
+                this.habitColumns.forEach(column=>{
+                    this.scores[student.pivot.klass_student_id][term.value][column.name]='';
+                });
+            })
+        });
+        this.habits.forEach(habit=>{
+            this.habitColumns.forEach(column=>{
+                this.scores[habit.klass_student_id][habit.term_id][column.name]=habit[column.name];
+            });
+        })
     },
     mounted() {
         this.$refs.scoreTable.addEventListener('keydown', (e) => {
@@ -120,24 +122,13 @@ export default {
         },
         saveScores(){
             var data=[];
-            // Object.entries(this.scores).forEach(([klass_student_id,term])=>{
-            //     Object.entries(term).forEach(([term_id,habits])=>{
-            //         if(term_id==this.selectedTermId){
-            //             data.push(habits)
-            //         }
-            //     })
-            // })
-            Object.values(this.habits.scores).forEach((std)=>{
-                Object.entries(std).forEach(([termId,scores])=>{
-                    if(termId==this.selectedTermId){
-                        delete scores['created_at']
-                        delete scores['updated_at']
-                        data.push(scores)
+            Object.entries(this.scores).forEach(([klass_student_id,term])=>{
+                Object.entries(term).forEach(([term_id,habits])=>{
+                    if(term_id==this.selectedTerm){
+                        data.push(habits)
                     }
                 })
             })
-            // console.log(data);
-            // return true;
             this.$inertia.put(route("manage.klass.habits.update",this.klass.id), data, {
                 onSuccess: (page) => {
                         console.log(page);

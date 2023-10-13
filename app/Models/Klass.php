@@ -231,11 +231,28 @@ class Klass extends Model
         foreach($students as $student){
             $data['students'][$student->pivot->klass_student_id]=$student;
             foreach($this->courses as $course){
-                $courseStudentId=$course->students->where('id',$student->id)->first()->pivot->course_student_id;
-                foreach($course->scoreColumns as $column){
-                    $score=$course->allScores->where('course_student_id',$courseStudentId)->where('score_column_id',$column->id)->first();
-                    $data['scores'][$student->pivot->klass_student_id][$course->id][$column->id]=$score;
+                $std=$course->students->where('id',$student->id)->first();
+                if(isset($std)){
+                    $courseStudentId=$std->pivot->course_student_id;
+                    if(isset($courseStudentId)){
+                        foreach($course->scoreColumns as $column){
+                            
+                            $score=$course->allScores->where('course_student_id',$courseStudentId)->where('score_column_id',$column->id)->first();
+                            $data['scores'][$student->pivot->klass_student_id][$course->id][$column->id]=$score;
+                        }
+                    }
+                }else{
+                    foreach($course->scoreColumns as $column){
+                        $score=Score::make([
+                            'course_student_id'=>'0',
+                            'score_column_id'=>$column->id,
+                            'student_id'=>$student->id,
+                            'point'=>null
+                        ]);
+                        $data['scores'][$student->pivot->klass_student_id][$course->id][$column->id]=$score;
+                    }
                 }
+                
             }
         }
         // dd($data['scores'][316][153][1051]);
@@ -267,6 +284,30 @@ class Klass extends Model
     //     }
     //     return $students;
     // }
+    public function finalScoresK(){
+        $yearTerms=Config::item('year_terms');
+        $students=$this->students;
+        $habitColumns=array_column(Config::item('habit_columns'),'name');
+        //dd($habitColumns);
+        foreach($students as $student){
+            $habitSum=0;
+            $habitYearSum=0;
+            $data['students'][$student->pivot->klass_student_id]=$student;
+            foreach($yearTerms as $term){
+                $habit=Habit::where('klass_student_id',$student->pivot->klass_student_id)->where('term_id',$term->value)->first();
+                foreach($habitColumns as $column){
+                    $habitSum+=$habit[$column];
+                };
+                $data['habits'][$student->pivot->klass_student_id][$term->value]=$habitSum/count($habitColumns);
+                $habitYearSum+=$habitSum/count($habitColumns);;
+            }
+            $data['habits'][$student->pivot->klass_student_id][9]=$habitYearSum/count($yearTerms);
+            $data['abilities'][$student->pivot->klass_student_id]=array_column(Ability::selectRaw('avg(credit) as total, term_id')->where('klass_student_id',$student->pivot->klass_student_id)->groupBy('term_id')->get()->toArray(),'total','term_id');
+        };
+        //dd($data);
+        return $data;
+
+    }
     public function finalScores(){
         //passing score with reference_code "passing" in transcript_templates
         $passing=$this->grade->passingScore();
@@ -293,6 +334,8 @@ class Klass extends Model
             //     'klass_student_id' => $student->pivot->klass_student_id,
             //     'fail_units'=>0,
             // ];
+            $data['scores'][$student->pivot->klass_student_id]['fail_units']=0;
+
             foreach ($courses as $course) {
                 $scoreColumn = $course->scoreColumns->where('term_id', 9)->first();
                 //$transcript[]['scores'][$scoreColumnId]=$tmpScores[$student->id][$course->id][$scoreColumnId];
@@ -300,29 +343,29 @@ class Klass extends Model
                     //$tmp['scores'][$scoreColumn->id] = $tmpScores[$student->id][$course->id][$scoreColumn->id];
                     $data['scores'][$student->pivot->klass_student_id][$scoreColumn->id]['score']=$tmpScores[$student->id][$course->id][$scoreColumn->id];
                     //count number of failed units
-                    $data['scores'][$student->pivot->klass_student_id][$scoreColumn->id]['fail_units']=0;
                     if($tmpScores[$student->id][$course->id][$scoreColumn->id]<=$passing){
                         //$tmp['fail_units']++;
-                        $data['scores'][$student->pivot->klass_student_id][$scoreColumn->id]['fail_units']++;
+                        $data['scores'][$student->pivot->klass_student_id]['fail_units']++;
                     }
                 } else { //if the student is not in the course
                     //$tmp['scores'][$scoreColumn->id] = '--';
                     $data['scores'][$student->pivot->klass_student_id][$scoreColumn->id]['score'] = '--';
                 }
-                $data['scores'][$student->pivot->klass_student_id][$scoreColumn->id]['makeups']=$course->studentsMakeups();
+                //$data['scores'][$student->pivot->klass_student_id][$scoreColumn->id]['makeups']=$course->studentsMakeups();
                 $scoreColumn['course_code'] = $course->code;
                 $scoreColumn['course_title'] = $course->title_zh;
                 $scoreColumn['course_unit'] = $course->unit;
                 $scoreColumn['makeups']=$course->studentsMakeups();
                 // $scoreColumns[$scoreColumn->id] = $scoreColumn;
                 $data['score_columns'][$scoreColumn->id]=$scoreColumn;
+
             }
             //$data['scores'][$student->pivot->klass_student_id]=$tmp['scores'];
             //$data['fail_units'][$student->pivot->klass_student_id]=$tmp['fail_units'];
             //$transcripts['students'][] = $tmp;
         }
         //$transcripts['score_columns']=$scoreColumns;
-        
+        // dd($data);
         return $data;
     }
 
@@ -356,5 +399,59 @@ class Klass extends Model
         //$templates=AdditiveTemplate::all()->toArray();
         $data['templates']=array_column($templates->toArray(),null,'reference_code'); 
         return $data;
+    }
+
+    public function habits(){
+        return $this->hasManyThrough(Habit::class,KlassStudent::class,'klass_id','klass_student_id');
+    }
+    public function habitsScores(){
+        $students=$this->students;
+        $yearTerms=Config::item('year_terms');
+        $habitColumns=array_fill_keys(array_column(Config::item('habit_columns'),'name'),null);
+       
+        $data=[];
+        foreach($students as $student){
+            $data['students'][$student->pivot->klass_student_id]=$student;
+            foreach($yearTerms as $term){
+                $score=Habit::where('klass_student_id',$student->pivot->klass_student_id)->where('term_id',$term->value)->first();
+                if($score){
+                    $data['scores'][$student->pivot->klass_student_id][$term->value]=Habit::where('klass_student_id',$student->pivot->klass_student_id)->where('term_id',$term->value)->first();
+                }else{
+                    //dd($student->pivot->klass_student_id);
+                    $habitColumns['klass_student_id']=$student->pivot->klass_student_id;
+                    $habitColumns['term_id']=$term->value;
+                    $ss=Habit::forceCreate($habitColumns);
+                    $data['scores'][$student->pivot->klass_student_id][$term->value]=Habit::forceCreate($habitColumns);
+                }
+            }
+        }
+        return $data;
+    }
+    public function abilities(){
+        return $this->hasManyThrough(Ability::class,KlassStudent::class,'klass_id','klass_student_id');
+    }
+
+    public function abilitiesScores(){
+        $students=$this->students;
+        $yearTerms=Config::item('year_terms');
+        $themes=$this->themes;
+        $topics=$this->grade->topics;
+        $abilities=[];
+        $data=[];
+        foreach($students as $student){
+            $data['students'][$student->pivot->klass_student_id]=$student;
+            foreach($yearTerms as $term){
+                foreach($topics as $topic){
+                    $data['scores'][$student->pivot->klass_student_id][$term->value][$topic->id]=Ability::firstOrCreate([
+                        'klass_student_id'=>$student->pivot->klass_student_id,
+                        'term_id'=>$term->value,
+                        'topic_id'=>$topic->id,
+                    ]);
+                }
+            }
+        }
+
+    //    dd($data['abilities'][1]);
+       return $data;
     }
 }

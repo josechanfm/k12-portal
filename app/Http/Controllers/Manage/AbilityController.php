@@ -17,14 +17,21 @@ class AbilityController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function byKlass(Klass $klass){
+    public function klass(Klass $klass){
+        //dd($klass->abilitiesScores());
+        //dd($klass->grade->themes);
+        //dd($klass->themes);
+        //dd($klass->grade->topics);
+        $terms=Config::item('year_terms');
+
         return Inertia::render('Manage/Ability',[
-            'terms'=>Config::item('year_terms'),
+            'yearTerms'=>Config::item('year_terms'),
             'klass'=>$klass,
             'themes'=>$klass->themes,
             'topics'=>$klass->grade->topics,
             // 'abilities'=>$klass->abilities,
-            'students_abilities'=>$klass->students_abilities
+            'students_abilities'=>$klass->students_abilities,
+            'abilities'=>$klass->abilitiesScores()
         ]);
 
     }
@@ -86,6 +93,7 @@ class AbilityController extends Controller
      */
     public function update(Klass $klass, Request $request)
     {
+        
         //return $request->all();
         Ability::upsert(
             $request->all(),

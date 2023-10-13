@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Ability extends Model
 {
     use HasFactory;
+    protected $fillable=['klass_student_id','term_id','topic_id','credit','remark'];
 
     public function student(){
         return $this->hasOneThrough(Student::class, KlassStudent::class,'id','id');
