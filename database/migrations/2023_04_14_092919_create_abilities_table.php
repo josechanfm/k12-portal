@@ -16,11 +16,12 @@ return new class extends Migration
         Schema::create('abilities', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('klass_student_id');
+            $table->integer('term_id');
             $table->bigInteger('topic_id');
             $table->integer('credit')->nullable();
             $table->text('remark')->nullable();
             $table->timestamps();
-            $table->unique(['klass_student_id','topic_id']);
+            $table->unique(['klass_student_id','term_id','topic_id']);
         });
     }
 

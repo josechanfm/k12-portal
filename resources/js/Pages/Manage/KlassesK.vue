@@ -10,7 +10,6 @@
         <p>Current Term: {{currentTerm.label}}</p>
         
         <template v-if="klass.grade_year<=3">
-            <inertia-link :href="route('manage.klass.students', klass.id)" class="ant-btn">學生名單</inertia-link>
             <inertia-link :href="route('manage.klass.habits', klass.id)" class="ant-btn">生活習摜</inertia-link>
             <inertia-link :href="route('manage.klass.abilities', klass.id)" class="ant-btn">學習主題</inertia-link>
             <inertia-link :href="route('manage.klass.finalScoresK', klass.id)" class="ant-btn">期末成績</inertia-link>
@@ -45,29 +44,18 @@
                     <table style="table-layout: auto;">
                         <thead class="ant-table-thead">
                             <tr>
-                                <th class="text-left">Abbr</th>
-                                <th class="text-left">Title Zh</th>
-                                <th class="text-left">Stream</th>
-                                <th class="text-left">Elective</th>
-                                <th class="text-left">Active</th>
-                                <th class="text-left">Units</th>
-                                <th class="text-left">Score</th>
+                                <th class="text-left">學生姓名</th>
+                                <th>別名</th>
+                                <th>性別</th>
+                                <th>出生日期</th>
                             </tr>
                         </thead>
                         <tbody class="ant-table-tbody">
-                            <tr v-for="(course, courseKey) in klass.courses" :course_id="course.id">
-                                <td class="text-left">{{ course.code }}</td>
-                                <td class="text-left">{{ course.title_zh }}</td>
-                                <td class="text-left">{{ course.stream }}</td>
-                                <td class="text-left">{{ course.elective }}</td>
-                                <td class="text-left">{{ course.active }}</td>
-                                <td class="text-left">{{ course.unit }}</td>
-                                <th class="text-left">
-                                    <inertia-link :href="route('manage.course.scores', course.id)"
-                                        class="ant-btn">學分</inertia-link>
-                                    <inertia-link :href="route('manage.course.makeups', course.id)"
-                                        class="ant-btn">補考</inertia-link>
-                                </th>
+                            <tr v-for="student in klass.students">
+                                <td class="text-left">{{ student.name_zh }}</td>
+                                <td>{{student.display_name}}</td>
+                                <td>{{student.gender}}</td>
+                                <td>{{student.dob}}</td>
                             </tr>
                         </tbody>
                     </table>

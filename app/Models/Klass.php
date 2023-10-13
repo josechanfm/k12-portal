@@ -420,7 +420,6 @@ class Klass extends Model
                     //dd($student->pivot->klass_student_id);
                     $habitColumns['klass_student_id']=$student->pivot->klass_student_id;
                     $habitColumns['term_id']=$term->value;
-                    $ss=Habit::forceCreate($habitColumns);
                     $data['scores'][$student->pivot->klass_student_id][$term->value]=Habit::forceCreate($habitColumns);
                 }
             }

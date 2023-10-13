@@ -155,7 +155,7 @@ Route::group([
         Route::get('/course/{course}/scores',[App\Http\Controllers\Manage\CourseController::class,'scores'])->name('manage.course.scores');
         Route::get('/course/{course}/makeups',[App\Http\Controllers\Manage\CourseController::class,'makeups'])->name('manage.course.makeups');
         Route::get('/klass/{klass}/final_scores',[App\Http\Controllers\Manage\KlassController::class,'finalScores'])->name('manage.klass.finalScores');
-        Route::get('/klass/{klass}/final_scores_k',[App\Http\Controllers\Manage\KlassController::class,'finalScoresK'])->name('manage.klass.finalScoresX');
+        Route::get('/klass/{klass}/final_scores_k',[App\Http\Controllers\Manage\KlassController::class,'finalScoresK'])->name('manage.klass.finalScoresK');
         Route::post('/makeup/create_or_cancel',[App\Http\Controllers\Manage\MakeupController::class,'createOrCancel'])->name('manage.makeup.createOrCancel');
         Route::post('/makeup/update',[App\Http\Controllers\Manage\MakeupController::class,'update'])->name('manage.makeup.update');
 

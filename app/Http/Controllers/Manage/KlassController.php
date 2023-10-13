@@ -61,18 +61,31 @@ class KlassController extends Controller
         $klass->courses;
         //$courses = Klass::find($klass->id)->courses;
         $klass->students;
-
-        // dd($courses);
-        return Inertia::render('Manage/Klasses', [
-            //'grade' => $grade,
-            'currentTerm'=>Year::currentTerm(),
-            'klass' => $klass,
-            //'courses' => $courses,
-            //'students'=>$students,
-            'additiveTemplates'=>AdditiveTemplate::all(),
-            'additiveStyle'=>Config::item('additive_style'),
-            'additiveGroups'=>Config::item('additive_groups')
-        ]);
+        if($klass->grade->grade_year<=3){
+            // dd($courses);
+            return Inertia::render('Manage/KlassesK', [
+                //'grade' => $grade,
+                'currentTerm'=>Year::currentTerm(),
+                'klass' => $klass,
+                //'courses' => $courses,
+                //'students'=>$students,
+                'additiveTemplates'=>AdditiveTemplate::all(),
+                'additiveStyle'=>Config::item('additive_style'),
+                'additiveGroups'=>Config::item('additive_groups')
+            ]);
+        }else{
+            // dd($courses);
+            return Inertia::render('Manage/Klasses', [
+                //'grade' => $grade,
+                'currentTerm'=>Year::currentTerm(),
+                'klass' => $klass,
+                //'courses' => $courses,
+                //'students'=>$students,
+                'additiveTemplates'=>AdditiveTemplate::all(),
+                'additiveStyle'=>Config::item('additive_style'),
+                'additiveGroups'=>Config::item('additive_groups')
+            ]);
+        }
     }
 
     /**

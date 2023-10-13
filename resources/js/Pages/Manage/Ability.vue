@@ -8,6 +8,14 @@
                 Class: {{ klass.tag }}
             </h2>
         </template>
+        {{themes}}
+        <ol>
+            <template v-for="theme in themes">
+                <li v-if="theme.term_id==selectedTermId">
+                    {{theme.term_id}}-{{theme.title}}
+                </li>
+            </template>
+        </ol>
         <div class="py-12">
             <div class="mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">

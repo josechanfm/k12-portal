@@ -18,6 +18,7 @@ class ThemeSeeder extends Seeder
     {
         //grade year: 1, term 1, theme 1
         $id=DB::table('themes')->insertGetId([
+            'year_id'=>1,
             'grade_year'=>1,
             'term_id'=>1,
             'sequence'=>1,
@@ -95,6 +96,7 @@ class ThemeSeeder extends Seeder
         ]);
         //grade year: 1, term 1, theme 2
         $id=DB::table('themes')->insertGetId([
+            'year_id'=>1,
             'grade_year'=>1,
             'term_id'=>1,
             'sequence'=>2,
@@ -173,6 +175,7 @@ class ThemeSeeder extends Seeder
 
         //grade year: 1, term 2, theme 3
         $id=DB::table('themes')->insertGetId([
+            'year_id'=>1,
             'grade_year'=>1,
             'term_id'=>2,
             'sequence'=>3,

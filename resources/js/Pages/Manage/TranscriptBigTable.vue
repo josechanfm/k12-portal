@@ -52,7 +52,7 @@
                                 <template v-for="course in transcripts['courses']">
                                     <td v-for="column in course.score_columns"  class="text-center">
                                         <span v-if="transcripts['scores'][ksid][course.id]">
-                                            <span v-if="transcripts['scores'][ksid][course.id][column.id].point==null">
+                                            <span v-if="transcripts['scores'][ksid][course.id][column.id]==null">
                                                 --
                                             </span>
                                             <span v-else>

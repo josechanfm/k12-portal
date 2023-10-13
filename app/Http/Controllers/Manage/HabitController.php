@@ -18,7 +18,6 @@ class HabitController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function klass(Klass $klass){
-
         $klass=Klass::with('students')->find($klass->id);
         $terms=Config::item('year_terms');
         $habitColumns=Config::item('habit_columns');

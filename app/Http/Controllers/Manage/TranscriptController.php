@@ -81,7 +81,6 @@ class TranscriptController extends Controller
         $year->klasses;
         $year->grades;
         $transcripts=$klass->transcripts();
-        //dd($transcripts);
         if($request->get('type') && $request->get('type')=='summary'){
             return Inertia::render('Manage/TranscriptSummary',[
                 'year'=>$year,
@@ -113,7 +112,6 @@ class TranscriptController extends Controller
     public function migrate(Klass $klass)
     {
         $transcripts=$klass->transcripts();
-        dd($transcripts);
         $templateGroups=$klass->grade->transcriptTemplates();
         $yearTerms=Config::item('year_terms');
         //behaviours to transcripts
@@ -151,7 +149,7 @@ class TranscriptController extends Controller
                                     'field_name'=>$column->field_name,
                                     'category'=>'SUBJECT',
                                     'reference_code'=>$course->code,
-                                    'value'=>$transcripts['scores'][$ksid][$course->id][$column->id]['point']
+                                    'value'=>$transcripts['scores'][$ksid][$course->id][$column->id]['point']??0
                                 ];
                             }
                         }
