@@ -9,6 +9,9 @@ use App\Models\Config;
 use App\Models\Klass;
 use App\Models\Ability;
 use App\Models\Theme;
+use \Mpdf\Mpdf as mPDF; 
+use Illuminate\Support\Facades\Storage;
+use PDF;
 
 class AbilityController extends Controller
 {
@@ -22,13 +25,17 @@ class AbilityController extends Controller
         //dd($klass->grade->themes);
         //dd($klass->themes);
         //dd($klass->grade->topics);
+        //$klass->grade->themes;
+        //$klass->grade->topics;
+        //dd($klass);
+        
         $terms=Config::item('year_terms');
 
         return Inertia::render('Manage/Ability',[
             'yearTerms'=>Config::item('year_terms'),
             'klass'=>$klass,
-            'themes'=>$klass->themes,
-            'topics'=>$klass->grade->topics,
+            //'themes'=>$klass->grade->themes,
+            //'topics'=>$klass->grade->topics,
             // 'abilities'=>$klass->abilities,
             'students_abilities'=>$klass->students_abilities,
             'abilities'=>$klass->abilitiesScores()
@@ -114,5 +121,48 @@ class AbilityController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function pdf(Klass $klass){
+        $theme=Theme::find(1);
+        dd($theme->report());
+        return view('pdf.reportAbilities',['klass'=>$klass]);
+
+        $pdf=PDF::loadView('pdf.reportAbilities',['klass'=>$klass]);
+        $pdf->render();
+        
+        return $pdf->stream('test.pdf',array('Attachment'=>false));
+
+    }
+    public function mpdf(Klass $klass){
+        // Setup a filename 
+        $documentFileName = "fun.pdf";
+
+        // Create the mPDF document
+        $document = new mPDF( [
+            'mode' => 'utf-8',
+            'format' => 'A4',
+            'margin_header' => '3',
+            'margin_top' => '20',
+            'margin_bottom' => '20',
+            'margin_footer' => '2',
+        ]);     
+
+        // Set some header informations for output
+        $header = [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="'.$documentFileName.'"'
+        ];
+        $content='<h1 style="color:blue">TheCodingJack</h1>';
+        $content.='<p>Write something, just for fun!</p>';
+        // Write some simple Content
+        $document->WriteHTML($content);
+        //return response($content);
+        // $document->WriteHTML('<h1 style="color:blue">TheCodingJack</h1>');
+        // $document->WriteHTML('<p>Write something, just for fun!</p>');
+        // Save PDF on your public storage 
+        Storage::disk('public')->put($documentFileName, $document->Output($documentFileName, "S"));
+        
+        // Get file back from storage with the give header informations
+        return Storage::disk('public')->download($documentFileName, 'Request', $header); 
     }
 }

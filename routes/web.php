@@ -136,6 +136,8 @@ Route::group([
         Route::post('/score_column/update_is_total',[App\Http\Controllers\Manage\ScoreColumnController::class,'update_is_total'])->name('manage.score_column.update_is_total');
         Route::get('/klass/{klass}/courses',[App\Http\Controllers\Manage\CourseController::class,'klass'])->name('manage.klass.courses');
         Route::get('/klass/{klass}/abilities',[App\Http\Controllers\Manage\AbilityController::class,'klass'])->name('manage.klass.abilities');
+        Route::get('/klass/{klass}/abilities/pdf',[App\Http\Controllers\Manage\AbilityController::class,'pdf'])->name('manage.klass.abilities.pdf');
+        Route::get('/klass/{klass}/abilities/mpdf',[App\Http\Controllers\Manage\AbilityController::class,'mpdf'])->name('manage.klass.abilities.mpdf');
         Route::post('/klass/{klass}/abilities/update',[App\Http\Controllers\Manage\AbilityController::class,'update'])->name('manage.klass.abilities.update');
         Route::resource('klass/{klass}/behaviours',App\Http\Controllers\Manage\BehaviourController::class)->names('manage.klass.behaviours');
         Route::get('klass/{klass}/behaviour/adjust',[App\Http\Controllers\Manage\BehaviourController::class,'adjust'])->name('manage.klass.behaviour.adjust');

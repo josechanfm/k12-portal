@@ -31,17 +31,13 @@ class Grade extends Model
     }
 
     public function themes(){
-        return $this->hasMany(Theme::class,'grade_year','grade_year')->with('topics');
+        return $this->hasMany(Theme::class)->with('topics');
     }
 
     public function topics(){
         return $this->hasManyThrough(
             Topic::class,
             Theme::class,
-            'grade_year',
-            'theme_id',
-            'grade_year',
-            'id'
         )->with('theme');
     }
     public function transcriptTemplates(){

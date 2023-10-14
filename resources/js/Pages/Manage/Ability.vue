@@ -8,57 +8,61 @@
                 Class: {{ klass.tag }}
             </h2>
         </template>
-        {{themes}}
-        <ol>
-            <template v-for="theme in themes">
-                <li v-if="theme.term_id==selectedTermId">
-                    {{theme.term_id}}-{{theme.title}}
-                </li>
-            </template>
-        </ol>
         <div class="py-12">
             <div class="mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <a-button type="primary" @click="saveAbilities">更新並保存</a-button>
+                    <a-divider type="vertical" />
                     <a-select
                         v-model:value="selectedThemeId"
-                        :options="themes"
+                        :options="klass.themes.filter(theme=>theme.term_id==selectedTermId)"
                         :field-names="{value:'id',label:'title'}"
                     ></a-select>
-                    <a-button v-for="term in yearTerms" @click="selectedTermId=term.value" class="ml-4" :type="selectedTermId==term.value?'primary':''">{{term.label}}</a-button>
-
+                    <a-divider type="vertical" />
+                    <a-radio-group v-model:value="selectedTermId" button-style="solid" @change="onChangeTerm">
+                        <template v-for="term in yearTerms">
+                            <a-radio-button :value="term.value">{{term.label}}</a-radio-button>
+                        </template>
+                    </a-radio-group>
+                    <a-divider type="vertical" />
+                    <a :href="route('manage.klass.abilities.pdf',klass.id)" class="ant-btn">報告</a>
                     <table id="abilityTable" ref="abilityTable">
-                        <tr>
-                            <th rowspan="2">Student name</th>
-                            <template v-for="topic in topics"  >
-                                <th v-if="topic.theme_id==selectedThemeId" class="text-center">
-                                    {{ topic.section }} 
-                                </th>
-                            </template>
-                        </tr>
-                        <tr>
-                            <template v-for="topic in topics"  >
-                                <th v-if="topic.theme_id==selectedThemeId" class="text-center">
-                                    <a-tooltip>
-                                        <template #title>[{{topic.theme.title}}]<br>{{ topic.title }}</template>
-                                        {{ topic.abbr }} 
-                                    </a-tooltip>
-                                </th>
-                            </template>
-                        </tr>
-                        <template v-for="(student, ksid) in abilities['students']">
+                        <thead>
                             <tr>
-                                <td>{{ student.name_zh }}</td>
-                                <template v-for="topic in topics">
-                                    <td v-if="topic.theme_id==selectedThemeId">
-                                        <a-input v-model:value="abilities['scores'][ksid][selectedTermId][topic.id].credit" 
-                                            @keyup.arrow-keys="onKeypressed" 
-                                            @click="onFocusInput($event)"
-                                        />
-                                    </td>
+                                <th rowspan="2">Student name</th>
+                                <template v-for="topic in klass.themes.find(theme=>theme.id==selectedThemeId).topics"  >
+                                    <th class="text-center">
+                                        {{ topic.section }} 
+                                    </th>
                                 </template>
                             </tr>
-                        </template>
+                            <tr>
+                                <template v-for="topic in klass.themes.find(theme=>theme.id==selectedThemeId).topics"  >
+                                    <th class="text-center">
+                                        <a-tooltip>
+                                            <template #title>[{{topic.theme.title}}]<br>{{ topic.title }}</template>
+                                            {{ topic.abbr }} 
+                                        </a-tooltip>
+                                    </th>
+                                </template>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template v-for="(student, ksid) in abilities['students']">
+                                <tr>
+                                    <td>{{ student.name_zh }}</td>
+                                    <template v-for="topic in klass.themes.find(theme=>theme.id==selectedThemeId).topics"  >
+                                        <td>
+                                            <a-input v-model:value="abilities['scores'][ksid][selectedTermId][topic.id].credit" 
+                                                @keyup.arrow-keys="onKeypressed" 
+                                                @click="onFocusInput($event)"
+                                                class="text-center"
+                                            />
+                                        </td>
+                                    </template>
+                                </tr>
+                            </template>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -79,12 +83,12 @@ export default {
         return {
             keypressed:"",
             selectedTermId:1,
-            selectedThemeId:this.themes[0].id,
+            selectedThemeId:this.klass.themes[0].id,
             tableCell:{
                 row:0,
                 col:0,
                 maxRow:this.students_abilities.length,
-                maxCol:this.topics.length
+                maxCol:this.klass.topics.length
             },
         }
     },
@@ -124,15 +128,13 @@ export default {
         onKeypressed(event){
             this.keypressed=event.keyCode;
         },
+        onChangeTerm(target){
+            this.selectedThemeId=this.klass.themes.find(theme=>theme.term_id==this.selectedTermId).id
+        },
         saveAbilities(){
             var data=[];
             var topicList=[];
-            console.log(this.selectedThemeId);
-            Object.values(this.topics).forEach(topic=>{
-                if(topic.theme_id==this.selectedThemeId){
-                    topicList.push(topic.id)
-                }
-            })
+            var topicList=this.klass.themes.find(theme=>theme.id==this.selectedThemeId).topics.map(topic=>topic.id)
             Object.values(this.abilities.scores).forEach((std)=>{
                 Object.entries(std).forEach(([termId,scores])=>{
                     if(termId==this.selectedTermId){

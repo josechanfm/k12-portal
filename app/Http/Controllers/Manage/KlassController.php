@@ -57,6 +57,7 @@ class KlassController extends Controller
      */
     public function show(Klass $klass)
     {
+        //dd($klass->grade);
         $klass->grade;
         $klass->courses;
         //$courses = Klass::find($klass->id)->courses;

@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use \Mpdf\Mpdf as PDF; 
+use Illuminate\Support\Facades\Storage;
 
 class Klass extends Model
 {
@@ -58,7 +60,7 @@ class Klass extends Model
         return KlassStudent::where('promote_to',$this->id)->count();
     }
     public function grade(){
-        return $this->belongsTo(Grade::class)->with('themes');
+        return $this->belongsTo(Grade::class);
     }
     public function students(){
         return $this->belongsToMany(Student::class)
@@ -274,7 +276,11 @@ class Klass extends Model
     }
 
     public function themes(){
-        return $this->belongsToMany(Theme::class,'grades','id','grade_year','grade_year','grade_year');
+        return $this->hasMany(Theme::class)->with('topics');
+        //return $this->belongsToMany(Theme::class,'grades','id','grade_year','grade_year','grade_year');
+    }
+    public function topics(){
+        return $this->hasManyThrough(Topic::class, Theme::class);
     }
 
     // public static function klass_scores($klassId){
@@ -434,7 +440,7 @@ class Klass extends Model
         $students=$this->students;
         $yearTerms=Config::item('year_terms');
         $themes=$this->themes;
-        $topics=$this->grade->topics;
+        $topics=$this->topics;
         $abilities=[];
         $data=[];
         foreach($students as $student){
@@ -452,5 +458,35 @@ class Klass extends Model
 
     //    dd($data['abilities'][1]);
        return $data;
+    }
+
+    public function reportAbilities(){
+        $documentFileName = "fun.pdf";
+ 
+        // Create the mPDF document
+        $document = new PDF( [
+            'mode' => 'utf-8',
+            'format' => 'A4',
+            'margin_header' => '3',
+            'margin_top' => '20',
+            'margin_bottom' => '20',
+            'margin_footer' => '2',
+        ]);     
+ 
+        // Set some header informations for output
+        $header = [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="'.$documentFileName.'"'
+        ];
+ 
+        // Write some simple Content
+        $document->WriteHTML('<h1 style="color:blue">TheCodingJack</h1>');
+        $document->WriteHTML('<p>Write something, just for fun!</p>');
+        // Save PDF on your public storage 
+        Storage::disk('public')->put($documentFileName, $document->Output($documentFileName, "S"));
+         
+        // Get file back from storage with the give header informations
+        //return ['fileName'=>$documentFileName,'document'=>$document,'header'=>$header];
+        return Storage::disk('public')->download($documentFileName, 'Request', $header); 
     }
 }
