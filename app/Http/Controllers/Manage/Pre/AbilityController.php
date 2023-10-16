@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Manage;
+namespace App\Http\Controllers\Manage\Pre;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -31,7 +31,7 @@ class AbilityController extends Controller
         
         $terms=Config::item('year_terms');
 
-        return Inertia::render('Manage/Ability',[
+        return Inertia::render('Manage/Pre/Ability',[
             'yearTerms'=>Config::item('year_terms'),
             'klass'=>$klass,
             //'themes'=>$klass->grade->themes,
@@ -124,10 +124,13 @@ class AbilityController extends Controller
     }
     public function pdf(Klass $klass){
         $theme=Theme::find(1);
-        dd($theme->report());
-        return view('pdf.reportAbilities',['klass'=>$klass]);
-
-        $pdf=PDF::loadView('pdf.reportAbilities',['klass'=>$klass]);
+        dd($theme->reportKlass());
+        // return view('pdf.reportAbilities',['klass'=>$klass]);
+        //dd($klass->abilitiesScores());
+        $pdf=PDF::loadView('pdf.reportAbilities',[
+            'klass'=>$klass,
+            'report'=>$theme->report(),
+        ]);
         $pdf->render();
         
         return $pdf->stream('test.pdf',array('Attachment'=>false));
@@ -150,7 +153,7 @@ class AbilityController extends Controller
         // Set some header informations for output
         $header = [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="'.$documentFileName.'"'
+            'Content-Disposition' => 'inline; filenaabilitiesScoresme="'.$documentFileName.'"'
         ];
         $content='<h1 style="color:blue">TheCodingJack</h1>';
         $content.='<p>Write something, just for fun!</p>';

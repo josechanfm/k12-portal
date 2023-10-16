@@ -8,6 +8,7 @@
                 Class: {{ klass.tag }}
             </h2>
         </template>
+
         <div class="py-12">
             <div class="mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -18,6 +19,7 @@
                         :options="klass.themes.filter(theme=>theme.term_id==selectedTermId)"
                         :field-names="{value:'id',label:'title'}"
                     ></a-select>
+                    
                     <a-divider type="vertical" />
                     <a-radio-group v-model:value="selectedTermId" button-style="solid" @change="onChangeTerm">
                         <template v-for="term in yearTerms">
@@ -25,7 +27,7 @@
                         </template>
                     </a-radio-group>
                     <a-divider type="vertical" />
-                    <a :href="route('manage.klass.abilities.pdf',klass.id)" class="ant-btn">報告</a>
+                    <a :href="route('manage.pre.klass.abilities.pdf',klass.id)" class="ant-btn">報告</a>
                     <table id="abilityTable" ref="abilityTable">
                         <thead>
                             <tr>
@@ -35,31 +37,42 @@
                                         {{ topic.section }} 
                                     </th>
                                 </template>
+                                <td rowspan="2">Report</td>
                             </tr>
                             <tr>
                                 <template v-for="topic in klass.themes.find(theme=>theme.id==selectedThemeId).topics"  >
                                     <th class="text-center">
-                                        <a-tooltip>
+                                        {{ topic.abbr }}
+                                        <!-- <a-tooltip>
                                             <template #title>[{{topic.theme.title}}]<br>{{ topic.title }}</template>
                                             {{ topic.abbr }} 
-                                        </a-tooltip>
+                                        </a-tooltip> -->
                                     </th>
                                 </template>
                             </tr>
+
                         </thead>
                         <tbody>
                             <template v-for="(student, ksid) in abilities['students']">
                                 <tr>
-                                    <td>{{ student.name_zh }}</td>
+                                    <td>{{ student.name_zh }}{{ ksid }}</td>
                                     <template v-for="topic in klass.themes.find(theme=>theme.id==selectedThemeId).topics"  >
                                         <td>
-                                            <a-input v-model:value="abilities['scores'][ksid][selectedTermId][topic.id].credit" 
+                                            <a-input v-model:value="abilities['scores'][ksid][topic.id].credit" 
                                                 @keyup.arrow-keys="onKeypressed" 
                                                 @click="onFocusInput($event)"
                                                 class="text-center"
                                             />
                                         </td>
                                     </template>
+                                <td>
+                                    <template v-for="theme in klass.themes">
+                                        <span v-if="theme.id==selectedThemeId">
+                                            <a :href="route('manage.pre.theme.student',{theme:theme.id,klassStudent:ksid})" target="_blank">Pdf</a>
+                                        </span>
+                                    </template>
+                                    
+                                </td>
                                 </tr>
                             </template>
                         </tbody>
@@ -67,6 +80,12 @@
                 </div>
             </div>
         </div>
+        <div class="page-break"></div>
+        page 2
+        <div class="page-break"></div>
+        page 3
+        <div class="page-break"></div>
+        page 4
     </AdminLayout>
 
 </template>

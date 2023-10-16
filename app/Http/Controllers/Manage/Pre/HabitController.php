@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Manage;
+namespace App\Http\Controllers\Manage\Pre;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -27,7 +27,7 @@ class HabitController extends Controller
         $klass->habits;
         $klass->students;
         //dd($klass->habitsScores());
-        return Inertia::render('Manage/Habit',[
+        return Inertia::render('Manage/Pre/Habit',[
             'klass'=>$klass,
             'yearTerms'=>$terms,
             'habitColumns'=>$habitColumns,

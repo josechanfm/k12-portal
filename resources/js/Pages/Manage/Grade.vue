@@ -10,7 +10,7 @@
         <a-typography-title :level="4">學年全稱: {{ year.title }}</a-typography-title>
         <a-typography-title :level="4">學年開始: {{ year.start }}</a-typography-title>
         <a-typography-title :level="4">學年結束: {{ year.end }}</a-typography-title>
-
+        
 
         <div class="ant-table">
             <div class="ant-table-container">
@@ -46,8 +46,14 @@
                                 <td class="text-left">
                                     <ul>
                                         <li v-for="klass in grade.klasses" :klass_id="klass.id">
-                                            <inertia-link :href="route('manage.klasses.show', klass.id)"
+                                            <template v-if="klass.grade_year <=3">
+                                                <inertia-link :href="route('manage.pre.klasses.show', klass.id)"
                                                 class="ant-btn">Panel</inertia-link>
+                                            </template>
+                                            <template v-else>
+                                                <inertia-link :href="route('manage.klasses.show', klass.id)"
+                                                class="ant-btn">Panel</inertia-link>
+                                            </template>
                                         </li>
                                     </ul>
                                 </td>

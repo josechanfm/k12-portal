@@ -17,20 +17,40 @@
     
     <body>
         {{base_path().'/storage/'}}fonts/SimHei.ttf<br>
-        新疆是中国陆地面积最大的省份
-        {{ $klass.tag }}
-        <div style="font-family: DejaVu Sans, sans-serif;">✔</div>
-        <div style="font-family: DejaVu Sans, sans-serif;">✗</div>
-        <div style="font-family: SimHei, sans-serif;">新疆是中国陆地面积最大的省份</div>
-
-
+        <div style="font-family: DejaVu Sans, sans-serif;">José</div>
+        <p>{{ $klass->tag }}</p>
+        <p style="font-family: SimHei, sans-serif;">{{ $student->name_zh }}</p>
         <table width="100%" border="1">
-            <tr style="background-color: lightgray">
-                <th>a</th>
-                <th>b</th>
-                <th>c</th>
-            </th>
+            <tr>
+                <th colspan="2">Student</th>
+                <th width="30px">1</th>
+                <th width="30px">2</th>
+                <th width="30px">3</th>
+                <th width="30px">4</th>
+                <th width="30px">5</th>
+            </tr>
+            @foreach($theme->topics as $topic)
+                <tr>
+                    <td style="font-family: SimHei, sans-serif;" width="120">{{ $topic->section}}</td>
+                    <td style="font-family: SimHei, sans-serif;">{{ $topic->abbr}}</td>
+                    <td>{{ json_encode($abilities[$theme->id][$topic->id]['credit']) }}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            @endforeach
+
         </table>
+        <div class="page_break"></div>
+        <div>New page</div>
+
     </body>
 </html>
+
+<style>
+    .page_break { page-break-before: always; }
+
+</style>
+
 

@@ -135,16 +135,10 @@ Route::group([
         Route::post('/score_column/reorder',[App\Http\Controllers\Manage\ScoreColumnController::class,'reorder'])->name('manage.score_column.reorder');
         Route::post('/score_column/update_is_total',[App\Http\Controllers\Manage\ScoreColumnController::class,'update_is_total'])->name('manage.score_column.update_is_total');
         Route::get('/klass/{klass}/courses',[App\Http\Controllers\Manage\CourseController::class,'klass'])->name('manage.klass.courses');
-        Route::get('/klass/{klass}/abilities',[App\Http\Controllers\Manage\AbilityController::class,'klass'])->name('manage.klass.abilities');
-        Route::get('/klass/{klass}/abilities/pdf',[App\Http\Controllers\Manage\AbilityController::class,'pdf'])->name('manage.klass.abilities.pdf');
-        Route::get('/klass/{klass}/abilities/mpdf',[App\Http\Controllers\Manage\AbilityController::class,'mpdf'])->name('manage.klass.abilities.mpdf');
-        Route::post('/klass/{klass}/abilities/update',[App\Http\Controllers\Manage\AbilityController::class,'update'])->name('manage.klass.abilities.update');
         Route::resource('klass/{klass}/behaviours',App\Http\Controllers\Manage\BehaviourController::class)->names('manage.klass.behaviours');
         Route::get('klass/{klass}/behaviour/adjust',[App\Http\Controllers\Manage\BehaviourController::class,'adjust'])->name('manage.klass.behaviour.adjust');
         //Route::get('behaviours',[App\Http\Controllers\Manage\BehaviourController::class,'list'])->name('manage.behaviours');
         
-        Route::get('/klass/{klass}/habits',[App\Http\Controllers\Manage\HabitController::class,'klass'])->name('manage.klass.habits');
-        Route::put('/klass/{klass}/habits',[App\Http\Controllers\Manage\HabitController::class,'update'])->name('manage.klass.habits.update');
 
         Route::get('/year/{year}/transcripts',[App\Http\Controllers\Manage\TranscriptController::class,'yearTranscripts'])->name('manage.year.transcripts');
         Route::get('/grade/{grade}/transcripts',[App\Http\Controllers\Manage\TranscriptController::class,'gradeTranscripts'])->name('manage.grade.transcripts');
@@ -157,9 +151,11 @@ Route::group([
         Route::get('/course/{course}/scores',[App\Http\Controllers\Manage\CourseController::class,'scores'])->name('manage.course.scores');
         Route::get('/course/{course}/makeups',[App\Http\Controllers\Manage\CourseController::class,'makeups'])->name('manage.course.makeups');
         Route::get('/klass/{klass}/final_scores',[App\Http\Controllers\Manage\KlassController::class,'finalScores'])->name('manage.klass.finalScores');
-        Route::get('/klass/{klass}/final_scores_k',[App\Http\Controllers\Manage\KlassController::class,'finalScoresK'])->name('manage.klass.finalScoresK');
+        //Route::get('/klass/{klass}/final_scores_k',[App\Http\Controllers\Manage\KlassController::class,'finalScoresK'])->name('manage.klass.finalScoresK');
         Route::post('/makeup/create_or_cancel',[App\Http\Controllers\Manage\MakeupController::class,'createOrCancel'])->name('manage.makeup.createOrCancel');
         Route::post('/makeup/update',[App\Http\Controllers\Manage\MakeupController::class,'update'])->name('manage.makeup.update');
+        
+        Route::get('/pre/klass/{klass}/final_scores',[App\Http\Controllers\Manage\Pre\KlassController::class,'finalScores'])->name('manage.pre.klass.finalScores');
 
         Route::resource('additives',App\Http\Controllers\Manage\AdditiveController::class)->names('manage.additives');
         Route::get('klass/{klass}/additive/{category}',[App\Http\Controllers\Manage\AdditiveController::class,'scope'])->name('manage.klass.additive');
@@ -176,6 +172,18 @@ Route::group([
         Route::get('activity/{activity}/students/scores/report',[App\Http\Controllers\Manage\ActivityController::class,'scoreReport'])->name('manage.activity.students.scores.report');
         Route::resource('certificates',App\Http\Controllers\Manage\CertificateController::class)->names('manage.certificates');
         Route::get('certificate/get_by_conditions',[App\Http\Controllers\Manage\CertificateController::class,'getByConditions'])->name('manage.certificate.getByConditions');
+
+        Route::resource('/pre/klasses',App\Http\Controllers\Manage\Pre\KlassController::class)->names('manage.pre.klasses');
+        Route::resource('pre/students',App\Http\Controllers\Manage\Pre\StudentController::class)->names('manage.pre.students');
+        Route::get('/pre/klass/{klass}/habits',[App\Http\Controllers\Manage\Pre\HabitController::class,'klass'])->name('manage.pre.klass.habits');
+        Route::put('/pre/klass/{klass}/habits',[App\Http\Controllers\Manage\Pre\HabitController::class,'update'])->name('manage.pre.klass.habits.update');
+        Route::get('/pre/klass/{klass}/abilities',[App\Http\Controllers\Manage\Pre\AbilityController::class,'klass'])->name('manage.pre.klass.abilities');
+        Route::get('/pre/klass/{klass}/abilities/pdf',[App\Http\Controllers\Manage\Pre\AbilityController::class,'pdf'])->name('manage.pre.klass.abilities.pdf');
+        Route::get('/pre/klass/{klass}/abilities/mpdf',[App\Http\Controllers\Manage\Pre\AbilityController::class,'mpdf'])->name('manage.pre.klass.abilities.mpdf');
+        Route::post('/pre/klass/{klass}/abilities/update',[App\Http\Controllers\Manage\Pre\AbilityController::class,'update'])->name('manage.pre.klass.abilities.update');
+        //Route::get('pre/theme/{theme}/student/{klassStudent}/{format?}',[App\Http\Controllers\Manage\Pre\StudentController::class,'theme'])->name('manage.pre.theme.student');
+        Route::get('pre/klass_student/{klassStudent}/theme/{theme}/{format?}',[App\Http\Controllers\Manage\Pre\ThemeController::class,'klassStudent'])->name('manage.pre.klassStudent.theme');
+        Route::get('pre/klass/{klass}/theme/{theme}/{format?}',[App\Http\Controllers\Manage\Pre\ThemeController::class,'klass'])->name('manage.pre.klass.theme');
 });
 
 //Route::prefix('teacher/')->group(function(){

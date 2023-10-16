@@ -438,22 +438,18 @@ class Klass extends Model
 
     public function abilitiesScores(){
         $students=$this->students;
-        $yearTerms=Config::item('year_terms');
         $themes=$this->themes;
         $topics=$this->topics;
         $abilities=[];
         $data=[];
         foreach($students as $student){
             $data['students'][$student->pivot->klass_student_id]=$student;
-            foreach($yearTerms as $term){
                 foreach($topics as $topic){
-                    $data['scores'][$student->pivot->klass_student_id][$term->value][$topic->id]=Ability::firstOrCreate([
+                    $data['scores'][$student->pivot->klass_student_id][$topic->id]=Ability::firstOrCreate([
                         'klass_student_id'=>$student->pivot->klass_student_id,
-                        'term_id'=>$term->value,
                         'topic_id'=>$topic->id,
                     ]);
                 }
-            }
         }
 
     //    dd($data['abilities'][1]);

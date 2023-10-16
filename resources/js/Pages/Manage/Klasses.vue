@@ -13,7 +13,7 @@
             <inertia-link :href="route('manage.klass.students', klass.id)" class="ant-btn">學生名單</inertia-link>
             <inertia-link :href="route('manage.klass.habits', klass.id)" class="ant-btn">生活習摜</inertia-link>
             <inertia-link :href="route('manage.klass.abilities', klass.id)" class="ant-btn">學習主題</inertia-link>
-            <inertia-link :href="route('manage.klass.finalScoresK', klass.id)" class="ant-btn">期末成績</inertia-link>
+            <inertia-link :href="route('manage.pre.klass.finalScores', klass.id)" class="ant-btn">期末成績</inertia-link>
         </template>
         <template v-else>
             <inertia-link :href="route('manage.klass.students', klass.id)" class="ant-btn">學生名單</inertia-link>

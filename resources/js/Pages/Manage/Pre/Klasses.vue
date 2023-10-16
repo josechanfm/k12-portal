@@ -9,16 +9,10 @@
         <p>Students: {{ klass.student_count }}</p>
         <p>Current Term: {{currentTerm.label}}</p>
         
-        <template v-if="klass.grade_year<=3">
-            <inertia-link :href="route('manage.klass.habits', klass.id)" class="ant-btn">生活習摜</inertia-link>
-            <inertia-link :href="route('manage.klass.abilities', klass.id)" class="ant-btn">學習主題</inertia-link>
-            <inertia-link :href="route('manage.klass.finalScoresK', klass.id)" class="ant-btn">期末成績</inertia-link>
-        </template>
-        <template v-else>
-            <inertia-link :href="route('manage.klass.students', klass.id)" class="ant-btn">學生名單</inertia-link>
-            <inertia-link :href="route('manage.klass.finalScores', klass.id)" class="ant-btn">期末成績</inertia-link>
-            <inertia-link :href="route('manage.klass.transcripts', klass.id)" class="ant-btn">成積總表</inertia-link>
-        </template>
+        <inertia-link :href="route('manage.pre.klass.habits', klass.id)" class="ant-btn">生活習摜</inertia-link>
+        <inertia-link :href="route('manage.pre.klass.abilities', klass.id)" class="ant-btn">學習主題</inertia-link>
+        <inertia-link :href="route('manage.pre.klass.finalScores', klass.id)" class="ant-btn">期末成績</inertia-link>
+        
         <a-divider type="vertical" />
         <inertia-link :href="route('manage.klass.behaviours.index', klass.id)" class="ant-btn">操行</inertia-link>
 
@@ -48,6 +42,7 @@
                                 <th>別名</th>
                                 <th>性別</th>
                                 <th>出生日期</th>
+                                <th>Operation</th>
                             </tr>
                         </thead>
                         <tbody class="ant-table-tbody">
@@ -56,6 +51,7 @@
                                 <td>{{student.display_name}}</td>
                                 <td>{{student.gender}}</td>
                                 <td>{{student.dob}}</td>
+                                <td>Personal records </td>
                             </tr>
                         </tbody>
                     </table>
