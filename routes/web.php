@@ -184,6 +184,7 @@ Route::group([
         //Route::get('pre/theme/{theme}/student/{klassStudent}/{format?}',[App\Http\Controllers\Manage\Pre\StudentController::class,'theme'])->name('manage.pre.theme.student');
         Route::get('pre/klass_student/{klassStudent}/theme/{theme}/{format?}',[App\Http\Controllers\Manage\Pre\ThemeController::class,'klassStudent'])->name('manage.pre.klassStudent.theme');
         Route::get('pre/klass/{klass}/theme/{theme}/{format?}',[App\Http\Controllers\Manage\Pre\ThemeController::class,'klass'])->name('manage.pre.klass.theme');
+        Route::get('pre/klass/{klass}/themes/{format?}',[App\Http\Controllers\Manage\Pre\ThemeController::class,'summary'])->name('manage.pre.klass.themes');
 });
 
 //Route::prefix('teacher/')->group(function(){
