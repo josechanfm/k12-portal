@@ -5,13 +5,22 @@
                 學習主題
             </h2>
         </template>
+
         <a-typography-title :level="3">年級: {{ klass.tag }}</a-typography-title>
         
+            
+        <a-select v-model:value="selectedThemeId" 
+        :options="themes" 
+        :fieldNames="{value:'id',label:'title'}"
+        style="width:150px"
+        />
         <button @click="onClickCreate()"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">新增主題</button>
-        <a-table :dataSource="themes" :columns="columns">
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">新增內容</button>
+
+        <a-table :dataSource="themes.find(theme=>theme.id==selectedThemeId).topics" :columns="columns">
             <template #bodyCell="{column, text, record, index}">
                 <template v-if="column.dataIndex=='operation'">
+                    {{record.topics}}
                     <a-button @click="onClickEdit(record)" :style="'Edit'">修改</a-button>
                     <a-button @click="onClickDelete(record)" :style="'Delete'">刪除</a-button>
                 </template>
@@ -52,10 +61,13 @@
                 :label-col="{ span: 4 }"
                 :wrapper-col="{ span: 20 }"
             >
-                <a-form-item label="學段" name="term_id">
-                    <a-select v-model:value=modal.data.term_id :options="yearTerms"/>
+                <a-form-item label="分類" name="section_code">
+                    <a-select v-model:value="modal.data.section_code" :options="topicAbilities"/>
                 </a-form-item>
-                <a-form-item label="主題名稱" name="title">
+                <a-form-item label="分組標題" name="abbr">
+                    <a-input v-model:value="modal.data.abbr" />
+                </a-form-item>
+                <a-form-item label="分組全稱" name="title">
                     <a-input v-model:value="modal.data.title" />
                 </a-form-item>
             </a-form>         
@@ -78,9 +90,10 @@ export default {
     components: {
         AdminLayout,
     },
-    props: ['yearTerms','klass','themes','topicTemplates'],
+    props: ['yearTerms','topicAbilities','klass','themes','topicTemplates'],
     data() {
         return {
+            selectedThemeId:this.themes[0].id,
             modal: {
                 mode:null,
                 isOpen: false,
@@ -89,10 +102,13 @@ export default {
             },
             columns:[
                 {
-                    title: '學段',
-                    dataIndex: 'term_id',
+                    title: '分類名稱',
+                    dataIndex: 'section',
                 },{
-                    title: '主題名稱',
+                    title: '分組標題',
+                    dataIndex: 'abbr',
+                },{
+                    title: '分組全稱',
                     dataIndex: 'title',
                 },{
                     title: 'Operation',
@@ -100,7 +116,10 @@ export default {
                 }
             ],
             rules:{
-                term_id:{
+                section_code:{
+                    required:true,
+                },
+                abbr:{
                     required:true,
                 },
                 title:{
@@ -123,22 +142,23 @@ export default {
     methods: {
         onClickCreate(){
             this.modal.data={}
-            this.modal.data.klass_id=this.klass.id
+            this.modal.data.klass_id=this.klass.id,
+            this.modal.data.theme_id=this.selectedThemeId
             this.modal.title="新增"
             this.modal.mode='CREATE'
             this.modal.isOpen=true
         },
 
-        onClickEdit(theme){
-            this.modal.data={...theme}
+        onClickEdit(topic){
+            console.log(topic)
+            this.modal.data={...topic}
             this.modal.isOpen=true
             this.modal.mode='EDIT'
             this.modal.title="修改"
         },
         updateRecord(){
-            console.log('update')
             this.$refs.modalRef.validateFields().then(()=>{
-                this.$inertia.put(route('admin.klass.themes.update',[this.modal.data.klass_id,this.modal.data.id]), this.modal.data,{
+                this.$inertia.put(route('admin.klass.topics.update',[this.klass.id,this.modal.data.id]), this.modal.data,{
                     onSuccess:(page)=>{
                         this.modal.data={}
                         this.modal.isOpen=false;
@@ -153,9 +173,8 @@ export default {
 
         },
         storeRecord(){
-            console.log('save')
             this.$refs.modalRef.validateFields().then(()=>{
-                this.$inertia.post(route('admin.klass.themes.store',this.modal.data.klass_id), this.modal.data,{
+                this.$inertia.post(route('admin.klass.topics.store',this.klass.id), this.modal.data,{
                     onSuccess:(page)=>{
                         this.modal.data={}
                         this.modal.isOpen=false;
@@ -180,3 +199,4 @@ export default {
     },
 }
 </script>
+

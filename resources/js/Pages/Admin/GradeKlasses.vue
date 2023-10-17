@@ -14,7 +14,7 @@
         <a-table :dataSource="klasses" :columns="columns">
             <template #bodyCell="{ column, text, record, index }">
                 <template v-if="column.dataIndex == 'operation'">
-                    <inertia-link v-if="record.grade.grade_year <= 3" :href="route('admin.grade.themeTemplates.index', record.grade.id)"
+                    <inertia-link v-if="record.grade.grade_year <= 3" :href="route('admin.klass.themes.index', record.grade.id)"
                         class="ant-btn">主題</inertia-link>
                     <inertia-link v-else :href="route('admin.klass.courses.index', record.id)" class="ant-btn">科目</inertia-link>
                     <inertia-link :href="route('admin.select.students.index', {type:'klass',id:record.id})" class="ant-btn">學生</inertia-link>
@@ -112,7 +112,7 @@
                         max-tag-count="responsive" :options="klassLetters"></a-select>
                 </a-form-item>
                 <a-form-item label="學生計劃" name="study_id">
-                    <a-select v-model:value="modal.data.study_id" styple="with:100%" placeholder="請選擇..."
+                    <a-select v-model:value="modal.data.study_id" style="with:100%" placeholder="請選擇..."
                         max-tag-count="responsive" :options="studies"
                         :field-names="{ label: 'title_zh', value: 'id' }"></a-select>
                 </a-form-item>

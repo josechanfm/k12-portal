@@ -4,29 +4,20 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use App\Models\Config;
 use App\Models\Klass;
-use App\Models\Theme;
 use App\Models\Topic;
 
-class ThemeController extends Controller
+class TopicController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Klass $klass)
+    public function index()
     {
-        return Inertia::render('Admin/KlassThemes',[
-            'yearTerms'=>Config::item('year_terms'),
-            'topicAbilities'=>Config::item('topic_abilities'),
-            'klass'=>$klass,
-            'themes'=>$klass->themes,
-            'topicTemplates'=>Topic::all(),
-        ]);
-
+        //
     }
 
     /**
@@ -47,7 +38,13 @@ class ThemeController extends Controller
      */
     public function store(Klass $klass, Request $request)
     {
-        Theme::create($request->all());
+        
+        $data=$request->all();
+        $data['sequence']=Topic::where('theme_id',$request->theme_id)->get()->count()+1;
+        
+        //$data['section']=>Config:
+        $sections=Config::item('topic_abilities');
+        Topic::create($data);
         return redirect()->back();
 
     }
@@ -81,10 +78,10 @@ class ThemeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Klass $klass, Theme $theme, Request $request)
-    {
-        $theme->update($request->all());
-        return response()->json($theme);
+    public function update(Klass $klass, Topic $topic, Request $request)
+    {   
+        $topic->update($request->all());
+        return redirect()->back();
     }
 
     /**

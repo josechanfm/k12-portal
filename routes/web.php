@@ -99,6 +99,7 @@ Route::group([
     Route::resource('grade/{grade}/klasses',App\Http\Controllers\Admin\KlassController::class)->names('admin.grade.klasses');
     Route::resource('/grade/{grade}/theme_templates',App\Http\Controllers\Admin\ThemeTemplateController::class)->names('admin.grade.themeTemplates');
     Route::resource('klass/{klass}/themes',App\Http\Controllers\Admin\ThemeController::class)->names('admin.klass.themes');
+    Route::resource('klass/{klass}/topics',App\Http\Controllers\Admin\TopicController::class)->names('admin.klass.topics');
     Route::resource('klass/{klass}/courses',App\Http\Controllers\Admin\CourseController::class)->names('admin.klass.courses');
     Route::resource('{type}/{id}/students',App\Http\Controllers\Admin\StudentController::class)->names('admin.select.students');
     Route::post('student/sync_courses',[App\Http\Controllers\Admin\StudentController::class,'syncCourses'])->name('admin.klass.syncCourses');

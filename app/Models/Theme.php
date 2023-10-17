@@ -52,33 +52,31 @@ class Theme extends Model
     }
     public static function summary(Klass $klass){
         $data=[];
-        $topicSectionGroupKeys=['1','2','3','4','5'];
-        $sectionIds=[1,2,3,4,5,6,7,8,9,10];
-        $topicSections[]=array_fill_keys($sectionIds,null);
+        //$topicSectionGroupKeys=['1','2','3','4','5'];
+        $categoryCodes=[1,2,3,4,5,6,7,8,9,10];
+        $topicCategories[]=array_fill_keys($categoryCodes,null);
         //dd($topicSections);
 
         $themeCount=$klass->themes->count();
         $data['topics']=$klass->themes->first()->topics;
         foreach($klass->students as $student){
-            $data['summaries'][$student->pivot->klass_student_id]=array_fill_keys($sectionIds,0);
+            $data['summaries'][$student->pivot->klass_student_id]=array_fill_keys($categoryCodes,0);
             $data['students'][$student->pivot->klass_student_id]=$student;
             $abilities=KlassStudent::find($student->pivot->klass_student_id)->hasMany(Ability::class)->get();
             foreach($klass->topics as $topic){
                 $ability=$abilities->where('topic_id',$topic->id)->first();
-                // echo json_encode($ability);
-                // echo '<hr>';
                 $data['scores'][$student->pivot->klass_student_id][$topic->id]=$ability;
-                $data['summaries'][$student->pivot->klass_student_id][$topic->section_id]+=$ability->credit;
+                $data['summaries'][$student->pivot->klass_student_id][$topic->category_code]+=$ability->credit;
             }
-            foreach($data['summaries'][$student->pivot->klass_student_id] as $sectionId=>$sum){
-                $data['averages'][$student->pivot->klass_student_id][$sectionId]=round($sum/$themeCount,2);
+            foreach($data['summaries'][$student->pivot->klass_student_id] as $categoryCode=>$sum){
+                $data['averages'][$student->pivot->klass_student_id][$categoryCode]=round($sum/$themeCount,2);
             }
             //$data['average'][$student->pivot->klass_student_id][]
         }
         return $data;
-        dd($data); 
-        dd($themes);
-        dd($klass);
+        // dd($data); 
+        // dd($themes);
+        // dd($klass);
     }
     // public function reportStudent($student){
     //     $data=[];
