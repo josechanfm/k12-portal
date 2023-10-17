@@ -12,7 +12,16 @@ use PDF;
 class ThemeController extends Controller
 {
     public function summary(Klass $klass, $format='pdf'){
+        $themes=$klass->themes;
         $abilities=Theme::summary($klass);
+        //dd($abilities);
+        $pdf=PDF::loadView('pdf.abilitiesSummaries',[
+            'klass'=>$klass,
+            'abilities'=>$abilities,
+        ]);
+        $pdf->render();
+        
+        return $pdf->stream('test.pdf',array('Attachment'=>false));
         
     }
     public function klassStudent(KlassStudent $klassStudent,Theme $theme, $format='pdf'){
@@ -28,12 +37,9 @@ class ThemeController extends Controller
 
     }
 
-    public function klass(Klass $klass,Theme $theme, $format='pdf'){
-        
+    public function klass(Klass $klass,Theme $theme, $format='pdf'){        
         $theme->topics;
         $abilities=$theme->klassAbilities($klass);
-        
-
         $pdf=PDF::loadView('pdf.reportAbilities',[
             'klass'=>$klass,
             'abilities'=>$abilities,

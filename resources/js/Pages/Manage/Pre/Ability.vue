@@ -68,7 +68,7 @@
                                 <td>
                                     <template v-for="theme in klass.themes">
                                         <span v-if="theme.id==selectedThemeId">
-                                            <a :href="route('manage.pre.theme.student',{theme:theme.id,klassStudent:ksid})" target="_blank">Pdf</a>
+                                            <a :href="route('manage.pre.klassStudent.theme',{klassStudent:ksid,theme:theme.id})" target="_blank">Pdf</a>
                                         </span>
                                     </template>
                                     

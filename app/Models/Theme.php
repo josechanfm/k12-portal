@@ -50,24 +50,29 @@ class Theme extends Model
     public static function summary(Klass $klass){
         $data=[];
         $topicSectionGroupKeys=['1','2','3','4','5'];
-        
-        //$topicGroups[]=array_fill_keys($topicKeys,null);
-        //dd($topicGroups);
+        $sectionIds=[1,2,3,4,5,6,7,8,9,10];
+        $topicSections[]=array_fill_keys($sectionIds,null);
+        //dd($topicSections);
 
-        $themes=$klass->themes;
-        $data['themes']=array_column($klass->themes->toArray(),null,'id');
+        $themeCount=$klass->themes->count();
+        $data['topics']=$klass->themes->first()->topics;
         foreach($klass->students as $student){
+            $data['summaries'][$student->pivot->klass_student_id]=array_fill_keys($sectionIds,0);
             $data['students'][$student->pivot->klass_student_id]=$student;
             $abilities=KlassStudent::find($student->pivot->klass_student_id)->hasMany(Ability::class)->get();
-            foreach($topicSectionGroupKeys as $sectionGroupKey){
-                dd($klass->topics->where('section_group',$sectionGroupKey));
-                $data['summary'][$topicGroup]=null;
-            }
-            
             foreach($klass->topics as $topic){
-                $data['scores'][$student->pivot->klass_student_id][$topic->id]=$abilities->where('topic_id',$topic->id);
+                $ability=$abilities->where('topic_id',$topic->id)->first();
+                // echo json_encode($ability);
+                // echo '<hr>';
+                $data['scores'][$student->pivot->klass_student_id][$topic->id]=$ability;
+                $data['summaries'][$student->pivot->klass_student_id][$topic->section_id]+=$ability->credit;
             }
+            foreach($data['summaries'][$student->pivot->klass_student_id] as $sectionId=>$sum){
+                $data['averages'][$student->pivot->klass_student_id][$sectionId]=round($sum/$themeCount,2);
+            }
+            //$data['average'][$student->pivot->klass_student_id][]
         }
+        return $data;
         dd($data); 
         dd($themes);
         dd($klass);
