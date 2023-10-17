@@ -7,17 +7,17 @@
         </template>
         <a-typography-title :level="4">學年:{{ grade.year.title }}</a-typography-title>
         <a-typography-title :level="4">年級:{{ grade.tag }}</a-typography-title>
-        <inertia-link v-for="g in grades" :href="route('admin.grade.klasses', g.id)"
+        <inertia-link v-for="g in grades" :href="route('admin.grade.klasses.index', g.id)"
             class="px-3 py-2 mr-2 rounded text-white text-sm font-bold whitespace-no-wrap bg-blue-600 hover:bg-blue-800">{{
                 g.tag }}</inertia-link>
         <a-button @click="createRecord()" type="primary">新增班別</a-button>
         <a-table :dataSource="klasses" :columns="columns">
             <template #bodyCell="{ column, text, record, index }">
                 <template v-if="column.dataIndex == 'operation'">
-                    <inertia-link v-if="record.grade.themes.length > 0" :href="route('admin.grade.themes', record.grade.id)"
+                    <inertia-link v-if="record.grade.grade_year <= 3" :href="route('admin.grade.themeTemplates.index', record.grade.id)"
                         class="ant-btn">主題</inertia-link>
-                    <inertia-link v-else :href="route('admin.klass.courses', record.id)" class="ant-btn">科目</inertia-link>
-                    <inertia-link :href="route('admin.klass.students', record.id)" class="ant-btn">學生</inertia-link>
+                    <inertia-link v-else :href="route('admin.klass.courses.index', record.id)" class="ant-btn">科目</inertia-link>
+                    <inertia-link :href="route('admin.select.students.index', {type:'klass',id:record.id})" class="ant-btn">學生</inertia-link>
                     <a-button @click="editRecord(record)">修改</a-button>
                     <a-button @click="lockTranscript(record)">鎖定成積表</a-button>
                 </template>

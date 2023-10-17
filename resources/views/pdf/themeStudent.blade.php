@@ -19,6 +19,7 @@
         @php $cnt=0 @endphp
         @foreach($abilities['students'] as $ksid=>$student)
             <p>Class: {{ $klass->tag}}</p>
+            <p style="font-family: SimHei, sans-serif;">Theme: {{ $theme->title }}</p>
             <p style="font-family: SimHei, sans-serif;">{{ $student->name_zh }}</p>
             <table width="100%" border="1">
                 <tr>

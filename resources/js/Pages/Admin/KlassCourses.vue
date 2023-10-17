@@ -17,7 +17,7 @@
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='students'">
                         <a-button @click="changeTeachers(record)">Teachers</a-button>
-                        <inertia-link :href="route('admin.course.students',record.id)" class="ant-btn">Students</inertia-link>
+                        <inertia-link :href="route('admin.select.students.index',{type:'course',id:record.id})" class="ant-btn">Students</inertia-link>
                     </template>
                     <template v-else-if="column.dataIndex=='subject_heads'">
                         <div v-if="toAssignTeachers">

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Theme;
 use App\Models\Klass;
 use App\Models\KlassStudent;
+use Inertia\Inertia;
 use PDF;
 
 class ThemeController extends Controller
@@ -27,21 +28,21 @@ class ThemeController extends Controller
     public function klassStudent(KlassStudent $klassStudent,Theme $theme, $format='pdf'){
         $theme->topics;
         $abilities=$theme->studentAbilities($klassStudent);
-        $pdf=PDF::loadView('pdf.reportAbilities',[
+        $pdf=PDF::loadView('pdf.themeStudent',[
             'klass'=>$klassStudent->klass,
+            'theme'=>$theme,
             'abilities'=>$abilities,
         ]);
         $pdf->render();
-        
         return $pdf->stream('test.pdf',array('Attachment'=>false));
-
     }
 
     public function klass(Klass $klass,Theme $theme, $format='pdf'){        
         $theme->topics;
         $abilities=$theme->klassAbilities($klass);
-        $pdf=PDF::loadView('pdf.reportAbilities',[
+        $pdf=PDF::loadView('pdf.themeStudent',[
             'klass'=>$klass,
+            'theme'=>$theme,
             'abilities'=>$abilities,
         ]);
         $pdf->render();

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Theme extends Model
 {
     use HasFactory;
+    protected $fillable=['klass_id','term_id','sequence','title'];
     protected $appends= ['topic_count'];
     
     public function getTopicCountAttribute(){
@@ -37,13 +38,15 @@ class Theme extends Model
     }
     public function studentAbilities(KlassStudent $klassStudent){
         $data=[];
-        $data['theme']=array_column($this->toArray(),null,'id');
+        $this->topics;
+        $data['theme']=$this;
+        
         $abilities=array_column($klassStudent->hasMany(Ability::class)->get()->toArray(),null,'topic_id');
         $data['students'][$klassStudent->id]=$klassStudent->student;
         foreach($this->topics as $topic){
             $data['scores'][$klassStudent->id][$topic->id]=$abilities[$topic->id]?$abilities[$topic->id]:null;
         }
-        //dd($data);
+        //dd($data['theme']);
         return $data;
     
     }

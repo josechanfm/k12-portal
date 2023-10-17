@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Klass;
 use App\Models\Course;
-use App\Models\Student;
+use App\Models\Staff;
 
 class CourseController extends Controller
 {
@@ -16,9 +16,16 @@ class CourseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Klass $klass)
     {
-        echo 'courses';
+        $courses=Course::whereBelongsTo($klass)->with('staffs')->get();
+        return Inertia::render('Admin/KlassCourses',[
+            'klass'=>$klass,
+            'courses'=>$courses,
+            'teachers'=>Staff::all()
+            //'subjects'=>$subjects
+        ]);
+
     }
 
     /**
@@ -95,14 +102,14 @@ class CourseController extends Controller
         //
     }
 
-    public function students(Course $course){
+    // public function students(Course $course){
 
-        return Inertia::render('Admin/CourseStudents',[
-            'course'=>$course,
-            'courses'=>$course->klass->courses()->get(),
-            'students'=>$course->students()->with('courses')->get(),
-        ]);
-    }
+    //     return Inertia::render('Admin/CourseStudents',[
+    //         'course'=>$course,
+    //         'courses'=>$course->klass->courses()->get(),
+    //         'students'=>$course->students()->with('courses')->get(),
+    //     ]);
+    // }
 
     public function updateCourseTeachers(Course $course, Request $request){
         $course->subject_head_ids=$request->subject_head_ids;

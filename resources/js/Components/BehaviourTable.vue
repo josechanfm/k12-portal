@@ -2,7 +2,7 @@
   <div class="ant-table">
     <div class="ant-table-container">
       <div class="ant-table-content">
-        <table style="table-layout: auto">
+        <table style="table-layout: auto" ref="behaviourTable">
           <thead class="ant-table-thead">
             <tr>
               <th>學生姓名</th>

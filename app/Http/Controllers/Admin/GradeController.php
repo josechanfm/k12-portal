@@ -11,25 +11,43 @@ use App\Models\Klass;
 use App\Models\Config;
 use App\Models\Study;
 use App\Models\Staff;
-use App\Models\User;
+use App\Models\Topic;
 use App\Models\Additive;
 
 class GradeController extends Controller
 {
+    public function list(){
+        // $yearId=$request->input('yearId');
+        // if($yearId){
+        //     $year=Year::find($yearId);
+        // }else{
+        //     $year=Year::where('active',1)->orderBy('start','DESC')->first();
+        // }
+        $year=Year::where('active',1)->orderBy('start','DESC')->first();
+        return redirect()->route('admin.year.grades.index',$year);
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Year $year)
     {
-        $yearId=$request->input('yearId');
-        if($yearId){
-            $year=Year::find($yearId);
-        }else{
-            $year=Year::where('active',1)->orderBy('start','DESC')->first();
-        }
-        return redirect()->route('admin.year.grades',$year);
+        $grades=Grade::whereBelongsTo($year)->orderBy('grade_year')->get();
+        return Inertia::render('Admin/YearGrades',[
+            'years'=>Year::where('active',true)->get(),
+            'year'=>$year,
+            'grades'=>$grades,
+            'gradeLevels'=>Config::item('grade_levels'),
+        ]);
+
+        // $yearId=$request->input('yearId');
+        // if($yearId){
+        //     $year=Year::find($yearId);
+        // }else{
+        //     $year=Year::where('active',1)->orderBy('start','DESC')->first();
+        // }
+        // return redirect()->route('admin.year.grades',$year);
     }
 
     /**
@@ -136,27 +154,29 @@ class GradeController extends Controller
 
 
 
-    public function klasses(Grade $grade){
-        $grade->year;
-        $grades=Grade::where('year_id',$grade->year_id)->get();
-        $klasses=Klass::with('grade')->with('courses')->whereBelongsTo($grade)->get();
-        $studies=Study::where('active',1)->get();
-        return Inertia::render('Admin/GradeKlasses',[
-            'grade'=>$grade,
-            'grades'=>$grades,
-            'klasses'=>$klasses,
-            'klassLetters'=>Config::item('klass_letters'),
-            'studyStreams'=>Config::item('study_streams'),
-            'studies'=>$studies,
-            'teachers'=>Staff::teachers()
-        ]);        
-    }
+    //public function klasses(Grade $grade){
+        // $grade->year;
+        // $grades=Grade::where('year_id',$grade->year_id)->get();
+        // $klasses=Klass::with('grade')->with('courses')->whereBelongsTo($grade)->get();
+        // $studies=Study::where('active',1)->get();
+        // return Inertia::render('Admin/GradeKlasses',[
+        //     'grade'=>$grade,
+        //     'grades'=>$grades,
+        //     'klasses'=>$klasses,
+        //     'klassLetters'=>Config::item('klass_letters'),
+        //     'studyStreams'=>Config::item('study_streams'),
+        //     'studies'=>$studies,
+        //     'teachers'=>Staff::teachers()
+        // ]);        
+    //}
 
-    public function themes(Grade $grade){
-        return Inertia::render('Admin/GradeThemes',[
-            'grade'=>$grade,
-            'topics'=>$grade->topics
-        ]);
-    }
+    // public function themes(Grade $grade){
+
+    //     return Inertia::render('Admin/GradeThemes',[
+    //         'grade'=>$grade,
+    //         'themeTemplates'=>$grade->themes,
+    //         'topicTemplates'=>Topic::all(),
+    //     ]);
+    // }
 
 }

@@ -23,7 +23,8 @@
 <script>
 export default {
   components: {},
-  
+  //param: extra route param
+  //showTerms: true:show terms selection 
   props: ['routePath','param','currentKlass','showTerms'],
   emits: ['changeTerm'],
   data() {
@@ -48,7 +49,6 @@ export default {
         var klass=this.currentYear.klasses.find(k=>
             k.grade_id==this.selectedGradeId
         )
-        console.log(klass);
         this.selectedKlassId=klass.id
     },
   },

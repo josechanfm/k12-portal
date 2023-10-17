@@ -194,13 +194,13 @@ class YearController extends Controller
     }
 
     public function grades(Year $year){
-        $grades=Grade::whereBelongsTo($year)->orderBy('grade_year')->get();
-        return Inertia::render('Admin/YearGrades',[
-            'years'=>Year::where('active',true)->get(),
-            'year'=>$year,
-            'grades'=>$grades,
-            'gradeLevels'=>Config::item('grade_levels'),
-        ]);
+        // $grades=Grade::whereBelongsTo($year)->orderBy('grade_year')->get();
+        // return Inertia::render('Admin/YearGrades',[
+        //     'years'=>Year::where('active',true)->get(),
+        //     'year'=>$year,
+        //     'grades'=>$grades,
+        //     'gradeLevels'=>Config::item('grade_levels'),
+        // ]);
     }
 
 

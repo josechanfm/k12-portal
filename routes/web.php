@@ -92,16 +92,22 @@ Route::group([
     Route::resource('/',App\Http\Controllers\Admin\DashboardController::class)->names('admin');
     Route::resource('staffs',App\Http\Controllers\Admin\StaffController::class)->names('admin.staffs');
     Route::resource('years',App\Http\Controllers\Admin\YearController::class)->names('admin.years');
-    Route::get('year/{year}/grades',[App\Http\Controllers\Admin\YearController::class,'grades'])->name('admin.year.grades');
-    Route::resource('/grades',App\Http\Controllers\Admin\GradeController::class)->names('admin.grades');
-    Route::get('grade/{grade}/klasses',[App\Http\Controllers\Admin\GradeController::class,'klasses'])->name('admin.grade.klasses');
-    Route::get('/grade/{grade}/themes',[App\Http\Controllers\Admin\GradeController::class, 'themes'])->name('admin.grade.themes');
-    Route::get('klass/{klass}/courses',[App\Http\Controllers\Admin\KlassController::class,'courses'])->name('admin.klass.courses');
-    Route::get('klass/{klass}/students',[App\Http\Controllers\Admin\KlassController::class,'students'])->name('admin.klass.students');
+    
+    //Route::get('year/{year}/grades',[App\Http\Controllers\Admin\YearController::class,'grades'])->name('admin.year.grades');
+
+    Route::resource('year/{year}/grades',App\Http\Controllers\Admin\GradeController::class)->names('admin.year.grades');
+    Route::resource('grade/{grade}/klasses',App\Http\Controllers\Admin\KlassController::class)->names('admin.grade.klasses');
+    Route::resource('/grade/{grade}/theme_templates',App\Http\Controllers\Admin\ThemeTemplateController::class)->names('admin.grade.themeTemplates');
+    Route::resource('klass/{klass}/themes',App\Http\Controllers\Admin\ThemeController::class)->names('admin.klass.themes');
+    Route::resource('klass/{klass}/courses',App\Http\Controllers\Admin\CourseController::class)->names('admin.klass.courses');
+    Route::resource('{type}/{id}/students',App\Http\Controllers\Admin\StudentController::class)->names('admin.select.students');
     Route::post('student/sync_courses',[App\Http\Controllers\Admin\StudentController::class,'syncCourses'])->name('admin.klass.syncCourses');
-    Route::get('course/{course}/students',[App\Http\Controllers\Admin\CourseController::class,'students'])->name('admin.course.students');
+
     Route::put('course/{course}/update_curse_teachers',[App\Http\Controllers\Admin\CourseController::class,'updateCourseTeachers'])->name('admin.course.updateCourseTeachers');
-    Route::resource('/klasses',App\Http\Controllers\Admin\KlassController::class)->names('admin.klasses');
+    
+    Route::get('/klasses',[App\Http\Controllers\Admin\KlassController::class,'list'])->name('admin.klasses');
+    Route::get('/grades',[App\Http\Controllers\Admin\GradeController::class,'list'])->name('admin.grades');
+
     Route::resource('/courses',App\Http\Controllers\Admin\CourseController::class)->names('admin.courses');
     Route::resource('/students',App\Http\Controllers\Admin\StudentController::class)->names('admin.students');
     Route::get('/lock_transcripts',[App\Http\Controllers\Admin\TranscriptController::class,'lockTranscripts'])->name('admin.lockTranscripts');

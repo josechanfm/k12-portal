@@ -18,19 +18,43 @@ use Illuminate\Support\Facades\Validator;
 
 class KlassController extends Controller
 {
+    public function list(){
+        // if($request->gid){
+        //     $grade=Grade::with('year')->find($request->gid);
+        // }else{
+        // $grade=Grade::with('year')->whereBelongsTo(Year::currentYear())->first();
+        // }
+        $grade=Grade::with('year')->whereBelongsTo(Year::currentYear())->first();
+        return redirect()->route('admin.grade.klasses.index',$grade);
+
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Grade $grade)
     {
-        if($request->gid){
-            $grade=Grade::with('year')->find($request->gid);
-        }else{
-            $grade=Grade::with('year')->whereBelongsTo(Year::currentYear())->first();
-        }
-        return redirect()->route('admin.grade.klasses',$grade);
+        $grade->year;
+        $grades=Grade::where('year_id',$grade->year_id)->get();
+        $klasses=Klass::with('grade')->with('courses')->whereBelongsTo($grade)->get();
+        $studies=Study::where('active',1)->get();
+        return Inertia::render('Admin/GradeKlasses',[
+            'grade'=>$grade,
+            'grades'=>$grades,
+            'klasses'=>$klasses,
+            'klassLetters'=>Config::item('klass_letters'),
+            'studyStreams'=>Config::item('study_streams'),
+            'studies'=>$studies,
+            'teachers'=>Staff::teachers()
+        ]);        
+
+        // if($request->gid){
+        //     $grade=Grade::with('year')->find($request->gid);
+        // }else{
+        //     $grade=Grade::with('year')->whereBelongsTo(Year::currentYear())->first();
+        // }
+        // return redirect()->route('admin.grade.klasses',$grade);
     }
 
     /**
@@ -138,46 +162,47 @@ class KlassController extends Controller
 
     public function courses(Klass $klass){
         //$klass=Klass::find($klassId);
-        $courses=Course::whereBelongsTo($klass)->with('staffs')->get();
-        return Inertia::render('Admin/KlassCourses',[
-            'klass'=>$klass,
-            'courses'=>$courses,
-            'teachers'=>Staff::all()
-            //'subjects'=>$subjects
-        ]);
+        // $courses=Course::whereBelongsTo($klass)->with('staffs')->get();
+        // return Inertia::render('Admin/KlassCourses',[
+        //     'klass'=>$klass,
+        //     'courses'=>$courses,
+        //     'teachers'=>Staff::all()
+        //     //'subjects'=>$subjects
+        // ]);
     }
-    public function students(Klass $klass){
-        $klassStudents=$klass->students;
-        $courses=$klass->courses;
-        $coursesStudents=$klass->coursesStudents;
-        $dataTable=[];
-        $dataColumns=[];
+    // public function students(Klass $klass){
+    //     $klassStudents=$klass->students;
+    //     $courses=$klass->courses;
+    //     $coursesStudents=$klass->coursesStudents;
+    //     $dataTable=[];
+    //     $dataColumns=[];
 
-        //Create student course dataTable array table with initial value of false/0 and dataColumns header
-        foreach($courses as $course){
-            $dataColumns[]=[
-                'title'=>$course->title_zh,
-                'dataIndex'=>$course->id
-            ];
-            foreach($klassStudents as $student){
-                $dataTable[$student->id]['student_name']=$student->name_zh;
-                $dataTable[$student->id]['courses'][$course->id]=0;
-            }
-        }
-        //Assign value (True/1) to dataTable array 
-        foreach($coursesStudents as $course){
-            foreach($course->students as $student){
-                $dataTable[$student->id]['courses'][$course->id]=1;
-            }
-        }
+    //     //Create student course dataTable array table with initial value of false/0 and dataColumns header
+    //     foreach($courses as $course){
+    //         $dataColumns[]=[
+    //             'title'=>$course->title_zh,
+    //             'dataIndex'=>$course->id
+    //         ];
+    //         foreach($klassStudents as $student){
+    //             $dataTable[$student->id]['student_name']=$student->name_zh;
+    //             $dataTable[$student->id]['courses'][$course->id]=0;
+    //         }
+    //     }
+    //     //Assign value (True/1) to dataTable array 
+    //     foreach($coursesStudents as $course){
+    //         foreach($course->students as $student){
+    //             $dataTable[$student->id]['courses'][$course->id]=1;
+    //         }
+    //     }
 
-        return Inertia::render('Admin/KlassStudents',[
-            'dataTable'=>$dataTable,
-            'dataColumns'=>$dataColumns,
-            'klass'=>Klass::where('id',$klass->id)->with('courses')->first(),
-            'students'=>$klass->students()->with('courses')->get(),
-            'courses'=>$klass->courses
-        ]);
-    }
+    //     return Inertia::render('Admin/KlassStudents',[
+    //         'dataTable'=>$dataTable,
+    //         'dataColumns'=>$dataColumns,
+    //         'klass'=>Klass::where('id',$klass->id)->with('courses')->first(),
+    //         'students'=>$klass->students()->with('courses')->get(),
+    //         'courses'=>$klass->courses
+    //     ]);
+    // }
+    
 
 }

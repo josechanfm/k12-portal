@@ -27,9 +27,9 @@
                         </template>
                     </a-radio-group>
                     <a-divider type="vertical" />
-                    <a :href="route('manage.pre.klass.theme',{klass:klass.id,theme:selectedThemeId,format:'pdf'})" class="ant-btn" target="_blank">所選主題所有學生</a>
+                    <a :href="route('manage.pre.klass.abilities.pdf',klass.id)" class="ant-btn">報告by Theme</a>
                     <a-divider type="vertical" />
-                    <a :href="route('manage.pre.klass.themes',{klass:klass.id,format:'pdf'})" class="ant-btn" target="_blank">年度總表</a>
+                    <a :href="route('manage.pre.klass.abilities.pdf',klass.id)" class="ant-btn">報告</a>
                     <table id="abilityTable" ref="abilityTable">
                         <thead>
                             <tr>
@@ -70,7 +70,7 @@
                                 <td>
                                     <template v-for="theme in klass.themes">
                                         <span v-if="theme.id==selectedThemeId">
-                                            <a :href="route('manage.pre.klassStudent.theme',{klassStudent:ksid,theme:theme.id,format:'pdf'},)" target="_blank">Pdf</a>
+                                            <a :href="route('manage.pre.klassStudent.theme',{klassStudent:ksid,theme:theme.id})" target="_blank">Pdf</a>
                                         </span>
                                     </template>
                                     
@@ -93,93 +93,20 @@ export default {
     components: {
         AdminLayout
     },
-    props: ['yearTerms','klass','themes', 'topics','students_abilities','abilities'],
+    props: ['klass','theme', 'abilities'],
     data() {
         return {
             keypressed:"",
             selectedTermId:1,
-            selectedThemeId:this.klass.themes[0].id,
-            tableCell:{
-                row:0,
-                col:0,
-                maxRow:this.students_abilities.length,
-                maxCol:this.klass.topics.length
-            },
+            
         }
     },
     created(){
     },
     mounted() {
-        this.$refs.abilityTable.addEventListener('keydown', (e) => {
-            switch(e.key){
-                case 'ArrowUp': 
-                    this.tableCell.row>1?this.tableCell.row--:'';
-                    break;
-                case 'ArrowDown':
-                    this.tableCell.row<this.tableCell.maxRow?this.tableCell.row++:'';
-                    break;
-                case 'ArrowLeft':
-                    this.tableCell.col>1?this.tableCell.col--:'';
-                    break;
-                case 'ArrowRight':
-                    this.tableCell.col<this.tableCell.maxCol?this.tableCell.col++:'';
-                    break;
-            }
-            
-            var input =this.$refs.abilityTable.rows[this.tableCell.row].cells[this.tableCell.col].getElementsByTagName("input");
-            if(input.length>0){
-                input[0].select();
-            }
-        })
-        const inputs=this.$refs.abilityTable.getElementsByTagName("input");
-        for(var i=0; i<inputs.length; i++){
-            inputs[i].addEventListener("focus", (e) => {
-                this.tableCell.row=e.target.closest('tr').rowIndex;
-                this.tableCell.col=e.target.closest('td').cellIndex;
-            })
-        }
     },
     methods: {
-        onKeypressed(event){
-            this.keypressed=event.keyCode;
-        },
-        onChangeTerm(target){
-            this.selectedThemeId=this.klass.themes.find(theme=>theme.term_id==this.selectedTermId).id
-        },
-        saveAbilities(){
-            var data=[];
-            var topicList=[];
-            var topicList=this.klass.themes.find(theme=>theme.id==this.selectedThemeId).topics.map(topic=>topic.id)
-            Object.values(this.abilities.scores).forEach((std)=>{
-                Object.values(std).forEach((score)=>{
-                    if(topicList.includes(score.topic_id)){
-                        delete score['created_at']
-                        delete score['updated_at']
-                        data.push(score)
-                    }
-                })
-            })
-            axios.post   (route('manage.pre.klass.abilities.update',this.klass.id),data)
-                .then(resp=> 
-                    console.log(resp.data)
-                );
-        },
-        getAbilityName(abilities, topic){
-            if(abilities.length==0){
-                return '';
-            }
-            var ability=abilities.find(a=>a.topic_id==topic.id);
-            if(ability===undefined){
-                return '';
-            }
-            return ability.credit
-            
-        },
-        onFocusInput(event){
-            this.tableCell.row=event.target.closest('tr').rowIndex;
-            this.tableCell.col=event.target.closest('td').cellIndex;
-        },
-    },
+    }
 }
 </script>
 

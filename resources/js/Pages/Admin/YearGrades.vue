@@ -26,7 +26,7 @@
         <a-table :dataSource="grades" :columns="columns">
             <template #bodyCell="{column, text, record, index}">
                 <template v-if="column.dataIndex=='operation'">
-                    <inertia-link :href="route('admin.grade.klasses',record.id)" class="ant-btn">班別</inertia-link>
+                    <inertia-link :href="route('admin.grade.klasses.index',record.id)" class="ant-btn">班別</inertia-link>
                     <a-button @click="editRecord(record)">修改</a-button>
                     <a-button @click="deleteRecord(record)">刪除</a-button>
                     <a-button @click="lockTranscript(record)">鎖定成積表</a-button>

@@ -5,12 +5,11 @@
                 學習主題
             </h2>
         </template>
-        <a-typography-title :level="3">年級: {{ grade.tag }}</a-typography-title>
-        <a-typography-title :level="3">年級全稱: {{ grade.title_zh }}</a-typography-title>
+        <a-typography-title :level="3">年級: {{ klass.tag }}</a-typography-title>
+        
         <button @click="onClickCreate()"
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">新增主題</button>
-
-        <a-table :dataSource="themeTemplates" :columns="columns">
+        <a-table :dataSource="themes" :columns="columns">
             <template #bodyCell="{column, text, record, index}">
                 <template v-if="column.dataIndex=='operation'">
                     <a-button @click="onClickEdit(record)" :style="'Edit'">修改</a-button>
@@ -79,7 +78,7 @@ export default {
     components: {
         AdminLayout,
     },
-    props: ['yearTerms','grade','themeTemplates','topicTemplates'],
+    props: ['yearTerms','klass','themes','topicTemplates'],
     data() {
         return {
             modal: {
@@ -106,7 +105,8 @@ export default {
                 },
                 title:{
                     required:true,
-                }            },
+                }
+            },
             validateMessages:{
                 required: '${label} is required!',
                 types: {
@@ -123,8 +123,7 @@ export default {
     methods: {
         onClickCreate(){
             this.modal.data={}
-            this.modal.data.grade_id=this.grade.id
-            this.modal.data.grade_year=this.grade.grade_year
+            this.modal.data.klass_id=this.klass.id
             this.modal.title="新增"
             this.modal.mode='CREATE'
             this.modal.isOpen=true
@@ -138,9 +137,8 @@ export default {
         },
         updateRecord(){
             console.log('update')
-            this.modal.isOpen=false
             this.$refs.modalRef.validateFields().then(()=>{
-                this.$inertia.put(route('admin.grade.themeTemplates.update',[this.modal.data.grade_id,this.modal.data.id]), this.modal.data,{
+                this.$inertia.put(route('admin.klass.themes.update',[this.modal.data.klass_id,this.modal.data.id]), this.modal.data,{
                     onSuccess:(page)=>{
                         this.modal.data={}
                         this.modal.isOpen=false;
@@ -156,9 +154,8 @@ export default {
         },
         storeRecord(){
             console.log('save')
-            this.modal.isOpen=false
             this.$refs.modalRef.validateFields().then(()=>{
-                this.$inertia.post(route('admin.grade.themeTemplates.store',this.modal.data.grade_id), this.modal.data,{
+                this.$inertia.post(route('admin.klass.themes.store',this.modal.data.klass_id), this.modal.data,{
                     onSuccess:(page)=>{
                         this.modal.data={}
                         this.modal.isOpen=false;
@@ -170,6 +167,7 @@ export default {
             }).catch(err => {
                 console.log("error", err);
             });
+
         },
         onClickDelete(){
 

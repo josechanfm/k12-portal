@@ -30,15 +30,16 @@ class Grade extends Model
         return $this->hasMany(Subject::class);
     }
 
-    public function themes(){
-        return $this->hasMany(Theme::class)->with('topics');
+    public function themeTemplates(){
+        return $this->hasMany(ThemeTemplate::class);
     }
 
     public function topics(){
-        return $this->hasManyThrough(
-            Topic::class,
-            Theme::class,
-        )->with('theme');
+        return $this->hasMany(ThemeTemplate::class);
+        // return $this->hasManyThrough(
+        //     Topic::class,
+        //     Theme::class,
+        // )->with('theme');
     }
     public function transcriptTemplates(){
         //$templateGroups=array_column(TranscriptTemplate::select('category')->where('template_id',$this->transcript_template_id)->groupBy('category')->get()->toArray(),null,'category');
