@@ -13,4 +13,7 @@ class Topic extends Model
     public function theme(){
         return $this->belongsTo(Theme::class);
     }
+    public function abilities(){
+        return $this->hasMany(Ability::class);
+    }
 }

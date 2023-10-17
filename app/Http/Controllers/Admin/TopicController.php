@@ -17,7 +17,8 @@ class TopicController extends Controller
      */
     public function index()
     {
-        //
+        $sections=array_column(Config::item('topic_abilities'),'label','value');
+        dd($sections['health']);
     }
 
     /**
@@ -43,7 +44,8 @@ class TopicController extends Controller
         $data['sequence']=Topic::where('theme_id',$request->theme_id)->get()->count()+1;
         
         //$data['section']=>Config:
-        $sections=Config::item('topic_abilities');
+        $sections=array_column(Config::item('topic_abilities'),'label','value');
+        $data['section']=$sections[$request->section_code];
         Topic::create($data);
         return redirect()->back();
 
@@ -90,8 +92,14 @@ class TopicController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Klass $klass, Topic $topic)
     {
-        //
+        if($topic->abilities->count()>0){
+            return redirect()->back()->withErrors(['message'=>'The selected topic had been associated, could not delete.']);
+        }else{
+            $topic->delete();
+            return redirect()->back();
+        }
+
     }
 }

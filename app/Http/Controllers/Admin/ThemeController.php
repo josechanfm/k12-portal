@@ -47,7 +47,9 @@ class ThemeController extends Controller
      */
     public function store(Klass $klass, Request $request)
     {
-        Theme::create($request->all());
+        $data=$request->all();
+        $data['sequence']=Theme::where('klass_id',$klass->id)->get()->count()+1;
+        Theme::create($data);
         return redirect()->back();
 
     }
@@ -84,7 +86,7 @@ class ThemeController extends Controller
     public function update(Klass $klass, Theme $theme, Request $request)
     {
         $theme->update($request->all());
-        return response()->json($theme);
+        return redirect()->back();
     }
 
     /**
@@ -93,8 +95,13 @@ class ThemeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Klass $klass, Theme $theme)
     {
-        //
+        if($theme->topics->count()>0){
+            return redirect()->back()->withErrors(['message'=>'The selected theme has child topics, could not delete.']);
+        }else{
+            $theme->delete();
+            return redirect()->back();
+        }
     }
 }

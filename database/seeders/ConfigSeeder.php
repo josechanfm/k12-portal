@@ -338,6 +338,28 @@ class ConfigSeeder extends Seeder
                 "label": "違規"
             }]'
         ]);
+
+        DB::table('configs')->insert([
+            'key'=>'topic_abilities',
+            'value'=>'[{
+                "value":"health",
+                "label":"健康與體育"
+                },
+                {
+                "value":"language",
+                "label":"語言"
+                },
+                {
+                "value":"social",
+                "label":"個人、社會與人文"
+                },{
+                "value":"science",
+                "label":"數學與科學"
+                },{
+                "value":"art",
+                "label":"藝術"                
+            }]'
+
     }
 }
 
