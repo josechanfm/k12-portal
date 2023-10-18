@@ -5,10 +5,29 @@
                 學習主題
             </h2>
         </template>
-        <a-typography-title :level="3">年級: {{ klass.tag }}</a-typography-title>
+
+        <div class="bg-white shadow sm:rounded-lg my-5 p-5">
+            <a-row>
+                <a-col :sm="24" :lg="12">
+                    <a-typography-title :level="3">年級: {{ year.title }}</a-typography-title>
+                </a-col>
+                <a-col :sm="24" :lg="12">
+                    <template v-for="grade in grades">
+                        <inertia-link class="ant-btn" :href="route('master.grade.themeTemplates.index',grade.id)">{{ grade.tag }}</inertia-link>
+                    </template>
+                </a-col>
+            </a-row>
+            <a-row class="pt-5">
+                <a-col :span="24">
+                    <a-typography-title :level="3">年級: {{ grade.tag }}</a-typography-title>
+                    <a-typography-title :level="3">年級全稱: {{ grade.title_zh }}</a-typography-title>
+                </a-col>
+            </a-row>
+        </div>
+
+        <a-typography-title :level="3">年級: {{ grade.tag }}</a-typography-title>
         <button @click="themeCreate()"
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">新增主題</button>
-
         <div class="ant-table">
             <div class="ant-table-container">
                 <div class="ant-table-content">
@@ -21,7 +40,7 @@
                             </tr>
                         </thead>
                         <tbody class="ant-table-tbody">
-                            <tr v-for="theme in themes">
+                            <tr v-for="theme in themeTemplates">
                                 <td>{{ theme.term_id }}</td>
                                 <td>{{ theme.title }}</td>
                                 <td>
@@ -35,13 +54,13 @@
             </div>
         </div>
 
-        <template v-if="themes.length > 0">
+        <template v-if="themeTemplates.length > 0">
             <button @click="topicCreate()"
                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">新增內容</button>
             <a-divider type="vertical"></a-divider>
-            <a-select v-model:value="selectedThemeId" :options="themes" :fieldNames="{ value: 'id', label: 'title' }"
+            <a-select v-model:value="selectedThemeId" :options="themeTemplates" :fieldNames="{ value: 'id', label: 'title' }"
                 style="width:150px" />
-            <a-table :dataSource="themes.find(theme => theme.id == selectedThemeId).topics" :columns="columns">
+            <a-table :dataSource="themeTemplates.find(theme => theme.id == selectedThemeId).topic_templates" :columns="columns">
                 <template #bodyCell="{ column, text, record, index }">
                     <template v-if="column.dataIndex == 'operation'">
                         {{ record.topics }}
@@ -54,6 +73,7 @@
                 </template>
             </a-table>
         </template>
+
         <!-- modalTheme Start-->
         <a-modal v-model:visible="modalTheme.isOpen" :title="modalTheme.title">
             <a-form :model="modalTheme.data" name="Theme" ref="modalThemeRef" :rules="themeRules"
@@ -109,7 +129,7 @@ export default {
     components: {
         AdminLayout, Modal, createVNode, ExclamationCircleOutlined
     },
-    props: ['yearTerms', 'topicAbilities', 'klass', 'themes'],
+    props: ['yearTerms','year','grades', 'topicAbilities', 'grade', 'themeTemplates'],
     data() {
         return {
             selectedThemeId: null,
@@ -172,15 +192,16 @@ export default {
 
         }
     },
-    created(){
-        if(this.themes.length>0){
-            this.selectedThemeId=this.themes[0].id
+    created() {
+        if (this.themeTemplates.length > 0) {
+            this.selectedThemeId = this.themeTemplates[0].id
         }
     },
     methods: {
         themeCreate() {
             this.modalTheme.data = {}
-            this.modalTheme.data.klass_id = this.klass.id
+            this.modalTheme.data.grade_id = this.grade.id
+            this.modalTheme.data.grade_year = this.grade.grade_year
             this.modalTheme.title = "新增"
             this.modalTheme.mode = 'CREATE'
             this.modalTheme.isOpen = true
@@ -188,7 +209,7 @@ export default {
         },
         themeUpdate() {
             this.$refs.modalThemeRef.validateFields().then(() => {
-                this.$inertia.put(route('admin.klass.themes.update', [this.klass.id, this.modalTheme.data.id]), this.modalTheme.data, {
+                this.$inertia.put(route('master.grade.themeTemplates.update', [this.grade.id, this.modalTheme.data.id]), this.modalTheme.data, {
                     onSuccess: (page) => {
                         this.modalTheme.data = {}
                         this.modalTheme.isOpen = false;
@@ -203,7 +224,7 @@ export default {
         },
         themeStore() {
             this.$refs.modalThemeRef.validateFields().then(() => {
-                this.$inertia.post(route('admin.klass.themes.store', this.klass.id), this.modalTheme.data, {
+                this.$inertia.post(route('master.grade.themeTemplates.store', this.grade.id), this.modalTheme.data, {
                     onSuccess: (page) => {
                         this.modalTheme.data = {}
                         this.modalTheme.isOpen = false;
@@ -224,7 +245,7 @@ export default {
                 okText: '確定',
                 cancelText: '取消',
                 onOk: () => {
-                    this.$inertia.delete(route('admin.klass.themes.destroy', [this.klass.id, theme.id]), {
+                    this.$inertia.delete(route('master.grade.themeTemplates.destroy', [this.grade.id, theme.id]), {
                         onSuccess: (page) => {
                             this.modalTheme.data = {}
                             this.modalTheme.isOpen = false;
@@ -244,7 +265,7 @@ export default {
         },
         topicCreate() {
             this.modalTopic.data = {}
-            this.modalTopic.data.theme_id = this.selectedThemeId
+            this.modalTopic.data.theme_template_id = this.selectedThemeId
             this.modalTopic.title = "新增"
             this.modalTopic.mode = 'CREATE'
             this.modalTopic.isOpen = true
@@ -258,7 +279,7 @@ export default {
         },
         topicUpdate() {
             this.$refs.modalTopicRef.validateFields().then(() => {
-                this.$inertia.put(route('admin.klass.topics.update', [this.klass.id, this.modalTopic.data.id]), this.modalTopic.data, {
+                this.$inertia.put(route('master.grade.topicTemplates.update', [this.grade.id, this.modalTopic.data.id]), this.modalTopic.data, {
                     onSuccess: (page) => {
                         this.modalTopic.data = {}
                         this.modalTopic.isOpen = false;
@@ -272,8 +293,9 @@ export default {
             });
         },
         topicStore() {
+            console.log(this.modalTopic.data);
             this.$refs.modalTopicRef.validateFields().then(() => {
-                this.$inertia.post(route('admin.klass.topics.store', this.klass.id), this.modalTopic.data, {
+                this.$inertia.post(route('master.grade.topicTemplates.store', this.grade.id), this.modalTopic.data, {
                     onSuccess: (page) => {
                         this.modalTopic.data = {}
                         this.modalTopic.isOpen = false;
@@ -294,7 +316,7 @@ export default {
                 okText: '確定',
                 cancelText: '取消',
                 onOk: () => {
-                    this.$inertia.delete(route('admin.klass.topics.destroy', [this.klass.id, topic.id]), {
+                    this.$inertia.delete(route('master.grade.topicTemplates.destroy', [this.grade.id, topic.id]), {
                         onSuccess: (page) => {
                             this.modalTopic.data = {}
                             this.modalTopic.isOpen = false;
@@ -312,8 +334,6 @@ export default {
         topicModalTopicCancel() {
             this.modalTopic.isOpen = false
         }
-
-        
 
 
     },

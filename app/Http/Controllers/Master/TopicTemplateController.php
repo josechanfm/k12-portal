@@ -1,31 +1,23 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
+use App\Models\TopicTemplate;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use App\Models\Config;
 use App\Models\Grade;
-use App\Models\ThemeTemplate;
-use App\Models\Topic;
 
-class ThemeTemplateController extends Controller
+class TopicTemplateController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Grade $grade)
+    public function index()
     {
-        return Inertia::render('Admin/GradeThemes',[
-            'yearTerms'=>Config::item('year_terms'),
-            'grade'=>$grade,
-            'themeTemplates'=>$grade->themeTemplates,
-            'topicTemplates'=>Topic::all(),
-        ]);
-
+        //
     }
 
     /**
@@ -46,7 +38,14 @@ class ThemeTemplateController extends Controller
      */
     public function store(Grade $grade, Request $request)
     {
-        ThemeTemplate::create($request->all());
+        
+        $data=$request->all();
+        $data['sequence']=TopicTemplate::where('theme_template_id',$request->theme_template_id)->get()->count()+1;
+        
+        //$data['section']=>Config:
+        $sections=array_column(Config::item('topic_abilities'),'label','value');
+        $data['section']=$sections[$request->section_code];
+        TopicTemplate::create($data);
         return redirect()->back();
     }
 
@@ -79,10 +78,11 @@ class ThemeTemplateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Grade $grade, ThemeTemplate $themeTemplate, Request $request)
+    public function update(Grade $grade, TopicTemplate $topicTemplate, Request $request)
     {
-        $themeTemplate->update($request->all());
+        $topicTemplate->update($request->all());
         return redirect()->back();
+        
     }
 
     /**
@@ -91,8 +91,9 @@ class ThemeTemplateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Grade $grade, TopicTemplate $topicTemplate)
     {
-        //
+        $topicTemplate->delete();
+        return redirect()->back();
     }
 }

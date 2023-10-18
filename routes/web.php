@@ -74,11 +74,14 @@ Route::group([
         Route::resource('/studies',App\Http\Controllers\Master\StudyController::class)->names('master.stuties');
         Route::resource('/study_subjects',App\Http\Controllers\Master\StudySubjectController::class)->names('master.studySubjects');
         Route::resource('/subjects',App\Http\Controllers\Master\SubjectController::class)->names('master.subjects');
-        Route::resource('/configs',App\Http\Controllers\Master\ConfigController::class);
-        Route::resource('/transcriptTemplate',App\Http\Controllers\Master\TranscriptTemplateController::class);
-        Route::resource('/roles',App\Http\Controllers\Master\RoleController::class);
-        Route::resource('/users',App\Http\Controllers\Master\UserController::class);
-});
+        Route::resource('/configs',App\Http\Controllers\Master\ConfigController::class)->names('master.configs');
+        Route::resource('/transcriptTemplate',App\Http\Controllers\Master\TranscriptTemplateController::class)->names('master.transcriptTemplate');
+        Route::resource('/roles',App\Http\Controllers\Master\RoleController::class)->names('master.roles');
+        Route::resource('/users',App\Http\Controllers\Master\UserController::class)->names('master.users');
+        Route::resource('/grade/{grade}/theme_templates',App\Http\Controllers\Master\ThemeTemplateController::class)->names('master.grade.themeTemplates');
+        Route::resource('/grade/{grade}/topic_templates',App\Http\Controllers\Master\TopicTemplateController::class)->names('master.grade.topicTemplates');
+        Route::get('/theme_templates',[App\Http\Controllers\Master\ThemeTemplateController::class,'list'])->name('master.themeTemplates');
+    });
 
 Route::group([
     'prefix'=>'/admin',
@@ -97,7 +100,6 @@ Route::group([
 
     Route::resource('year/{year}/grades',App\Http\Controllers\Admin\GradeController::class)->names('admin.year.grades');
     Route::resource('grade/{grade}/klasses',App\Http\Controllers\Admin\KlassController::class)->names('admin.grade.klasses');
-    Route::resource('/grade/{grade}/theme_templates',App\Http\Controllers\Admin\ThemeTemplateController::class)->names('admin.grade.themeTemplates');
     Route::resource('klass/{klass}/themes',App\Http\Controllers\Admin\ThemeController::class)->names('admin.klass.themes');
     Route::resource('klass/{klass}/topics',App\Http\Controllers\Admin\TopicController::class)->names('admin.klass.topics');
     Route::resource('klass/{klass}/courses',App\Http\Controllers\Admin\CourseController::class)->names('admin.klass.courses');

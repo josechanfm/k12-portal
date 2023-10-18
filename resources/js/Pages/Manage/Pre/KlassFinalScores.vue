@@ -9,7 +9,7 @@
         </template>
         <p>點擊紅色不合格分數批准補考</p>
         <div class="py-5">
-            <KlassSelector routePath="manage.klass.finalScores" :param="{type:'summary'}" :currentKlass="klass"/>
+            <KlassSelector routePath="manage.pre.klass.finalScores" :param="[]" :currentKlass="klass"/>
         </div>
 
         <div>
@@ -35,26 +35,9 @@
                                         <td v-for="term in yearTerms" class="text-center">
                                             {{ parseFloat(finalScoresK['habits'][ksid][term.value]).toFixed(2) }}
                                         </td>
-                                        <td v-for="term in yearTerms" class="text-center">
-                                            {{ parseFloat(finalScoresK['abilities'][ksid][term.value]).toFixed(2) }}
+                                        <td class="text-center">
+                                            {{ parseFloat(finalScoresK['abilities'][ksid]).toFixed(2) }}
                                         </td>
-                                        <!-- <td v-for="column in finalScores.score_columns" class="text-center">
-                                            <span v-if="isPassed(finalScores['scores'][ksid][column.id]['score'])">
-                                                {{finalScores['scores'][ksid][column.id]['score']}}
-                                            </span>
-                                            <span v-else>
-                                                <span @click="toMakeup(student, column)" class="text-red-500 font-bold">
-                                                    <span :class="column.makeups[ksid] ? 'p-1 rounded-full border-2 border-rose-300' : ''">
-                                                            {{finalScores['scores'][ksid][column.id]['score']}}
-                                                        <span v-if="column.makeups[ksid] && column.makeups[ksid]['point']!==null">
-                                                            / {{ column.makeups[ksid]['point'] }}
-                                                        </span>
-                                                        
-                                                    </span>
-                                                </span>
-                                            </span>
-                                        </td>
-                                        <td class="text-center">{{ finalScores['scores'][ksid]['fail_units'] }}</td> -->
                                     </tr>
                                 </template>
                             </tbody>

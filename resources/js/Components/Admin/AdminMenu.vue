@@ -91,14 +91,18 @@
       url:'/master/studies',
     },{
       key: '0.3',
+      title: '基力設置',
+      url:'/master/theme_templates',
+    },{
+      key: '0.4',
       title: '成積表欄位',
       url:'/master/transcriptTemplate',
     },{
-      key: '0.4',
+      key: '0.5',
       title: '系統參數',
       url:'/master/configs',
     },{
-      key: '0.5',
+      key: '0.6',
       title: '角色及權限',
       url:'/master/roles',
     }],

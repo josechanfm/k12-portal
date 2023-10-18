@@ -301,16 +301,19 @@ class Klass extends Model
             $data['students'][$student->pivot->klass_student_id]=$student;
             foreach($yearTerms as $term){
                 $habit=Habit::where('klass_student_id',$student->pivot->klass_student_id)->where('term_id',$term->value)->first();
-                foreach($habitColumns as $column){
-                    $habitSum+=$habit[$column];
-                };
-                $data['habits'][$student->pivot->klass_student_id][$term->value]=$habitSum/count($habitColumns);
-                $habitYearSum+=$habitSum/count($habitColumns);;
+                $data['habits'][$student->pivot->klass_student_id][$term->value]=0;
+                if($habit){
+                    foreach($habitColumns as $column){
+                        $habitSum+=$habit[$column];
+                    };
+                    $data['habits'][$student->pivot->klass_student_id][$term->value]=$habitSum/count($habitColumns);
+                    $habitYearSum+=$habitSum/count($habitColumns);;
+                }
             }
             $data['habits'][$student->pivot->klass_student_id][9]=$habitYearSum/count($yearTerms);
-            $data['abilities'][$student->pivot->klass_student_id]=array_column(Ability::selectRaw('avg(credit) as total, term_id')->where('klass_student_id',$student->pivot->klass_student_id)->groupBy('term_id')->get()->toArray(),'total','term_id');
+            $data['abilities'][$student->pivot->klass_student_id]=array_column(Ability::selectRaw('avg(credit) as total')->where('klass_student_id',$student->pivot->klass_student_id)->get()->toArray(),'total');
         };
-        //dd($data);
+
         return $data;
 
     }

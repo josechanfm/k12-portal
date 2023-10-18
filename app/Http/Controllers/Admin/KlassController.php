@@ -13,7 +13,7 @@ use App\Models\Year;
 use App\Models\Grade;
 use App\Models\Study;
 use App\Models\Staff;
-use App\Models\Student;
+use App\Models\Topic;
 use Illuminate\Support\Facades\Validator;
 
 class KlassController extends Controller

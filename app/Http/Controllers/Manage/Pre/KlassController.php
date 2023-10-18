@@ -129,7 +129,7 @@ class KlassController extends Controller
         $year->klasses;
         $year->grades;
         //  dd($klass->finalScoresK());
-        return Inertia::render('Manage/KlassFinalScoresK', [
+        return Inertia::render('Manage/Pre/KlassFinalScores', [
             'yearTerms'=>Config::item('year_terms'),
             'year'=>$year,
             'klass' => $klass,

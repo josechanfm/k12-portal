@@ -31,7 +31,7 @@ class Grade extends Model
     }
 
     public function themeTemplates(){
-        return $this->hasMany(ThemeTemplate::class);
+        return $this->hasMany(ThemeTemplate::class)->with('topicTemplates');
     }
 
     public function topics(){

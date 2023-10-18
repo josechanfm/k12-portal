@@ -9,4 +9,8 @@ class ThemeTemplate extends Model
 {
     use HasFactory;
     protected $fillable=['grade_id','grade_year','term_id','sequence','title'];
+
+    public function topicTemplates(){
+        return $this->hasMany(TopicTemplate::class);
+    }
 }
