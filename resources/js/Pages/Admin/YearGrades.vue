@@ -183,7 +183,7 @@ export default {
         updateRecord(){
             this.$refs.modalRef.validateFields().then(()=>{
                 // this.modal.data._method = 'PATCH';
-                this.$inertia.put('/admin/grades/' + this.modal.data.id, this.modal.data,{
+                this.$inertia.put(route('admin.year.grades.update',[this.year.id,this.modal.data.id]), this.modal.data,{
                     onSuccess:(page)=>{
                         this.modal.isOpen=false;
                     },
@@ -197,7 +197,7 @@ export default {
         },
         storeRecord(){
             this.$refs.modalRef.validateFields().then(()=>{
-                this.$inertia.post('/admin/grades/', this.modal.data,{
+                this.$inertia.post(route('admin.year.grades.store', [this.year.id,this.modal.data]),{
                     onSuccess:(page)=>{
                         console.log(page);
                         this.modal.isOpen=false;

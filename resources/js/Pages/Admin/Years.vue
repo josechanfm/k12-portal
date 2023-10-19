@@ -2,18 +2,18 @@
     <AdminLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                School Years
+                學年管理
             </h2>
         </template>
         <button @click="createRecord()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">
-            Create New School Year
+            創建新學年
         </button>
             <a-table :dataSource="years" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
-                        <inertia-link :href="route('admin.year.grades.index',record.id)" class="ant-btn">Grades</inertia-link>
-                        <a-button @click="editRecord(record)">Edit</a-button>
-                        <a-button @click="deleteRecord(record)">Delete</a-button>
+                        <inertia-link :href="route('admin.year.grades.index',record.id)" class="ant-btn">年級</inertia-link>
+                        <a-button @click="editRecord(record)">修改</a-button>
+                        <a-button @click="deleteRecord(record)">刪除</a-button>
                         <a-button @click="lockTranscript(record)">鎖定成積表</a-button>
                     </template>
                     <template v-else-if="column.dataIndex=='grade_group'">
@@ -41,17 +41,16 @@
             @finish="onFinish"
             @onFinishFailed="onFinishFailed"
         >
-            <a-input type="hidden" v-model:value="modal.data.id"/>
-            <a-form-item label="code" name="code">
+            <a-form-item label="學年編號" name="code">
                 <a-input v-model:value="modal.data.code" style="width: 100px"/>
             </a-form-item>
-            <a-form-item label="Title" name="Title">
+            <a-form-item label="學年標題" name="title">
                 <a-input v-model:value="modal.data.title" />
             </a-form-item>
-            <a-form-item label="period" name="Period">
+            <a-form-item label="時期" name="period">
                 <a-range-picker v-model:value="modal.data.period" />
             </a-form-item>
-            <a-form-item label="Current Term" name="current_term">
+            <a-form-item label="開始學段" name="current_term">
                 <a-radio-group v-model:value="modal.data.current_term">
                     <template v-for="term in yearTerms">
                         <a-radio-button :value="term.value">{{term.label}}</a-radio-button>
@@ -59,15 +58,25 @@
                 </a-radio-group>
             </a-form-item>
             <div v-if="modal.mode=='CREATE'">
-                <a-form-item label="Description" name="description">
+                <a-form-item label="簡介" name="description">
                     <a-textarea v-model:value="modal.data.description" />
                 </a-form-item>
 
-                <a-divider orientation="left">Kindergarten</a-divider>
+                <a-divider orientation="left">幼雅園</a-divider>
                 <a-row>
                     <a-col :span="8"></a-col>
                     <a-col :span="8">
-                        <a-form-item label="K Klass" name="kklass">
+                        <a-form-item label="年級數" name="kgrade">
+                            <a-select
+                            v-model:value="modal.data.kgrade"
+                            :options="kgradeOptions"
+                            style="width: 80px"
+                            disabled 
+                            />
+                        </a-form-item>
+                    </a-col>
+                    <a-col :span="8">
+                        <a-form-item label="班級數" name="kklass">
                             <a-select
                             v-model:value="modal.data.kklass"
                             :options="kklassOptions"
@@ -75,21 +84,22 @@
                             />
                         </a-form-item>
                     </a-col>
-                    <a-col :span="8">
-                        <a-form-item label="K Grade" name="kgrade">
-                            <a-select
-                            v-model:value="modal.data.kgrade"
-                            :options="kgradeOptions"
-                            style="width: 80px"
-                            />
-                        </a-form-item>
-                    </a-col>
                 </a-row>
-                <a-divider orientation="left">Primary</a-divider>
+                <a-divider orientation="left">小學</a-divider>
                 <a-row>
                     <a-col :span="8"></a-col>
                     <a-col :span="8">
-                        <a-form-item label="P Klass" name="pklass">
+                        <a-form-item label="年級數" name="pgrade">
+                            <a-select
+                            v-model:value="modal.data.pgrade"
+                            :options="pgradeOptions"
+                            style="width: 80px"
+                            disabled 
+                            />
+                        </a-form-item>
+                    </a-col>
+                    <a-col :span="8">
+                        <a-form-item label="班級數" name="pklass">
                             <a-select
                             v-model:value="modal.data.pklass"
                             :options="pklassOptions"
@@ -97,33 +107,25 @@
                             />
                         </a-form-item>
                     </a-col>
-                    <a-col :span="8">
-                        <a-form-item label="P Grade" name="pgrade">
-                            <a-select
-                            v-model:value="modal.data.pgrade"
-                            :options="pgradeOptions"
-                            style="width: 80px"
-                            />
-                        </a-form-item>
-                    </a-col>
                 </a-row>
-                <a-divider orientation="left">Secondary</a-divider>
+                <a-divider orientation="left">中學</a-divider>
                 <a-row>
                     <a-col :span="8"></a-col>
                     <a-col :span="8">
-                        <a-form-item label="S Klass" name="sklass">
+                        <a-form-item label="年級數" name="sgrade">
                             <a-select
-                            v-model:value="modal.data.sklass"
-                            :options="sklassOptions"
+                            v-model:value="modal.data.sgrade"
+                            :options="sgradeOptions"
                             style="width: 80px"
+                            disabled 
                             />
                         </a-form-item>
                     </a-col>
                     <a-col :span="8">
-                        <a-form-item label="S Grade" name="sgrade">
+                        <a-form-item label="班級數" name="sklass">
                             <a-select
-                            v-model:value="modal.data.sgrade"
-                            :options="sgradeOptions"
+                            v-model:value="modal.data.sklass"
+                            :options="sklassOptions"
                             style="width: 80px"
                             />
                         </a-form-item>
@@ -146,11 +148,14 @@
 
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
+import { Modal } from 'ant-design-vue';
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
+import { ref, createVNode } from 'vue';
 import dayjs from 'dayjs';
 
 export default {
     components: {
-        AdminLayout,
+        AdminLayout, Modal, createVNode, ExclamationCircleOutlined
     },
     props: ['years','param','yearTerms'],
     data() {
@@ -201,18 +206,16 @@ export default {
                 },
             ],
             rules:{
-                name_zh:{
-                    required:true,
-                },
-                phone:[{
-                    required:true,
-                }],
-                address:[{
-                    required:true,
-                }],
-                registed_date:[{
-                    required:true,
-                }],
+                code:{required:true},
+                title:{required:true},
+                period:{required:true},
+                current_term:{required:true},
+                kgrade:{required:true},
+                kklass:{required:true},
+                pgrade:{required:true},
+                pklass:{required:true},
+                sgrade:{required:true},
+                sklass:{required:true},
             },
             validateMessages:{
                 required: '${label} is required!',
@@ -224,65 +227,6 @@ export default {
                     range: '${label} must be between ${min} and ${max}',
                 },
             },
-            kklassOptions:[],
-            kgradeOptions:[],
-            klassOptions:[
-                {
-                    value: '0',
-                    label: '0',
-                },{
-                    value: '1',
-                    label: '1',
-                }, {
-                    value: '2',
-                    label: '2',
-                }, {
-                    value: '3',
-                    label: '3',
-                }, {
-                    value: '4',
-                    label: '4',
-                }, {
-                    value: '5',
-                    label: '5',
-                }, {
-                    value: '6',
-                    label: '6',
-                }
-            ],
-            gradeOptions:[
-                {
-                    value: '0',
-                    label: '0',
-                },{
-                    value: '1',
-                    label: '1',
-                }, {
-                    value: '2',
-                    label: '2',
-                }, {
-                    value: '3',
-                    label: '3',
-                }, {
-                    value: '4',
-                    label: '4',
-                }, {
-                    value: '5',
-                    label: '5',
-                }, {
-                    value: '6',
-                    label: '6',
-                }, {
-                    value: '7',
-                    label: '7',
-                }, {
-                    value: '8',
-                    label: '8',
-                }, {
-                    value: '9',
-                    label: '9',
-                }
-            ],
             labelCol: {
                 style: {
                 width: '150px',
@@ -311,6 +255,7 @@ export default {
         createRecord(){
             this.modalForm={};
             this.modal.data.period=[dayjs('2022/09/01', this.dateFormat), dayjs('2023/07/01', this.dateFormat)];
+            this.modal.data.current_term=1;
             this.modal.data.kklass=this.param.kklassDefault;
             this.modal.data.kgrade=this.param.kgradeDefault;
             this.modal.data.pklass=this.param.pklassDefault;
@@ -319,25 +264,33 @@ export default {
             this.modal.data.sgrade=this.param.sgradeDefault;
             this.modal.mode="CREATE";
             this.modal.isOpen=true
-            this.modal.title="Create Year"
+            this.modal.title="創建學年"
         },
         editRecord(record){
             this.modal.data={...record}
             this.modal.data.period=[dayjs(this.modal.data.start, this.dateFormat), dayjs(this.modal.data.end, this.dateFormat)]
             this.modal.mode="EDIT";
             this.modal.isOpen=true
-            this.modal.title="Edit Year"
+            this.modal.title="修改學年"
         },
         storeRecord(record){
+            console.log(record);
+            console.log(this.modal.data);
             this.$refs.modalRef.validateFields().then(()=>{
-                this.$inertia.post('/admin/years/', record,{
+                this.$inertia.post((route('admin.years.store')), this.modal.data,{
                     onSuccess:(page)=>{
                         console.log(page);
                     },
                     onError:(err)=>{
                         console.log(err);
+                        Modal.error({
+                            title: '數據一致性出錯',
+                            icon: createVNode(ExclamationCircleOutlined),
+                            content: '學年編號重複使用!',
+                            okText: '了解',
+                        });
                     }
-                });
+                })
             }).catch(err => {
                 console.log(err);
             });

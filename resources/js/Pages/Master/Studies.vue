@@ -34,10 +34,10 @@
                 :rules="rules"
                 :validate-messages="validateMessages"
             >
-                <a-form-item label="學年階段" name="grade">
+                <a-form-item label="學年階段.." name="grade_level">
                     <a-select
                         ref="select"
-                        v-model:value="modal.data.grade"
+                        v-model:value="modal.data.grade_level"
                         :options="gradeLevels"
                     />
                 </a-form-item>
@@ -61,10 +61,10 @@
                 <a-form-item label="簡介" name="description">
                     <a-textarea v-model:value="modal.data.description" placeholder="textarea with clear icon" allow-clear />
                 </a-form-item>
-                <a-form-item label="Klass Heads" name="subject_head_ids">
+                <!-- <a-form-item label="Klass Heads" name="subject_head_ids">
                     <a-select v-model:value="modal.data.klass_head_ids" :options="teachers" :fieldNames="{value:'id',label:'name_zh'}"/>
                 </a-form-item>
-
+ -->
                 <a-form-item label="有效" name="active">
                     <a-switch v-model:checked="modal.data.active" :checkedValue="1" :uncheckedValue="0"/>
                 </a-form-item>
@@ -131,7 +131,7 @@ export default {
                 eletive:{
                     required:true,
                 },
-                grade:{
+                grade_level:{
                     required:true,
                 },
                 active:{
@@ -178,8 +178,9 @@ export default {
             this.modal.isOpen = true;
         },
         storeRecord(){
+            console.log(this.modal.data);
             this.$refs.modalRef.validateFields().then(()=>{
-                this.$inertia.post('/master/studies/', this.modal.data,{
+                this.$inertia.post(route('master.studies.store'), this.modal.data,{
                     onSuccess:(page)=>{
                         console.log(page);
                         this.modal.isOpen=false;
@@ -193,8 +194,9 @@ export default {
             });
         },
         updateRecord(){
+            console.log(this.modal.data);
             this.$refs.modalRef.validateFields().then(()=>{
-                this.$inertia.put('/master/studies/' + this.modal.data.id, this.modal.data,{
+                this.$inertia.put(route('master.studies.update',this.modal.data.id), this.modal.data,{
                     onSuccess:(page)=>{
                         console.log(page);
                         this.modal.isOpen=false;

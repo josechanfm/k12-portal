@@ -33,6 +33,7 @@ class GradeController extends Controller
      */
     public function index(Year $year)
     {
+        //dd($year);
         $grades=Grade::whereBelongsTo($year)->orderBy('grade_year')->get();
         return Inertia::render('Admin/YearGrades',[
             'years'=>Year::where('active',true)->get(),
@@ -77,8 +78,10 @@ class GradeController extends Controller
         $grade->title_zh=$request->title_zh;
         $grade->title_en=$request->title_en;
         $grade->description=$request->description;
+        $grade->transcript_template_id=$request->transcript_template_id;
+        $grade->behaviour_scheme=json_encode(Config::item('behaviour_scheme'));
         $grade->version=$request->version;
-        $grade->active=$request->active;
+        $grade->active=$request->active??false;
         $grade->save();
         return redirect()->back();
     }

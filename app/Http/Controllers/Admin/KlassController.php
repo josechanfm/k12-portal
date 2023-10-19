@@ -35,6 +35,8 @@ class KlassController extends Controller
      */
     public function index(Grade $grade)
     {
+        // $study=Study::where('active',true)->where('grade_level',4)->latest()->first();
+        // dd($study);
         $grade->year;
         $grades=Grade::where('year_id',$grade->year_id)->get();
         $klasses=Klass::with('grade')->with('courses')->whereBelongsTo($grade)->get();
@@ -73,7 +75,7 @@ class KlassController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Grade $grade, Request $request)
     {
         Validator::make($request->all(), [
             'grade_id' => ['required'],
@@ -83,10 +85,10 @@ class KlassController extends Controller
         $klass->grade_id=$request->grade_id;
         $klass->letter=$request->letter;
         $klass->stream=$request->stream;
-        $klass->study_id=$request->study_id;
+        $klass->study_id=Study::where('active',true)->where('grade_level',$grade->level)->latest()->first();
         $klass->room=$request->room;
         $klass->tag=Grade::find($request->grade_id)->tag.$request->letter;
-        $klass->study_id=$request->study_id;
+        //$klass->study_id=$request->study_id;
         $klass->save();
         return redirect()->back();
 }
@@ -122,7 +124,7 @@ class KlassController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Grade $grade, Klass $klass, Request $request)
     {
 
         Validator::make($request->all(), [
@@ -131,7 +133,6 @@ class KlassController extends Controller
         ])->validate();
         
         if($request->has('id')){
-            $klass=Klass::find($id);
             $klass->grade_id=$request->grade_id;
             $klass->letter=$request->letter;
             $klass->stream=$request->stream;

@@ -71,7 +71,7 @@ Route::group([
     ]
 ],function () {
         Route::resource('/manuals',App\Http\Controllers\Master\ManualController::class)->names('master.manuals');
-        Route::resource('/studies',App\Http\Controllers\Master\StudyController::class)->names('master.stuties');
+        Route::resource('/studies',App\Http\Controllers\Master\StudyController::class)->names('master.studies');
         Route::resource('/study_subjects',App\Http\Controllers\Master\StudySubjectController::class)->names('master.studySubjects');
         Route::resource('/subjects',App\Http\Controllers\Master\SubjectController::class)->names('master.subjects');
         Route::resource('/configs',App\Http\Controllers\Master\ConfigController::class)->names('master.configs');

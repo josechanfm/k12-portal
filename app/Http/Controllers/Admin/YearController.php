@@ -8,7 +8,7 @@ use Inertia\Inertia;
 use App\Models\Year;
 use App\Models\Grade;
 use App\Models\Klass;
-use App\Models\Subject;
+use App\Models\Study;
 use App\Models\Config;
 use Illuminate\Support\Facades\Validator;
 
@@ -51,6 +51,9 @@ class YearController extends Controller
      */
     public function store(Request $request)
     {
+        if(Year::where('code',$request->code)->get()->count()>0){
+            return redirect()->back()->withErrors(['message'=>'Duplicate Year Code.']);
+        }
         Validator::make($request->all(), [
             'code' => ['required'],
             'title' => ['required'],
@@ -64,29 +67,37 @@ class YearController extends Controller
         ])->validate();
 
         $year=new Year;
-        $year->code = $request->input('code');
-        $year->title = $request->input('title');
-        $year->start = date('Y-m-d', strtotime($request->input('period')[0]));
-        $year->end = date('Y-m-d', strtotime($request->input('period')[1]));
-        $year->description= $request->input('description') ?? "";
+        $year->code = $request->code;
+        $year->title = $request->title;
+        $year->start = date('Y-m-d', strtotime($request->period[0]));
+        $year->end = date('Y-m-d', strtotime($request->period[1]));
+        $year->description= $request->description ?? "";
         $year->active=1;
+        $year->current_term=$request->current_term;
         $year->save();
         $yearId=$year->id;
-        $kklass=$request->input('kklass');
-        $kgrade=$request->input('kgrade');
-        $pklass=$request->input('pklass');
-        $pgrade=$request->input('pgrade');
-        $sklass=$request->input('sklass');
-        $sgrade=$request->input('sgrade');
-        $rank=1;
+        $kklass=$request->kklass;
+        $kgrade=$request->kgrade;
+        $pklass=$request->pklass;
+        $pgrade=$request->pgrade;
+        $sklass=$request->sklass;
+        $sgrade=$request->sgrade;
+
+        //start grade year from 1
+        //Grade year 1-3, kindergarten
+        //Grade year 4-9, kindergarten
+        //Grade year 10-13, kindergarten
+        $gradeYear=1; 
         $letters=['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','W','X','Y','Z'];
-        for($i=1;$i<=$kgrade;$i++){
+        for($i=1;$i<=$kgrade;$i++){ //$i is going to transfer to letter
             $grade=new Grade;
             $grade->year_id=$yearId;
-            $grade->rank=$rank++;
+            $grade->grade_year=$gradeYear++;
+            $grade->initial='K';
             $grade->level=$i;
-            $grade->initial='P';
             $grade->tag=$grade->initial.($i);
+            $grade->transcript_template_id=Config::item('transcript_template');
+            $grade->behaviour_scheme=json_encode(Config::item('behaviour_scheme'));
             $grade->active=1;
             $grade->save();
             $gradeId=$grade->id;
@@ -95,6 +106,7 @@ class YearController extends Controller
                 $klass->grade_id=$gradeId;
                 $klass->letter=$letters[$j-1];
                 $klass->tag=$grade->tag.$letters[$j-1];
+                $klass->study_id=Study::where('active',true)->where('grade_level',$grade->level)->latest()->first()->id??1;
                 $klass->save();
             }
         }
@@ -102,11 +114,13 @@ class YearController extends Controller
         for($i=1;$i<=$pgrade;$i++){
             $grade=new Grade;
             $grade->year_id=$yearId;
-            $grade->rank=$rank++;
-            $grade->level=$i;
+            $grade->grade_year=$gradeYear++;
             $grade->initial='P';
+            $grade->level=$i;
             $grade->tag=$grade->initial.($i);
             $grade->active=1;
+            $grade->transcript_template_id=Config::item('transcript_template');
+            $grade->behaviour_scheme=json_encode(Config::item('behaviour_scheme'));
             $grade->save();
             $gradeId=$grade->id;
             for($j=1;$j<=$pklass;$j++){
@@ -114,17 +128,20 @@ class YearController extends Controller
                 $klass->grade_id=$gradeId;
                 $klass->letter=$letters[$j-1];
                 $klass->tag=$grade->tag.$letters[$j-1];
+                $klass->study_id=Study::where('active',true)->where('grade_level',$grade->level)->latest()->first()->id??1;
                 $klass->save();
             }
         }
         for($i=1;$i<=$sgrade;$i++){
             $grade=new Grade;   
             $grade->year_id=$yearId;
-            $grade->rank=$rank++;
-            $grade->level=$i;
+            $grade->grade_year=$gradeYear++;
             $grade->initial='S';
+            $grade->level=$i;
             $grade->tag=$grade->initial.($i);
             $grade->active=1;
+            $grade->transcript_template_id=Config::item('transcript_template');
+            $grade->behaviour_scheme=json_encode(Config::item('behaviour_scheme'));
             $grade->save();
             $gradeId=$grade->id;
             for($j=1;$j<=$sklass;$j++){
@@ -132,6 +149,7 @@ class YearController extends Controller
                 $klass->grade_id=$gradeId;
                 $klass->letter=$letters[$j-1];
                 $klass->tag=$grade->tag.$letters[$j-1];
+                $klass->study_id=Study::where('active',true)->where('grade_level',$grade->level)->latest()->first()->id??1;
                 $klass->save();
             }
         }
@@ -155,13 +173,13 @@ class YearController extends Controller
             'current_term'=> ['required'],
         ])->validate();
         if($request->has('id')){
-            $year=Year::find($request->input('id'));
-            // $year->herit = $request->input('herit') ?? 0;
-            $year->code = $request->input('code');
-            $year->title = $request->input('title');
-            $year->start = date('Y-m-d', strtotime($request->input('period')[0]));
-            $year->end = date('Y-m-d', strtotime($request->input('period')[1]));
-            $year->description= $request->input('description') ?? "";
+            $year=Year::find($request->id);
+            // $year->herit = $request->herit') ?? 0;
+            $year->code = $request->code;
+            $year->title = $request->title;
+            $year->start = date('Y-m-d', strtotime($request->period[0]));
+            $year->end = date('Y-m-d', strtotime($request->period[1]));
+            $year->description= $request->description ?? "";
             $year->current_term=$request->current_term;
             $year->active=1;
             $year->save();

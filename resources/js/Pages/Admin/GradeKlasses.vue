@@ -221,7 +221,7 @@ export default {
         storeRecord() {
             console.log(this.modal.data);
             this.$refs.modalRef.validateFields().then(() => {
-                this.$inertia.post('/admin/klasses/', this.modal.data, {
+                this.$inertia.post(route('admin.grade.klasses.store',this.grade.id), this.modal.data, {
                     onSuccess: (page) => {
                         this.modal.isOpen = false;
                         console.log(page);
@@ -236,7 +236,7 @@ export default {
         },
         updateRecord() {
             this.$refs.modalRef.validateFields().then(() => {
-                this.$inertia.put('/admin/klasses/' + this.modal.data.id, this.modal.data, {
+                this.$inertia.put(route('admin.grade.klasses.update',[this.grade.id,this.modal.data.id]),  this.modal.data, {
                     onSuccess: (page) => {
                         this.modal.isOpen = false;
                     },

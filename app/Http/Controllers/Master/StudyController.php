@@ -58,7 +58,7 @@ class StudyController extends Controller
         $study->title_en=$request->title_en;
         $study->stream=$request->stream;
         $study->description=$request->description;
-        $study->grade=$request->grade;
+        $study->grade_level=$request->grade_level;
         $study->active=$request->active;
         $study->save();
         return redirect()->back();
@@ -93,20 +93,19 @@ class StudyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Study $study, Request $request)
     {
         Validator::make($request->all(), [
             'version' => ['required'],
             'title_zh' => ['required'],
         ])->validate();
 
-        $study=Study::find($id);
         $study->version=$request->version;
         $study->title_zh=$request->title_zh;
         $study->title_en=$request->title_en;
         $study->stream=$request->stream;
         $study->description=$request->description;
-        $study->grade=$request->grade;
+        $study->grade_level=$request->grade_level;
         $study->active=$request->active;
         $study->save();
         return redirect()->back();

@@ -17,7 +17,7 @@ class StudySeeder extends Seeder
     {
         $id=DB::table('studies')->insertGetId([
             'version'=>1,
-            'grade'=>'P1',
+            'grade_level'=>'4',
             'title_zh'=>'小學一年級',
             'stream'=>'ALL',
             'active'=>true
@@ -31,7 +31,7 @@ class StudySeeder extends Seeder
 
         $id=DB::table('studies')->insertGetId([
             'version'=>1,
-            'grade'=>'P2',
+            'grade_level'=>'5',
             'title_zh'=>'小學二年級',
             'stream'=>'ALL',
             'active'=>true
@@ -45,7 +45,7 @@ class StudySeeder extends Seeder
 
         $id=DB::table('studies')->insertGetId([
             'version'=>1,
-            'grade'=>'P3',
+            'grade_level'=>'6',
             'title_zh'=>'小學三年級',
             'stream'=>'ALL',
             'active'=>true
@@ -59,7 +59,7 @@ class StudySeeder extends Seeder
 
         $id=DB::table('studies')->insertGetId([
             'version'=>1,
-            'grade'=>'P4',
+            'grade_level'=>'7',
             'title_zh'=>'小學四年級',
             'stream'=>'ALL',
             'active'=>true
@@ -73,7 +73,7 @@ class StudySeeder extends Seeder
 
         $id=DB::table('studies')->insertGetId([
             'version'=>1,
-            'grade'=>'P5',
+            'grade_level'=>'8',
             'title_zh'=>'小學五年級',
             'stream'=>'ALL',
             'active'=>true
@@ -87,7 +87,7 @@ class StudySeeder extends Seeder
 
         $id=DB::table('studies')->insertGetId([
             'version'=>1,
-            'grade'=>'P6',
+            'grade_level'=>'9',
             'title_zh'=>'小學六年級',
             'stream'=>'ALL',
             'active'=>true
@@ -101,7 +101,7 @@ class StudySeeder extends Seeder
 
         $id=DB::table('studies')->insertGetId([
             'version'=>1,
-            'grade'=>'SC1',
+            'grade_level'=>'10',
             'title_zh'=>'初中一年級',
             'stream'=>'ALL',
             'active'=>true
@@ -115,7 +115,7 @@ class StudySeeder extends Seeder
 
         $id=DB::table('studies')->insertGetId([
             'version'=>1,
-            'grade'=>'SC2',
+            'grade_level'=>'11',
             'title_zh'=>'初中二年級',
             'stream'=>'ALL',
             'active'=>true
@@ -129,7 +129,7 @@ class StudySeeder extends Seeder
 
         $id=DB::table('studies')->insertGetId([
             'version'=>1,
-            'grade'=>'SC3',
+            'grade_level'=>'12',
             'title_zh'=>'初中三年級',
             'stream'=>'ALL',
             'active'=>true
@@ -143,7 +143,7 @@ class StudySeeder extends Seeder
 
         $id=DB::table('studies')->insertGetId([
             'version'=>1,
-            'grade'=>'SG1',
+            'grade_level'=>'13',
             'title_zh'=>'高中一年級',
             'stream'=>'ALL',
             'active'=>true
@@ -157,7 +157,7 @@ class StudySeeder extends Seeder
 
         $id=DB::table('studies')->insertGetId([
             'version'=>1,
-            'grade'=>'SG2',
+            'grade_level'=>'14',
             'title_zh'=>'高中二年級',
             'stream'=>'ALL',
             'active'=>true
@@ -171,7 +171,7 @@ class StudySeeder extends Seeder
 
         $id=DB::table('studies')->insertGetId([
             'version'=>1,
-            'grade'=>'SG3',
+            'grade_level'=>'15',
             'title_zh'=>'高中三年級',
             'stream'=>'ALL',
             'active'=>true
