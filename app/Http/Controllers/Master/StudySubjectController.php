@@ -95,7 +95,7 @@ class StudySubjectController extends Controller
     public function edit($id)
     {
         $study=Study::with('subjects')->find($id);
-        $subjects=Subject::where('active',1)->with('study')->get();
+        $subjects=Subject::where('active',1)->with('studys')->get();
         //dd($subjects[0]->study);
         return Inertia::render('Master/StudySubjectEdit',[
             'study'=>$study,

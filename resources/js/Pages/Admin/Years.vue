@@ -274,18 +274,15 @@ export default {
             this.modal.title="修改學年"
         },
         storeRecord(record){
-            console.log(record);
-            console.log(this.modal.data);
             this.$refs.modalRef.validateFields().then(()=>{
                 this.$inertia.post((route('admin.years.store')), this.modal.data,{
                     onSuccess:(page)=>{
                         console.log(page);
                     },
                     onError:(err)=>{
-                        console.log(err);
+                        //console.log(err);
                         Modal.error({
                             title: '數據一致性出錯',
-                            icon: createVNode(ExclamationCircleOutlined),
                             content: '學年編號重複使用!',
                             okText: '了解',
                         });
@@ -313,17 +310,27 @@ export default {
             });
            
         },
-        deleteRecord(recordId){
-            if (!confirm('Are you sure want to remove?')) return;
-            this.$inertia.delete('/admin/years/' + recordId,{
-                onSuccess: (page)=>{
-                    console.log(page);
-                },
-                onError: (error)=>{
-                    console.log(error);
+        deleteRecord(record){
+            Modal.confirm({
+                title: '是否確定',
+                content: '刪除所選之主題?',
+                okText: '確定',
+                cancelText: '取消',
+                onOk: () => {
+                    this.$inertia.delete(route('admin.years.destroy', record.id), {
+                        onSuccess: (page) => {
+                            console.log(record.id+"deleted.");
+                        },
+                        onError: (error) => {
+                            Modal.error({
+                                title: '數據一致性出錯',
+                                content: error.message,
+                                okText: '了解',
+                            });
+                        }
+                    });
                 }
-            });
-            this.ChangeModalMode('Close');
+            })
         },
         handleValidate(field){
             console.log("handleValidate: "+field);

@@ -106,7 +106,7 @@ class YearController extends Controller
                 $klass->grade_id=$gradeId;
                 $klass->letter=$letters[$j-1];
                 $klass->tag=$grade->tag.$letters[$j-1];
-                $klass->study_id=Study::where('active',true)->where('grade_level',$grade->level)->latest()->first()->id??1;
+                $klass->study_id=Study::where('active',true)->where('grade_year',$grade->grade_year)->latest()->first()->id??1;
                 $klass->save();
             }
         }
@@ -128,7 +128,7 @@ class YearController extends Controller
                 $klass->grade_id=$gradeId;
                 $klass->letter=$letters[$j-1];
                 $klass->tag=$grade->tag.$letters[$j-1];
-                $klass->study_id=Study::where('active',true)->where('grade_level',$grade->level)->latest()->first()->id??1;
+                $klass->study_id=Study::where('active',true)->where('grade_year',$grade->grade_year)->latest()->first()->id??1;
                 $klass->save();
             }
         }
@@ -149,7 +149,7 @@ class YearController extends Controller
                 $klass->grade_id=$gradeId;
                 $klass->letter=$letters[$j-1];
                 $klass->tag=$grade->tag.$letters[$j-1];
-                $klass->study_id=Study::where('active',true)->where('grade_level',$grade->level)->latest()->first()->id??1;
+                $klass->study_id=Study::where('active',true)->where('grade_year',$grade->grade_year)->latest()->first()->id??1;
                 $klass->save();
             }
         }
@@ -194,14 +194,13 @@ class YearController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Year $year)
     {
-        $payment=Year::find($id);
-        if($payment){
-            $payment->delete();
-            return redirect()->back()
-                ->with('message', 'Year Delete Successfully');
-
+        if($year->grades->count()>0){
+            return redirect()->back()->withErrors(['message'=>'Could not delete, foreign key used in grade table.']);
+        }else{
+            $year->delete();
+            return redirect()->back();    
         }
     }
     public function year($yearId){
@@ -211,15 +210,6 @@ class YearController extends Controller
         ]);
     }
 
-    public function grades(Year $year){
-        // $grades=Grade::whereBelongsTo($year)->orderBy('grade_year')->get();
-        // return Inertia::render('Admin/YearGrades',[
-        //     'years'=>Year::where('active',true)->get(),
-        //     'year'=>$year,
-        //     'grades'=>$grades,
-        //     'gradeLevels'=>Config::item('grade_levels'),
-        // ]);
-    }
 
 
 }

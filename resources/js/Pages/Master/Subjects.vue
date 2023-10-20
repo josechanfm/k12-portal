@@ -91,14 +91,18 @@
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
+import { Modal } from 'ant-design-vue';
 import {CheckSquareOutlined, StopOutlined} from '@ant-design/icons-vue';
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
+import { ref, createVNode } from 'vue';
 
 export default {
     components: {
         AdminLayout,
         ButtonLink,
         CheckSquareOutlined,
-        StopOutlined
+        StopOutlined, 
+        Modal, createVNode, ExclamationCircleOutlined
     },
     props: ['subjects','subjectTypes','studyStreams','teachers'],
     data() {
@@ -231,16 +235,27 @@ export default {
             });
            
         },
-        onClickDelete(recordId){
-            if (!confirm('是否確定刪除?')) return;
-            this.$inertia.delete('/admin/gradeSubjects/' + recordId,{
-                onSuccess: (page)=>{
-                    console.log(page);
-                },
-                onError: (error)=>{
-                    console.log(error);
+        onClickDelete(record){
+            Modal.confirm({
+                title: '是否確定',
+                content: '刪除所選之主題?',
+                okText: '確定',
+                cancelText: '取消',
+                onOk: () => {
+                    this.$inertia.delete(route('master.subjects.destroy', record.id), {
+                        onSuccess: (page) => {
+                            console.log(record.id+"deleted.");
+                        },
+                        onError: (error) => {
+                            Modal.error({
+                                title: '數據一致性出錯',
+                                content: error.message,
+                                okText: '了解',
+                            });
+                        }
+                    });
                 }
-            });
+            })
         },
         modalCancel(){
             this.modal.data={}

@@ -78,15 +78,15 @@ class SubjectController extends Controller
      */
     public function show($id)
     {
-        $study=Study::with('subjects')->find($id);
-        $subjects=Subject::where('version',1)->get();
-        // echo json_encode($study);
-        // echo json_encode($subjects);
-        // return;
-        return Inertia::render('Master/Subject',[
-            'study'=>$study,
-            'subjects'=>$subjects
-        ]);
+        // $study=Study::with('subjects')->find($id);
+        // $subjects=Subject::where('version',1)->get();
+        // // echo json_encode($study);
+        // // echo json_encode($subjects);
+        // // return;
+        // return Inertia::render('Master/Subject',[
+        //     'study'=>$study,
+        //     'subjects'=>$subjects
+        // ]);
     }
 
     /**
@@ -97,12 +97,12 @@ class SubjectController extends Controller
      */
     public function edit($id)
     {
-        $study=Study::with('subjects')->find($id);
-        $subjects=Subject::where('version',1)->where('active',1)->get();
-        return Inertia::render('Master/SubjectEdit',[
-            'study'=>$study,
-            'subjects'=>$subjects
-        ]);
+        // $study=Study::with('subjects')->find($id);
+        // $subjects=Subject::where('version',1)->where('active',1)->get();
+        // return Inertia::render('Master/SubjectEdit',[
+        //     'study'=>$study,
+        //     'subjects'=>$subjects
+        // ]);
     }
 
     /**
@@ -112,14 +112,13 @@ class SubjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Subject $subject, Request $request)
     {
         Validator::make($request->all(), [
             'code' => ['required'],
         ])->validate();
         
         if($request->has('id')){
-            $subject=Subject::find($id);
             $subject->code=$request->code;
             $subject->title_zh=$request->title_zh;
             $subject->title_en=$request->title_en;
@@ -140,8 +139,14 @@ class SubjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Subject $subject)
     {
-        //
+        if($subject->studys->count()>0){
+            return redirect()->back()->withErrors(['message'=>'Could not delete, record depends on study table']);
+        }else{
+            $subject->delete();
+            return redirect()->back();    
+        }
+        
     }
 }

@@ -39,7 +39,7 @@ class GradeController extends Controller
             'years'=>Year::where('active',true)->get(),
             'year'=>$year,
             'grades'=>$grades,
-            'gradeLevels'=>Config::item('grade_levels'),
+            'gradeLevels'=>Config::item('grade_years'),
         ]);
 
         // $yearId=$request->input('yearId');
@@ -67,7 +67,7 @@ class GradeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Year $year, Request $request)
     {
         $grade=new Grade;
         $grade->year_id=$request->year_id;
@@ -92,9 +92,8 @@ class GradeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Year $year, Grade $grade)
     {
-        $grade=Grade::find($id);
         $klasses=Klass::whereBelongsTo(Grade::find($id))->get();
         echo json_encode($grade);
         echo json_encode($klasses);
@@ -124,10 +123,9 @@ class GradeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Year $year, Grade $grade, Request $request)
     {
         if($request->has('id')){
-            $grade=Grade::find($id);
             $grade->year_id=1;
             $grade->title_zh=$request->title_zh;
             $grade->title_en=$request->title_en;
@@ -145,41 +143,16 @@ class GradeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Year $year, Grade $grade)
     {
-        if(Klass::whereBelongsTo(Grade::find($id))->get()->count()>0){
+        if(Klass::whereBelongsTo($grade)->get()->count()>0){
             return redirect()->back()->withErrors(['message'=>'Could not delete, foreign key used in Klass table.']);
         }else{
-            //Grade::destroy($id);
+            $grade->delete();
             return redirect()->back();    
         }
     }
 
 
-
-    //public function klasses(Grade $grade){
-        // $grade->year;
-        // $grades=Grade::where('year_id',$grade->year_id)->get();
-        // $klasses=Klass::with('grade')->with('courses')->whereBelongsTo($grade)->get();
-        // $studies=Study::where('active',1)->get();
-        // return Inertia::render('Admin/GradeKlasses',[
-        //     'grade'=>$grade,
-        //     'grades'=>$grades,
-        //     'klasses'=>$klasses,
-        //     'klassLetters'=>Config::item('klass_letters'),
-        //     'studyStreams'=>Config::item('study_streams'),
-        //     'studies'=>$studies,
-        //     'teachers'=>Staff::teachers()
-        // ]);        
-    //}
-
-    // public function themes(Grade $grade){
-
-    //     return Inertia::render('Admin/GradeThemes',[
-    //         'grade'=>$grade,
-    //         'themeTemplates'=>$grade->themes,
-    //         'topicTemplates'=>Topic::all(),
-    //     ]);
-    // }
 
 }

@@ -12,7 +12,7 @@
                     <template v-if="column.dataIndex=='operation'">
                         <inertia-link :href="route('master.studySubjects.edit',record.id)" class="ant-btn">選擇學科</inertia-link>
                         <a-button @click="onClickEdit(record)">修改</a-button>
-                        <a-button @click="onClickDelete(record.id)">刪除</a-button>
+                        <a-button @click="onClickDelete(record)">刪除</a-button>
                     </template>
                     <template v-else-if="column.dataIndex=='courses'">
                         <ul>
@@ -34,11 +34,11 @@
                 :rules="rules"
                 :validate-messages="validateMessages"
             >
-                <a-form-item label="學年階段.." name="grade_level">
+                <a-form-item label="學年階段.." name="grade_year">
                     <a-select
                         ref="select"
-                        v-model:value="modal.data.grade_level"
-                        :options="gradeLevels"
+                        v-model:value="modal.data.grade_year"
+                        :options="gradeYears"
                     />
                 </a-form-item>
                 <a-form-item label="版本" name="version">
@@ -83,12 +83,15 @@
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { defineComponent, reactive } from 'vue';
+import { Modal } from 'ant-design-vue';
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
+import { ref, createVNode } from 'vue';
 
 export default {
     components: {
-        AdminLayout,
+        AdminLayout, Modal, createVNode, ExclamationCircleOutlined
     },
-    props: ['studies','studyStreams','gradeLevels','versions'],
+    props: ['studies','studyStreams','gradeYears','versions'],
     data() {
         return {
             modal: {
@@ -103,7 +106,7 @@ export default {
                     dataIndex: 'version',
                 },{
                     title: '年級代號',
-                    dataIndex: 'grade',
+                    dataIndex: 'grade_year',
                 },{
                     title: '年級名稱',
                     dataIndex: 'title_zh',
@@ -131,7 +134,7 @@ export default {
                 eletive:{
                     required:true,
                 },
-                grade_level:{
+                grade_year:{
                     required:true,
                 },
                 active:{
@@ -210,16 +213,28 @@ export default {
             });
            
         },
-        onClickDelete(recordId){
-            if (!confirm('Are you sure want to remove?')) return;
-            this.$inertia.delete('/master/studies/' + recordId,{
-                onSuccess: (page)=>{
-                    console.log(page);
-                },
-                onError: (error)=>{
-                    console.log(error);
+        onClickDelete(record){
+            Modal.confirm({
+                title: '是否確定',
+                content: '刪除所選之主題?',
+                okText: '確定',
+                cancelText: '取消',
+                onOk: () => {
+                    this.$inertia.delete(route('master.studies.destroy', record.id), {
+                        onSuccess: (page) => {
+                            console.log(record.id+"deleted.");
+                        },
+                        onError: (error) => {
+                            console.log(error.message);
+                            Modal.error({
+                                title: '數據一致性出錯',
+                                content: error.message,
+                                okText: '了解',
+                            });
+                        }
+                    });
                 }
-            });
+            })
         },
         modalCancel(){
             this.modal.data={}

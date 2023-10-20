@@ -14,7 +14,7 @@ class Subject extends Model
     public function grade(){
         return $this->belongsTo(Grade::class);
     }
-    public function study(){
+    public function studys(){
         return $this->belongsToMany(Study::class)->withPivot('subject_head_ids');
     }
 }

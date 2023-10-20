@@ -5,7 +5,7 @@
                 學習主題
             </h2>
         </template>
-
+        {{ themeTemplates }}
         <div class="bg-white shadow sm:rounded-lg my-5 p-5">
             <a-row>
                 <a-col :sm="24" :lg="12">

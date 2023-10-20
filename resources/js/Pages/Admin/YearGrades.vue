@@ -61,8 +61,6 @@
                             :options="gradeLevels.map(level=>({value:level.value, label:level.label}))"
                             @change="onChangeGradeSelected"
                         ></a-select>
-                        <input v-model="modal.data.initial" hidden/>
-                        <input v-model="modal.data.level" hidden/>
                     </a-form-item>
                     <a-form-item label="年級代號" name="tag" v-else >
                         {{ modal.data.initial }}{{ modal.data.level }}
@@ -72,9 +70,6 @@
                     </a-form-item>
                     <a-form-item label="英文名稱" name="title_en">
                         <a-input v-model:value="modal.data.title_en" />
-                    </a-form-item>
-                    <a-form-item label="建立班別數" name="klass_num">
-                        <a-input-number v-model:value="modal.data.klass_num" />
                     </a-form-item>
                     <a-form-item label="成績表模版" name="transcript_template_id">
                         <a-input-number v-model:value="modal.data.transcript_template_id" />
@@ -107,6 +102,9 @@
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
 import {CheckSquareOutlined, StopOutlined} from '@ant-design/icons-vue';
+import { Modal } from 'ant-design-vue';
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
+import { ref, createVNode } from 'vue';
 
 
 export default {
@@ -114,7 +112,8 @@ export default {
         AdminLayout,
         ButtonLink,
         CheckSquareOutlined,
-        StopOutlined
+        StopOutlined,
+        Modal, ExclamationCircleOutlined, createVNode
     },
     props: ['years','year','grades','gradeLevels'],
     data() {
@@ -127,9 +126,10 @@ export default {
                 data:{}
             },
             rules:{
-                sequence:{
-                    required:true,
-                },
+                grade_year:{required:true},
+                title_zh:{required:true},
+                title_en:{required:true},
+                transcript_template_id:{required:true},
             },
             validateMessages:{
                 required: '${label} is required!',
@@ -211,16 +211,28 @@ export default {
             })
         },
         deleteRecord(record){
-            if (!confirm('是否確定刪除?')) return;
-            this.$inertia.delete('/admin/grades/'+record.id,{
-                onSuccess:(page)=>{
-                    console.log(record.id+" deleted.");
-                },
-                onError:(error)=>{
-                    alert(error.message );
-                    console.log(error);
+            console.log(record)
+            Modal.confirm({
+                title: '是否確定',
+                content: '刪除所選之主題?',
+                okText: '確定',
+                cancelText: '取消',
+                onOk: () => {
+                    this.$inertia.delete(route('admin.year.grades.destroy', [record.year_id, record.id]), {
+                        onSuccess: (page) => {
+                            console.log(record.id+"deleted.");
+                        },
+                        onError: (error) => {
+                            Modal.error({
+                                title: '數據一致性出錯',
+                                content: error.message,
+                                okText: '了解',
+                            });
+                        }
+                    });
                 }
-            });
+            })
+
         },
         selectYear(item){
             this.$inertia.get(route('admin.year.grades',item));

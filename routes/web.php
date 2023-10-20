@@ -78,8 +78,8 @@ Route::group([
         Route::resource('/transcriptTemplate',App\Http\Controllers\Master\TranscriptTemplateController::class)->names('master.transcriptTemplate');
         Route::resource('/roles',App\Http\Controllers\Master\RoleController::class)->names('master.roles');
         Route::resource('/users',App\Http\Controllers\Master\UserController::class)->names('master.users');
-        Route::resource('/grade/{grade}/theme_templates',App\Http\Controllers\Master\ThemeTemplateController::class)->names('master.grade.themeTemplates');
-        Route::resource('/grade/{grade}/topic_templates',App\Http\Controllers\Master\TopicTemplateController::class)->names('master.grade.topicTemplates');
+        Route::resource('/grade/{gradeYear}/theme_templates',App\Http\Controllers\Master\ThemeTemplateController::class)->names('master.grade.themeTemplates');
+        Route::resource('/grade/{gradeYear}/topic_templates',App\Http\Controllers\Master\TopicTemplateController::class)->names('master.grade.topicTemplates');
         Route::get('/theme_templates',[App\Http\Controllers\Master\ThemeTemplateController::class,'list'])->name('master.themeTemplates');
     });
 

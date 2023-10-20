@@ -23,7 +23,7 @@ class StudyController extends Controller
         return Inertia::render('Master/Studies',[
             'studies'=>$studies,
             'studyStreams'=>Config::item('study_streams'),
-            'gradeLevels'=>Config::item('grade_levels'),
+            'gradeYears'=>Config::item('grade_years'),
             'versions'=>Study::versions()
             // 'versions'=>'[{value:1},{value:2}]'
         ]);
@@ -58,7 +58,7 @@ class StudyController extends Controller
         $study->title_en=$request->title_en;
         $study->stream=$request->stream;
         $study->description=$request->description;
-        $study->grade_level=$request->grade_level;
+        $study->grade_year=$request->grade_year;
         $study->active=$request->active;
         $study->save();
         return redirect()->back();
@@ -105,7 +105,7 @@ class StudyController extends Controller
         $study->title_en=$request->title_en;
         $study->stream=$request->stream;
         $study->description=$request->description;
-        $study->grade_level=$request->grade_level;
+        $study->grade_year=$request->grade_year;
         $study->active=$request->active;
         $study->save();
         return redirect()->back();
@@ -118,15 +118,23 @@ class StudyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Study $study)
     {
-        $study=Study::find($id);
-        if($study){
-            $study->delete();
-            return redirect()->back()
-                ->with('message', 'Study Delete Successfully');
 
+        if($study->subjects->count()>0){
+            return redirect()->back()->withErrors(['message'=>'Could not delete, record depends on subject table']);
+        }else{
+            $study->delete();
+            return redirect()->back();    
         }
+
+        // $study=Study::find($id);
+        // if($study){
+        //     $study->delete();
+        //     return redirect()->back()
+        //         ->with('message', 'Study Delete Successfully');
+
+        // }
     }
 
     public function subjects(Request $request)

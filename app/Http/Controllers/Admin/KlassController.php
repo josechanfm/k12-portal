@@ -33,10 +33,7 @@ class KlassController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Grade $grade)
-    {
-        // $study=Study::where('active',true)->where('grade_level',4)->latest()->first();
-        // dd($study);
+    public function index(Grade $grade){
         $grade->year;
         $grades=Grade::where('year_id',$grade->year_id)->get();
         $klasses=Klass::with('grade')->with('courses')->whereBelongsTo($grade)->get();
@@ -85,7 +82,7 @@ class KlassController extends Controller
         $klass->grade_id=$request->grade_id;
         $klass->letter=$request->letter;
         $klass->stream=$request->stream;
-        $klass->study_id=Study::where('active',true)->where('grade_level',$grade->level)->latest()->first();
+        $klass->study_id=Study::where('active',true)->where('grade_years',$grade->grade_year)->latest()->first();
         $klass->room=$request->room;
         $klass->tag=Grade::find($request->grade_id)->tag.$request->letter;
         //$klass->study_id=$request->study_id;

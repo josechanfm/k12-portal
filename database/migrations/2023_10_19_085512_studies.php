@@ -16,11 +16,11 @@ return new class extends Migration
         Schema::create('studies', function (Blueprint $table) {
             $table->id();
             $table->integer('version');
+            $table->string('grade_year');
             $table->integer('sequence')->nullable();
             $table->string('title_zh');
             $table->string('title_en');
             $table->string('stream');
-            $table->string('grade_level');
             $table->text('description')->nullable();
             $table->boolean('active');
             $table->timestamps();

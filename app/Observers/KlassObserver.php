@@ -20,7 +20,9 @@ class KlassObserver
     {
         //$subjects=Subject::where('grade_id',$klass->grade_id)->get();
         if(empty($klass->study_id)){
-            if($klass->grade->level<=3)
+            if($klass->grade->level<=3){
+                
+            }
             return false;
         };
         $subjects=Study::find($klass->study_id)->subjects;

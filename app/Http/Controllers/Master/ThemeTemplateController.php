@@ -23,26 +23,56 @@ class ThemeTemplateController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Grade $grade)
+    public function index($gradeYear)
     {
+        //dd($gradeYear);
+        $t=ThemeTemplate::find(1);
+        //dd($t->topicTemplates);
+        $tempTopics=Config::item('topic_templates');
+        //dd($tempTopics);
+        $themeTemplates=ThemeTemplate::where('grade_year',$gradeYear)->with('TopicTemplates')->get();
+        if($themeTemplates->count()<=0){
+            echo 'add themetemplate';
+        }else{
+            foreach($themeTemplates as $themeTemplate){
+                if($themeTemplate->topicTemplates->count()<=0){
+                    echo 'add topic to theme'.$themeTemplate->id;
+                    foreach($tempTopics as $i=>$topic){
+                        $topic->theme_template_id=$themeTemplate->id;
+                        
+                        TopicTemplate::create((array)$topic);
+                    }
+                }else{
+                    echo json_encode($themesTopics);
+                }
+            }
+        }
+        dd('---');
+
         $grades=Year::currentYear()->grades->where('grade_year','<=',3);
         $topics=TopicTemplate::where('theme_template_id',1)->get()->toArray();
-        dd($topics);
+
         foreach($grades as $grade){
             if($grade->themeTemplates->count()<=0){
-                echo $grade->id .'no themes<br>';
+                return Inertia::render('Error',[
+                    'message'=>"You are themeTemplates."
+                ]);
             }else{
-                foreach($grade->themeTemplates as $theme){
-                    if($theme->topicTemplates->count()<=0){
+                foreach($grade->themeTemplates as $themeTemplate){
+                    if($themeTemplate->topicTemplates->count()>0){
                         foreach($topics as $i=>$topic){
-                            $topics[$i]['theme_tempalte_id']=$theme->id;
+                            $topics[$i]['theme_template_id']=$themeTemplate->id;
                         }
-                        TopicTemplate::create($topics);
+                        // TopicTemplate::upsert(
+                        //     $topics,
+                        //     ['theme_template_id','section_code'],
+                        //     ['sequence','abbr','title']
+                        // );
                     }
                 }
             }
         }
-        dd($grades);
+        
         $year=$grade->year;
         return Inertia::render('Master/GradeThemeTemplates',[
             'yearTerms'=>Config::item('year_terms'),
