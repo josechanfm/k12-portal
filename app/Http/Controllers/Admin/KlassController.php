@@ -85,7 +85,7 @@ class KlassController extends Controller
         $klass->grade_id=$request->grade_id;
         $klass->letter=$request->letter;
         $klass->stream=$request->stream;
-        $klass->study_id=Study::where('active',true)->where('grade_level',$grade->level)->latest()->first();
+        $klass->study_id=Study::where('active',true)->where('grade_year',$grade->grade_year)->latest()->first()->id;
         $klass->room=$request->room;
         $klass->tag=Grade::find($request->grade_id)->tag.$request->letter;
         //$klass->study_id=$request->study_id;

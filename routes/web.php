@@ -214,14 +214,13 @@ Route::group([
 
 
 
-/*
+
 Route::prefix('promote')->group(function(){
     Route::resource('/',App\Http\Controllers\Admin\PromotionController::class);
+    Route::get('klass/{klassId}',[App\Http\Controllers\Admin\PromotionController::class,'klass']);
     Route::get('getStudents/{klassId}',[App\Http\Controllers\Admin\PromotionController::class,'getStudents']);
     Route::get('getPromotedStudents/{klassId}',[App\Http\Controllers\Admin\PromotionController::class,'getPromotedStudents']);
     Route::post('updateStudents',[App\Http\Controllers\Admin\PromotionController::class,'updateStudents']);
     Route::get('data/{yearId}',[App\Http\Controllers\Admin\PromotionController::class, 'data']);
 });
 
-
-*/

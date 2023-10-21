@@ -169,14 +169,18 @@ class PromotionController extends Controller
     }
     public function klass($klassId){
         $grade=Klass::find($klassId)->grade;
+        //dd($grade);
         $year=Year::find($grade->year_id);
         $nextYear=Year::nextYear($year->id);;
-        $nextGrade=Grade::where('year_id',$nextYear->id)->where('level',($grade->level+1))->first();
+        $nextGrade=Grade::where('year_id',$nextYear->id)->where('grade_year',($grade->grade_year+1))->first();
+        //dd($nextGrade);
         $klass=Klass::find($klassId);
+        //dd($klass);
         $nextKlasses=Klass::where('grade_id',$nextGrade->id)->get();
+        //dd($nextKlasses);
         $students=Klass::find($klassId)->students;
         //$courses=Klass::find($klassId)->courses;
-        return Inertia::render('Annual/Promotion',[
+        return Inertia::render('Admin/Promotion',[
             'year'=>$year,
             'nextYear'=>$nextYear,
             'grade'=>$grade,

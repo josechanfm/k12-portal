@@ -5,13 +5,13 @@
                 Year Plan Dashboard
             </h2>
         </template>
-        <p>Year: {{year}}</p>
+        <!-- <p>Year: {{year}}</p>
         <p>Grades: {{grades}}</p>
         <p>Next Year: {{nextYear}}</p>
         <p>Grade: {{grade}}</p>
         <p>Next Grade: {{nextGrade}}</p>
         <p>Klass: {{klass}}</p>
-        <p>Next Klasses: {{nextKlasses}}</p>
+        <p>Next Klasses: {{nextKlasses}}</p> -->
 <!-- 
         <p>Year: {{year}}</p>
         
@@ -29,7 +29,7 @@
         
        </div>
        <div class="float-right">
-        <a-button type="primary">Promote</a-button>
+        <a-button type="primary" @click="confirmPromote">Promote</a-button>
        </div>
        
         
@@ -52,17 +52,29 @@
                         <a-checkbox v-model:checked="student.selected"/>
 
                     </td>
-                    <td class="text-left">{{student.name_zh}}</td>
-                    <td class="text-left">{{student.gender}}</td>
+                    <td class="text-left">
+                        {{student.name_zh}}
+                    </td>
+                    <td class="text-left">
+                        {{student.gender}}
+                    </td>
                     <td class="text-left">
                         <StudyStream :stream="student.pivot.stream"/>
                     </td>
-                    <td class="text-left">{{student.pivot.state}}</td>
+                    <td class="text-left">
+                        {{student.pivot.state}}
+                    </td>
                     <td class="text-left">
                         <PromoteState :state="student.pivot.promote"/>
                     </td>
                     <td class="text-left">
-                        <PromoteLetters :grade="1" :student="student"/>
+                        <a-radio-group v-model:value="student.pivot.promote_to" button-style="solid">
+                            <template v-for="klass in nextKlasses">
+                                <a-radio-button :value="klass.id">
+                                    {{ klass.tag}}
+                                </a-radio-button>
+                            </template>
+                        </a-radio-group>
                     </td>
                     <td>
                         actions
@@ -89,19 +101,20 @@
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { defineComponent, reactive } from 'vue';
 import PromoteState from '@/Components/PromoteState.vue';
-import PromoteLetters from '@/Components/PromoteLetters.vue';
+//import PromoteLetters from '@/Components/PromoteLetters.vue';
 import StudyStream from '@/Components/StudyStream.vue'
 
 export default {
     components: {
         AdminLayout,
         PromoteState,
-        PromoteLetters,
+        //PromoteLetters,
         StudyStream
     },
-    props: ['year','grades'],
+    props: ['year','grades','grade','klass','nextYear','nextGrade','nextKlasses','students'],
     data() {
         return {
+            tmp:{},
             selectAll:false,
             activeKey:"1",
             klassColumns: [
@@ -127,7 +140,9 @@ export default {
         }
     },
     methods: {
-
+        confirmPromote(){
+            console.log(this.students);
+        }
     },
 }
 </script>
