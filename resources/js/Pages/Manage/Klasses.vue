@@ -22,7 +22,6 @@
         </template>
         <a-divider type="vertical" />
         <inertia-link :href="route('manage.klass.behaviours.index', klass.id)" class="ant-btn">操行</inertia-link>
-
         <a-divider type="vertical" />
         <template v-if="additiveStyle=='default'">
             <template v-for="group in additiveGroups">
@@ -35,7 +34,8 @@
         <template v-else-if="additiveStyle=='direct'">
             <inertia-link :href="route('manage.klass.additive.direct', klass.id)" class="ant-btn">直接輸入</inertia-link>
         </template>
-
+        <a-divider type="vertical" />
+        <inertia-link :href="route('manage.klass.promotes.index',klass.id)" class="ant-btn">升留班</inertia-link>
 
         <p>&nbsp;</p>
 

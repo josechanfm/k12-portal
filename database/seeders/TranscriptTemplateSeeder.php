@@ -74,53 +74,65 @@ class TranscriptTemplateSeeder extends Seeder
         //template 1
         //primary to secondary grades
         //'title_zh'=>'學年評定',
+        $cnt=1;
         foreach($personal as $key=>$value){
             DB::table('transcript_templates')->insert([
                 'template_id'=>1,
                 'category'=>'PERSONAL',
                 'reference_code'=>$key,
+                'sequence'=>$cnt++,
                 'title_zh'=>$value,
             ]);
         };
+        $cnt=1;
         foreach($subject as $key=>$value){
             DB::table('transcript_templates')->insert([
                 'template_id'=>1,
                 'category'=>'SUBJECT',
                 'reference_code'=>$key,
+                'sequence'=>$cnt++,
                 'title_zh'=>$value,
                 'version'=>1,
             ]);
         };
+        $cnt=1;
         foreach($summary as $key=>$value){
             DB::table('transcript_templates')->insert([
                 'template_id'=>1,
                 'category'=>'SUMMARY',
                 'reference_code'=>$key,
+                'sequence'=>$cnt++,
                 'title_zh'=>$value,
                 'version'=>1,
             ]);
         };
+        $cnt=1;
         foreach($general as $key=>$value){
             DB::table('transcript_templates')->insert([
                 'template_id'=>1,
                 'category'=>'GENERAL',
                 'reference_code'=>$key,
+                'sequence'=>$cnt++,
                 'title_zh'=>$value,
                 'version'=>1,
             ]);
         };
+        $cnt=1;
         DB::table('transcript_templates')->insert([
             'template_id'=>1,
             'category'=>'GENERAL',
             'reference_code'=>'appraisal',
+            'sequence'=>$cnt++,
             'title_zh'=>'學年評定',
             'version'=>1,
         ]);
+        $cnt=1;
         DB::table('transcript_templates')->insert([
             'template_id'=>1,
             'category'=>'GENERAL',
             'reference_code'=>'passing',
             'title_zh'=>'合格分數',
+            'sequence'=>$cnt++,
             'value'=>60,
             'version'=>1,
         ]);
@@ -132,45 +144,55 @@ class TranscriptTemplateSeeder extends Seeder
         //template 2
         //kindergarden
         //'title_zh'=>'學年評定',
+        $cnt=1;
         foreach($personal as $key=>$value){
             DB::table('transcript_templates')->insert([
                 'template_id'=>2,
                 'category'=>'PERSONAL',
                 'reference_code'=>$key,
+                'sequence'=>$cnt++,
                 'title_zh'=>$value,
             ]);
         };
+        $cnt=1;
         foreach($attitude as $key=>$value){
             DB::table('transcript_templates')->insert([
                 'template_id'=>2,
                 'category'=>'ATTITUDE',
                 'reference_code'=>$key,
+                'sequence'=>$cnt++,
                 'title_zh'=>$value,
                 'version'=>1,
             ]);
         };
+        $cnt=1;
         foreach($summary as $key=>$value){
             DB::table('transcript_templates')->insert([
                 'template_id'=>2,
                 'category'=>'SUMMARY',
                 'reference_code'=>$key,
+                'sequence'=>$cnt++,
                 'title_zh'=>$value,
                 'version'=>1,
             ]);
         };
+        $cnt=1;
         foreach($general as $key=>$value){
             DB::table('transcript_templates')->insert([
                 'template_id'=>2,
                 'category'=>'GENERAL',
                 'reference_code'=>$key,
+                'sequence'=>$cnt++,
                 'title_zh'=>$value,
                 'version'=>1,
             ]);
         };
+        $cnt=1;
         DB::table('transcript_templates')->insert([
             'template_id'=>2,
             'category'=>'GENERAL',
             'reference_code'=>'appraisal',
+            'sequence'=>$cnt++,
             'title_zh'=>'學年評定',
             'version'=>1,
         ]);

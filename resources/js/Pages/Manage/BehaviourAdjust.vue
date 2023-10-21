@@ -5,7 +5,7 @@
     </template>
     <div>
       <div class="py-5">
-        <KlassSelector routePath="manage.klass.behaviour.adjust" :param="[]" :currentKlass="klass" showTerms="true" @changeTerm="changeSelectedTerm"/>
+        <KlassSelector routePath="manage.klass.behaviour.adjust" :param="[]" showTerms="true" @changeTerm="changeSelectedTerm"/>
       </div>
       <a-typography-title :level="4">{{ staff.name_zh }}</a-typography-title>
       <div v-if="course">

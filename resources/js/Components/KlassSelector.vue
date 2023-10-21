@@ -6,7 +6,7 @@
     <a-radio-group v-model:value="selectedKlassId" button-style="solid">
         <template v-for="klass in currentYear.klasses">
             <a-radio-button v-if="klass.grade_id==selectedGradeId" :value="klass.id">
-                <inertia-link :href="route(routePath, [klass.id,param])">{{klass.tag}}</inertia-link>
+                <inertia-link :href="route(routePath, [klass.id,routeParam])">{{klass.tag}}</inertia-link>
             </a-radio-button>
         </template>
     </a-radio-group>
@@ -33,16 +33,28 @@ export default {
         selectedGradeId:0,
         selectedKlassId:0,
         currentYear:{},
+        klass:{},
+        routeParam:null,
     };
   },
   mounted() {
+    if(this.param!=null){
+        this.routeParam=this.param;
+    }
+    
     axios.get(route('gradesKlasses'))
         .then(resp=> {
                 this.currentYear=resp.data.current_year
+                if(this.currentKlass==null){
+                    this.klass=this.currentYear.klasses.find(klass=>klass.grade_year>3);
+                }else{
+                    this.klass=this.currentKlass;
+                }
+                
+                this.selectedKlassId=this.klass.id
+                this.selectedGradeId=this.klass.grade_id
             }
         );
-    this.selectedKlassId=this.currentKlass.id
-    this.selectedGradeId=this.currentKlass.grade_id
   },
   methods: {
     onGradeChange(){

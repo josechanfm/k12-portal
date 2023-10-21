@@ -5,6 +5,9 @@
                 Year Plan Dashboard
             </h2>
         </template>
+        <div class="py-5">
+            <KlassSelector routePath="manage.klass.promotes.index" :currentKlass="klass"/>
+        </div>
         <!-- <p>Year: {{year}}</p>
         <p>Grades: {{grades}}</p>
         <p>Next Year: {{nextYear}}</p>
@@ -20,13 +23,14 @@
         <p>{{klassesSubjects}}</p> 
  -->
        <div>
-        Selected Item:
-        <a-select
-            style="width: 120px"
-        >
-            <a-select-option value="a">Promote to: </a-select-option>
+        Selected Item promote to:
+        <a-select v-model:value="batchPromoteTo" style="width: 120px">
+            <a-select-option :value="0">Reset all</a-select-option>
+            <template v-for="klass in nextKlasses">
+                <a-select-option :value="klass.id">{{klass.tag}}</a-select-option>
+            </template>
         </a-select>
-        
+        <a-button @click="confirmBatchPromote">Confirm</a-button>
        </div>
        <div class="float-right">
         <a-button type="primary" @click="confirmPromote">Promote</a-button>
@@ -36,7 +40,9 @@
         <table width="100%">
             <thead>
                 <tr>
-                    <th class="text-left"><a-checkbox v-model:checked="selectAll"/>Selection</th>
+                    <th class="text-left">
+                        <a-checkbox @change="selectAll"/> Selection
+                    </th>
                     <th class="text-left">Name</th>
                     <th class="text-left">Gender</th>
                     <th class="text-left">Stream</th>
@@ -50,7 +56,6 @@
                 <tr v-for="student in students">
                     <td class="text-left">
                         <a-checkbox v-model:checked="student.selected"/>
-
                     </td>
                     <td class="text-left">
                         {{student.name_zh}}
@@ -68,7 +73,7 @@
                         <PromoteState :state="student.pivot.promote"/>
                     </td>
                     <td class="text-left">
-                        <a-radio-group v-model:value="student.pivot.promote_to" button-style="solid">
+                        <a-radio-group v-model:value="student.pivot.promote_to" button-style="solid" @change="student.selected=true">
                             <template v-for="klass in nextKlasses">
                                 <a-radio-button :value="klass.id">
                                     {{ klass.tag}}
@@ -103,45 +108,84 @@ import { defineComponent, reactive } from 'vue';
 import PromoteState from '@/Components/PromoteState.vue';
 //import PromoteLetters from '@/Components/PromoteLetters.vue';
 import StudyStream from '@/Components/StudyStream.vue'
+import KlassSelector from '@/Components/KlassSelector.vue';
 
 export default {
     components: {
         AdminLayout,
         PromoteState,
         //PromoteLetters,
-        StudyStream
+        StudyStream,
+        KlassSelector
     },
     props: ['year','grades','grade','klass','nextYear','nextGrade','nextKlasses','students'],
     data() {
         return {
-            tmp:{},
-            selectAll:false,
-            activeKey:"1",
-            klassColumns: [
-                {
-                    title: 'Grade',
-                    dataIndex:'grade',
-                },
-                {
-                    title: 'Initial',
-                    dataIndex:'initial',
-                }
-            ],
-            subjectColumns: [
-                {
-                    title: 'Abbr',
-                    dataIndex:'abbr',
-                },
-                {
-                    title: 'Title Zh',
-                    dataIndex:'title_zh',
-                }
-            ]
+            batchPromoteTo:null,
+            // activeKey:"1",
+            // klassColumns: [
+            //     {
+            //         title: 'Grade',
+            //         dataIndex:'grade',
+            //     },
+            //     {
+            //         title: 'Initial',
+            //         dataIndex:'initial',
+            //     }
+            // ],
+            // subjectColumns: [
+            //     {
+            //         title: 'Abbr',
+            //         dataIndex:'abbr',
+            //     },
+            //     {
+            //         title: 'Title Zh',
+            //         dataIndex:'title_zh',
+            //     }
+            // ]
         }
     },
     methods: {
         confirmPromote(){
-            console.log(this.students);
+            var data=[]
+            this.students.forEach(student=>{
+                if(student.selected){
+                    data.push({
+                        klass_student_id:student.pivot.klass_student_id, 
+                        promote_to:student.pivot.promote_to
+                    })
+                }
+            })
+            this.$inertia.put(route('manage.klass.promotes.update',this.klass.id), {klassStudents:data}, {
+                onSuccess: (page) => {
+                    console.log(page)
+                },
+                onError: (error) => {
+                    console.log(error);
+                }
+            });
+            console.log(data)
+        },
+        selectAll(event){
+            this.students.forEach(student=>{
+                student.selected=event.target.checked;
+            })
+        },
+        confirmBatchPromote(){
+            if(this.batchPromoteTo==0){
+                this.$inertia.get(route('manage.klass.promotes.index',this.klass.id));
+            }else{
+                var data=[]
+                this.students.forEach(student=>{
+                    if(student.selected){
+                        student.pivot.promote_to=this.batchPromoteTo
+                        data.push({
+                            klass_student_id:student.pivot.klass_student_id, 
+                            promote_to:student.pivot.promote_to
+                        })
+                    }
+                })
+            }
         }
     },
 }

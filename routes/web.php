@@ -182,6 +182,14 @@ Route::group([
         Route::resource('certificates',App\Http\Controllers\Manage\CertificateController::class)->names('manage.certificates');
         Route::get('certificate/get_by_conditions',[App\Http\Controllers\Manage\CertificateController::class,'getByConditions'])->name('manage.certificate.getByConditions');
 
+        Route::get('promotes',[App\Http\Controllers\Manage\PromotionController::class,'list'])->name('manage.promotes');
+        Route::resource('klass/{klass}/promotes/',App\Http\Controllers\Manage\PromotionController::class)->names('manage.klass.promotes');
+        // Route::get('klass/{klassId}/promote',[App\Http\Controllers\Manage\PromotionController::class,'klass'])->name('manage.klass.promote');
+        // Route::get('getStudents/{klassId}/promote',[App\Http\Controllers\Manage\PromotionController::class,'getStudents'])->name('manage.getStudents.promote');;
+        // Route::get('getPromotedStudents/{klassId}/promote',[App\Http\Controllers\Manage\PromotionController::class,'getPromotedStudents'])->name('manage.getPromotedStudents.promote');;
+        // Route::post('updateStudents/promote',[App\Http\Controllers\Manage\PromotionController::class,'updateStudents'])->name('manage.updateStudents.promote');;
+        // Route::get('data/{yearId}/promote',[App\Http\Controllers\Manage\PromotionController::class, 'data'])->name('manage.data.promote');;
+    
         Route::resource('/pre/klasses',App\Http\Controllers\Manage\Pre\KlassController::class)->names('manage.pre.klasses');
         Route::resource('pre/students',App\Http\Controllers\Manage\Pre\StudentController::class)->names('manage.pre.students');
         Route::get('/pre/klass/{klass}/habits',[App\Http\Controllers\Manage\Pre\HabitController::class,'klass'])->name('manage.pre.klass.habits');
@@ -215,12 +223,12 @@ Route::group([
 
 
 
-Route::prefix('promote')->group(function(){
-    Route::resource('/',App\Http\Controllers\Admin\PromotionController::class);
-    Route::get('klass/{klassId}',[App\Http\Controllers\Admin\PromotionController::class,'klass']);
-    Route::get('getStudents/{klassId}',[App\Http\Controllers\Admin\PromotionController::class,'getStudents']);
-    Route::get('getPromotedStudents/{klassId}',[App\Http\Controllers\Admin\PromotionController::class,'getPromotedStudents']);
-    Route::post('updateStudents',[App\Http\Controllers\Admin\PromotionController::class,'updateStudents']);
-    Route::get('data/{yearId}',[App\Http\Controllers\Admin\PromotionController::class, 'data']);
-});
+// Route::prefix('promote')->group(function(){
+//     Route::resource('/',App\Http\Controllers\Admin\PromotionController::class);
+//     Route::get('klass/{klassId}',[App\Http\Controllers\Admin\PromotionController::class,'klass']);
+//     Route::get('getStudents/{klassId}',[App\Http\Controllers\Admin\PromotionController::class,'getStudents']);
+//     Route::get('getPromotedStudents/{klassId}',[App\Http\Controllers\Admin\PromotionController::class,'getPromotedStudents']);
+//     Route::post('updateStudents',[App\Http\Controllers\Admin\PromotionController::class,'updateStudents']);
+//     Route::get('data/{yearId}',[App\Http\Controllers\Admin\PromotionController::class, 'data']);
+// });
 

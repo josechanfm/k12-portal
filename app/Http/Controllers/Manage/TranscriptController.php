@@ -12,6 +12,7 @@ use App\Models\Year;
 use App\Models\Grade;
 use App\Models\Klass;
 use App\Models\Config;
+use PhpParser\Builder\Trait_;
 
 use function GuzzleHttp\json_decode;
 
@@ -25,11 +26,19 @@ class TranscriptController extends Controller
     }
 
     public function KlassStudent(KlassStudent $klassStudent){
-        dd($klassStudent->student);
-        $klassStudent=KlassStudent::find($klassStudentId);
-        dd($klassStudent);
-        return Inertia::render('Manage/Transcript',[
-            'transcriptTemplate'=>$id,
+        //dd($klassStudent->student);
+        //$klassStudent=KlassStudent::find($klassStudentId);
+        $klassStudent->student;
+        $klassStudent->klass;
+        $transcriptTemplates=TranscriptTemplate::where('template_id',$klassStudent->klass->grade->transcript_template_id)->orderBy('category')->orderBy('sequence')->get();
+        //dd($transcriptTemplates);
+        $transcripts=Transcript::where('klass_student_id',$klassStudent->id)->get();
+        //dd($transcripts);
+        // dd($transcriptTemplates);
+        return Inertia::render('Manage/StudentTranscript',[
+            'yearTerms'=>Config::item('year_terms'),
+            'transcriptTemplates'=>$transcriptTemplates,
+            'transcripts'=>$transcripts,
             'student'=>$klassStudent
         ]);
         return response($klassStudent);
