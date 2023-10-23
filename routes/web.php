@@ -153,7 +153,7 @@ Route::group([
         Route::get('/grade/{grade}/transcripts',[App\Http\Controllers\Manage\TranscriptController::class,'gradeTranscripts'])->name('manage.grade.transcripts');
         Route::get('/klass/{klass}/transcripts',[App\Http\Controllers\Manage\TranscriptController::class,'klass'])->name('manage.klass.transcripts');
         Route::get('/klass/{klass}/transcripts/migrate',[App\Http\Controllers\Manage\TranscriptController::class,'migrate'])->name('manage.klass.transcripts.migrate');
-        Route::get('/klass/student/{klassStudent}/transcript',[App\Http\Controllers\Manage\TranscriptController::class,'klassStudent'])->name('manage.klass.student.transcripts');
+        Route::get('/klass/student/{klassStudent}/transcript',[App\Http\Controllers\Manage\TranscriptController::class,'klassStudent'])->name('manage.klass.student.transcript');
         
         Route::resource('/teachers',App\Http\Controllers\Manage\TeacherController::class);
         Route::get('teaching/{teacherId}',[App\Http\Controllers\Manage\TeacherController::class,'teaching'])->name('manage.teaching');   
