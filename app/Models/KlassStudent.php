@@ -19,7 +19,7 @@ class KlassStudent extends Model
         return $this->hasMany(Behaviour::class);
     }
     public function klass(){
-        return $this->belongsTo(Klass::class);
+        return $this->belongsTo(Klass::class)->with('grade');
     }
 
 }

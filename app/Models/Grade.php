@@ -42,21 +42,89 @@ class Grade extends Model
         // )->with('theme');
     }
     public function transcriptTemplates(){
+        $yearTerms=Config::item('year_terms');
         //$templateGroups=array_column(TranscriptTemplate::select('category')->where('template_id',$this->transcript_template_id)->groupBy('category')->get()->toArray(),null,'category');
-        $templateGroups=TranscriptTemplate::select('category')->where('template_id',$this->transcript_template_id)->groupBy('category')->get()->pluck('category')->mapWithKeys(function($item){
-            return [$item=>[]];
-        });
+        $byTermCategories=['GENERAL'];
+        $byYearCategories=['PERSONAL','SUMMARY'];
+        $byTemplate=['appraisal','passing'];
+        //SUBJECT are different with specific process
+        $data=[];
+        //dd($templateCategories);
         // dd($templateGroups['PERSONAL']);
-        foreach($templateGroups as $cat=>$value){
-            $templateGroups[$cat]=array_column(TranscriptTemplate::where('template_id',$this->transcript_template_id)->where('category',$cat)->get()->toArray(),null,'reference_code');
-
+        //PERSONAL category
+        foreach($byYearCategories as $cat){
+            $data[$cat]=array_column(TranscriptTemplate::where('template_id',$this->transcript_template_id)
+                ->where('category',$cat)
+                ->orderBy('id')->get()->toArray(),
+                null,
+                'reference_code'
+            );
         }
-        // $templates=TranscriptTemplate::where('template_id',$this->transcript_template_id)->get()->toArray();
-        return $templateGroups;
-        
-        return array_column($templates,null,'category');
-        
-        //return $this->hasMany(TranscriptTemplate::class,'template_id','transcript_template_id');
+
+        foreach($byTermCategories as $cat){
+            $referenceCodes=TranscriptTemplate::select('reference_code')
+                ->where('template_id',$this->transcript_template_id)
+                ->where('category',$cat)
+                ->groupBy('reference_code')->get()
+                ->pluck('reference_code')
+                ->mapWithKeys(function($item){
+                    return [$item=>[]];
+                });
+            //dd($referenceCodes);
+            foreach($referenceCodes as $referenceCode=>$value){
+                foreach($yearTerms as $term){
+                    $data[$cat][$term->value][$referenceCode]=
+                        TranscriptTemplate::where('template_id',$this->transcript_template_id)
+                            ->where('term_id',$term->value)
+                            ->where('category',$cat)
+                            ->where('reference_code',$referenceCode)
+                            ->orderBy('id')->first();
+                }
+                $data[$cat][9][$referenceCode]=
+                    TranscriptTemplate::where('template_id',$this->transcript_template_id)
+                        ->where('term_id',9)
+                        ->where('category',$cat)
+                        ->where('reference_code',$referenceCode)
+                        ->orderBy('id')->first();
+
+            }
+        }
+        //SUBJECT Specifics
+        $referenceCodes=TranscriptTemplate::select('reference_code')
+            ->where('template_id',$this->transcript_template_id)
+            ->where('category','SUBJECT')
+            ->groupBy('reference_code')->get()
+            ->pluck('reference_code')
+            ->mapWithKeys(function($item){
+                return [$item=>[]];
+            });
+        foreach($referenceCodes as $referenceCode=>$value){
+            foreach($yearTerms as $term){
+                $data['SUBJECT'][$term->value][$referenceCode]=array_column(
+                    TranscriptTemplate::where('template_id',$this->transcript_template_id)
+                        ->where('term_id',$term->value)
+                        ->where('category','SUBJECT')
+                        ->where('reference_code',$referenceCode)
+                        ->orderBy('id')->get()->toArray()
+                    ,null,
+                    'field_name'
+                );
+            }
+            $data['SUBJECT'][9][$referenceCode]=array_column(
+                TranscriptTemplate::where('template_id',$this->transcript_template_id)
+                    ->where('term_id',9)
+                    ->where('category','SUBJECT')
+                    ->where('reference_code',$referenceCode)
+                    ->orderBy('id')->get()->toArray()
+                ,null,
+                'field_name'
+            );  
+        }
+        $data['APPRAISAL']['appraisal']=TranscriptTemplate::where('template_id',$this->transcript_template_id)
+            ->where('category','APPRAISAL')->first()->toArray();
+        $data['PASSING']['passing']=TranscriptTemplate::where('template_id',$this->transcript_template_id)
+            ->where('category','PASSING')->first()->toArray();
+        return $data;
     }
 
     public function passingScore(){

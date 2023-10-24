@@ -1,12 +1,12 @@
 <template>
     <div>
-        <p>{{fields.name_ch}}</p>
+        <!-- <p>{{fields.name_ch}}</p>
         <p>{{fields.name_fn}}</p>
         <p>{{fields.academic_year}}</p>
         <p>{{fields.grade_class}}</p>
         <p>{{fields.student_number}}</p>
         <p>{{fields.id_number}}</p>
-        <p>{{fields.issue_date}}</p>
+        <p>{{fields.issue_date}}</p> -->
         <div class="row">
             <div class="column_left">
                 <table style="height:600px">
@@ -24,137 +24,33 @@
                         <td style="width:50px">考試<br>23%</td>
                         <td style="width:50px">平均分<br>50%</td>
                     </tr>
-                    <tr>
-                        <td colspan="2">{{fields.religion}}</td>
-                        <td>{{ t1e.religion }}</td>
-                        <td>{{ t1p.religion }}</td>
-                        <td>{{ t1a.religion }}</td>
-                        <td>{{ t2e.religion }}</td>
-                        <td>{{ t2p.religion }}</td>
-                        <td>{{ t2a.religion }}</td>
-                        <td>{{ fin.religion }}</td>
-                    </tr>
-                    <tr>
-                        <td rowspan="4" style="width:30px">中文</td>
-                        <td style="width:70px">{{fields.chinese_literature}}</td>
-                        <td>{{ t1e.chinese_literature }}</td>
-                        <td>{{ t1p.chinese_literature }}</td>
-                        <td>{{ t1a.chinese_literature }}</td>
-                        <td>{{ t2e.chinese_literature }}</td>
-                        <td>{{ t2p.chinese_literature }}</td>
-                        <td>{{ t2a.chinese_literature }}</td>
-                        <td>{{ fin.chinese_literature }}</td>
-                    </tr>
-                    <tr>
-                        <td>{{fields.common_sense}}</td>
-                        <td>{{ t1e.common_sense }}</td>
-                        <td>{{ t1p.common_sense }}</td>
-                        <td>{{ t1a.common_sense }}</td>
-                        <td>{{ t2e.common_sense }}</td>
-                        <td>{{ t2p.common_sense }}</td>
-                        <td>{{ t2a.common_sense }}</td>
-                        <td>{{ fin.common_sense }}</td>
-                    </tr>
-                    <tr>
-                        <td>{{fields.story}}</td>
-                        <td>{{ t1e.story }}</td>
-                        <td>{{ t1p.story }}</td>
-                        <td>{{ t1a.story }}</td>
-                        <td>{{ t2e.story }}</td>
-                        <td>{{ t2p.story }}</td>
-                        <td>{{ t2a.story }}</td>
-                        <td>{{ fin.story }}</td>
-                    </tr>
-                    <tr>
-                        <td>{{fields.chinese_writing}}</td>
-                        <td>{{ t1e.chinese_writing }}</td>
-                        <td>{{ t1p.chinese_writing }}</td>
-                        <td>{{ t1a.chinese_writing }}</td>
-                        <td>{{ t2e.chinese_writing }}</td>
-                        <td>{{ t2p.chinese_writing }}</td>
-                        <td>{{ t2a.chinese_writing }}</td>
-                        <td>{{ fin.chinese_writing }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">{{fields.numeracy}}</td>
-                        <td>{{ t1e.numeracy }}</td>
-                        <td>{{ t1p.numeracy }}</td>
-                        <td>{{ t1a.numeracy }}</td>
-                        <td>{{ t2e.numeracy }}</td>
-                        <td>{{ t2p.numeracy }}</td>
-                        <td>{{ t2a.numeracy }}</td>
-                        <td>{{ fin.numeracy }}</td>
-                    </tr>
-                    <tr>
-                        <td rowspan="2">英文</td>
-                        <td>{{fields.english_reading}}</td>
-                        <td>{{ t1e.english_reading }}</td>
-                        <td>{{ t1p.english_reading }}</td>
-                        <td>{{ t1a.english_reading }}</td>
-                        <td>{{ t2e.english_reading }}</td>
-                        <td>{{ t2p.english_reading }}</td>
-                        <td>{{ t2a.english_reading }}</td>
-                        <td>{{ fin.english_reading }}</td>
-                    </tr>
-                    <tr>
-                        <td>{{fields.english_writing}}</td>
-                        <td>{{ t1e.english_writing}}</td>
-                        <td>{{ t1p.english_writing}}</td>
-                        <td>{{ t1a.english_writing}}</td>
-                        <td>{{ t2e.english_writing}}</td>
-                        <td>{{ t2p.english_writing}}</td>
-                        <td>{{ t2a.english_writing}}</td>
-                        <td>{{ fin.english_writing}}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">{{fields.computer}}</td>
-                        <td>{{ t1e.computer }}</td>
-                        <td>{{ t1p.computer }}</td>
-                        <td>{{ t1a.computer }}</td>
-                        <td>{{ t2e.computer }}</td>
-                        <td>{{ t2p.computer }}</td>
-                        <td>{{ t2a.computer }}</td>
-                        <td>{{ fin.computer }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">{{fields.mandarin}}</td>
-                        <td>{{ t1e.mandarin }}</td>
-                        <td>{{ t1p.mandarin }}</td>
-                        <td>{{ t1a.mandarin }}</td>
-                        <td>{{ t2e.mandarin }}</td>
-                        <td>{{ t2p.mandarin }}</td>
-                        <td>{{ t2a.mandarin }}</td>
-                        <td>{{ fin.mandarin }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">{{fields.art_craft}}</td>
-                        <td>{{ t1e.art_craft }}</td>
-                        <td>{{ t1p.art_craft }}</td>
-                        <td>{{ t1a.art_craft }}</td>
-                        <td>{{ t2e.art_craft }}</td>
-                        <td>{{ t2p.art_craft }}</td>
-                        <td>{{ t2a.art_craft }}</td>
-                        <td>{{ fin.art_craft }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">{{fields.playgroup}}</td>
-                        <td>{{ t1e.playgroup }}</td>
-                        <td>{{ t1p.playgroup }}</td>
-                        <td>{{ t1a.playgroup }}</td>
-                        <td>{{ t2e.playgroup }}</td>
-                        <td>{{ t2p.playgroup }}</td>
-                        <td>{{ t2a.playgroup }}</td>
-                        <td>{{ fin.playgroup }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">{{fields.physical_fitness}}</td>
-                        <td>{{ t1e.physical_fitness }}</td>
-                        <td>{{ t1p.physical_fitness }}</td>
-                        <td>{{ t1a.physical_fitness }}</td>
-                        <td>{{ t2e.physical_fitness }}</td>
-                        <td>{{ t2p.physical_fitness }}</td>
-                        <td>{{ t2a.physical_fitness }}</td>
-                        <td>{{ fin.physical_fitness }}</td>
+                    <tr v-for="subject in fields['SUBJECT']">
+                        <td colspan="2">{{subject.title_zh}}</td>
+                        <template v-for="term in yearTerms">
+                            <td>
+                                <span v-if="values[term.value]['SUBJECT'][subject.reference_code]">
+                                    {{values[term.value]['SUBJECT'][subject.reference_code]['REGULAR']?values[term.value]['SUBJECT'][subject.reference_code]['REGULAR'].value:'-'}}
+                                </span>
+                            </td>
+                            <td>
+                                <span v-if="values[term.value]['SUBJECT'][subject.reference_code]">
+                                    {{values[term.value]['SUBJECT'][subject.reference_code]['EXAM']?values[term.value]['SUBJECT'][subject.reference_code]['EXAM'].value:'-'}}
+                                </span>
+                            </td>
+                            <td>
+                                <span v-if="values[term.value]['SUBJECT'][subject.reference_code]">
+                                    {{values[term.value]['SUBJECT'][subject.reference_code]['FINAL']?values[term.value]['SUBJECT'][subject.reference_code]['FINAL'].value:'-'}}
+                                </span>
+                            </td>
+
+                        </template>
+                        <td>
+                            <span v-if="values[9]['SUBJECT']">
+                                <span v-if="values[9]['SUBJECT'][subject.reference_code]">
+                                    {{values[9]['SUBJECT'][subject.reference_code]['FINAL'].value}}
+                                </span >
+                            </span>
+                        </td>
                     </tr>
                     <tr>
                         <td colspan="2"></td>
@@ -177,37 +73,38 @@
                         <td>--</td>
                     </tr>
                     <tr>
-                        <td colspan="2">{{ fields.total_score }}</td>
+                        <td colspan="2">
+                            {{fields['SUMMARY']['total_score'].title_zh}}</td>
                         <td colspan="3">{{ t1.total_score }}</td>
                         <td colspan="3">{{ t2.total_score }}</td>
                         <td>{{ fin.total_score }}</td>
                     </tr>
                     <tr>
-                        <td colspan="2">{{ fields.average_score }}</td>
+                        <td colspan="2">{{fields['SUMMARY']['average_score'].title_zh}}</td>
                         <td colspan="3">{{ t1.average_score }}</td>
                         <td colspan="3">{{ t2.average_score }}</td>
                         <td> {{ fin.average_score }}</td>
                     </tr>
                     <tr>
-                        <td colspan="2">{{ fields.class_size }}</td>
+                        <td colspan="2">{{fields['SUMMARY']['class_size'].title_zh}}</td>
                         <td colspan="3">{{ t1.class_size }}</td>
                         <td colspan="3">{{ t2.class_size }}</td>
                         <td>{{ fin.class_size }}</td>
                     </tr>
                     <tr>
-                        <td colspan="2">{{ fields.ranking }}</td>
+                        <td colspan="2">{{fields['SUMMARY']['ranking'].title_zh}}</td>
                         <td colspan="3">{{ t1.ranking }}</td>
                         <td colspan="3">{{ t2.ranking }}</td>
                         <td>{{ fin.ranking }}</td>
                     </tr>
                     <tr>
-                        <td colspan="2">{{ fields.late }}</td>
+                        <td colspan="2">{{fields['SUMMARY']['late'].title_zh}}</td>
                         <td colspan="3">{{ t1.late }}</td>
                         <td colspan="3">{{ t2.late }}</td>
                         <td>{{ fin.late }}</td>
                     </tr>
                     <tr>
-                        <td colspan="2">{{ fields.absent }}</td>
+                        <td colspan="2">{{fields['SUMMARY']['absent'].title_zh}}</td>
                         <td colspan="3">{{ t1.absent }}</td>
                         <td colspan="3">{{ t2.absent }}</td>
                         <td>{{ fin.absent }}</td>
@@ -215,7 +112,7 @@
                 </table>
                 <table style="height:350px">
                     <tr>
-                        <td rowspan="2" style="width:100px">{{ fields.comment }}</td>
+                        <td rowspan="2" style="width:100px">{{fields['GENERAL']['comment'].title_zh}}</td>
                         <td style="width:80px">上學期</td>
                         <td colspan="2" style="width:270px;text-align: left;">{{ t1.comment }}</td>
                     </tr>
@@ -224,7 +121,7 @@
                         <td colspan="2" style="width:270px;text-align: left;">{{ t2.comment }}</td>
                     </tr>
                     <tr>
-                        <td rowspan="2" style="width:100px">{{ fields.reward_punishment }}</td>
+                        <td rowspan="2" style="width:100px">{{fields['GENERAL']['reward_punishment'].title_zh}}</td>
                         <td style="width:80px">上學期</td>
                         <td colspan="2" style="width:270px;text-align: left;">{{ t1.reward_punishment }}</td>
                     </tr>
@@ -233,7 +130,7 @@
                         <td colspan="2" style="width:270px;text-align: left;">{{ t2.reward_punishment }}</td>
                     </tr>
                     <tr>
-                        <td rowspan="4" style="width:100px">{{ fields.leisure }}</td>
+                        <td rowspan="4" style="width:100px">{{fields['GENERAL']['leisure_name'].title_zh}}</td>
                         <td rowspan="2" style="width:80px">上學期</td>
                         <td style="width:70px">活動名稱</td>
                         <td style="width:200px;text-align: left;">{{ t1.leisure_name }}</td>
@@ -252,7 +149,7 @@
                         <td style="width:200px;text-align: left;">{{ t2.leisure_performance }}</td>
                     </tr>
                     <tr>
-                        <td rowspan="3" style="width:100px">{{ fields.remark }}</td>
+                        <td rowspan="3" style="width:100px">{{fields['GENERAL']['remark'].title_zh}}</td>
                         <td style="width:80px">上學期</td>
                         <td colspan="2" style="width:270px;text-align: left;">{{ t1.remark }}</td>
                     </tr>
@@ -265,7 +162,7 @@
                         <td colspan="2" style="width:270px;text-align: left;">{{ fin.remark }}</td>
                     </tr>
                     <tr>
-                        <td style="width:100px">{{ fields.appraisal }}</td>
+                        <td style="width:100px">{{fields['GENERAL']['appraisal'].title_zh}}</td>
                         <td colspan="3" style="width:270px;text-align: left;">{{ fin.appraisal }}&nbsp;<br>&nbsp;<br></td>
                     </tr>
                 </table>
@@ -279,27 +176,35 @@
                     </tr>
                     <tr>
                         <td rowspan="6" style="width:30px">個人衛生</td>
-                        <td style="width:200px">{{ fields.health_1 }}</td>
-                        <td>{{ t1.health_1 }}</td>
-                        <td>{{ t2.health_1 }}</td>
+                        <td style="width:200px">{{fields['ATTITUDE']['health_1'].title_zh}}</td>
+                        <td>
+                            <span v-if="values[1]['ATTITUDE']['health_1']['FINAL']">
+                                {{values[1]['ATTITUDE']['health_1']['FINAL'].value}}
+                            </span>
+                        </td>
+                        <td>
+                            <span v-if="values[2]['ATTITUDE']['health_1']['FINAL']">
+                                {{values[2]['ATTITUDE']['health_1']['FINAL'].value}}
+                            </span>
+                        </td>
                     </tr>
                     <tr>
-                        <td style="width:200px">{{ fields.health_2 }}</td>
+                        <td style="width:200px">{{fields['ATTITUDE']['health_2'].title_zh}}</td>
                         <td>{{ t1.health_2 }}</td>
                         <td>{{ t2.health_2 }}</td>
                     </tr>
                     <tr>
-                        <td style="width:200px">{{ fields.health_3 }}</td>
+                        <td style="width:200px">{{fields['ATTITUDE']['health_3'].title_zh}}</td>
                         <td>{{ t1.health_3 }}</td>
                         <td>{{ t2.health_3 }}</td>
                     </tr>
                     <tr>
-                        <td style="width:200px">{{ fields.health_4 }}</td>
+                        <td style="width:200px">{{fields['ATTITUDE']['health_4'].title_zh}}</td>
                         <td>{{ t1.health_4 }}</td>
                         <td>{{ t2.health_4 }}</td>
                     </tr>
                     <tr>
-                        <td style="width:200px">{{ fields.health_5 }}</td>
+                        <td style="width:200px">{{fields['ATTITUDE']['health_5'].title_zh}}</td>
                         <td>{{ t1.health_5 }}</td>
                         <td>{{ t2.health_5 }}</td>
                     </tr>
@@ -310,32 +215,32 @@
                     </tr>
                     <tr>
                         <td rowspan="7" style="width:30px">行為習慣</td>
-                        <td style="width:200px">{{ fields.behaviour_1 }}</td>
+                        <td style="width:200px">{{fields['ATTITUDE']['behaviour_1'].title_zh}}</td>
                         <td>{{ t1.behaviour_1 }}</td>
                         <td>{{ t2.behaviour_1 }}</td>
                 </tr>
                     <tr>
-                        <td style="width:200px">{{ fields.behaviour_2 }}</td>
+                        <td style="width:200px">{{fields['ATTITUDE']['behaviour_2'].title_zh}}</td>
                         <td>{{ t1.behaviour_2 }}</td>
                         <td>{{ t2.behaviour_2 }}</td>
                     </tr>
                     <tr>
-                        <td style="width:200px">{{ fields.behaviour_3 }}</td>
+                        <td style="width:200px">{{fields['ATTITUDE']['behaviour_3'].title_zh}}</td>
                         <td>{{ t1.behaviour_3 }}</td>
                         <td>{{ t2.behaviour_3 }}</td>
                     </tr>
                     <tr>
-                        <td style="width:200px">{{ fields.behaviour_4 }}</td>
+                        <td style="width:200px">{{fields['ATTITUDE']['behaviour_4'].title_zh}}</td>
                         <td>{{ t1.behaviour_4 }}</td>
                         <td>{{ t2.behaviour_4 }}</td>
                     </tr>
                     <tr>
-                        <td style="width:200px">{{ fields.behaviour_5 }}</td>
+                        <td style="width:200px">{{fields['ATTITUDE']['behaviour_5'].title_zh}}</td>
                         <td>{{ t1.behaviour_5 }}</td>
                         <td>{{ t2.behaviour_5 }}</td>
                     </tr>
                     <tr>
-                        <td style="width:200px">{{ fields.behaviour_6 }}</td>
+                        <td style="width:200px">{{fields['ATTITUDE']['behaviour_6'].title_zh}}</td>
                         <td>{{ t1.behaviour_6 }}</td>
                         <td>{{ t2.behaviour_6 }}</td>
                     </tr>
@@ -346,27 +251,27 @@
                     </tr>
                     <tr>
                         <td rowspan="6" style="width:30px">社交態度</td>
-                        <td style="width:200px">{{ fields.social_1 }}</td>
+                        <td style="width:200px">{{fields['ATTITUDE']['social_1'].title_zh}}</td>
                         <td>{{ t1.social_1 }}</td>
                         <td>{{ t2.social_1 }}</td>
                     </tr>
                     <tr>
-                        <td style="width:200px">{{ fields.social_2 }}</td>
+                        <td style="width:200px">{{fields['ATTITUDE']['social_2'].title_zh}}</td>
                         <td>{{ t1.social_2 }}</td>
                         <td>{{ t2.social_2 }}</td>
                     </tr>
                     <tr>
-                        <td style="width:200px">{{ fields.social_3 }}</td>
+                        <td style="width:200px">{{fields['ATTITUDE']['social_3'].title_zh}}</td>
                         <td>{{ t1.social_3 }}</td>
                         <td>{{ t2.social_3 }}</td>
                     </tr>
                     <tr>
-                        <td style="width:200px">{{ fields.social_4 }}</td>
+                        <td style="width:200px">{{fields['ATTITUDE']['social_4'].title_zh}}</td>
                         <td>{{ t1.social_4 }}</td>
                         <td>{{ t2.social_4 }}</td>
                     </tr>
                     <tr>
-                        <td style="width:200px">{{ fields.social_5 }}</td>
+                        <td style="width:200px">{{fields['ATTITUDE']['social_5'].title_zh}}</td>
                         <td>{{ t1.social_5 }}</td>
                         <td>{{ t2.social_5 }}</td>
                     </tr>
@@ -442,10 +347,12 @@
 <script>
 
 export default {
-    props:['transcriptTemplate','transcript'],
+    props:['yearTerms','transcriptTemplates','transcripts'],
     data(){
         return {
+            subjects:{},
             fields:{},
+            values:{},
             t1:{},
             t2:{},
             t1e:{},
@@ -458,10 +365,30 @@ export default {
         }
     },
     created(){
-        this.transcriptTemplate.forEach((t)=>{
-            this.fields[t.field_name]=t.title_zh
+        //for template columns
+        Object.values(this.transcriptTemplates).forEach((t)=>{
+            if(!this.fields[t.category]){
+                this.fields[t.category]={}
+            }
+            this.fields[t.category][t.reference_code]=t;
         });
-        this.transcript.forEach((t)=>{
+        //for transcript values, by terms
+        this.yearTerms.forEach((term)=>{
+            this.values[term.value]={}
+        });
+        this.values[9]={}
+        this.yearTerms.forEach((term)=>{
+            Object.values(this.transcriptTemplates).forEach((t)=>{
+                if(!this.values[term.value][t.category]){
+                    this.values[term.value][t.category]={}
+                }
+                this.values[term.value][t.category][t.reference_code]={};
+            });
+        });
+
+        console.log(this.values);
+        Object.values(this.transcripts).forEach((t)=>{
+            this.values[t.term_id][t.category][t.reference_code][t.field_name]=t
             switch(t.column){
                 case 'T1':
                     this.t1[t.field_name]=t.field_value;
@@ -493,7 +420,7 @@ export default {
             }
         });
 
-        console.log(this.t1e);
+        
 
     },
     mounted(){
@@ -504,7 +431,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 table, td, th {
   border: 1px solid;
   text-align: center;

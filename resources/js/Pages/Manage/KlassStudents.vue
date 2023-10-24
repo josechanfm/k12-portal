@@ -9,12 +9,7 @@
         <a-table :dataSource="students" :columns="columns">
             <template #bodyCell="{column, text, record, index}">
                 <template v-if="column.dataIndex == 'action'">
-                    <inertia-link 
-                    :href="route('manage.klass.student.transcripts',
-                            {klassStudent:record.pivot.klass_student_id})"
-                            class="ant-btn">
-                    [成績表]
-                    </inertia-link>
+                    <inertia-link :href="route('manage.klass.student.transcript',record.pivot.klass_student_id)" class="ant-btn">成績表</inertia-link>
                     <inertia-link class="ant-btn">[操行]</inertia-link>
                 </template>
                 <template v-else>

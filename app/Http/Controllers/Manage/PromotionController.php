@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Manage;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -22,7 +22,7 @@ class PromotionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function list(Request $request)
     {
 
         $gradeId=$request->input('gradeId');
@@ -43,11 +43,36 @@ class PromotionController extends Controller
         // echo $year;
         // echo $nextYear;
         //***** Check if any of the varible not completed  jump to the error page******/
-        return Inertia::render('Admin/Dashboard',[
+        return Inertia::render('Manage/Promotes',[
             'year'=>$year,
             'grades'=>$grades,
             'nextYear'=>$nextYear,
             'nextGrades'=>$nextGrades
+        ]);
+    }
+
+    public function index(Klass $klass){
+        $grade=$klass->grade;
+        //dd($grade);
+        $year=Year::find($grade->year_id);
+        $nextYear=Year::nextYear($year->id);;
+        $nextGrade=Grade::where('year_id',$nextYear->id)->where('grade_year',($grade->grade_year+1))->first();
+        //dd($nextGrade);
+        
+        //dd($klass);
+        $nextKlasses=Klass::where('grade_id',$nextGrade->id)->get();
+        //dd($nextKlasses);
+        $students=$klass->students;
+        //$courses=Klass::find($klassId)->courses;
+        return Inertia::render('Manage/KlassPromotion',[
+            'year'=>$year,
+            'nextYear'=>$nextYear,
+            'grade'=>$grade,
+            'nextGrade'=>$nextGrade,
+            'klass'=>$klass,
+            'nextKlasses'=>$nextKlasses,
+            'students'=>$students,
+
         ]);
     }
 
@@ -80,7 +105,7 @@ class PromotionController extends Controller
      */
     public function show($id)
     {
-        //
+        dd($id);
     }
 
     /**
@@ -101,9 +126,14 @@ class PromotionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Klass $klass, Request $request)
     {
-        //
+        foreach($request->klassStudents as $record){
+            // dd($record);
+            // dd(KlassStudent::find($record['klass_student_id']));
+            KlassStudent::find($record['klass_student_id'])->update(['promote_to'=>$record['promote_to']]);
+        };
+        return redirect()->back();
     }
 
     /**
@@ -167,26 +197,30 @@ class PromotionController extends Controller
         $klasses=Grade::find($gradeId)->klasses;
         echo $klasses;
     }
-    public function klass($klassId){
-        $grade=Klass::find($klassId)->grade;
-        $year=Year::find($grade->year_id);
-        $nextYear=Year::nextYear($year->id);;
-        $nextGrade=Grade::where('year_id',$nextYear->id)->where('level',($grade->level+1))->first();
-        $klass=Klass::find($klassId);
-        $nextKlasses=Klass::where('grade_id',$nextGrade->id)->get();
-        $students=Klass::find($klassId)->students;
-        //$courses=Klass::find($klassId)->courses;
-        return Inertia::render('Annual/Promotion',[
-            'year'=>$year,
-            'nextYear'=>$nextYear,
-            'grade'=>$grade,
-            'nextGrade'=>$nextGrade,
-            'klass'=>$klass,
-            'nextKlasses'=>$nextKlasses,
-            'students'=>$students,
+    // public function klass($klassId){
+    //     $grade=Klass::find($klassId)->grade;
+    //     //dd($grade);
+    //     $year=Year::find($grade->year_id);
+    //     $nextYear=Year::nextYear($year->id);;
+    //     $nextGrade=Grade::where('year_id',$nextYear->id)->where('grade_year',($grade->grade_year+1))->first();
+    //     //dd($nextGrade);
+    //     $klass=Klass::find($klassId);
+    //     //dd($klass);
+    //     $nextKlasses=Klass::where('grade_id',$nextGrade->id)->get();
+    //     //dd($nextKlasses);
+    //     $students=Klass::find($klassId)->students;
+    //     //$courses=Klass::find($klassId)->courses;
+    //     return Inertia::render('Manage/KlassPromotion',[
+    //         'year'=>$year,
+    //         'nextYear'=>$nextYear,
+    //         'grade'=>$grade,
+    //         'nextGrade'=>$nextGrade,
+    //         'klass'=>$klass,
+    //         'nextKlasses'=>$nextKlasses,
+    //         'students'=>$students,
 
-        ]);
-    }
+    //     ]);
+    // }
 
     public function data($yearId){
         $year=Year::find($yearId);

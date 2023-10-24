@@ -222,14 +222,6 @@ class Klass extends Model
         $yearTerms=Config::item('year_terms');
         $data=[];
         $data['courses']=$this->courses;
-        //dd($data['courses']);
-        // $coursesScores=$this->coursesScores;
-        // foreach($yearTerms as $term){
-        //     foreach($coursesScores as $course){
-        //         $data['courses'][$course->id]=array_column($course->scoreColumns->where('for_transcript',true)->toArray(),null,'id');
-        //     }
-        // }
-        //dd($this->transcriptCoursesScores[0]['allScores'][0]);
         foreach($students as $student){
             $data['students'][$student->pivot->klass_student_id]=$student;
             foreach($this->courses as $course){

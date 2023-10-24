@@ -124,8 +124,6 @@ export default {
             return score >= parseInt(this.transcriptTemplates['passing'].value)
         },
         isPassed(value){
-            console.log(this.transcriptTemplates['GENERAL']['passing']);
-            //return true;
             return value >= parseInt(this.transcriptTemplates['GENERAL']['passing'].value)
         },
         migrateTranscripts() {
@@ -149,8 +147,6 @@ export default {
             })
         },
         toMakeup(student, column) {
-            console.log(student);
-            console.log(column);
             this.modal.data.student=student;
             this.modal.data.column=column;
             this.modal.isOpen = true;
