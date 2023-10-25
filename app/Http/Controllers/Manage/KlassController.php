@@ -155,12 +155,9 @@ class KlassController extends Controller
         if($klass->grade->grade_year<=3){
             return redirect()->route('manage.klass.finalScoresK',$klass);
         }
-        // dd($klass->finalScores());
         $year=Year::find(Year::currentYear()->id);
         $year->klasses;
         $year->grades;
-        //dd($klass->finalScores());
-        //dd($klass->grade->transcriptTemplates());
         return Inertia::render('Manage/KlassFinalScores', [
             'year'=>$year,
             'klass' => $klass,

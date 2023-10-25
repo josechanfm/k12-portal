@@ -93,6 +93,7 @@ class Grade extends Model
         $referenceCodes=TranscriptTemplate::select('reference_code')
             ->where('template_id',$this->transcript_template_id)
             ->where('category','SUBJECT')
+            ->orderBy('sequence')
             ->groupBy('reference_code')->get()
             ->pluck('reference_code')
             ->mapWithKeys(function($item){
@@ -100,7 +101,7 @@ class Grade extends Model
             });
         foreach($referenceCodes as $referenceCode=>$value){
             foreach($yearTerms as $term){
-                $data['SUBJECT'][$term->value][$referenceCode]=array_column(
+                $data['SUBJECT'][$referenceCode][$term->value]=array_column(
                     TranscriptTemplate::where('template_id',$this->transcript_template_id)
                         ->where('term_id',$term->value)
                         ->where('category','SUBJECT')
@@ -110,7 +111,7 @@ class Grade extends Model
                     'field_name'
                 );
             }
-            $data['SUBJECT'][9][$referenceCode]=array_column(
+            $data['SUBJECT'][$referenceCode][9]=array_column(
                 TranscriptTemplate::where('template_id',$this->transcript_template_id)
                     ->where('term_id',9)
                     ->where('category','SUBJECT')

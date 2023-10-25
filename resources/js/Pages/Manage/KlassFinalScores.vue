@@ -31,13 +31,13 @@
                                     <tr class="ant-table-row ant-table-row-level-0">
                                         <td>{{ student.name_zh }}</td>
                                         <td v-for="column in finalScores.score_columns" class="text-center">
-                                            <span v-if="isPassed(finalScores['scores'][ksid][column.id]['score'])">
-                                                {{finalScores['scores'][ksid][column.id]['score']}}
+                                            <span v-if="isPassed(finalScores['scores'][ksid][column.course_code]['score'])">
+                                                {{finalScores['scores'][ksid][column.course_code]['score']}}
                                             </span>
                                             <span v-else>
                                                 <span @click="toMakeup(student, column)" class="text-red-500 font-bold">
                                                     <span :class="column.makeups[ksid] ? 'p-1 rounded-full border-2 border-rose-300' : ''">
-                                                            {{finalScores['scores'][ksid][column.id]['score']}}
+                                                            {{finalScores['scores'][ksid][column.course_code]['score']}}
                                                         <span v-if="column.makeups[ksid] && column.makeups[ksid]['point']!==null">
                                                             / {{ column.makeups[ksid]['point'] }}
                                                         </span>
@@ -120,11 +120,8 @@ export default {
     mounted() {
     },
     methods: {
-        isPass(score) {
-            return score >= parseInt(this.transcriptTemplates['passing'].value)
-        },
         isPassed(value){
-            return value >= parseInt(this.transcriptTemplates['GENERAL']['passing'].value)
+            return value >= parseInt(this.transcriptTemplates['PASSING']['passing'].value)
         },
         migrateTranscripts() {
             if (this.klass.transcript_migrated == 1) {

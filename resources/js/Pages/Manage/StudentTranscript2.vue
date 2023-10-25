@@ -33,73 +33,168 @@
                     <td style="width:80px">考試<br>23%</td>
                     <td style="width:80px">平均分<br>50%</td>
                 </tr>
-                <tr v-for="termSubjects in templates['SUBJECT']">
-                    <template v-for="subject in termSubjects">
-                        <td colspan="2">{{ subject[1]['REGULAR'].title_zh }}</td>
-                        <td>
-                            <span v-if="transcripts[subject['REGULAR'].id]">
-                                {{ transcripts[subject[1]['REGULAR'].id].value }}
-                            </span>
-                        </td>
-                        <td>
-                            <span v-if="transcripts[subject[1]['EXAM'].id]">
-                                {{ transcripts[subject[1]['EXAM'].id].value }}
-                            </span>
+                <tr v-for="subject in templates['SUBJECT']">
+                    <td colspan="2">{{ subject[1]['REGULAR'].title_zh }}
+                    </td>
+                    <td>
+                        <span v-if="transcripts[subject[1]['REGULAR'].id]">
+                            {{ subject[1]['REGULAR'].value }}
+                            {{ transcripts[subject[1]['REGULAR'].id].value }}
+                        </span>
+                    </td>
+                    <td>
+                        <span v-if="transcripts[subject[1]['EXAM'].id]">
+                            {{ transcripts[subject[1]['EXAM'].id].value }}
+                        </span>
 
-                        </td>
-                        <td>
-                            <span v-if="transcripts[subject[1]['TERM'].id]">
-                                {{ transcripts[subject[1]['TERM'].id].value }}
-                            </span>
-                        </td>
-                    </template>
+                    </td>
+                    <td>
+                        <span v-if="transcripts[subject[1]['TERM'].id]">
+                            {{ transcripts[subject[1]['TERM'].id].value }}
+                        </span>
+                    </td>
+                    <td>
+                        <span v-if="transcripts[subject[2]['REGULAR'].id]">
+                            {{ transcripts[subject[2]['REGULAR'].id].value }}
+                        </span>
+                    </td>
+                    <td>
+                        <span v-if="transcripts[subject[2]['EXAM'].id]">
+                            {{ transcripts[subject[2]['EXAM'].id].value }}
+                        </span>
+
+                    </td>
+                    <td>
+                        <span v-if="transcripts[subject[2]['TERM'].id]">
+                            {{ transcripts[subject[2]['TERM'].id].value }}
+                        </span>
+                    </td>
+                    <td>
+                        <span v-if="transcripts[subject[9]['FINAL'].id]">
+                            {{ transcripts[subject[9]['FINAL'].id].value }}
+                        </span>
+                    </td>
                 </tr>
             </table>
         </div>
+
+
+        <div class="row" sytle="height:350">
+            <div class="column_left">
+                <table style="height:350px">
+                    <tr>
+                        <td rowspan="2" style="width:100px">
+                            {{templates['GENERAL'][1]['comment'].title_zh}}
+                        </td>
+                        <td style="width:80px">上學期</td>
+                        <td colspan="2" style="width:270px;text-align: left;">
+                            {{templates['GENERAL'][1]['comment'].value}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:80px">下學期</td>
+                        <td colspan="2" style="width:270px;text-align: left;">
+                            {{templates['GENERAL'][2]['comment'].value}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2" style="width:100px">
+                            {{templates['GENERAL'][1]['reward_punishment'].title_zh}}
+                        </td>
+                        <td style="width:80px">上學期</td>
+                        <td colspan="2" style="width:270px;text-align: left;">
+                            {{templates['GENERAL'][1]['reward_punishment'].value}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:80px">下學期</td>
+                        <td colspan="2" style="width:270px;text-align: left;">
+                            {{templates['GENERAL'][2]['reward_punishment'].value}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td rowspan="4" style="width:100px">
+                            {{templates['GENERAL'][1]['leisure_name'].title_zh}}
+                        </td>
+                        <td rowspan="2" style="width:80px">上學期</td>
+                        <td style="width:70px">活動名稱</td>
+                        <td style="width:200px;text-align: left;">
+                            {{templates['GENERAL'][1]['leisure_name'].value}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:70px">活動表現</td>
+                        <td style="width:200px;text-align: left;">
+                            {{templates['GENERAL'][1]['leisure_performance'].value}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2" style="width:80px">下學期</td>
+                        <td style="width:70px">活動名稱</td>
+                        <td style="width:200px;text-align: left;">
+                            {{templates['GENERAL'][2]['leisure_name'].value}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:70px">活動表現</td>
+                        <td style="width:200px;text-align: left;">
+                            {{templates['GENERAL'][2]['leisure_performance'].value}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td rowspan="3" style="width:100px">
+                            {{templates['GENERAL'][1]['remark'].title_zh}}
+                        </td>
+                        <td style="width:80px">上學期</td>
+                        <td colspan="2" style="width:270px;text-align: left;">
+                            {{templates['GENERAL'][1]['remark'].value}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:80px">下學期</td>
+                        <td colspan="2" style="width:270px;text-align: left;">
+                            {{templates['GENERAL'][2]['remark'].value}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:80px">全學年</td>
+                        <td colspan="2" style="width:270px;text-align: left;">
+                            {{templates['GENERAL'][2]['remark'].value}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:100px">
+                            {{templates['APPRAISAL']['appraisal'].title_zh}}
+                        </td>
+                        <td colspan="3" style="width:270px;text-align: left;">
+                            {{templates['APPRAISAL']['appraisal'].value}}
+                        &nbsp;<br>&nbsp;<br></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="column_right">
+                <table style="width:300px;height:350px">
+                    <tr style="height:10px">
+                        <td>校長</td>
+                        <td>副校長</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr style="height:10px">
+                        <td>班主任</td>
+                        <td>家長</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
 <!--
-                <tr v-for="template in templates['SUBJECT'][1]">
-                    <td colspan="2">
-                        {{template.title_zh}}
-                    </td>
-                    <td>
-                        <span v-if="fields['SUBJECT'][1][template.reference_code]">
-                            {{fields['SUBJECT'][1][template.reference_code]['REGULAR']}}
-                        </span>
-                    </td>
-                    <td>
-                        <span v-if="fields['SUBJECT'][1][template.reference_code]">
-                            {{fields['SUBJECT'][1][template.reference_code]['EXAM']}}
-                        </span>
-                    </td>
-                    <td>
-                        <span v-if="fields['SUBJECT'][1][template.reference_code]">
-                            {{fields['SUBJECT'][1][template.reference_code]['FINAL']}}
-                        </span>
-                    </td>
-                    <td>
-                        <span v-if="fields['SUBJECT'][2][template.reference_code]">
-                            {{fields['SUBJECT'][2][template.reference_code]['REGULAR']}}
-                        </span>
-                    </td>
-                    <td>
-                        <span v-if="fields['SUBJECT'][2][template.reference_code]">
-                            {{fields['SUBJECT'][2][template.reference_code]['EXAM']}}
-                        </span>
-                    </td>
-                    <td>
-                        <span v-if="fields['SUBJECT'][2][template.reference_code]">
-                            {{fields['SUBJECT'][2][template.reference_code]['FINAL']}}
-                        </span>
-                    </td>
-                    <td>
-                        <span v-if="fields['SUBJECT'][9]">
-                            {{fields['SUBJECT'][9][template.reference_code]['FINAL']}}
-                        </span>
-                    </td>
-                </tr>
-
-            </table>
-        </div>
 
         <div class="row" sytle="height:350">
             <div class="column_left">

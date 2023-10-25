@@ -217,6 +217,7 @@ class Klass extends Model
         return $this->hasMany(Course::class)->where('in_transcript',1)->with('allScores');
         // return $this->hasMany(Course::class)->with('scores')->with('students');
     }
+    /*
     public function transcripts(){
         $students=$this->students;
         $yearTerms=Config::item('year_terms');
@@ -260,6 +261,7 @@ class Klass extends Model
     ];
      return $this->students;   
     }
+    */
     // public function outcomes(){
     //     return $this->hasManyThrough(Outcome::class, KlassStudent::class,'klass_id', 'klass_student_id')->with('student');
     // }
@@ -275,13 +277,6 @@ class Klass extends Model
         return $this->hasManyThrough(Topic::class, Theme::class);
     }
 
-    // public static function klass_scores($klassId){
-    //     $students=Klass::find($klassId)->students;
-    //     foreach($students as $i=>$student){
-    //         $student->scores=Score::where('klass_student_id',$student->pivot->klass_student_id)->get();
-    //     }
-    //     return $students;
-    // }
     public function finalScoresK(){
         $yearTerms=Config::item('year_terms');
         $students=$this->students;
@@ -319,54 +314,37 @@ class Klass extends Model
         $tmpScores = [];
         foreach ($coursesScores as $course) {
             foreach ($course->allScores as $score) {
-                $tmpScores[$score->student_id][$course->id][$score->score_column_id] = $score->point;
+                ///$tmpScores[$score->student_id][$course->id][$score->score_column_id] = $score->point;
+                $tmpScores[$score->student_id][$course->code][$score->score_column_id] = $score->point;
             }
         }
         //generate student list with personal info required in transcript
         //loop all scores in term_id==9 in all courses and put it in student array list
         $data=[];
-        $transcripts = [];
-        $scoreColumns = [];
         foreach ($students as $student) {
             $data['students'][$student->pivot->klass_student_id]=$student;
-            // $tmp = [
-            //     'student_id' => $student->id,
-            //     'student_name' => $student->name_zh,
-            //     'klass_student_id' => $student->pivot->klass_student_id,
-            //     'fail_units'=>0,
-            // ];
             $data['scores'][$student->pivot->klass_student_id]['fail_units']=0;
 
             foreach ($courses as $course) {
                 $scoreColumn = $course->scoreColumns->where('term_id', 9)->first();
-                //$transcript[]['scores'][$scoreColumnId]=$tmpScores[$student->id][$course->id][$scoreColumnId];
-                if (isset($tmpScores[$student->id][$course->id])) {
-                    //$tmp['scores'][$scoreColumn->id] = $tmpScores[$student->id][$course->id][$scoreColumn->id];
-                    $data['scores'][$student->pivot->klass_student_id][$scoreColumn->id]['score']=$tmpScores[$student->id][$course->id][$scoreColumn->id];
-                    //count number of failed units
-                    if($tmpScores[$student->id][$course->id][$scoreColumn->id]<=$passing){
-                        //$tmp['fail_units']++;
+                if (isset($tmpScores[$student->id][$course->code])) {
+                    ///$data['scores'][$student->pivot->klass_student_id][$scoreColumn->id]['score']=$tmpScores[$student->id][$course->id][$scoreColumn->id];
+                    $data['scores'][$student->pivot->klass_student_id][$course->code]['score']=$tmpScores[$student->id][$course->code][$scoreColumn->id];
+                    if($tmpScores[$student->id][$course->code][$scoreColumn->id]<=$passing){
                         $data['scores'][$student->pivot->klass_student_id]['fail_units']++;
                     }
                 } else { //if the student is not in the course
-                    //$tmp['scores'][$scoreColumn->id] = '--';
-                    $data['scores'][$student->pivot->klass_student_id][$scoreColumn->id]['score'] = '--';
+                    ///$data['scores'][$student->pivot->klass_student_id][$scoreColumn->id]['score'] = '--';
+                    $data['scores'][$student->pivot->klass_student_id][$course->code]['score'] = '--';
                 }
-                //$data['scores'][$student->pivot->klass_student_id][$scoreColumn->id]['makeups']=$course->studentsMakeups();
                 $scoreColumn['course_code'] = $course->code;
                 $scoreColumn['course_title'] = $course->title_zh;
                 $scoreColumn['course_unit'] = $course->unit;
                 $scoreColumn['makeups']=$course->studentsMakeups();
-                // $scoreColumns[$scoreColumn->id] = $scoreColumn;
-                $data['score_columns'][$scoreColumn->id]=$scoreColumn;
-
+                ///$data['score_columns'][$scoreColumn->id]=$scoreColumn;
+                $data['score_columns'][$course->code]=$scoreColumn;
             }
-            //$data['scores'][$student->pivot->klass_student_id]=$tmp['scores'];
-            //$data['fail_units'][$student->pivot->klass_student_id]=$tmp['fail_units'];
-            //$transcripts['students'][] = $tmp;
         }
-        //$transcripts['score_columns']=$scoreColumns;
-        // dd($data);
         return $data;
     }
 

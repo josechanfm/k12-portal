@@ -26,10 +26,13 @@ class TranscriptController extends Controller
     }
 
     public function KlassStudent(KlassStudent $klassStudent){
+        //dd($klassStudent->klass->courses);
         $templates=$klassStudent->klass->grade->transcriptTemplates();
         //dd($klassStudent->klass->grade);
         //$templates=array_column(TranscriptTemplate::where('template_id',$klassStudent->klass->grade->transcript_template_id)->get()->toArray(),null,'id');
         //dd($templates);
+        dd($klassStudent->klass->finalScores()['score_columns']);
+        //dd($klassStudent->klass->transcripts()['scores'][316]);
         $transcripts=array_column(Transcript::where('klass_student_id',$klassStudent->id)->get()->toArray(),null,'transcript_template_id');
         // foreach($transcripts as $transcript){
         //     $templates[$transcript['transcript_template_id']]['value']=$transcript['value'];
@@ -44,6 +47,16 @@ class TranscriptController extends Controller
 
         //dd($transcripts);
         $data=[];
+        foreach($templates as $cat=>$categories){
+            foreach($categories as $ref=>$references){
+                foreach($references as $term){
+                    echo json_encode($field);
+                    echo '<hr>';
+    
+                }
+            }
+        }
+        dd($data);
         //dd($data['PERSONAL']['name_zh']);
         // foreach($templates['SUMMARY'] as $key=>$template){
         //     $data['SUMMARY'][$key]=
@@ -127,7 +140,8 @@ class TranscriptController extends Controller
     {
         //dd($klass);
         $yearTerms=Config::item('year_terms');
-        $transcripts=$klass->transcripts();
+        //dd($klass->students);
+        //$transcripts=$klass->transcripts();
         //dd($transcripts['scores'][316][153]);
         //dd($transcripts['courses']);
         //dd($transcripts);
@@ -135,7 +149,9 @@ class TranscriptController extends Controller
         $templateCategories=$klass->grade->transcriptTemplates();
         //$templateCategories=$templateCategories->jsonSerialize();
         //dd($templateCategories);
-        foreach($transcripts['students'] as $ksid=>$student){
+        //foreach($transcripts['students'] as $ksid=>$student){
+        foreach($klass->students as $student){
+            $ksid=$student->pivot->klass_student_id;
             $data=[];
             $data[]=[
                 'klass_student_id'=>$ksid,
@@ -227,27 +243,39 @@ class TranscriptController extends Controller
                 };
             }
             //SUBJECT scores
+            $finalScores=$klass->finalScores();
+            $data=[];
+            // dd($finalScores['scores'][$ksid]['CLT']);
+            // dd(array_column($finalScores['score_columns'],null,'course_code'));
+            // dd(array_column($finalScores['score_columns'],null,'course_id'));
             foreach($templateCategories['SUBJECT'] as $termId=>$subjects){
                 foreach($subjects as $subject){
                     foreach($subject as $field){
-                        foreach($transcripts['courses'] as $course){
-                            if($course->code==$field['reference_code'] && $course['in_transcript']==true){
-                                foreach($course->scoreColumns as $scoreColumn){
-                                    if($scoreColumn->field_name==$field['field_name']){
-                                        $data[]=[
-                                            'klass_student_id'=>$ksid,
-                                            'transcript_template_id'=>$field['id'],
-                                            'value'=>$transcripts['scores'][$ksid][$course->id][$scoreColumn->id]['point']??0
-                                        ];
-                                    }
-                                }
-                            }
-                        }
+                        $data[]=[
+                            'klass_student_id'=>$ksid,
+                            'transcript_template_id'=>$field['id'],
+                            'value'=>$finalScores['scores'][$ksid][$field['reference_code']]['score']??'0'
+                        ];
+                        // foreach($transcripts['courses'] as $course){
+                        //     dd($course);
+                        //     if($course->code==$field['reference_code'] && $course['in_transcript']==true){
+                        //         foreach($course->scoreColumns as $scoreColumn){
+                        //             if($scoreColumn->field_name==$field['field_name']){
+                        //                 $data[]=[
+                        //                     'klass_student_id'=>$ksid,
+                        //                     'transcript_template_id'=>$field['id'],
+                        //                     'value'=>$transcripts['scores'][$ksid][$course->id][$scoreColumn->id]['point']??0
+                        //                 ];
+                        //             }
+                        //         }
+                        //     }
+                        // }
                         //dd($transcripts['courses']->where('code',$field['reference_code'])->get());
                     }
                     //dd($transcript['courses']->where('code',));
                 };
             }
+            // dd($data);
             Transcript::upsert(
                 $data, 
                 ['klass_student_id','transcript_template_id'],
