@@ -20,7 +20,7 @@
                         <thead>
                             <tr>
                                 <td rowspan="3">Student Name</td>
-                                <td v-for="course in transcripts['courses']" :colspan="course.score_columns.length" class="text-center">
+                                <td v-for="course in transcriptsScores['courses']" :colspan="course.score_columns.length" class="text-center">
                                     {{ course.title_zh }}
                                 </td>
                                 <td colspan="2">
@@ -28,7 +28,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <template v-for="course in transcripts['courses']">
+                                <template v-for="course in transcriptsScores['courses']">
                                     <td v-for="term in year_terms" :colspan="3" class="text-center">
                                         {{ term.label }}
                                     </td>
@@ -39,7 +39,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <template v-for="course in transcripts['courses']">
+                                <template v-for="course in transcriptsScores['courses']">
                                     <td v-for="column in course.score_columns"  class="text-center">
                                         {{ column.field_label }}
                                     </td>
@@ -47,23 +47,23 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(student,ksid) in transcripts['students']">
+                            <tr v-for="(student,ksid) in transcriptsScores['students']">
                                 <td>{{ student.name_zh}}</td>
-                                <template v-for="course in transcripts['courses']">
+                                <template v-for="course in transcriptsScores['courses']">
                                     <td v-for="column in course.score_columns"  class="text-center">
-                                        <span v-if="transcripts['scores'][ksid][course.id]">
-                                            <span v-if="transcripts['scores'][ksid][course.id][column.id]==null">
+                                        <span v-if="transcriptsScores['scores'][ksid][course.id]">
+                                            <span v-if="transcriptsScores['scores'][ksid][course.id][column.id]==null">
                                                 --
                                             </span>
                                             <span v-else>
-                                                {{ transcripts['scores'][ksid][course.id][column.id].point}}
+                                                {{ transcriptsScores['scores'][ksid][course.id][column.id].point}}
                                             </span>
                                         </span>
                                     </td>
                                 </template>
                                 <template v-for="term in year_terms">
                                     <td>
-                                        {{ transcripts['behaviours'][ksid][term.value] }}
+                                        {{ transcriptsScores['behaviours'][ksid][term.value] }}
                                     </td>
                                 </template>
                             </tr>
@@ -85,7 +85,7 @@ export default {
     components: {
         AdminLayout, ButtonLink, KlassSelector
     },
-    props: ['year', 'klass','year_terms', 'transcripts', 'students_courses_scores', 'courses', 'scores', 'behaviours'],
+    props: ['year', 'klass','year_terms', 'transcriptsScores', 'students_courses_scores', 'courses', 'scores', 'behaviours'],
     data() {
         return {
             columns: [

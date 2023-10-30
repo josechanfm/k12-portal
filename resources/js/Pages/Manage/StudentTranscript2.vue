@@ -3,7 +3,6 @@
         {{klassStudent.student.name_zh}}
         <br>
         {{klassStudent.klass.tag}}
-
         <ol>
             <li v-for="item in templates['PERSONAL']">
                 {{item.title_zh}}
@@ -38,19 +37,20 @@
                     </td>
                     <td>
                         <span v-if="transcripts[subject[1]['REGULAR'].id]">
-                            {{ subject[1]['REGULAR'].value }}
                             {{ transcripts[subject[1]['REGULAR'].id].value }}
                         </span>
                     </td>
                     <td>
-                        <span v-if="transcripts[subject[1]['EXAM'].id]">
-                            {{ transcripts[subject[1]['EXAM'].id].value }}
+                        <span v-if="transcripts[subject[1]['TERM'].id]">
+                            {{ subject[1]['TERM'].id }}
+                            {{ transcripts[subject[1]['TERM'].id].value }}
                         </span>
 
                     </td>
                     <td>
-                        <span v-if="transcripts[subject[1]['TERM'].id]">
-                            {{ transcripts[subject[1]['TERM'].id].value }}
+                        <span v-if="transcripts[subject[1]['YEAR'].id]">
+                            {{ subject[1]['YEAR'].id }}
+                            {{ transcripts[subject[1]['YEAR'].id].value }}
                         </span>
                     </td>
                     <td>
@@ -59,14 +59,14 @@
                         </span>
                     </td>
                     <td>
-                        <span v-if="transcripts[subject[2]['EXAM'].id]">
-                            {{ transcripts[subject[2]['EXAM'].id].value }}
+                        <span v-if="transcripts[subject[2]['TERM'].id]">
+                            {{ transcripts[subject[2]['TERM'].id].value }}
                         </span>
 
                     </td>
                     <td>
-                        <span v-if="transcripts[subject[2]['TERM'].id]">
-                            {{ transcripts[subject[2]['TERM'].id].value }}
+                        <span v-if="transcripts[subject[2]['YEAR'].id]">
+                            {{ transcripts[subject[2]['YEAR'].id].value }}
                         </span>
                     </td>
                     <td>
@@ -319,7 +319,7 @@
 <script>
 
 export default {
-    props:['klassStudent','templates','fields','transcripts'],
+    props:['klassStudent','templates','transcripts'],
     data(){
         return {
             t1:{},

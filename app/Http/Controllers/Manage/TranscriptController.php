@@ -13,6 +13,9 @@ use App\Models\Grade;
 use App\Models\Klass;
 use App\Models\Config;
 use PhpParser\Builder\Trait_;
+use PDF;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 use function GuzzleHttp\json_decode;
 
@@ -24,132 +27,70 @@ class TranscriptController extends Controller
     public function gradeTranscripts(Grade $grade){
         dd($grade);
     }
+    public function generateTranscripts(Klass $klass){
+        $yearCode=$klass->grade->year->code;
+        $pathTofile='app/public/2021/P1A/1_7e41808a-ea84-44cb-8c8b-e8ec84222e67.pdf';
+        return response()->download(storage_path($pathTofile), null, [], null);
+        return response()->file(
+            Storage::disk('local')->get($pathTofile),
+            ['content-type'=>'application/pdf']
+        );
+
+        return response()->file(storage_path($pathTofile),['content-type'=>'application/pdf']);
+
+        return response()->file($pathTofile);
+        dd($yearCode);
+    }
 
     public function KlassStudent(KlassStudent $klassStudent){
-        //dd($klassStudent->klass->courses);
         $templates=$klassStudent->klass->grade->transcriptTemplates();
-        //dd($klassStudent->klass->grade);
-        //$templates=array_column(TranscriptTemplate::where('template_id',$klassStudent->klass->grade->transcript_template_id)->get()->toArray(),null,'id');
-        //dd($templates);
-        dd($klassStudent->klass->finalScores()['score_columns']);
-        //dd($klassStudent->klass->transcripts()['scores'][316]);
         $transcripts=array_column(Transcript::where('klass_student_id',$klassStudent->id)->get()->toArray(),null,'transcript_template_id');
-        // foreach($transcripts as $transcript){
-        //     $templates[$transcript['transcript_template_id']]['value']=$transcript['value'];
-        // }
-        //dd($transcripts);
-        
-        $student=$klassStudent->student;
-        //dd($klassStudent);
-        //dd($template['PERSONAL']['name_zh']);
-        //$template['PERSONAL']['name_zh']['value']='abc';
-        //dd($templates);
-
-        //dd($transcripts);
-        $data=[];
-        foreach($templates as $cat=>$categories){
-            foreach($categories as $ref=>$references){
-                foreach($references as $term){
-                    echo json_encode($field);
-                    echo '<hr>';
-    
-                }
-            }
-        }
-        dd($data);
-        //dd($data['PERSONAL']['name_zh']);
-        // foreach($templates['SUMMARY'] as $key=>$template){
-        //     $data['SUMMARY'][$key]=
-        //         Transcript::where('klass_student_id',$klassStudent->id)
-        //             ->where('field_name',$key)
-        //             ->first()->value;
-        // };
-        // foreach($templates['PERSONAL'] as $key=>$template){
-        //     $data['PERSONAL'][$key]=
-        //         Transcript::where('klass_student_id',$klassStudent->id)
-        //             ->where('field_name',$key)
-        //             ->first()->value;
-        // };
-        // foreach($templates['GENERAL'] as $key=>$template){
-        //     $terms=Transcript::select('term_id')->where('klass_student_id',$klassStudent->id)
-        //         ->where('reference_code',$key)
-        //         ->groupBy('term_id')
-        //         ->get()->pluck('term_id');
-        //     foreach($terms as $term){
-        //         $data['GENERAL'][$term][$key]=
-        //             Transcript::where('klass_student_id',$klassStudent->id)
-        //                 ->where('term_id',$term)
-        //                 ->where('field_name',$key)
-        //                 ->first()->value;
-        //     }
-        // };
-        // foreach($templates['SUBJECT'] as $key=>$template){
-        //     // dd($template);
-        //     $terms=Transcript::select('term_id')->where('klass_student_id',$klassStudent->id)
-        //         ->where('reference_code',$key)
-        //         ->groupBy('term_id')
-        //         ->get()->pluck('term_id');
-        //     foreach($terms as $term){
-        //         $data['SUBJECT'][$term][$key]=
-        //         array_column(
-        //             Transcript::where('klass_student_id',$klassStudent->id)
-        //                 ->where('term_id',$term)
-        //                 ->where('reference_code',$key)
-        //                 ->get()->toArray(),
-        //             'value',
-        //             'field_name'
-        //         );
-        //     }
-        // }
-        //dd($data);
-        return Inertia::render('Manage/StudentTranscript2',[
-            // 'yearTerms'=>Config::item('year_terms'),
-            // 'transcriptTemplates'=>$transcriptTemplates,
-            // 'transcripts'=>$transcripts,
+        $klassStudent->student;
+        $pathTofile=$klassStudent->klass->grade->year->code.'/'.$klassStudent->klass->tag.'/'.$klassStudent->student_number.'_'.(String) Str::uuid().'.pdf';
+        $pdf=PDF::loadView('pdf.transcript',[
             'templates'=>$templates,
             'klassStudent'=>$klassStudent,
-            'fields'=>$data,
             'transcripts'=>$transcripts
         ]);
+        Storage::disk('public')->put(
+            $pathTofile,
+            $pdf->output()
+        );
+        
 
+        // $pdf->render();
+        // $fileName='transcripts_'.$klassStudent->klass->grade->year_id.'_'.$klassStudent->klass->ta.'.pdf';
+        // return $pdf->stream($fileName,array('Attachment'=>false));
     }
+
     public function klass(Klass $klass, Request $request){
         $year=Year::find(Year::currentYear()->id);
         $year->klasses;
         $year->grades;
-        $transcripts=$klass->transcripts();
+        $transcriptsScores=$klass->transcriptsScores();
         if($request->get('type') && $request->get('type')=='summary'){
             return Inertia::render('Manage/KlassTranscriptsSummary',[
                 'year'=>$year,
                 'klass'=>$klass,
                 'year_terms'=>Config::item('year_terms'),
-                'transcripts'=>$transcripts,
+                'transcriptsScores'=>$transcriptsScores,
             ]);
         }else{
             return Inertia::render('Manage/KlassTranscriptsBigTable',[
                 'year'=>$year,
                 'klass'=>$klass,
                 'year_terms'=>Config::item('year_terms'),
-                'students_courses_scores'=>$transcripts['students'],
-                'transcripts'=>$transcripts
+                'students_courses_scores'=>$transcriptsScores['students'],
+                'transcriptsScores'=>$transcriptsScores
             ]);
         }
     }
 
     public function migrate(Klass $klass)
     {
-        //dd($klass);
-        $yearTerms=Config::item('year_terms');
-        //dd($klass->students);
-        //$transcripts=$klass->transcripts();
-        //dd($transcripts['scores'][316][153]);
-        //dd($transcripts['courses']);
-        //dd($transcripts);
-       
+        $klassCourses=array_column($klass->courses->toArray(),null,'code');
         $templateCategories=$klass->grade->transcriptTemplates();
-        //$templateCategories=$templateCategories->jsonSerialize();
-        //dd($templateCategories);
-        //foreach($transcripts['students'] as $ksid=>$student){
+        $klassScores=$klass->transcriptsScores()['scores'];
         foreach($klass->students as $student){
             $ksid=$student->pivot->klass_student_id;
             $data=[];
@@ -243,39 +184,23 @@ class TranscriptController extends Controller
                 };
             }
             //SUBJECT scores
-            $finalScores=$klass->finalScores();
-            $data=[];
-            // dd($finalScores['scores'][$ksid]['CLT']);
-            // dd(array_column($finalScores['score_columns'],null,'course_code'));
-            // dd(array_column($finalScores['score_columns'],null,'course_id'));
-            foreach($templateCategories['SUBJECT'] as $termId=>$subjects){
-                foreach($subjects as $subject){
-                    foreach($subject as $field){
-                        $data[]=[
-                            'klass_student_id'=>$ksid,
-                            'transcript_template_id'=>$field['id'],
-                            'value'=>$finalScores['scores'][$ksid][$field['reference_code']]['score']??'0'
-                        ];
-                        // foreach($transcripts['courses'] as $course){
-                        //     dd($course);
-                        //     if($course->code==$field['reference_code'] && $course['in_transcript']==true){
-                        //         foreach($course->scoreColumns as $scoreColumn){
-                        //             if($scoreColumn->field_name==$field['field_name']){
-                        //                 $data[]=[
-                        //                     'klass_student_id'=>$ksid,
-                        //                     'transcript_template_id'=>$field['id'],
-                        //                     'value'=>$transcripts['scores'][$ksid][$course->id][$scoreColumn->id]['point']??0
-                        //                 ];
-                        //             }
-                        //         }
-                        //     }
-                        // }
-                        //dd($transcripts['courses']->where('code',$field['reference_code'])->get());
+            foreach($templateCategories['SUBJECT'] as $courseCode=>$termCourses){
+                foreach($termCourses as $termId=>$courseFieldName){
+                    foreach($courseFieldName as $fieldName){
+                        if(isset($klassCourses[$fieldName['reference_code']])){
+                            $course=$klassCourses[$fieldName['reference_code']];
+                            foreach($course['score_columns'] as $column){
+                                $data[]=[
+                                    'klass_student_id'=>$ksid,
+                                    'transcript_template_id'=>$fieldName['id'],
+                                    'value'=>$klassScores[$ksid][$course['id']][$column['id']]['point']??''
+                                ];
+                            }
+                        }
                     }
-                    //dd($transcript['courses']->where('code',));
                 };
             }
-            // dd($data);
+
             Transcript::upsert(
                 $data, 
                 ['klass_student_id','transcript_template_id'],

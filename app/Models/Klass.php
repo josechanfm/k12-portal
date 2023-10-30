@@ -217,8 +217,8 @@ class Klass extends Model
         return $this->hasMany(Course::class)->where('in_transcript',1)->with('allScores');
         // return $this->hasMany(Course::class)->with('scores')->with('students');
     }
-    /*
-    public function transcripts(){
+    
+    public function transcriptsScores(){
         $students=$this->students;
         $yearTerms=Config::item('year_terms');
         $data=[];
@@ -253,15 +253,15 @@ class Klass extends Model
         // dd($data['scores'][316][153][1051]);
         $data['behaviours']=$this->behaviourSummary()['sumTerms'];
         return $data;
-     return [
-        'students'=>$this->students,
-        'behaviours'=>$this->behaviourSummary(),
-        'courses'=>$this->courses,
-        'scores'=>$this->coursesScores
-    ];
-     return $this->students;   
+        return [
+            'students'=>$this->students,
+            'behaviours'=>$this->behaviourSummary(),
+            'courses'=>$this->courses,
+            'scores'=>$this->coursesScores
+        ];
+         return $this->students;   
     }
-    */
+    
     // public function outcomes(){
     //     return $this->hasManyThrough(Outcome::class, KlassStudent::class,'klass_id', 'klass_student_id')->with('student');
     // }
