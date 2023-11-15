@@ -16,7 +16,8 @@ return new class extends Migration
         Schema::create('treatments', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('student_id');
-            $table->string('current_klass')->nullable();
+            $table->string('reference')->nullable();
+            $table->string('patient_name')->nullable();
             $table->date('date');
             $table->string('category');
             $table->string('title');

@@ -42,9 +42,6 @@ export default {
                     title: 'Student',
                     dataIndex: 'student_id',
                 }, {
-                    title: 'klass',
-                    dataIndex: 'current_klass',
-                }, {
                     title: 'Category',
                     dataIndex: 'category',
                 }, {

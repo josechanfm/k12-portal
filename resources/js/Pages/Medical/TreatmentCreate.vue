@@ -16,20 +16,24 @@
                         ref="modalRef"
                         :rules="rules"
                         :validate-messages="validateMessages"
+                        @finish="onFormSubmit"
                     >
                         <a-form-item label="Student" name="student">
-                            {{ treatment.student_id }}
+                            <a-input v-model:value="treatment.patient_name" readonly/>
                         </a-form-item>
-
-                        <a-form-item label="Category" name="category">
+                        <a-form-item label="分類" name="category">
                             <a-select v-model:value="treatment.category" :options="medicalTreatments"/>
                         </a-form-item>
-                        <a-form-item label="Title" name="title">
+                        <a-form-item label="主題" name="title">
                             <a-input v-model:value="treatment.title"/>
                         </a-form-item>
-                        <a-form-item label="Title" name="title">
+                        <a-form-item label="診斷記錄" name="description">
                             <a-textarea v-model:value="treatment.description"/>
                         </a-form-item>
+                        <div>
+                            <a-button type="default" html-type="submit">新增</a-button>
+                        </div>
+
                         <a-button @click="onSubmit" type="primary" class="ml-3">保存</a-button>
                     </a-form>
 
@@ -38,9 +42,9 @@
                         <li v-for="treat in medicalRecord.treatments">{{ treat }}</li>
                     </ol>
                     <p>General Records</p>
-                    <ol>
-                        <li v-for="(health, field) in medicalRecord.healthcare">{{field}} : {{ health }}</li>
-                    </ol>
+                      <a-descriptions title="General Records" bordered>
+                        <a-descriptions-item v-for="(health, field) in medicalRecord.healthcare" :label="field">{{health}}</a-descriptions-item>
+                      </a-descriptions>
                 </a-card>
             </a-col>
             <a-col :span="6">
@@ -83,6 +87,8 @@ export default {
         return {
             dateFormat: 'YYYY-MM-DD',
             treatment:{},
+            // selectedGrade:{},
+            // selectedKlass:{},
             selectedGradeId:0,
             selectedKlassId:0,
             students:{},
@@ -109,13 +115,10 @@ export default {
                 }
             ],
             rules:{
-                name_zh:{
+                category:{
                     required:true,
                 },
-                gender:{
-                    required:true,
-                },
-                mobile:{
+                title:{
                     required:true,
                 }
             },
@@ -133,8 +136,10 @@ export default {
         }
     },
     created() {
+        //this.selectedGrade=this.grades.find(g=>g.grade_year==4)
+        //this.selectedKlass=this.grades.find(g=>g.id==this.selectedGrade.id).klasses
         this.selectedGradeId=this.grades.find(g=>g.grade_year==4).id
-        this.selectedKlassId=this.grades.find(g=>g.id==this.selectedGradeId).klasses
+        // this.selectedKlassId=this.grades.find(g=>g.id==this.selectedGradeId).klasses
     },
     mounted(){
 
@@ -154,14 +159,19 @@ export default {
                 );
         },
         onSelectStudent(student){
+            var selectedKlass=this.grades.find(g=>g.id==this.selectedGradeId).klasses.find(k=>k.id==this.selectedKlassId)
             this.treatment.student_id=student.id
             axios.get(route('api.studentMedicalRecords',student.id))
                 .then(resp=> {
-                    console.log(resp.data);
                     this.medicalRecord=resp.data
-                    }
-                );
+                    this.treatment.reference=selectedKlass.tag + " ()" + student.pivot.student_number + ")"
+                    this.treatment.patient_name=this.medicalRecord.name_zh
+                }
+            );
 
+        },
+        onFormSubmit(){
+            console.log(this.treatment);
         },
         changeSelectedKlass(){
             console.log('klass changed');

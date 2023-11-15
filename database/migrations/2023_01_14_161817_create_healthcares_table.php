@@ -16,17 +16,17 @@ return new class extends Migration
         Schema::create('healthcares', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('student_id');
-            $table->string('hospital');
-            $table->string('health_state');
-            $table->date('vaccinated');
-            $table->integer('last_vaccine');
-            $table->string('vaccine count');
-            $table->integer('covid_19');
-            $table->string('illness');
-            $table->string('trauma');
-            $table->string('trauma_treatment');
-            $table->string('food_allergy');
-            $table->string('medicine_allergy');
+            $table->string('hospital')->nullable();
+            $table->string('health_state')->nullable();
+            $table->date('vaccinated')->nullable();
+            $table->integer('last_vaccine')->nullable();
+            $table->string('vaccine count')->nullable();
+            $table->integer('covid_19')->nullable();
+            $table->string('illness')->nullable();
+            $table->string('trauma')->nullable();
+            $table->string('trauma_treatment')->nullable();
+            $table->string('food_allergy')->nullable();
+            $table->string('medicine_allergy')->nullable();
             $table->timestamps();
         });
     }
