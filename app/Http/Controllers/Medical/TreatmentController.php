@@ -1,12 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Medical;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Config;
+use Inertia\Inertia;
+use App\Models\Treatment;
 use App\Models\Year;
+use App\Models\Grade;
+use App\Models\Config;
 
-class ConfigController extends Controller
+class TreatmentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +19,9 @@ class ConfigController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('Medical/Treatments',[
+            'treatments'=>Treatment::all()
+        ]);
     }
 
     /**
@@ -25,7 +31,10 @@ class ConfigController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Medical/TreatmentCreate',[
+            'grades'=>Grade::whereBelongsTo(Year::currentYear())->with('klasses')->get(),
+            'medicalTreatments'=>Config::item('medical_treatments'),
+        ]);
     }
 
     /**
@@ -82,14 +91,5 @@ class ConfigController extends Controller
     public function destroy($id)
     {
         //
-    }
-    public function gradesKlasses(Request $request){
-        $year=Year::find(Year::currentYear()->id);
-        $year->grades;
-        $year->klasses;
-        $year->yearTerms=Config::item('year_terms');
-        $grade=$year->grades->where('grade_year',4)->first();
-        $grade->klasses->first();
-        return response()->json(['current_year'=>$year,'default_grade'=>$grade]);
     }
 }

@@ -38,7 +38,9 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('grades_klasses',[App\Http\Controllers\ConfigController::class,'gradesKlasses'])->name('gradesKlasses');
+    Route::get('api/grades_klasses',[App\Http\Controllers\Api\GatherController::class,'gradesKlasses'])->name('api.gradesKlasses');
+    Route::get('api/klass_students/{klass}',[App\Http\Controllers\Api\GatherController::class,'klassStudents'])->name('api.klassStudents');
+    Route::get('api/student_medical_records/{student}',[App\Http\Controllers\Api\GatherController::class,'studentMedicalRecords'])->name('api.studentMedicalRecords');
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
@@ -219,7 +221,17 @@ Route::group([
 
 
 
-
+Route::group([
+    'prefix'=>'/medical',
+    'middleware'=>[
+        'auth:sanctum',
+        config('jetstream.auth_session'),
+        'verified',
+        'role:master|admin|director|teacher'
+    ]
+],function () {        
+    Route::resource('treatments',App\Http\Controllers\Medical\TreatmentController::class)->names('medical.treatments');
+});
 // Route::prefix('promote')->group(function(){
 //     Route::resource('/',App\Http\Controllers\Admin\PromotionController::class);
 //     Route::get('klass/{klassId}',[App\Http\Controllers\Admin\PromotionController::class,'klass']);

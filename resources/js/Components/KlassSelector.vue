@@ -42,7 +42,7 @@ export default {
         this.routeParam=this.param;
     }
     
-    axios.get(route('gradesKlasses'))
+    axios.get(route('api.gradesKlasses'))
         .then(resp=> {
                 this.currentYear=resp.data.current_year
                 if(this.currentKlass==null){

@@ -344,12 +344,10 @@ class ConfigSeeder extends Seeder
             'value'=>'[{
                 "value":"health",
                 "label":"健康與體育"
-                },
-                {
+                },{
                 "value":"language",
                 "label":"語言"
-                },
-                {
+                },{
                 "value":"social",
                 "label":"個人、社會與人文"
                 },{
@@ -359,6 +357,24 @@ class ConfigSeeder extends Seeder
                 "value":"art",
                 "label":"藝術"                
             }]'
+        ]);
+
+        DB::table('configs')->insert([
+            'key'=>'medical_treatments',
+            'value'=>'[{
+                "value":"DISCOMFORT",
+                "label":"身體不適"
+                },{
+                "value":"TRAUMA",
+                "label":"普通外傷"
+                },{
+                "value":"REST",
+                "label":"卧床休息"
+                },{
+                "value":"ACCIDENT",
+                "label":"嚴重意外"
+            }]'
+        ]);
 
     }
 }

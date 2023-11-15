@@ -13,16 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('studies', function (Blueprint $table) {
+        Schema::create('treatments', function (Blueprint $table) {
             $table->id();
-            $table->integer('version');
-            $table->string('grade_year');
-            $table->integer('sequence')->nullable();
-            $table->string('title_zh');
-            $table->string('title_en');
-            $table->string('stream');
+            $table->bigInteger('student_id');
+            $table->string('current_klass')->nullable();
+            $table->date('date');
+            $table->string('category');
+            $table->string('title');
             $table->text('description')->nullable();
-            $table->boolean('active');
             $table->timestamps();
         });
     }
@@ -34,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('studies');
+        Schema::dropIfExists('treatments');
     }
 };
