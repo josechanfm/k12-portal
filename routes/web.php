@@ -230,8 +230,13 @@ Route::group([
         'role:master|admin|director|teacher'
     ]
 ],function () {
+    Route::get('dashboard',[App\Http\Controllers\Medical\DashboardController::class,'index'])->name('medical.dashboard');
+    Route::resource('physicals',App\Http\Controllers\Medical\PhysicalController::class)->names('medical.physicals');
+    
+    Route::get('klass/{klass}',[App\Http\Controllers\Medical\DashboardController::class,'klass'])->name('medical.klass');
     Route::get('healthcare',[App\Http\Controllers\Medical\HealthcareController::class,'dashboard'])->name('medical.healthcare');
     Route::resource('treatments',App\Http\Controllers\Medical\TreatmentController::class)->names('medical.treatments');
+    Route::resource('physicals',App\Http\Controllers\Medical\PhysicalController::class)->names('medical.physicals');
     Route::resource('klass/{klass}/healthcares',App\Http\Controllers\Medical\HealthcareController::class)->names('medical.klass.healthcares');
 });
 // Route::prefix('promote')->group(function(){

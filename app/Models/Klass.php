@@ -461,4 +461,8 @@ class Klass extends Model
         //return ['fileName'=>$documentFileName,'document'=>$document,'header'=>$header];
         return Storage::disk('public')->download($documentFileName, 'Request', $header); 
     }
+
+    public function physicals(){
+        return $this->hasMany(Physical::class);
+    }
 }
