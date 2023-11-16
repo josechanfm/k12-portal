@@ -5,22 +5,26 @@ namespace App\Http\Controllers\Medical;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Treatment;
-use App\Models\Year;
-use App\Models\Grade;
-use App\Models\Config;
+use App\Models\Healthcare;
+use App\Models\Klass;
 
-class TreatmentController extends Controller
+class HealthcareController extends Controller
 {
+
+    public function dashboard(){
+        return Inertia::render('Medical/HealthcareDashboard',[
+        ]);
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Klass $klass)
     {
-        return Inertia::render('Medical/Treatments',[
-            'treatments'=>Treatment::all()
+        $klass->healthcares;
+        return Inertia::render('Medical/Healthcares',[
+            'klass'=>$klass
         ]);
     }
 
@@ -31,10 +35,7 @@ class TreatmentController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Medical/TreatmentCreate',[
-            'grades'=>Grade::whereBelongsTo(Year::currentYear())->with('klasses')->get(),
-            'medicalTreatments'=>Config::item('medical_treatments'),
-        ]);
+        //
     }
 
     /**
@@ -43,10 +44,10 @@ class TreatmentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Klass $klass, Request $request)
     {
-        Treatment::create($request->all());
-        return response()->json($request->all());
+        Healthcare::create($request->all());
+        return redirect()->back();
     }
 
     /**
@@ -57,7 +58,7 @@ class TreatmentController extends Controller
      */
     public function show($id)
     {
-        //
+
     }
 
     /**
@@ -66,14 +67,9 @@ class TreatmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Treatment $treatment)
+    public function edit(Healthcare $healthcare)
     {
-        return Inertia::render('Medical/TreatmentEdit',[
-            'grades'=>Grade::whereBelongsTo(Year::currentYear())->with('klasses')->get(),
-            'medicalTreatments'=>Config::item('medical_treatments'),
-            'treatment'=>$treatment,
-        ]);
-
+        echo json_encode($healthcare);
     }
 
     /**
@@ -83,10 +79,16 @@ class TreatmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Treatment $treatment, Request $request)
+    public function update(Klass $klass, $id, Request $request)
     {
-        $treatment->update($request->all());
+        if($id==0){
+            Healthcare::create($request->all());
+        }else{
+            Healthcare::find($id)->update($request->all());
+        }
+        
         return redirect()->back();
+
     }
 
     /**

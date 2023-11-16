@@ -66,6 +66,9 @@ class Klass extends Model
         return $this->belongsToMany(Student::class)
                 ->withPivot(['id as pivot_klass_student_id','student_number','stream','state','promote','promote_to']);
     }
+    public function healthcares(){
+        return $this->belongsToMany(Student::class)->with('healthcare');
+    }
     public function behaviours($actor='KLASS_HEAD'){
         $students=$this->students;
         $terms=Config::item('year_terms');

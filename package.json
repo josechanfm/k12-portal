@@ -23,6 +23,7 @@
     "dependencies": {
         "@ant-design/icons-vue": "^6.1.0",
         "ant-design-vue": "^3.2.13",
-        "vue-draggable-next": "^2.1.1"
+        "vue-draggable-next": "^2.1.1",
+        "vue3-quill": "^0.3.1"
     }
 }

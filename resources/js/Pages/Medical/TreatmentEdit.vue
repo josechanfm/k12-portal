@@ -55,7 +55,7 @@
                             />
                         </a-form-item>
                         <div>
-                            <a-button type="default" html-type="submit">新增</a-button>
+                            <a-button type="default" html-type="submit">保存</a-button>
                         </div>
                     </a-form>
                     <a-divider/>
@@ -75,24 +75,6 @@
                 </a-card>
             </a-col>
             <a-col :span="6">
-                <a-card>
-                    <div class="py-5">
-                        <a-radio-group v-model:value="selectedGradeId" button-style="solid">
-                            <template v-for="grade in grades">
-                                <a-radio-button :value="grade.id">{{ grade.tag }}</a-radio-button>
-                            </template>
-                        </a-radio-group>
-                        <a-divider/>
-                        <a-radio-group v-model:value="selectedKlassId" button-style="solid" @change="onChangeKlass">
-                            <template v-for="klass in grades.find(g=>g.id==selectedGradeId).klasses">
-                                <a-radio-button :value="klass.id">{{ klass.tag }}</a-radio-button>
-                            </template>
-                        </a-radio-group>
-                    </div>
-                    <ol>
-                        <li v-for="student in students" @click="onSelectStudent(student)">{{ student.pivot.student_number }} : {{ student.name_zh }}</li>
-                    </ol>
-                </a-card>
             </a-col>
         </a-row>
 
@@ -111,11 +93,10 @@ export default {
         dayjs,
         quillEditor
     },
-    props: ['grades','medicalTreatments'],
+    props: ['grades','medicalTreatments','treatment'],
     data() {
         return {
             dateFormat: 'YYYY-MM-DD',
-            treatment:{},
             // selectedGrade:{},
             // selectedKlass:{},
             selectedGradeId:0,
@@ -164,10 +145,6 @@ export default {
         }
     },
     created() {
-        //this.selectedGrade=this.grades.find(g=>g.grade_year==4)
-        //this.selectedKlass=this.grades.find(g=>g.id==this.selectedGrade.id).klasses
-        this.selectedGradeId=this.grades.find(g=>g.grade_year==4).id
-        // this.selectedKlassId=this.grades.find(g=>g.id==this.selectedGradeId).klasses
     },
     mounted(){
 
@@ -199,7 +176,7 @@ export default {
 
         },
         onFormSubmit(){
-            this.$inertia.post(route("medical.treatments.store"), this.treatment, {
+            this.$inertia.put(route("medical.treatments.update",this.treatment.id), this.treatment, {
                 onSuccess: (page) => {
                     console.log(page);
                         console.log("approved")

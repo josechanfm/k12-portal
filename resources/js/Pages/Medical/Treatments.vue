@@ -5,13 +5,11 @@
                 Medial Treatment
             </h2>
         </template>
-        <inertia-link :href="route('medical.treatments.create')" type="primary" class="ant-btn">Create</inertia-link>
+        <inertia-link :href="route('medical.treatments.create')" class="ant-btn ant-btn-primary">Create</inertia-link>
         <a-table :dataSource="treatments" :columns="columns">
             <template #bodyCell="{ column, text, record, index }">
                 <template v-if="column.dataIndex == 'operation'">
-                    <inertia-link :href="route('manage.activity.students',record.id)" class="ant-btn">學生名單</inertia-link>
-                    <inertia-link :href="route('manage.activity.students.scores',record.id)" class="ant-btn">Scores</inertia-link>
-                    <a-button>Report</a-button>
+                    <inertia-link :href="route('medical.treatments.edit',record.id)" class="ant-btn">edit</inertia-link>
                 </template>
                 <template v-else>
                     {{ record[column.dataIndex] }}

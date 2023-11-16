@@ -151,7 +151,20 @@
     }],
   },{
     key: '4',
-    roles:[],
+    roles:['master','admin','director'],
+    title: '健康狀況',
+    children: [{
+      key: '4.1',
+      title: '健康記錄',
+      url:'/medical/healthcare',
+    },{
+      key: '4.2',
+      title: '就診記錄',
+      url:'/medical/treatments',
+    }],
+  },{
+    key: '5',
+    roles:['master','admin','director'],
     title: 'Navigation 4',
     children: [{
       key: '4.1',
@@ -161,7 +174,7 @@
         title: 'Option 4.1.1',
       }],
     }],
-  }];
+}];
 
 
 

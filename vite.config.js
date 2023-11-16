@@ -7,6 +7,7 @@ export default defineConfig(({ mode }) => {
     process.env = {...process.env, ...loadEnv(mode, process.cwd())};
 
     return {
+        optimizeDeps: { include: ["quill"]},
         server: {
             host: '0.0.0.0',
             hmr: {
