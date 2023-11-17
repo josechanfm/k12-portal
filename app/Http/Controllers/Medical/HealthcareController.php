@@ -5,15 +5,16 @@ namespace App\Http\Controllers\Medical;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Healthcare;
 use App\Models\Klass;
+use App\Models\Healthcare;
+use App\Models\Physical;
 
 class HealthcareController extends Controller
 {
-
     public function dashboard(){
-        return Inertia::render('Medical/HealthcareDashboard',[
-        ]);
+        $healthcare=Healthcare::find(1);
+        $healthcare->chronicles;
+        dd($healthcare);
     }
     /**
      * Display a listing of the resource.
@@ -23,7 +24,7 @@ class HealthcareController extends Controller
     public function index(Klass $klass)
     {
         $klass->healthcares;
-        return Inertia::render('Medical/Healthcares',[
+        return Inertia::render('Medical/Healthcare',[
             'klass'=>$klass
         ]);
     }
@@ -44,10 +45,26 @@ class HealthcareController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Klass $klass, Request $request)
+    public function store(Request $request)
     {
-        Healthcare::create($request->all());
-        return redirect()->back();
+        $input=$request->all();
+        $input['data_fields']=json_decode($request->data_fields);
+        $healthcare=Healthcare::create($input);
+        foreach($healthcare->klass->students as $student){
+            foreach($healthcare->data_fields as $field){
+                $data[]=[
+                    'healthcare_id'=>$healthcare->id,
+                    'klass_student_id'=>$student->pivot->klass_student_id,
+                    'field_name'=>$field['value'],
+                    'value'=>NULL
+                ];
+            };
+        };
+        Physical::upsert(
+            $data,
+            ['healthcate_id','klass_student_id','field_name'],
+            ['value']
+        );    
     }
 
     /**
@@ -56,9 +73,13 @@ class HealthcareController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Healthcare $healthcare)
     {
-
+        $healthcare->physicals;
+        $healthcare->klass;
+        return Inertia::render('Medical/Healthcare',[
+            'healthcare'=>$healthcare
+        ]);
     }
 
     /**
@@ -67,9 +88,9 @@ class HealthcareController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Healthcare $healthcare)
+    public function edit($id)
     {
-        echo json_encode($healthcare);
+        //
     }
 
     /**
@@ -79,16 +100,13 @@ class HealthcareController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Klass $klass, $id, Request $request)
+    public function update(Healthcare $healthcare, Request $request)
     {
-        if($id==0){
-            Healthcare::create($request->all());
-        }else{
-            Healthcare::find($id)->update($request->all());
-        }
-        
+        $input=$request->all();
+        $input['data_fields']=json_decode($request->data_fields);
+ 
+        $healthcare->update($input);
         return redirect()->back();
-
     }
 
     /**

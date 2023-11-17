@@ -6,12 +6,9 @@
             </h2>
         </template>
         <div class="py-5">
-            <KlassSelector routePath="medical.klass.healthcares.index" :param="[]" :currentKlass="klass" />
+            <KlassSelector routePath="medical.klass" :param="[]"  />
         </div>
 
-        <div class="py-5">
-            <KlassSelector routePath="medical.klass.physicals.index" :param="[]" :currentKlass="klass" />
-        </div>
 
     </AdminLayout>
 </template>

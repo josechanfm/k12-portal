@@ -4,18 +4,32 @@ namespace App\Http\Controllers\Medical;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Physical;
+use Inertia\Inertia;
+use App\Models\Medicnote;
+use App\Models\Year;
+use App\Models\Grade;
+use App\Models\Klass;
 
-class PhysicalController extends Controller
+class MedicnoteController extends Controller
 {
+
+    public function dashboard(){
+        $klass=Klass::whereBelongsTo(Grade::whereBelongsTo(Year::currentYear())->where('grade_year',4)->first())->first();
+        return redirect()->route('medical.klass.medicnotes.index',$klass);
+        //return Inertia::render('Medical/MedicnoteDashboard',[
+    
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Klass $klass)
     {
-        //
+        $klass->medicnotes;
+        return Inertia::render('Medical/Medicnotes',[
+            'klass'=>$klass
+        ]);
     }
 
     /**
@@ -34,9 +48,10 @@ class PhysicalController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Klass $klass, Request $request)
     {
-        //
+        Medicnote::create($request->all());
+        return redirect()->back();
     }
 
     /**
@@ -47,7 +62,7 @@ class PhysicalController extends Controller
      */
     public function show($id)
     {
-        //
+
     }
 
     /**
@@ -56,9 +71,9 @@ class PhysicalController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Medicnote $healthcare)
     {
-        //
+        echo json_encode($healthcare);
     }
 
     /**
@@ -68,14 +83,16 @@ class PhysicalController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Klass $klass, $id, Request $request)
     {
-        Physical::upsert(
-            $request->all(),
-            ['healthcase_id','klass_student_id','field_name'],
-            ['value']
-        );
+        if($id==0){
+            Medicnote::create($request->all());
+        }else{
+            Medicnote::find($id)->update($request->all());
+        }
+        
         return redirect()->back();
+
     }
 
     /**

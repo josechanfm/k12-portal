@@ -6,9 +6,9 @@
             </h2>
         </template>
         <div class="py-5">
-            <KlassSelector routePath="medical.klass.healthcares.index" :param="[]" :currentKlass="klass" />
+            <KlassSelector routePath="medical.klass.medicnotes.index" :param="[]" :currentKlass="klass" />
         </div>
-        <a-table :dataSource="klass.healthcares" :columns="columns">
+        <a-table :dataSource="klass.medicnotes" :columns="columns">
             <template #bodyCell="{ column, text, record, index }">
                 <template v-if="column.dataIndex == 'operation'">
                     <a-button @click="editRecord(record)">修改</a-button>
@@ -143,18 +143,18 @@ export default {
     methods: {
         editRecord(record) {
             console.log(record)
-            if(record.healthcare==null){
+            if(record.medicnote==null){
                 this.modal.data = {id:0 }
                 this.modal.data.student_id=record.id
             }else{
-                this.modal.data = { ...record.healthcare }
+                this.modal.data = { ...record.medicnote }
             }
             this.modal.mode = 'EDIT'
             this.modal.title = "修改健康記錄"
             this.modal.isOpen = true
         },
         onFormSubmit(){
-            this.$inertia.put(route("medical.klass.healthcares.update",[this.klass.id,this.modal.data.id]), this.modal.data, {
+            this.$inertia.put(route("medical.klass.medicnotes.update",[this.klass.id,this.modal.data.id]), this.modal.data, {
                 onSuccess: (page) => {
                     this.modal.isOpen=false
                 },

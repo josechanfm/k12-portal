@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('physicals', function (Blueprint $table) {
+        Schema::create('healthcares', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('klass_id');
             $table->string('category');
@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('data_fields');
             $table->string('responsible')->nullable();
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('physicals');
+        Schema::dropIfExists('healthcares');
     }
 };

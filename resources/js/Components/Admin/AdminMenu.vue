@@ -156,7 +156,7 @@
     children: [{
       key: '4.1',
       title: '健康記錄',
-      url:'/medical/healthcare',
+      url:'/medical',
     },{
       key: '4.2',
       title: '就診記錄',

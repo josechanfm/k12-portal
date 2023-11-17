@@ -6,7 +6,7 @@
             </h2>
         </template>
         <div class="py-5">
-            <KlassSelector routePath="medical.klass.healthcares.index" :param="[]" :currentKlass="klass" />
+            <KlassSelector routePath="medical.klass.medicnotes.index" :param="[]"  />
         </div>
 
 

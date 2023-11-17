@@ -66,8 +66,8 @@ class Klass extends Model
         return $this->belongsToMany(Student::class)
                 ->withPivot(['id as pivot_klass_student_id','student_number','stream','state','promote','promote_to']);
     }
-    public function healthcares(){
-        return $this->belongsToMany(Student::class)->with('healthcare');
+    public function medicnotes(){
+        return $this->belongsToMany(Student::class)->with('medicnote');
     }
     public function behaviours($actor='KLASS_HEAD'){
         $students=$this->students;
@@ -462,7 +462,7 @@ class Klass extends Model
         return Storage::disk('public')->download($documentFileName, 'Request', $header); 
     }
 
-    public function physicals(){
-        return $this->hasMany(Physical::class);
+    public function healthcares(){
+        return $this->hasMany(Healthcare::class);
     }
 }

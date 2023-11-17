@@ -56,8 +56,8 @@ class Student extends Model
     {
         return $this->hasOne(Guardian::class)->latestOfMany();
     }
-    public function healthcare(){
-        return $this->hasOne(Healthcare::class);
+    public function medicnote(){
+        return $this->hasOne(Medicnote::class);
     }
     public function abilities(){
         return $this->hasManyThrough(Ability::class, KlassStudent::class, 'student_id','klass_student_id')->with('topic');
