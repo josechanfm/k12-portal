@@ -18,8 +18,10 @@ return new class extends Migration
             $table->bigInteger('healthcare_id');
             $table->bigInteger('klass_student_id');
             $table->string('field_name');
-            $table->string('value');
+            $table->string('value')->nullable();
             $table->timestamps();
+            $table->unique(['healthcare_id','klass_student_id','field_name']);
+
         });
     }
 

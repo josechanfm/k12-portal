@@ -84,6 +84,10 @@ export default {
                 'value':'WEIGHT',
                 'label':'Weight',
                 'dataFields':'[{"value":"field_11","label":"Field 11"},{"value":"field_22","label":"Field 22"}]'
+            },{
+                'value':'SIGHT',
+                'label':'Sight',
+                'dataFields':'[{"value":"distance","label":"Distance"},{"value":"charactor","label":"Charactor"},{"value":"level","label":"Level"}]'
             }],
             modal: {
                 mode: null,
