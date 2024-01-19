@@ -1,10 +1,5 @@
 <template>
-    <AdminLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                學年管理
-            </h2>
-        </template>
+    <AdminLayout title="學年" :breadcrumb="breadcrumb">
         <button @click="createRecord()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">
             創建新學年
         </button>
@@ -160,6 +155,10 @@ export default {
     props: ['years','param','yearTerms'],
     data() {
         return {
+            breadcrumb:[
+                {label:"Admin" ,url:route('admin')},
+                {label:"Years" ,url:null},
+            ],
             kgrade:0,
             kklass:0,
             dataSource:[],

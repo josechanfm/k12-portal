@@ -1,5 +1,5 @@
 <template>
-    <AdminLayout title="Dashboard">
+    <AdminLayout title="Teacher" :breadcrumb="breadcrumb">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Teacher
@@ -41,6 +41,10 @@ export default {
     props: ['teachers'],
     data() {
         return {
+            breadcrumb:[
+                {label:"Manage" ,url:route('manage')},
+                {label:"Teachers" ,url:null},
+            ],
             columns:[
                 {
                     title: 'Staff #',

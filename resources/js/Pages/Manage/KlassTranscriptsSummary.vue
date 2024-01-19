@@ -1,5 +1,5 @@
 <template>
-    <AdminLayout title="Dashboard">
+    <AdminLayout title="Dashboard" :breadcrumb="breadcrumb">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Score Summary
@@ -21,31 +21,31 @@
                         <thead>
                             <tr>
                                 <td rowspan="2">Student Name</td>
-                                <td v-for="course in transcripts['courses']" :colspan="year_terms.length" class="text-center">
+                                <td v-for="course in transcriptsScores['courses']" :colspan="year_terms.length" class="text-center">
                                     {{course.title_zh}}
                                 </td>
                                 <td :colspan="year_terms.length" class="text-center">操行</td>
                             </tr>
                             <tr>
-                                <template v-for="course in transcripts['courses']" :colspan="year_terms.length" class="text-center">
+                                <template v-for="course in transcriptsScores['courses']" :colspan="year_terms.length" class="text-center">
                                     <td v-for="term in year_terms">{{ term.label }}</td>
                                 </template>
                                 <td v-for="term in year_terms">{{ term.label }}</td>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(student,ksid) in transcripts['students']">
+                            <tr v-for="(student,ksid) in transcriptsScores['students']">
                                 <td>{{student.name_zh}}</td>
-                                <template v-for="course in transcripts['courses']">
+                                <template v-for="course in transcriptsScores['courses']">
                                     <template v-for="column in course.score_columns">
                                         <template v-for="term in year_terms">
                                             <td v-if="column.is_total==1 && column.term_id==term.value" class="text-center">
-                                                <span v-if="transcripts['scores'][ksid][course.id][column.id]">
-                                                        <span v-if="transcripts['scores'][ksid][course.id][column.id].point==null">
+                                                <span v-if="transcriptsScores['scores'][ksid][course.id][column.id]">
+                                                        <span v-if="transcriptsScores['scores'][ksid][course.id][column.id].point==null">
                                                     --
                                                 </span>
                                                 <span v-else>
-                                                    {{ transcripts['scores'][ksid][course.id][column.id].point}}
+                                                    {{ transcriptsScores['scores'][ksid][course.id][column.id].point}}
                                                 </span>
                                             </span>
                                             </td>
@@ -53,7 +53,7 @@
                                     </template>
                                 </template>
                                 <template v-for="term in year_terms">
-                                    <td>{{ transcripts['behaviours'][ksid][term.value] }}</td>
+                                    <td>{{ transcriptsScores['behaviours'][ksid][term.value] }}</td>
                                 </template>
 
                             </tr>                        
@@ -75,9 +75,13 @@ export default {
     components: {
         AdminLayout, ButtonLink, KlassSelector
     },
-    props: ['year','klass','year_terms','transcripts'],
+    props: ['year','klass','year_terms','transcriptsScores'],
     data() {
         return {
+            breadcrumb:[
+                {label:"Home" ,url:route('manage')},
+                {label:"Klass" ,url:route('manage.klasses.show',this.klass.id)},
+            ],
             columns:[
                 {
                     title: 'Staff #',

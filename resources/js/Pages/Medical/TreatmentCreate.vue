@@ -1,10 +1,5 @@
 <template>
-    <AdminLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Medial Treatment
-            </h2>
-        </template>
+    <AdminLayout title="新增就診記錄" :breadcrumb="breadcrumb">
         <a-divider/>
         <a-row>
             <a-col :span="18">
@@ -114,6 +109,11 @@ export default {
     props: ['grades','medicalTreatments'],
     data() {
         return {
+            breadcrumb:[
+                {label:"Medical" ,url:route('medical')},
+                {label:"Treatments" ,url:route('medical.treatments.index')},
+                {label:"新增記錄" ,url:null},
+            ],
             dateFormat: 'YYYY-MM-DD',
             treatment:{},
             // selectedGrade:{},

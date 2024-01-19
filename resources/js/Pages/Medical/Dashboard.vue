@@ -1,12 +1,8 @@
 <template>
-    <AdminLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                健康記錄
-            </h2>
-        </template>
+    <AdminLayout title="健康記錄" :breadcrumb="breadcrumb">
         <div class="py-5">
             <KlassSelector routePath="medical.klass" :param="[]"  />
+            <p>Medical Record dashboad, design to show general information and/or statistic of medical treatments.</p>
         </div>
 
 
@@ -27,6 +23,9 @@ export default {
     props: [],
     data() {
         return {
+            breadcrumb:[
+                {label:"Medical" ,url:null},
+            ],
             dateFormat: 'YYYY-MM-DD',
         }
     },

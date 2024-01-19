@@ -1,10 +1,5 @@
 <template>
-    <AdminLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Medial Treatment
-            </h2>
-        </template>
+    <AdminLayout title="就診記錄" :breadcrumb="breadcrumb">
         <inertia-link :href="route('medical.treatments.create')" class="ant-btn ant-btn-primary">Create</inertia-link>
         <a-table :dataSource="treatments" :columns="columns">
             <template #bodyCell="{ column, text, record, index }">
@@ -33,6 +28,10 @@ export default {
     props: ['treatments'],
     data() {
         return {
+            breadcrumb:[
+                {label:"Medical" ,url:route('medical')},
+                {label:"Treatments" ,url:null},
+            ],
             dateFormat: 'YYYY-MM-DD',
             selectedGrade: 4,
             columns: [

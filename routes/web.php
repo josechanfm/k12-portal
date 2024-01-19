@@ -94,7 +94,7 @@ Route::group([
         'role:master|admin'
     ]
 ],function () {
-    Route::resource('/',App\Http\Controllers\Admin\DashboardController::class)->names('admin');
+    Route::get('/',[App\Http\Controllers\Admin\DashboardController::class,'index'])->name('admin');
     Route::resource('staffs',App\Http\Controllers\Admin\StaffController::class)->names('admin.staffs');
     Route::resource('years',App\Http\Controllers\Admin\YearController::class)->names('admin.years');
     
@@ -133,8 +133,8 @@ Route::group([
     ]
 ],function () {
         Route::get('/',[App\Http\Controllers\Manage\DashboardController::class,'index'])->name('manage');
-        Route::resource('/grades',App\Http\Controllers\Manage\GradeController::class);
-        Route::resource('/course',App\Http\Controllers\Manage\CourseController::class);
+        Route::resource('grades',App\Http\Controllers\Manage\GradeController::class)->names('manage.grades');
+        Route::resource('course',App\Http\Controllers\Manage\CourseController::class);
         Route::resource('/student',App\Http\Controllers\Manage\StudentController::class);
         Route::get('/students/get_by_klass_id/{klass}',[App\Http\Controllers\Manage\StudentController::class,'getByKlassId'])->name('manage.students.getByKlassId');
         Route::post('/students/get_by_names',[App\Http\Controllers\Manage\StudentController::class,'getByNames'])->name('manage.students.getByNames');
@@ -188,19 +188,32 @@ Route::group([
         // Route::post('updateStudents/promote',[App\Http\Controllers\Manage\PromotionController::class,'updateStudents'])->name('manage.updateStudents.promote');;
         // Route::get('data/{yearId}/promote',[App\Http\Controllers\Manage\PromotionController::class, 'data'])->name('manage.data.promote');;
     
-        Route::get('/pre/klass/{klass}/final_scores',[App\Http\Controllers\Manage\Pre\KlassController::class,'finalScores'])->name('manage.pre.klass.finalScores');
-        Route::resource('/pre/klasses',App\Http\Controllers\Manage\Pre\KlassController::class)->names('manage.pre.klasses');
-        Route::resource('pre/students',App\Http\Controllers\Manage\Pre\StudentController::class)->names('manage.pre.students');
-        Route::get('/pre/klass/{klass}/habits',[App\Http\Controllers\Manage\Pre\HabitController::class,'klass'])->name('manage.pre.klass.habits');
-        Route::put('/pre/klass/{klass}/habits',[App\Http\Controllers\Manage\Pre\HabitController::class,'update'])->name('manage.pre.klass.habits.update');
-        Route::get('/pre/klass/{klass}/abilities',[App\Http\Controllers\Manage\Pre\AbilityController::class,'klass'])->name('manage.pre.klass.abilities');
-        Route::get('/pre/klass/{klass}/abilities/pdf',[App\Http\Controllers\Manage\Pre\AbilityController::class,'pdf'])->name('manage.pre.klass.abilities.pdf');
-        Route::get('/pre/klass/{klass}/abilities/mpdf',[App\Http\Controllers\Manage\Pre\AbilityController::class,'mpdf'])->name('manage.pre.klass.abilities.mpdf');
-        Route::post('/pre/klass/{klass}/abilities/update',[App\Http\Controllers\Manage\Pre\AbilityController::class,'update'])->name('manage.pre.klass.abilities.update');
-        //Route::get('pre/theme/{theme}/student/{klassStudent}/{format?}',[App\Http\Controllers\Manage\Pre\StudentController::class,'theme'])->name('manage.pre.theme.student');
-        Route::get('pre/klass_student/{klassStudent}/theme/{theme}/{format?}',[App\Http\Controllers\Manage\Pre\ThemeController::class,'klassStudent'])->name('manage.pre.klassStudent.theme');
-        Route::get('pre/klass/{klass}/theme/{theme}/{format?}',[App\Http\Controllers\Manage\Pre\ThemeController::class,'klass'])->name('manage.pre.klass.theme');
-        Route::get('pre/klass/{klass}/themes/{format?}',[App\Http\Controllers\Manage\Pre\ThemeController::class,'summary'])->name('manage.pre.klass.themes');
+        Route::group(['prefix'=>'pre',],function () {
+            Route::get('/klass/{klass}/final_scores',[App\Http\Controllers\Manage\Pre\KlassController::class,'finalScores'])->name('manage.pre.klass.finalScores');
+            Route::resource('/klasses',App\Http\Controllers\Manage\Pre\KlassController::class)->names('manage.pre.klasses');
+            Route::resource('students',App\Http\Controllers\Manage\Pre\StudentController::class)->names('manage.pre.students');
+            Route::get('/klass/{klass}/habits',[App\Http\Controllers\Manage\Pre\HabitController::class,'klass'])->name('manage.pre.klass.habits');
+            Route::put('/klass/{klass}/habits',[App\Http\Controllers\Manage\Pre\HabitController::class,'update'])->name('manage.pre.klass.habits.update');
+            Route::get('/klass/{klass}/abilities',[App\Http\Controllers\Manage\Pre\AbilityController::class,'klass'])->name('manage.pre.klass.abilities');
+            Route::get('/klass/{klass}/abilities/pdf',[App\Http\Controllers\Manage\Pre\AbilityController::class,'pdf'])->name('manage.pre.klass.abilities.pdf');
+            Route::get('/klass/{klass}/abilities/mpdf',[App\Http\Controllers\Manage\Pre\AbilityController::class,'mpdf'])->name('manage.pre.klass.abilities.mpdf');
+            Route::post('/klass/{klass}/abilities/update',[App\Http\Controllers\Manage\Pre\AbilityController::class,'update'])->name('manage.pre.klass.abilities.update');
+            //Route::get('pre/theme/{theme}/student/{klassStudent}/{format?}',[App\Http\Controllers\Manage\Pre\StudentController::class,'theme'])->name('manage.pre.theme.student');
+            Route::get('klass_student/{klassStudent}/theme/{theme}/{format?}',[App\Http\Controllers\Manage\Pre\ThemeController::class,'klassStudent'])->name('manage.pre.klassStudent.theme');
+            Route::get('klass/{klass}/theme/{theme}/{format?}',[App\Http\Controllers\Manage\Pre\ThemeController::class,'klass'])->name('manage.pre.klass.theme');
+            Route::get('klass/{klass}/themes/{format?}',[App\Http\Controllers\Manage\Pre\ThemeController::class,'summary'])->name('manage.pre.klass.themes');
+
+            Route::resource('klass/{klass}/behaviours',App\Http\Controllers\Manage\Pre\BehaviourController::class)->names('manage.pre.klass.behaviours');
+            Route::get('klass/{klass}/behaviour/adjust',[App\Http\Controllers\Manage\BehaviourController::class,'adjust'])->name('manage.pre.klass.behaviour.adjust');
+
+            Route::resource('additives',App\Http\Controllers\Manage\Pre\AdditiveController::class)->names('manage.pre.additives');
+            Route::get('klass/{klass}/additive/{category}',[App\Http\Controllers\Manage\Pre\AdditiveController::class,'scope'])->name('manage.pre.klass.additive');
+            Route::get('klass/{klass}/additive_page',[App\Http\Controllers\Manage\Pre\AdditiveController::class,'page'])->name('manage.pre.klass.additive.page');
+            Route::get('klass/{klass}/additive_direct',[App\Http\Controllers\Manage\Pre\AdditiveController::class,'direct'])->name('manage.pre.klass.additive.direct');
+            Route::post('klass/{klass}/additive_direct_input',[App\Http\Controllers\Manage\Pre\AdditiveController::class,'directInput'])->name('manage.pre.klass.additive.directInput');
+    
+    
+        });        
 });
 
 //Route::prefix('teacher/')->group(function(){
@@ -230,7 +243,7 @@ Route::group([
         'role:master|admin|director|teacher'
     ]
 ],function () {
-    Route::get('/',[App\Http\Controllers\Medical\DashboardController::class,'index'])->name('medical.dashboard');
+    Route::get('/',[App\Http\Controllers\Medical\DashboardController::class,'index'])->name('medical');
     //Route::resource('healthcares',App\Http\Controllers\Medical\HealthcareController::class)->names('medical.healthcares');
     
     Route::get('klass/{klass}',[App\Http\Controllers\Medical\DashboardController::class,'klass'])->name('medical.klass');

@@ -1,10 +1,5 @@
 <template>
-    <AdminLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                學年階段之班別
-            </h2>
-        </template>
+    <AdminLayout title="學年階段之班別" :breadcrumb="breadcrumb">
         <a-typography-title :level="4">學年:{{ grade.year.title }}</a-typography-title>
         <a-typography-title :level="4">年級:{{ grade.tag }}</a-typography-title>
         <inertia-link v-for="g in grades" :href="route('admin.grade.klasses.index', g.id)"
@@ -146,6 +141,11 @@ export default {
     props: ['grades', 'grade', 'klasses', 'klassLetters', 'studyStreams', 'studies','teachers'],
     data() {
         return {
+            breadcrumb:[
+                {label:"Admin" ,url:route('admin')},
+                {label:"Grades" ,url:route('admin.year.grades.index',this.grade.year_id)},
+                {label:"Klass" ,url:null},
+            ],
             gradeSelected: 1,
             modal: {
                 mode: null,

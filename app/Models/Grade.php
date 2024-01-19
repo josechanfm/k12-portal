@@ -121,10 +121,17 @@ class Grade extends Model
                 'field_name'
             );  
         }
-        $data['APPRAISAL']['appraisal']=TranscriptTemplate::where('template_id',$this->transcript_template_id)
-            ->where('category','APPRAISAL')->first()->toArray();
-        $data['PASSING']['passing']=TranscriptTemplate::where('template_id',$this->transcript_template_id)
-            ->where('category','PASSING')->first()->toArray();
+        
+
+        $templateTemplates=TranscriptTemplate::where('template_id',$this->transcript_template_id)->where('category','APPRAISAL')->first();
+        $data['APPRAISAL']['appraisal']=$templateTemplates?$templateTemplates->toArray():NULL;
+        $templateTemplates=TranscriptTemplate::where('template_id',$this->transcript_template_id)->where('category','PASSING')->first();
+        $data['PASSING']['passing']=$templateTemplates?$templateTemplates->toArray():NULL;
+
+        // $data['APPRAISAL']['appraisal']=TranscriptTemplate::where('template_id',$this->transcript_template_id)
+        //     ->where('category','APPRAISAL')->first()->toArray();
+        // $data['PASSING']['passing']=TranscriptTemplate::where('template_id',$this->transcript_template_id)
+        //     ->where('category','PASSING')->first()->toArray();
         return $data;
     }
 

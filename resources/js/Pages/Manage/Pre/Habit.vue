@@ -1,10 +1,5 @@
 <template>
-    <AdminLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                生活習慣和態度
-            </h2>
-        </template>
+    <AdminLayout title="生活習慣和態度" :breadcrumb="breadcrumb">
         <a-typography-title :level="3">班別:{{klass.tag}}</a-typography-title>
         <a-typography-title :level="3">專業方向:{{klass.stream}}</a-typography-title>
 
@@ -56,6 +51,12 @@ export default {
     props: ['klass','yearTerms','habitColumns','habits'],
     data() {
         return {
+            breadcrumb:[
+                {label:"Manage", url:route('manage')},
+                {label:"小學", url:route('manage.grades.index',{'type':'primary'})},
+                {label:this.klass.tag+'班' ,url:route('manage.pre.klasses.show',this.klass.id)},
+                {label:'生活習慣和態度' ,url:null},
+            ],
             keypressed:"",
             tableCell:{
                 row:0,

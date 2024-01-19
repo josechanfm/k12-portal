@@ -1,10 +1,5 @@
 <template>
-    <AdminLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                健康記錄
-            </h2>
-        </template>
+    <AdminLayout title="就診記錄" :breadcrumb="breadcrumb">
         <div class="py-5">
             <KlassSelector routePath="medical.klass.medicnotes.index" :param="[]" :currentKlass="klass" />
         </div>
@@ -19,7 +14,7 @@
             </template>
         </a-table>
 
-                <!-- Modal Start-->
+        <!-- Modal Start-->
         <a-modal :model="modal.data" v-model:visible="modal.isOpen" :title="modal.title" width="60%" okText="Save" @ok="onFormSubmit">
             <a-form ref="modalForm" :model="modal.data" :rules="rules" layout="vertical" @finish="onFormSubmit" id="modalForm">
                 <a-row :gutter="10">
@@ -101,6 +96,10 @@ export default {
     props: ['klass'],
     data() {
         return {
+            breadcrumb:[
+                {label:"Medical" ,url:route('medical')},
+                {label:"Treatments" ,url:null},
+            ],
             dateFormat: 'YYYY-MM-DD',
             selectedGrade: 4,
             modal: {
@@ -161,7 +160,7 @@ export default {
                 onError: (error) => {
                     console.log(error);
                 }
-        })
+            })
         }
     },
 }

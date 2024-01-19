@@ -1,10 +1,5 @@
 <template>
-    <AdminLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                學年級別
-            </h2>
-        </template>
+    <AdminLayout title="學年年級" :breadcrumb="breadcrumb">
         <a-typography-title :level="4">
             學年代號: 
             <a-select
@@ -118,6 +113,10 @@ export default {
     props: ['years','year','grades','gradeLevels'],
     data() {
         return {
+            breadcrumb:[
+                {label:"Admin" ,url:route('admin')},
+                {label:"Grades" ,url:null},
+            ],
             selectedYear:this.year.id,
             modal: {
                 mode:null,

@@ -39,10 +39,15 @@ class AdditiveTemplateSeeder extends Seeder
                 ]
             ],
             'REMARK'=>[
-                'COMMENTS'=>[
+                'COMMENT'=>[
                     'COMMENT_T1'=>'備註',
                     'COMMENT_T2'=>'備註',
                     'COMMENT_FINAL'=>'備註',
+                ],
+            ],
+            'VIOLATION'=>[
+                'VIOLATION'=>[
+                    'VIOLATION'=>'違規'
                 ],
             ]
         ];

@@ -30,7 +30,8 @@ class AbilityController extends Controller
         //dd($klass);
         
         $terms=Config::item('year_terms');
-
+        // dd($terms);
+        //dd($klass->students_abilities);
         return Inertia::render('Manage/Pre/Ability',[
             'yearTerms'=>Config::item('year_terms'),
             'klass'=>$klass,

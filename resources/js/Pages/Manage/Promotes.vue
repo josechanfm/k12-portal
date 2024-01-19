@@ -1,32 +1,19 @@
 <template>
-    <AdminLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                升班操作
-            </h2>
-        </template>
-        <hr/>
-            <a-table :dataSource="grades" :columns="columns">
-                <template #bodyCell="{ column, text, record, index }">
-                    <template v-if="column.dataIndex == 'operation'">
-                        <template v-for="klass in record.klasses">
-                            <inertia-link :href="route('manage.klass.promotes.index',klass.id)" class="ant-btn">
-                                {{klass.tag}}
-                            </inertia-link>
-                        </template>
-                    </template>
-                    <template v-else>
-                        {{ record[column.dataIndex] }}
+    <AdminLayout title="升班預處理" :breadcrumb="breadcrumb">
+        <a-table :dataSource="grades" :columns="columns">
+            <template #bodyCell="{ column, text, record, index }">
+                <template v-if="column.dataIndex == 'operation'">
+                    <template v-for="klass in record.klasses">
+                        <inertia-link :href="route('manage.klass.promotes.index',klass.id)" class="ant-btn">
+                            {{klass.tag}}
+                        </inertia-link>
                     </template>
                 </template>
-            </a-table>
-
-        <ul>
-            <li v-for="grade in grades">
-                {{ grade }}
-                <hr>
-            </li>
-        </ul>
+                <template v-else>
+                    {{ record[column.dataIndex] }}
+                </template>
+            </template>
+        </a-table>
     </AdminLayout>
 
 </template>
@@ -41,6 +28,10 @@ export default {
     props: ['years','nextYear','grades','nextGrades'],
     data() {
         return {
+            breadcrumb:[
+                {label:"Manage" ,url:route('manage')},
+                {label:"Promotes" ,url:null},
+            ],
             columns: [
                 {
                     title: 'Tag',

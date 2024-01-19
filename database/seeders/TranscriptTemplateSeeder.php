@@ -258,6 +258,16 @@ class TranscriptTemplateSeeder extends Seeder
             'title_zh'=>'學年評定',
             'version'=>1,
         ]);
+        DB::table('transcript_templates')->insert([
+            'template_id'=>2,
+            'term_id'=>9,
+            'category'=>'PASSING',
+            'reference_code'=>'passing',
+            'title_zh'=>'合格分數',
+            'sequence'=>$cnt++,
+            'value'=>60,
+            'version'=>1,
+        ]);
 
 
 

@@ -1,17 +1,9 @@
 <template>
-    <AdminLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                年級管理
-            </h2>
-        </template>
-
+    <AdminLayout title="年級班別" :breadcrumb="breadcrumb">
         <a-typography-title :level="4">學年代號: {{ year.code }}</a-typography-title>
         <a-typography-title :level="4">學年全稱: {{ year.title }}</a-typography-title>
         <a-typography-title :level="4">學年開始: {{ year.start }}</a-typography-title>
         <a-typography-title :level="4">學年結束: {{ year.end }}</a-typography-title>
-        
-
         <div class="ant-table">
             <div class="ant-table-container">
                 <div class="ant-table-content">
@@ -79,6 +71,11 @@ export default {
     props: ['year', 'grades'],
     data() {
         return {
+            breadcrumb:[
+                {label:"Manage" ,url:route('manage')},
+                {label:"Grades" ,url:null},
+            ],
+
             // activeKey:'grade',
             //courses:[],
             //students:[],

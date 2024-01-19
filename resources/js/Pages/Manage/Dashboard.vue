@@ -1,5 +1,5 @@
 <template>
-    <AdminLayout title="Dashboard">
+    <AdminLayout title="Dashboard" :breadcrumb="breadcrumb">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Manage Dashboard
@@ -29,6 +29,9 @@ export default {
     props: ['defaultKlass'],
     data() {
         return {
+            breadcrumb:[
+                {label:"Manage" ,url:null},
+            ],
         }
     },
     methods: {

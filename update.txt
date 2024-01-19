@@ -1,3 +1,7 @@
+Use case:
+1. Admin preview only Primary or Secondary Klass.
+2. Teacher accessing their own Klass.
+
 調班:
 1. 學生調到同級另一班.
 2.1. 文轉理: 科目不一樣?

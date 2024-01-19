@@ -1,17 +1,9 @@
 <template>
-    <AdminLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                成積總表
-                {{ klass.tag }}
-                {{ klass.transcript_migrated }}
-            </h2>
-        </template>
+    <AdminLayout title="期末成績" :breadcrumb="breadcrumb">
         <p>點擊紅色不合格分數批准補考</p>
         <div class="py-5">
             <KlassSelector routePath="manage.pre.klass.finalScores" :param="[]" :currentKlass="klass"/>
         </div>
-
         <div>
             <div class="ant-table">
                 <div class="ant-table-container">
@@ -97,6 +89,12 @@ export default {
     props: ['yearTerms','year','klass', 'transcriptTemplates', 'finalScoresK'],
     data() {
         return {
+            breadcrumb:[
+                {label:"Manage", url:route('manage')},
+                {label:"小學", url:route('manage.grades.index',{'type':'primary'})},
+                {label:this.klass.tag+'班' ,url:route('manage.pre.klasses.show',this.klass.id)},
+                {label:'期末成績' ,url:null},
+            ],
             modal: {
                 mode:null,
                 isOpen: false,

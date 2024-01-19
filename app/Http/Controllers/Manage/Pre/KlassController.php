@@ -128,7 +128,6 @@ class KlassController extends Controller
         $year=Year::find(Year::currentYear()->id);
         $year->klasses;
         $year->grades;
-        //  dd($klass->finalScoresK());
         return Inertia::render('Manage/Pre/KlassFinalScores', [
             'yearTerms'=>Config::item('year_terms'),
             'year'=>$year,

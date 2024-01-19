@@ -424,6 +424,7 @@ class Klass extends Model
                     $data['scores'][$student->pivot->klass_student_id][$topic->id]=Ability::firstOrCreate([
                         'klass_student_id'=>$student->pivot->klass_student_id,
                         'topic_id'=>$topic->id,
+                        'term_id'=>$topic->theme->term_id
                     ]);
                 }
         }

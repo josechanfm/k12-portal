@@ -1,10 +1,5 @@
 <template>
-    <AdminLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Year Plan Dashboard
-            </h2>
-        </template>
+    <AdminLayout :title="klass.tag+'班升班預處理'" :breadcrumb="breadcrumb ">
         <div class="py-5">
             <KlassSelector routePath="manage.klass.promotes.index" :currentKlass="klass"/>
         </div>
@@ -121,6 +116,11 @@ export default {
     props: ['year','grades','grade','klass','nextYear','nextGrade','nextKlasses','students'],
     data() {
         return {
+            breadcrumb:[
+                {label:"Manage" ,url:route('manage')},
+                {label:"升班預處理" ,url:route('manage.promotes')},
+                {label:this.klass.tag+"班" ,url:null},
+            ],
             batchPromoteTo:null,
             // activeKey:"1",
             // klassColumns: [

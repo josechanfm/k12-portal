@@ -1,10 +1,5 @@
 <template>
-    <AdminLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                班別管理
-            </h2>
-        </template>
+    <AdminLayout title="班別管理" :breadcrumb="breadcrumb">
         <p>Klass: {{ klass.tag }}</p>
         <p>Students: {{ klass.student_count }}</p>
         <p>Current Term: {{currentTerm.label}}</p>
@@ -14,19 +9,19 @@
         <inertia-link :href="route('manage.pre.klass.finalScores', klass.id)" class="ant-btn">期末成績</inertia-link>
         
         <a-divider type="vertical" />
-        <inertia-link :href="route('manage.klass.behaviours.index', klass.id)" class="ant-btn">操行</inertia-link>
+        <inertia-link :href="route('manage.pre.klass.behaviours.index', klass.id)" class="ant-btn">操行</inertia-link>
 
         <a-divider type="vertical" />
         <template v-if="additiveStyle=='default'">
             <template v-for="group in additiveGroups">
-                <inertia-link :href="route('manage.klass.additive',[klass.id,group.category.toLowerCase()])" class="ant-btn">{{group.label}}</inertia-link>
+                <inertia-link :href="route('manage.pre.klass.additive',[klass.id,group.category.toLowerCase()])" class="ant-btn">{{group.label}}</inertia-link>
             </template>
         </template>
         <template v-else-if="additiveStyle=='page'">
-            <inertia-link :href="route('manage.klass.additive.page', klass.id)" class="ant-btn">單頁模式</inertia-link>
+            <inertia-link :href="route('manage.pre.klass.additive.page', klass.id)" class="ant-btn">單頁模式</inertia-link>
         </template>
         <template v-else-if="additiveStyle=='direct'">
-            <inertia-link :href="route('manage.klass.additive.direct', klass.id)" class="ant-btn">直接輸入</inertia-link>
+            <inertia-link :href="route('manage.pre.klass.additive.direct', klass.id)" class="ant-btn">直接輸入</inertia-link>
         </template>
 
 
@@ -73,6 +68,11 @@ export default {
     props: ['currentTerm','klass','additiveTemplates','additiveStyle','additiveGroups'],
     data() {
         return {
+            breadcrumb:[
+                {label:"Manage", url:route('manage')},
+                {label:"小學", url:route('manage.grades.index',{'type':'primary'})},
+                {label:this.klass.tag+'班' ,url:null},
+            ],
             course: {}
         }
     },

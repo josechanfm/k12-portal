@@ -1,14 +1,5 @@
 <template>
-    <AdminLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Year: {{ klass.year_code }}
-            </h2>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Class: {{ klass.tag }}
-            </h2>
-        </template>
-
+    <AdminLayout title="學習主題" :breadcrumb="breadcrumb">
         <div class="py-12">
             <div class="mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -96,6 +87,12 @@ export default {
     props: ['yearTerms','klass','themes', 'topics','students_abilities','abilities'],
     data() {
         return {
+            breadcrumb:[
+                {label:"Manage", url:route('manage')},
+                {label:"小學", url:route('manage.grades.index',{'type':'primary'})},
+                {label:this.klass.tag+'班' ,url:route('manage.pre.klasses.show',this.klass.id)},
+                {label:'學習主題' ,url:null},
+            ],
             keypressed:"",
             selectedTermId:1,
             selectedThemeId:this.klass.themes[0].id,

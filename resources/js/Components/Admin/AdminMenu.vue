@@ -138,7 +138,7 @@
     },{
       key: '2.3',
       title: '升班預處理',
-      url:'/promote',
+      url:'/manage/promotes',
     }],
   },{
     key: '3',
