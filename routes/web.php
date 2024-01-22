@@ -33,17 +33,18 @@ Route::get('/', function () {
     ]);
 })->name('abc');
 
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('api/grades_klasses',[App\Http\Controllers\Api\GatherController::class,'gradesKlasses'])->name('api.gradesKlasses');
-    Route::get('api/klass_students/{klass}',[App\Http\Controllers\Api\GatherController::class,'klassStudents'])->name('api.klassStudents');
-    Route::get('api/student_medical_records/{student}',[App\Http\Controllers\Api\GatherController::class,'studentMedicalRecords'])->name('api.studentMedicalRecords');
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+    Route::get('api/grades_klasses',[App\Http\Controllers\Api\GatherController::class,'gradesKlasses'])->name('api.gradesKlasses');
+    Route::get('api/klass_students/{klass}',[App\Http\Controllers\Api\GatherController::class,'klassStudents'])->name('api.klassStudents');
+    Route::get('api/student_medical_records/{student}',[App\Http\Controllers\Api\GatherController::class,'studentMedicalRecords'])->name('api.studentMedicalRecords');
     Route::prefix('master')->group(function(){
         Route::resource('/configs',App\Http\Controllers\Master\ConfigController::class);
         Route::resource('/transcriptTemplate',App\Http\Controllers\Master\TranscriptTemplateController::class);
@@ -85,6 +86,7 @@ Route::group([
         Route::get('/theme_templates',[App\Http\Controllers\Master\ThemeTemplateController::class,'list'])->name('master.themeTemplates');
     });
 
+//admin
 Route::group([
     'prefix'=>'/admin',
     'middleware'=>[
@@ -123,6 +125,7 @@ Route::group([
     Route::resource('klass/{klass}/behaviours',App\Http\Controllers\Admin\BehaviourController::class)->names('admin.klass.behaviours');
 });
 //Route::prefix('manage/')->middleware([ 'checkRole:master|admin|director|teacher'])->group(function(){
+//manage
 Route::group([
     'prefix'=>'/manage',
     'middleware'=>[

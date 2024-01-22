@@ -8,9 +8,17 @@
             <a-layout-header style="background: #fff; padding: 0">
                 <menu-unfold-outlined v-if="collapsed" class="trigger" @click="() => (collapsed = !collapsed)" />
                 <menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)" />
+
+                <div class="inline">
+                  xxx
+                </div>
+                <div class="float-right pr-5">
+                  aaa
+                </div>
+
+                  
             </a-layout-header>
             <a-layout-content :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }">
-
               <header class="flex justify-between items-center bg-gray-200 py-4 px-6 mb-5 bg-white shadow sm:rounded-lg">
                 <div class="text-lg font-bold">
                   {{ title }}
