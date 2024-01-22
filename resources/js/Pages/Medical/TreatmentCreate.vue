@@ -110,9 +110,9 @@ export default {
     data() {
         return {
             breadcrumb:[
-                {label:"Medical" ,url:route('medical')},
-                {label:"Treatments" ,url:route('medical.treatments.index')},
-                {label:"新增記錄" ,url:null},
+                {label:"健康狀況" ,url:route('medical')},
+                {label:"就診記錄" ,url:route('medical.treatments.index')},
+                {label:"新增就診記錄" ,url:null},
             ],
             dateFormat: 'YYYY-MM-DD',
             treatment:{},

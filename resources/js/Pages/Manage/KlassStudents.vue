@@ -1,10 +1,5 @@
 <template>
-    <AdminLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                班別學生列表
-            </h2>
-        </template>
+    <AdminLayout title="學生名單" :breadcrumb="breadcrumb">
         <a-typography-title :level="3">班別: {{ klass.tag }}</a-typography-title>
         <a-table :dataSource="students" :columns="columns">
             <template #bodyCell="{column, text, record, index}">
@@ -31,6 +26,12 @@ export default {
     props: ['klass','students'],
     data() {
         return {
+            breadcrumb:[
+                {label:"Manage", url:route('manage')},
+                {label:"年級班別", url:route('manage.grades.index',{'type':'secondary'})},
+                {label:this.klass.tag+'年級' ,url:route('manage.klasses.show', this.klass.id)},
+                {label:'學生名單' ,url:null}
+            ],
             columns:[
             {
                     title: '姓名(中文)',

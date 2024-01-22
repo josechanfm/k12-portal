@@ -1,14 +1,8 @@
 <template>
-    <AdminLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                班別管理
-            </h2>
-        </template>
+    <AdminLayout title="班別管理" :breadcrumb="breadcrumb">
         <p>Klass: {{ klass.tag }}</p>
         <p>Students: {{ klass.student_count }}</p>
         <p>Current Term: {{currentTerm.label}}</p>
-        
         <template v-if="klass.grade_year<=3">
             <inertia-link :href="route('manage.klass.students', klass.id)" class="ant-btn">學生名單</inertia-link>
             <inertia-link :href="route('manage.klass.habits', klass.id)" class="ant-btn">生活習摜</inertia-link>
@@ -22,7 +16,7 @@
             <inertia-link :href="route('manage.klass.transcripts', klass.id)" class="ant-btn">成積大表</inertia-link>
         </template>
         <a-divider type="vertical" />
-        <inertia-link :href="route('manage.klass.behaviours.index', klass.id)" class="ant-btn">操行</inertia-link>
+            <inertia-link :href="route('manage.klass.behaviours.index', klass.id)" class="ant-btn">操行</inertia-link>
         <a-divider type="vertical" />
         <template v-if="additiveStyle=='default'">
             <template v-for="group in additiveGroups">
@@ -90,6 +84,11 @@ export default {
     props: ['currentTerm','klass','additiveTemplates','additiveStyle','additiveGroups'],
     data() {
         return {
+            breadcrumb:[
+                {label:"Manage", url:route('manage')},
+                {label:"年級班別", url:route('manage.grades.index',{'type':'secondary'})},
+                {label:this.klass.grade.initial+'年級' ,url:null},
+            ],
             course: {}
         }
     },

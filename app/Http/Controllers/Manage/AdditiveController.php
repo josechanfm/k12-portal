@@ -111,9 +111,10 @@ class AdditiveController extends Controller
             return redirect()->route('manage');
         }
         return Inertia::render('Manage/KlassAdditives',[
-            'additives'=>$klass->additives($category,'2'),
+            'klass'=>$klass,
+            'currentTerm'=>Year::currentTerm(),
             'additiveTemplates'=>AdditiveTemplate::all(),
-            'currentTerm'=>Year::currentTerm()
+            'additives'=>$klass->additives($category,'2')
         ]);
     }
 

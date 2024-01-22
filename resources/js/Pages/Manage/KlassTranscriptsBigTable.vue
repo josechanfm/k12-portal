@@ -1,10 +1,5 @@
 <template>
-    <AdminLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                成積表
-            </h2>
-        </template>
+    <AdminLayout title="成積大表" :breadcrumb="breadcrumb">
         <a-button @click="migrateTranscripts" :disabled="klass.transcript_migrated == 9">
             <span v-if="klass.transcript_migrated == 1">重新轉換成積表分數</span>
             <span v-else>轉換成積表分數</span>
@@ -88,6 +83,12 @@ export default {
     props: ['year', 'klass','year_terms', 'transcriptsScores', 'students_courses_scores', 'courses', 'scores', 'behaviours'],
     data() {
         return {
+            breadcrumb:[
+                {label:"Manage", url:route('manage')},
+                {label:"年級班別", url:route('manage.grades.index',{'type':'secondary'})},
+                {label:this.klass.tag+'年級' ,url:route('manage.klasses.show', this.klass.id)},
+                {label:'成積大表' ,url:null}
+            ],
             columns: [
                 {
                     title: 'Staff #',

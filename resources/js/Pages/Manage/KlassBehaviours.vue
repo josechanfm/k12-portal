@@ -1,10 +1,5 @@
 <template>
-    <AdminLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                操行
-            </h2>
-        </template>
+    <AdminLayout title="操行" :breadcrumb="breadcrumb">
         <div>
             <div class="py-5">
             <KlassSelector routePath="manage.klass.behaviours.index" :param="[]" :currentKlass="klass" />
@@ -36,6 +31,12 @@ export default {
     props: ['year','yearTerms','currentTerm','staff','course','klass','behaviours'],
     data() {
         return {
+            breadcrumb:[
+                {label:"Manage", url:route('manage')},
+                {label:"年級班別", url:route('manage.grades.index',{'type':'secondary'})},
+                {label:this.klass.tag+'年級' ,url:route('manage.klasses.show', this.klass.id)},
+                {label:'操行' ,url:null}
+            ],
             tempBehaviour:null,
         }
     },

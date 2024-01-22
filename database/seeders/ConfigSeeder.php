@@ -331,7 +331,7 @@ class ConfigSeeder extends Seeder
                 "category": "PERFORM",
                 "label": "獎懲"
             }, {
-                "category": "COMMENT",
+                "category": "COMMENTS",
                 "label": "評語"
             }, {
                 "category": "VIOLATION",

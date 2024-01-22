@@ -24,7 +24,7 @@ class PromotionController extends Controller
      */
     public function list(Request $request)
     {
-
+    //dd($request->all());
         $gradeId=$request->input('gradeId');
         if($gradeId){
             $grades=Grade::where('id',$gradeId)->with('klasses')->get();

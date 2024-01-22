@@ -1,10 +1,5 @@
 <template>
-    <AdminLayout title="Dashboard" :breadcrumb="breadcrumb">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Score Summary
-            </h2>
-        </template>
+    <AdminLayout title="成積總表" :breadcrumb="breadcrumb">
         <a-button @click="migrateTranscripts" :disabled="klass.transcript_migrated == 9">
             <span v-if="klass.transcript_migrated == 1">重新轉換成積表分數</span>
             <span v-else>轉換成積表分數</span>
@@ -79,8 +74,10 @@ export default {
     data() {
         return {
             breadcrumb:[
-                {label:"Home" ,url:route('manage')},
-                {label:"Klass" ,url:route('manage.klasses.show',this.klass.id)},
+                {label:"Manage", url:route('manage')},
+                {label:"年級班別", url:route('manage.grades.index',{'type':'secondary'})},
+                {label:this.klass.tag+'年級' ,url:route('manage.klasses.show', this.klass.id)},
+                {label:'成積總表' ,url:null}
             ],
             columns:[
                 {

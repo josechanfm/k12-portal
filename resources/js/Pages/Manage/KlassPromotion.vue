@@ -1,5 +1,5 @@
 <template>
-    <AdminLayout :title="klass.tag+'班升班預處理'" :breadcrumb="breadcrumb ">
+    <AdminLayout :title="klass.tag+'班升班預處理.'" :breadcrumb="breadcrumb ">
         <div class="py-5">
             <KlassSelector routePath="manage.klass.promotes.index" :currentKlass="klass"/>
         </div>
@@ -117,10 +117,12 @@ export default {
     data() {
         return {
             breadcrumb:[
-                {label:"Manage" ,url:route('manage')},
-                {label:"升班預處理" ,url:route('manage.promotes')},
-                {label:this.klass.tag+"班" ,url:null},
+                {label:"Manage", url:route('manage')},
+                {label:"年級班別", url:route('manage.grades.index',{'type':'secondary'})},
+                {label:this.klass.tag+'年級' ,url:route('manage.klasses.show', this.klass.id)},
+                {label:'升班預處理' ,url:null}
             ],
+
             batchPromoteTo:null,
             // activeKey:"1",
             // klassColumns: [
