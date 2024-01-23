@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('study_subject', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('study_id');
-            $table->bigInteger('subject_id');
+            $table->foreignId('study_id');
+            $table->foreignId('subject_id');
             $table->string('subject_head_ids')->nullable();
             $table->timestamps();
         });

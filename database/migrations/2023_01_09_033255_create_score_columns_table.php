@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('score_columns', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('term_id');
-            $table->bigInteger('course_id')->on('courses')->onDelete('restrict')->onUpdate('cascade');
+            $table->integer('term_id');
+            $table->foreignId('course_id')->on('courses')->onDelete('restrict')->onUpdate('cascade');
             $table->integer('sequence')->nullable();
             $table->string('column_letter');
             $table->string('field_name');

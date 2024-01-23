@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('topics', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('theme_id');
+            $table->foreignId('theme_id');
             $table->integer('sequence');
             $table->string('section')->nullable();
             $table->string('abbr')->nullable();

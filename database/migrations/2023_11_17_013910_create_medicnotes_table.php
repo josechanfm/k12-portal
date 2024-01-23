@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('medicnotes', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('student_id');
+            $table->foreignId('student_id');
             $table->string('hospital')->nullable();
             $table->string('health_state')->nullable();
             $table->date('vaccinated')->nullable();

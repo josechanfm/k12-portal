@@ -31,10 +31,28 @@ class GradeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Year $year)
+    public function index(Year $year, Request $request)
     {
         //dd($year);
-        $grades=Grade::whereBelongsTo($year)->orderBy('grade_year')->get();
+        if($request->gradeScope){
+            switch($request->gradeScope){
+                case 'kindergarten':
+                    $grades=Grade::whereBelongsTo($year)->where('grade_year','<=',3)->orderBy('grade_year')->get();
+                    break;
+                case 'primary':
+                    $grades=Grade::whereBelongsTo($year)->whereBetween('grade_year',[4,9])->orderBy('grade_year')->get();
+                    break;
+                case 'secondary':
+                    $grades=Grade::whereBelongsTo($year)->where('grade_year','>',9)->orderBy('grade_year')->get();
+                    break;
+                default:
+                    $grades=Grade::whereBelongsTo($year)->whereBetween('grade_year',[4,9])->orderBy('grade_year')->get();
+            }
+        }else{
+            $grades=Grade::whereBelongsTo($year)->orderBy('grade_year')->get();
+        }
+        
+
         return Inertia::render('Admin/YearGrades',[
             'years'=>Year::where('active',true)->get(),
             'year'=>$year,

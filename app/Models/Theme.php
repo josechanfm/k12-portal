@@ -60,17 +60,19 @@ class Theme extends Model
         $themeCount=$klass->themes->count();
         $data['topics']=$klass->themes->first()->topics;
         foreach($klass->students as $student){
-            $data['summaries'][$student->pivot->klass_student_id]=array_fill_keys($categoryCodes,0);
+            //$data['summaries'][$student->pivot->klass_student_id]=array_fill_keys($categoryCodes,0);
             $data['students'][$student->pivot->klass_student_id]=$student;
             $abilities=KlassStudent::find($student->pivot->klass_student_id)->hasMany(Ability::class)->get();
+
             foreach($klass->topics as $topic){
                 $ability=$abilities->where('topic_id',$topic->id)->first();
                 $data['scores'][$student->pivot->klass_student_id][$topic->id]=$ability;
-                $data['summaries'][$student->pivot->klass_student_id][$topic->category_code]+=$ability->credit;
+                //$data['summaries'][$student->pivot->klass_student_id][$topic->category_code]+=$ability->credit;
             }
-            foreach($data['summaries'][$student->pivot->klass_student_id] as $categoryCode=>$sum){
-                $data['averages'][$student->pivot->klass_student_id][$categoryCode]=round($sum/$themeCount,2);
-            }
+            $data['averages'][$student->pivot->klass_student_id][$topic->id]=999;
+            //foreach($data['summaries'][$student->pivot->klass_student_id] as $categoryCode=>$sum){
+                //$data['averages'][$student->pivot->klass_student_id][$categoryCode]=round($sum/$themeCount,2);
+            //}
             //$data['average'][$student->pivot->klass_student_id][]
         }
         return $data;

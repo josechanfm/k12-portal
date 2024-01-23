@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('addresses', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('addressable_id');
+            $table->foreignId('addressable_id');
             $table->string('addressable_type');
             $table->string('zone');
             $table->string('road_name');

@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('banks', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('bankable_id');
+            $table->foreignId('bankable_id');
             $table->string('bankable_type');
             $table->string('bank_name')->nullable();
             $table->string('account_name')->nullable();

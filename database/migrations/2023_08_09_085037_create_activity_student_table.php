@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('activity_student', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('activity_id');
-            $table->bigInteger('student_id');
-            $table->bigInteger('klass_id');
+            $table->foreignId('activity_id');
+            $table->foreignId('student_id');
+            $table->foreignId('klass_id');
             $table->string('score',12)->nullable();
             $table->timestamps();
         });

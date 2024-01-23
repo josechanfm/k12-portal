@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('student_gardians', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('student_id')->on('students')->onDelete('restrict');
-            $table->bigInteger('gardian_id')->on('gardians')->onDelete('restrict');
+            $table->foreignId('student_id')->on('students')->onDelete('restrict');
+            $table->foreignId('gardian_id')->on('gardians')->onDelete('restrict');
             $table->string('relation');
             $table->timestamps();
         });

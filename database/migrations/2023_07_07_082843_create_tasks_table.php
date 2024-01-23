@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('workflow_id');
+            $table->foreignId('workflow_id');
             $table->text('description');
             $table->date('start_date');
             $table->date('due_date')->nullable();

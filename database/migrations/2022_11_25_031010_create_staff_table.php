@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('staffs', function (Blueprint $table) {
             $table->id();
-            $table->bigINteger('user_id')->nullable();
+            $table->foreignId('user_id')->nullable();
             $table->string('code')->nullable();
             $table->string('name_zh');
             $table->string('name_fn')->nullable();

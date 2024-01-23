@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('grades', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('year_id')->on('years')->onDelete('restrict')->onUpdate('cascade');
+            $table->foreignId('year_id')->on('years')->onDelete('restrict')->onUpdate('cascade');
             $table->integer('grade_year');
             $table->char('initial',2);
             $table->integer('level');            
@@ -26,7 +26,7 @@ return new class extends Migration
             $table->integer('klass_num')->default(0);
             $table->text('description')->nullable();
             $table->text('behaviour_scheme')->nullable();
-            $table->integer('transcript_template_id');
+            $table->foreignId('transcript_template_id');
             $table->integer('version')->nullable();
             $table->boolean('active')->default(true);
             $table->timestamps();

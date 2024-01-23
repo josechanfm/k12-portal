@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('behaviours', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('klass_student_id');
+            $table->foreignId('klass_student_id');
             $table->integer('term_id');
             $table->bigInteger('staff_id');
             $table->string('reference_id')->nullable();

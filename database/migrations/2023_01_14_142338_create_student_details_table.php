@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('student_details', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('student_id');
+            $table->foreignId('student_id');
             $table->string('holy_name')->nullable();
             $table->date('baptized')->nullable();
             $table->date('first_communion')->nullable();

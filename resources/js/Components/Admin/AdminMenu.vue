@@ -131,6 +131,19 @@
       key: '2.1',
       title: '年級班別',
       url:'/manage/grades',
+      children:[{
+        key: '2.1.1',
+        title: '幼稚園部',
+        url:'/manage/grades?gradeScope=kindergarten'
+      },{
+        key: '2.1.2',
+        title: '小學部',
+        url:'/manage/grades?gradeScope=primary'
+      },{
+        key: '2.1.3',
+        title: '中學部',
+        url:'/manage/grades?gradeScope=secondary'
+      }]
     },{
       key: '2.2',
       title: '教師',

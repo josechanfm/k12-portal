@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('teachers', function (Blueprint $table) {
             $table->id();
             $table->string('code')->nullable();
-            $table->bigInteger('staff_id');
+            $table->foreignId('staff_id');
             $table->string('subject_area')->nullable();
             $table->timestamps();
         });

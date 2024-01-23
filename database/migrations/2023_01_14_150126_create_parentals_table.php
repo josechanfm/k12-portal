@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('parentals', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('student_id');
+            $table->foreignIdc('student_id');
             $table->string('father_name')->nullable();
             $table->string('father_phone')->nullable();
             $table->string('father_organization')->nullable();

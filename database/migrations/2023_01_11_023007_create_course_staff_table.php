@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('course_staff', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('course_id');
-            $table->bigInteger('staff_id');
+            $table->foreignId('course_id');
+            $table->foreignId('staff_id');
             $table->boolean('behaviour')->default(true);
             $table->text('behaviour_exception')->nullable();
             $table->timestamps();

@@ -22,15 +22,25 @@ class GradeController extends Controller
     public function index(Request $request)
     {
         $year=Year::where('active',1)->orderBy('start','DESC')->first();
-        if($request->type){
-            if($request->type=='primary'){
-                $grades=Grade::where('year_id',$year->id)->where('grade_year','<=',3)->with('klasses')->get();
-            }elseif($request->type=='secondary'){
-                $grades=Grade::where('year_id',$year->id)->where('grade_year','>',3)->with('klasses')->get();
+
+        if($request->gradeScope){
+            switch($request->gradeScope){
+                case 'kindergarten':
+                    $grades=Grade::where('year_id',$year->id)->where('grade_year','<=',3)->with('klasses')->get();
+                    break;
+                case 'primary':
+                    $grades=Grade::where('year_id',$year->id)->whereBetween('grade_year',[4,9])->with('klasses')->get();
+                    break;
+                case 'secondary':
+                    $grades=Grade::where('year_id',$year->id)->where('grade_year','>',9)->with('klasses')->get();
+                    break;
+                default:
+                $grades=Grade::where('year_id',$year->id)->with('klasses')->get();
             }
         }else{
             $grades=Grade::where('year_id',$year->id)->with('klasses')->get();
         }
+
         return Inertia::render('Manage/Grades',[
             'year'=>$year,
             'grades'=>$grades,

@@ -16,14 +16,14 @@ return new class extends Migration
         Schema::create('additives', function (Blueprint $table) {
             $table->id();
             $table->integer('term_id');
-            $table->bigInteger('klass_student_id');
+            $table->foreignId('klass_student_id');
             $table->string('reference_code');
             $table->integer('value');
             $table->date('assign_at')->default(DB::raw('CURRENT_TIMESTAMP'));;
             $table->boolean('confirmed')->default(false);
             $table->date('submit_at')->nullable();
             $table->date('confirmed_at')->nullable();
-            $table->bigInteger('user_id');
+            $table->foreignId('user_id');
             $table->text('remark')->nullable();
             $table->timestamps();
         });

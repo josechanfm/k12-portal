@@ -1,15 +1,5 @@
 <template>
-    <AdminLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ course.klass.tag }} {{ course.title_zh }}科 學分管理
-                <br />
-                <span v-for="teacher in course.teachers">
-                    {{ teacher.name_zh }}
-                    &nbsp;
-                </span>
-            </h2>
-        </template>
+    <AdminLayout :title="course.klass.tag+'科學分管理'" :breadcrumb="breadcrumb">
         <div class="py-6">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <inertia-link :href="route('manage.klasses.show', course.klass_id)" class="ant-btn">Back</inertia-link>
@@ -18,6 +8,7 @@
                     :type="selectedTerm == term.value ? 'primary' : ''">{{ term.label }}</a-button>
             </div>
         </div>
+        {{course.klass.tag}}
         <div class="py-6">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -184,6 +175,11 @@ export default {
     props: ['year_terms', 'course', 'score_columns', 'students_scores', 'klass_courses'],
     data() {
         return {
+            breadcrumb:[
+                {label:"Manage", url:route('manage')},
+                {label:"年級班別", url:route('manage.grades.index',{'type':'secondary'})},
+                {label:this.course.klass.tag+'科學分管理' ,url:null},
+            ],
             merge: {
                 course_id: null,
                 score_column_id: null,

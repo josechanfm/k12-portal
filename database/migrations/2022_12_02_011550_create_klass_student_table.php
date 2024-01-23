@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('klass_student', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('klass_id')->on('klasses')->onDelete('restrict')->onUpdate('cascade');
-            $table->bigInteger('student_id')->on('students')->onDelete('restrict')->onUpdate('cascade');
-            $table->Integer('student_number')->default(0);
+            $table->foreignId('klass_id')->on('klasses')->onDelete('restrict')->onUpdate('cascade');
+            $table->foreignId('student_id')->on('students')->onDelete('restrict')->onUpdate('cascade');
+            $table->string('student_number')->default(0);
             $table->char('state',3)->default('ACT');
             $table->char('stream',3)->default('ART');
             $table->bigInteger('promote')->default(0);

@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('transcript_templates', function (Blueprint $table) {
             $table->id();
-            $table->integer('template_id');
+            $table->foreignId('template_id');
             $table->integer('term_id');
             $table->string('category');
             $table->string('reference_code')->nullable();

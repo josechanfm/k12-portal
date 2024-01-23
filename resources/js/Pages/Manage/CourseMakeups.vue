@@ -1,15 +1,5 @@
 <template>
-    <AdminLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                 {{ course.klass.tag }} {{ course.title_zh }}科 補考名單
-                <br/>
-                <span v-for="teacher in course.teachers">
-                    {{ teacher.name_zh }} 
-                    &nbsp;
-                </span>
-            </h2>
-        </template>
+    <AdminLayout :title="course.klass.tag+'科補考名單'" :breadcrumb="breadcrumb">
         <div class="py-6">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -61,6 +51,11 @@ export default {
     props: ['course','students_makeups'],
     data() {
         return {
+            breadcrumb:[
+                {label:"Manage", url:route('manage')},
+                {label:"年級班別", url:route('manage.grades.index',{'type':'secondary'})},
+                {label:this.course.klass.tag+'科補考名單' ,url:null},
+            ],
             tableCell:{
                 row:0,
                 col:0,

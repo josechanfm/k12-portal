@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('batch')->nullable();
             $table->string('type',6);
-            $table->bigInteger('term_id');
+            $table->integer('term_id');
             $table->string('name');
             $table->integer('sequence')->nullable();
             $table->string('scheme')->nullable();

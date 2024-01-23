@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('healthcares', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('klass_id');
+            $table->foreignId('klass_id');
             $table->string('category');
             $table->date('date');
             $table->string('title');

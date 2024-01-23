@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('workflows', function (Blueprint $table) {
             $table->id();
             $table->string('workflowable_type');
-            $table->bigInteger('workflowable_id');
+            $table->foreignId('workflowable_id');
             $table->json('processes');
             $table->text('title_zh');
             $table->timestamps();

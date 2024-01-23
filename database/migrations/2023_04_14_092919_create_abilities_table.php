@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('abilities', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('klass_student_id');
+            $table->foreignId('klass_student_id');
             $table->integer('term_id');
-            $table->bigInteger('topic_id');
+            $table->foreignId('topic_id');
             $table->integer('credit')->nullable();
             $table->text('remark')->nullable();
             $table->timestamps();

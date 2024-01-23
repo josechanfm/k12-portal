@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('physicals', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('healthcare_id');
-            $table->bigInteger('klass_student_id');
+            $table->foreignId('healthcare_id');
+            $table->foreignId('klass_student_id');
             $table->string('field_name');
             $table->string('value')->nullable();
             $table->timestamps();

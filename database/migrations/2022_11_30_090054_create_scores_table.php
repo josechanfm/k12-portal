@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('scores', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('course_student_id')->on('course_student')->onDelete('restrict')->onUpdate('cascade');
-            $table->bigInteger('score_column_id')->on('score_columns')->onDelete('restrict')->onUpdate('cascade');
-            $table->bigInteger('student_id');
+            $table->foreignId('course_student_id')->on('course_student')->onDelete('restrict')->onUpdate('cascade');
+            $table->foreignId('score_column_id')->on('score_columns')->onDelete('restrict')->onUpdate('cascade');
+            $table->foreignId('student_id');
             $table->string('point')->nullable();
             $table->string('remark')->nullable();
             $table->timestamps();

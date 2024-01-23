@@ -19,11 +19,11 @@ return new class extends Migration
             $table->text('certificate_meta');
             $table->date('issue_date');
             $table->string('issue_number');
-            $table->bigInteger('year_id');
+            $table->foreignId('year_id');
             $table->integer('term_id')->nullable();
             $table->bigInteger('student_id');
-            $table->bigInteger('student_number');
-            $table->bigInteger('klass_id');
+            $table->string('student_number');
+            $table->foreignId('klass_id');
             $table->string('klass_tag')->nullable();
             $table->string('name_display')->nullable();
             $table->text('extra')->nullable();

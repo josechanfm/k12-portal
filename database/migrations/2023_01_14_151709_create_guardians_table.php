@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('guardians', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('student_id');
+            $table->foreignId('student_id');
             $table->string('name')->nullable();
             $table->string('relation')->nullable();
             $table->string('phone')->nullable();

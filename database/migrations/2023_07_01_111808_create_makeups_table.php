@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('makeups', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('course_student_id')->unique();
-            $table->bigInteger('point')->nullable();
+            $table->foreignId('course_student_id')->unique();
+            $table->integer('point')->nullable();
             $table->timestamps();
         });
     }
