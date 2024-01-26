@@ -32,9 +32,10 @@
                 </tr>
                 @foreach($abilities['theme']->topics as $topic)
                     @php $score=$abilities['scores'][$ksid][$topic->id]['credit']; @endphp
-                    @endphp
                     <tr>
-                        <td style="font-family: SimHei, sans-serif;" width="120">{{ $topic->section}}</td>
+                        <td style="font-family: SimHei, sans-serif;" width="120">
+                            {{ $topic->section}}
+                        </td>
                         <td style="font-family: SimHei, sans-serif;">{{$topic->title}}</td>
                         <td>{{ $score=='1'?'X':'' }}</td>
                         <td>{{ $score=='2'?'X':'' }}</td>

@@ -50,79 +50,26 @@ class Theme extends Model
         return $data;
     
     }
-    public static function summary(Klass $klass){
+    public static function abilitiesGroupByTopicCategory(Klass $klass){
         $data=[];
-        //$topicSectionGroupKeys=['1','2','3','4','5'];
-        $categoryCodes=[1,2,3,4,5,6,7,8,9,10];
-        $topicCategories[]=array_fill_keys($categoryCodes,null);
-        //dd($topicSections);
-
-        $themeCount=$klass->themes->count();
         $data['topics']=$klass->themes->first()->topics;
+        $sum=0;
         foreach($klass->students as $student){
             //$data['summaries'][$student->pivot->klass_student_id]=array_fill_keys($categoryCodes,0);
             $data['students'][$student->pivot->klass_student_id]=$student;
             $abilities=KlassStudent::find($student->pivot->klass_student_id)->hasMany(Ability::class)->get();
-
+            foreach($klass->topics as $topic){
+                $data['summaries'][$student->pivot->klass_student_id][$topic->category_code]=0;
+            }
             foreach($klass->topics as $topic){
                 $ability=$abilities->where('topic_id',$topic->id)->first();
+                //scores store ability record into array
                 $data['scores'][$student->pivot->klass_student_id][$topic->id]=$ability;
-                //$data['summaries'][$student->pivot->klass_student_id][$topic->category_code]+=$ability->credit;
+                $data['summaries'][$student->pivot->klass_student_id][$topic->category_code]+=$ability->credit;
+                $sum+=$ability->credit;
             }
-            $data['averages'][$student->pivot->klass_student_id][$topic->id]=999;
-            //foreach($data['summaries'][$student->pivot->klass_student_id] as $categoryCode=>$sum){
-                //$data['averages'][$student->pivot->klass_student_id][$categoryCode]=round($sum/$themeCount,2);
-            //}
-            //$data['average'][$student->pivot->klass_student_id][]
+            $data['averages'][$student->pivot->klass_student_id]=round($sum/count($data['topics']),2);
         }
         return $data;
-        // dd($data); 
-        // dd($themes);
-        // dd($klass);
     }
-    // public function reportStudent($student){
-    //     $data=[];
-    //     $klass=Klass::find($this->klass_id);
-    //     $students=$klass->students;
-    //     $yearTerms=Config::item('year_terms');
-    //     $topicSections=$this->topics->groupBy('section_group');
-    //     // $klass->themes;
-    //     // $klass->topics;
-    //     //$data['klass']=$klass;
-    //     $data['theme']=$this;
-
-    //     foreach($students as $student){
-    //         $data['students'][$student->pivot->klass_student_id]=$student;
-    //         foreach($yearTerms as $term){
-    //             $data['sections'][$term->value]=$this->topics->where('term_id',$term->value)->groupBy('section_group');
-    //             $data['topics'][$term->value]=$this->topics->where('term_id',$term->value);
-    //             $data['abilities'][$student->pivot->klass_student_id][$term->value]=array_column(Ability::where('klass_student_id',$student->pivot->klass_student_id)->where('term_id',$term->value)->get()->toArray(),null,'topic_id');
-    //         }
-    //     }
-        
-    //     return $data;
-
-    // }
-    // public function reportKlass(){
-    //     $data=[];
-    //     $klass=Klass::find($this->klass_id);
-    //     $students=$klass->students;
-    //     $yearTerms=Config::item('year_terms');
-    //     $topicSections=$this->topics->groupBy('section_group');
-    //     // $klass->themes;
-    //     // $klass->topics;
-    //     //$data['klass']=$klass;
-    //     $data['theme']=$this;
-
-    //     foreach($students as $student){
-    //         $data['students'][$student->pivot->klass_student_id]=$student;
-    //         foreach($yearTerms as $term){
-    //             $data['sections'][$term->value]=$this->topics->where('term_id',$term->value)->groupBy('section_group');
-    //             $data['topics'][$term->value]=$this->topics->where('term_id',$term->value);
-    //             $data['abilities'][$student->pivot->klass_student_id][$term->value]=array_column(Ability::where('klass_student_id',$student->pivot->klass_student_id)->where('term_id',$term->value)->get()->toArray(),null,'topic_id');
-    //         }
-    //     }
-        
-    //     return $data;
-    // }
 }

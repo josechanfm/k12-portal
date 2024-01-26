@@ -2,39 +2,45 @@
     <AdminLayout title="生活習慣和態度" :breadcrumb="breadcrumb">
         <a-typography-title :level="3">班別:{{klass.tag}}</a-typography-title>
         <a-typography-title :level="3">專業方向:{{klass.stream}}</a-typography-title>
-
-        <div class="py-12">
-            <div>
-                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <a-button type="primary" @click="saveScores">更新並保存</a-button>
-                    <a-button v-for="term in yearTerms" @click="selectedTermId=term.value" class="ml-4" :type="selectedTermId==term.value?'primary':''">{{term.label}}</a-button>
-                    <p></p>
-                    <table id="scoreTable" ref="scoreTable">
-                        <tr>
-                            <th style="width:100px" rowspan="2" class="crossed">
-                                <span class="float-right">評分</span><br>
-                                <span class="float-left">學生姓名</span>
-                            </th>
-                            <th colspan="5">個人衛生</th>
-                            <th colspan="6">行為習慣</th>
-                            <th colspan="5">社交態度</th>
-                        </tr>
-                        <tr>
-                            <th v-for="column in habitColumns">
-                                <a-tooltip>
-                                    <template #title>{{ column.label }}</template>
-                                    {{ column.short }}
-                                </a-tooltip>
-                            </th>
-                        </tr>
-                        <tr v-for="(student,ksid) in habits['students']" >
-                            <td>{{ student.name_zh }}</td>
-                            <td v-for="column in habitColumns">
-                                <a-input v-model:value="habits['scores'][ksid][selectedTermId][column.name]"/>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
+        <div class="flex gap-5">
+            <a-button type="primary">滙入</a-button>
+            <a-button type="primary" @click="onExportExcel">
+                <template #icon>
+                    <DownloadOutlined />
+                </template>
+                Download
+            </a-button>
+        </div>
+        <div class="py-5">
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+                <a-button type="primary" @click="saveScores">更新並保存</a-button>
+                <a-button v-for="term in yearTerms" @click="selectedTermId=term.value" class="ml-4" :type="selectedTermId==term.value?'primary':''">{{term.label}}</a-button>
+                <p></p>
+                <table id="scoreTable" ref="scoreTable">
+                    <tr>
+                        <th style="width:100px" rowspan="2" class="crossed">
+                            <span class="float-right">評分</span><br>
+                            <span class="float-left">學生姓名</span>
+                        </th>
+                        <th colspan="5">個人衛生</th>
+                        <th colspan="6">行為習慣</th>
+                        <th colspan="5">社交態度</th>
+                    </tr>
+                    <tr>
+                        <th v-for="column in habitColumns">
+                            <a-tooltip>
+                                <template #title>{{ column.label }}</template>
+                                {{ column.short }}
+                            </a-tooltip>
+                        </th>
+                    </tr>
+                    <tr v-for="(student,ksid) in habits['students']" >
+                        <td>{{ student.name_zh }}</td>
+                        <td v-for="column in habitColumns">
+                            <a-input v-model:value="habits['scores'][ksid][selectedTermId][column.name]"/>
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
     </AdminLayout>
@@ -43,10 +49,11 @@
 
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
+import { DownloadOutlined } from '@ant-design/icons-vue';
 
 export default {
     components: {
-        AdminLayout
+        AdminLayout,DownloadOutlined
     },
     props: ['klass','yearTerms','habitColumns','habits'],
     data() {
@@ -141,18 +148,27 @@ export default {
             // return true;
             this.$inertia.put(route("manage.klass.habits.update",this.klass.id), data, {
                 onSuccess: (page) => {
-                        console.log(page);
-                    },
-                    onError: (error) => {
-                        console.log(error);
-                    }
+                    console.log(page);
+                },
+                onError: (error) => {
+                    console.log(error);
+                }
             })
         },
         onFocusInput(event){
             this.tableCell.row=event.target.closest('tr').rowIndex;
             this.tableCell.col=event.target.closest('td').cellIndex;
+        },
+        onExportExcel(){
+         this.$inertia.get(route('manage.pre.klass.habit.export',this.klass.id),{
+            onSuccess: (page) => {
+                console.log(page);
+            },
+            onError: (error) => {
+                console.log(error);
+            }
+         })   
         }
-        
     },
 }
 </script>

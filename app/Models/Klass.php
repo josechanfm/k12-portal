@@ -167,38 +167,7 @@ class Klass extends Model
             }
             
         }
-        
         return $data;
-        /*
-        foreach($students as $student){
-            foreach($terms as $term){
-                $termSum[$term->value]=0;
-                $coursesSum=0;
-                //dd($termSum);
-                
-                foreach($student->courseTeachers as $course){
-                    if(isset($course[$term->value])){
-                        $coursesSum+=$course[$term->value]['score_total'];
-                    }
-                }
-                $termSum[$term->value]=$coursesSum*$this->grade->behaviour_scheme['SUBJECT'];
-
-                if(isset($student->klassHeads[$term->value])){
-                    $termSum[$term->value]+=$student->klassHeads[$term->value]['score_total']*$this->grade->behaviour_scheme['KLASS_HEAD'];
-                }
-                if(isset($student->director[$term->value])){
-                    $termSum[$term->value]+=$student->director[$term->value]['score']*$this->grade->behaviour_scheme['DIRECTOR'];
-                }
-                if(isset($student->adjust[$term->value])){
-                    $termSum[$term->value]+=$student->adjust[$term->value]['score']*$this->grade->behaviour_scheme['ADJUST'];
-                }
-            }
-            $student->sumTerms=$termSum;
-        }
-
-        dd($data);
-        return $students;
-        */
     }
     public function promoteTo(){
         return $this->belongsToMany(Student::class,'klass_student','promote_to','student_id')->withPivot(['id as pivot_klass_student_id','student_number','stream','state','promote','promote_to','id as pivot_klass_id']);

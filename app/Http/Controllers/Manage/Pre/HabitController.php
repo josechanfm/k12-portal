@@ -9,6 +9,8 @@ use App\Models\Config;
 use App\Models\Klass;
 use App\Models\KlassStudent;
 use App\Models\Habit;
+use App\Exports\KlassHabitExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class HabitController extends Controller
 {
@@ -123,5 +125,9 @@ class HabitController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function export(Klass $klass){
+        return Excel::download(new KlassHabitExport,'KlassHabit.xlsx');
     }
 }

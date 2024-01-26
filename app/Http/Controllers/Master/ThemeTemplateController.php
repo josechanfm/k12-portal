@@ -25,11 +25,12 @@ class ThemeTemplateController extends Controller
      */
     public function index($gradeYear)
     {
+        
         //dd($gradeYear);
         $t=ThemeTemplate::find(1);
         //dd($t->topicTemplates);
         $tempTopics=Config::item('topic_templates');
-        //dd($tempTopics);
+        dd($tempTopics);
         $themeTemplates=ThemeTemplate::where('grade_year',$gradeYear)->with('TopicTemplates')->get();
         if($themeTemplates->count()<=0){
             echo 'add themetemplate';

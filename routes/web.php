@@ -197,6 +197,8 @@ Route::group([
             Route::resource('students',App\Http\Controllers\Manage\Pre\StudentController::class)->names('manage.pre.students');
             Route::get('/klass/{klass}/habits',[App\Http\Controllers\Manage\Pre\HabitController::class,'klass'])->name('manage.pre.klass.habits');
             Route::put('/klass/{klass}/habits',[App\Http\Controllers\Manage\Pre\HabitController::class,'update'])->name('manage.pre.klass.habits.update');
+            Route::get('/klass/{klass}/habit/export',[App\Http\Controllers\Manage\Pre\HabitController::class,'export'])->name('manage.pre.klass.habit.export');
+
             Route::get('/klass/{klass}/abilities',[App\Http\Controllers\Manage\Pre\AbilityController::class,'klass'])->name('manage.pre.klass.abilities');
             Route::get('/klass/{klass}/abilities/pdf',[App\Http\Controllers\Manage\Pre\AbilityController::class,'pdf'])->name('manage.pre.klass.abilities.pdf');
             Route::get('/klass/{klass}/abilities/mpdf',[App\Http\Controllers\Manage\Pre\AbilityController::class,'mpdf'])->name('manage.pre.klass.abilities.mpdf');
@@ -204,7 +206,7 @@ Route::group([
             //Route::get('pre/theme/{theme}/student/{klassStudent}/{format?}',[App\Http\Controllers\Manage\Pre\StudentController::class,'theme'])->name('manage.pre.theme.student');
             Route::get('klass_student/{klassStudent}/theme/{theme}/{format?}',[App\Http\Controllers\Manage\Pre\ThemeController::class,'klassStudent'])->name('manage.pre.klassStudent.theme');
             Route::get('klass/{klass}/theme/{theme}/{format?}',[App\Http\Controllers\Manage\Pre\ThemeController::class,'klass'])->name('manage.pre.klass.theme');
-            Route::get('klass/{klass}/themes/{format?}',[App\Http\Controllers\Manage\Pre\ThemeController::class,'summary'])->name('manage.pre.klass.themes');
+            Route::get('klass/{klass}/themes/{format?}',[App\Http\Controllers\Manage\Pre\ThemeController::class,'klassSummary'])->name('manage.pre.klass.themes');
 
             Route::resource('klass/{klass}/behaviours',App\Http\Controllers\Manage\Pre\BehaviourController::class)->names('manage.pre.klass.behaviours');
             Route::get('klass/{klass}/behaviour/adjust',[App\Http\Controllers\Manage\BehaviourController::class,'adjust'])->name('manage.pre.klass.behaviour.adjust');

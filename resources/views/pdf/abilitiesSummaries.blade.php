@@ -31,10 +31,11 @@
                     <th width="30px">5</th>
                 </tr>
                 @foreach($abilities['topics'] as $topic)
-                    @php $score=$abilities['averages'][$ksid][$topic->id]; @endphp
-                    @endphp
+                    @php $score=$abilities['summaries'][$ksid][$topic->category_code]; @endphp
                     <tr>
-                        <td style="font-family: SimHei, sans-serif;" width="120">{{ $topic->section}}</td>
+                        <td style="font-family: SimHei, sans-serif;" width="120">
+                            {{ $topic->section}}
+                        </td>
                         <td style="font-family: SimHei, sans-serif;">{{$topic->title}}</td>
                         <td>{{ $score>'0' && $score < 1.5 ?'X':'' }}</td>
                         <td>{{ $score>='1.5' && $score < 2.5 ?'X':'' }}</td>
