@@ -9,6 +9,7 @@ use Mockery\Undefined;
 class Habit extends Model
 {
     use HasFactory;
+    use \Znck\Eloquent\Traits\BelongsToThrough;
 
     // static function byKlassId($kid){
     //     $klass=Klass::with('students')->find($kid);
@@ -18,4 +19,13 @@ class Habit extends Model
     //         return [];
     //     }
     // }
+
+    public function student(){
+        return $this->belongsToThrough(
+            Student::class,
+            KlassStudent::class
+        );
+        //return $this->belongsTo(KlassStudent::class,'klass_student_id')->with('student');
+        //return $this->belongsToMany(Student::class,'klass_student','id','student_id');
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Exports\KlassHabitExport;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use \Mpdf\Mpdf as PDF; 
@@ -20,6 +21,7 @@ class Klass extends Model
    
     protected $appends= ['klass_heads','course_count','student_count','promoted_count','year_code','grade_year'];
     
+
     public function hasRight(){
         if(auth()->user()->hasRole('master') || auth()->user()->hasRole('admin')){
             return true;
@@ -37,7 +39,10 @@ class Klass extends Model
         }
         
     }
-
+    // public function klassStudents(){
+    //     $this->students;
+    //     return $this->hasMany(KlassStudent::class)->with('habits');
+    // }
     public function getKlassHeadsAttribute(){
         if(is_array($this->klass_head_ids)){
             return Staff::whereIn('id',$this->klass_head_ids)->get();
@@ -354,6 +359,20 @@ class Klass extends Model
 
     public function habits(){
         return $this->hasManyThrough(Habit::class,KlassStudent::class,'klass_id','klass_student_id');
+    }
+    public function studentsHabits(){
+        $students=$this->students;
+        $yearTerms=Config::item('year_terms');
+        $habits=[];
+        foreach($this->habits as $habit){
+            $habits[$habit->klass_student_id][$habit->term_id]=$habit;
+        }
+        foreach($students as $student){
+            foreach($yearTerms as $term){
+                $student->habits=$habits[$student->pivot->klass_student_id];
+            };
+        }
+        return $students;
     }
     public function habitsScores(){
         $students=$this->students;

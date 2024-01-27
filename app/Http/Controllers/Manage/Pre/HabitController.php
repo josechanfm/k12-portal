@@ -127,7 +127,7 @@ class HabitController extends Controller
         //
     }
 
-    public function export(Klass $klass){
-        return Excel::download(new KlassHabitExport,'KlassHabit.xlsx');
+    public function export(Klass $klass, Request $request){
+        return Excel::download(new KlassHabitExport($klass,$request->term_id??1),'KlassHabit.xlsx');
     }
 }

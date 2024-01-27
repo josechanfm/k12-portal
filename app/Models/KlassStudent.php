@@ -21,5 +21,8 @@ class KlassStudent extends Model
     public function klass(){
         return $this->belongsTo(Klass::class)->with('grade');
     }
+    public function habits(){
+        return $this->hasMany(Habit::class);
+    }
 
 }

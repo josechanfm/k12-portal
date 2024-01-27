@@ -4,12 +4,9 @@
         <a-typography-title :level="3">專業方向:{{klass.stream}}</a-typography-title>
         <div class="flex gap-5">
             <a-button type="primary">滙入</a-button>
-            <a-button type="primary" @click="onExportExcel">
-                <template #icon>
-                    <DownloadOutlined />
-                </template>
-                Download
-            </a-button>
+            <a :href="route('manage.pre.klass.habit.export',{klass:klass.id,term_id:selectedTermId})" class="ant-btn ant-btn-primary">
+                <DownloadOutlined /> 滙出
+            </a>
         </div>
         <div class="py-5">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -159,16 +156,6 @@ export default {
             this.tableCell.row=event.target.closest('tr').rowIndex;
             this.tableCell.col=event.target.closest('td').cellIndex;
         },
-        onExportExcel(){
-         this.$inertia.get(route('manage.pre.klass.habit.export',this.klass.id),{
-            onSuccess: (page) => {
-                console.log(page);
-            },
-            onError: (error) => {
-                console.log(error);
-            }
-         })   
-        }
     },
 }
 </script>
