@@ -10,6 +10,8 @@ use App\Models\Klass;
 use App\Models\KlassStudent;
 use App\Models\Habit;
 use App\Exports\KlassHabitExport;
+use App\Imports\KlassHabitImport;
+use Exception;
 use Maatwebsite\Excel\Facades\Excel;
 
 class HabitController extends Controller
@@ -29,7 +31,7 @@ class HabitController extends Controller
         $klass->habits;
         $klass->students;
         //dd($klass->habitsScores());
-        return Inertia::render('Manage/Pre/Habit',[
+        return Inertia::render('Manage/Pre/KlassHabits',[
             'klass'=>$klass,
             'yearTerms'=>$terms,
             'habitColumns'=>$habitColumns,
@@ -129,5 +131,26 @@ class HabitController extends Controller
 
     public function export(Klass $klass, Request $request){
         return Excel::download(new KlassHabitExport($klass,$request->term_id??1),'KlassHabit.xlsx');
+    }
+
+    public function import(Klass $klass, Request $request){
+        //dd($request->file());
+        $importFile=$request->file('importFile');
+        //dd($importFile);
+        // $this->validate($request,[
+        //     'importFile'=>"rquried|mines:xlsx,xls"
+        // ]);
+        //try{
+            $habits=Excel::import(new KlassHabitImport($klass), $importFile);
+            //$habits=Excel::toArray(new KlassHabitImport($klass), $importFile);
+            //dd($habits);
+            return redirect()->back();
+        // }catch(Exception $e){
+        //     dd('error');
+        //     //return redirect()->back()->with('error','Error import data? '.$e->getMessage());
+        // };
+        // dd($habits);
+        //return redirect()->back();
+
     }
 }

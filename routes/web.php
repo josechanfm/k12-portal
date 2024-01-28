@@ -198,6 +198,7 @@ Route::group([
             Route::get('/klass/{klass}/habits',[App\Http\Controllers\Manage\Pre\HabitController::class,'klass'])->name('manage.pre.klass.habits');
             Route::put('/klass/{klass}/habits',[App\Http\Controllers\Manage\Pre\HabitController::class,'update'])->name('manage.pre.klass.habits.update');
             Route::get('/klass/{klass}/habit/export',[App\Http\Controllers\Manage\Pre\HabitController::class,'export'])->name('manage.pre.klass.habit.export');
+            Route::post('/klass/{klass}/habit/import',[App\Http\Controllers\Manage\Pre\HabitController::class,'import'])->name('manage.pre.klass.habit.import');
 
             Route::get('/klass/{klass}/abilities',[App\Http\Controllers\Manage\Pre\AbilityController::class,'klass'])->name('manage.pre.klass.abilities');
             Route::get('/klass/{klass}/abilities/pdf',[App\Http\Controllers\Manage\Pre\AbilityController::class,'pdf'])->name('manage.pre.klass.abilities.pdf');

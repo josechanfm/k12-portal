@@ -27,6 +27,7 @@ class KlassHabitExport implements FromCollection, WithHeadings
         $habitColumns=array_column(Config::item('habit_columns'),'short');
         array_unshift($habitColumns,'學生姓名');
         array_unshift($habitColumns,'學號');
+        array_unshift($habitColumns,'學期');
         array_unshift($habitColumns,'控制欄');
         return $habitColumns;
     }
@@ -43,6 +44,7 @@ class KlassHabitExport implements FromCollection, WithHeadings
             $habit=$student->habits[$this->termId];
             $tmp=[];
             $tmp['klass_student_id']=substr('0000000000'.$student->pivot->klass_student_id,-10);
+            $tmp['term_id']=$this->termId;
             $tmp['student_number']=$student->pivot->student_number;
             $tmp['student_name']=$student->name_zh;
             foreach($habitColumns as $column){
