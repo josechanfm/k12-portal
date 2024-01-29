@@ -43,7 +43,9 @@ class KlassHabitExport implements FromCollection, WithHeadings
         foreach($studentHabits as $student){
             $habit=$student->habits[$this->termId];
             $tmp=[];
-            $tmp['klass_student_id']=substr('0000000000'.$student->pivot->klass_student_id,-10);
+            //$tmp['klass_student_id']=substr('0000000000'.$student->pivot->klass_student_id,-10);
+            //$tmp['habit_id']=substr('00000000'.dechex($habit->id),-8).'-'.substr('00000000'.dechex($habit->klass_student_id),-8);
+            $tmp['control_code']=hash('crc32',$this->klass->id.$habit->id).'-'.substr('00000000'.dechex($habit->id),-8);
             $tmp['term_id']=$this->termId;
             $tmp['student_number']=$student->pivot->student_number;
             $tmp['student_name']=$student->name_zh;

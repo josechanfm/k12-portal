@@ -134,23 +134,27 @@ class HabitController extends Controller
     }
 
     public function import(Klass $klass, Request $request){
-        //dd($request->file());
         $importFile=$request->file('importFile');
-        //dd($importFile);
-        // $this->validate($request,[
-        //     'importFile'=>"rquried|mines:xlsx,xls"
-        // ]);
-        //try{
-            $habits=Excel::import(new KlassHabitImport($klass), $importFile);
-            //$habits=Excel::toArray(new KlassHabitImport($klass), $importFile);
-            //dd($habits);
+        if(empty($importFile)){
             return redirect()->back();
-        // }catch(Exception $e){
-        //     dd('error');
-        //     //return redirect()->back()->with('error','Error import data? '.$e->getMessage());
-        // };
-        // dd($habits);
-        //return redirect()->back();
+        }
+        $habits=Excel::toArray(new KlassHabitImport($klass), $importFile);
+        //remove first row of the heading
+        array_splice($habits[0],0,1);
+        foreach($habits[0] as $key=>$habit){
+            $controlCode=explode('-',$habit[0]);
+            $hash=hash('crc32',$klass->id.hexdec($controlCode[1]));
+            if($hash != $controlCode[0]){
+                array_splice($habits[0],$key,1);
+            };
+        }
+        return Inertia::render('Manage/Pre/KlassHabitsImport',[
+            'klass'=>$klass,
+            'importData'=>$habits[0],
+        ]);
+    }
 
+    public function importConfirmed(Klass $klass, Request $request){
+        dd($request->all());
     }
 }

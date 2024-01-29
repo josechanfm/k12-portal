@@ -67,6 +67,9 @@
         </table>
       </div>
     </div>
+
+
+
   </AdminLayout>
 </template>
 
@@ -106,20 +109,6 @@ export default {
     };
   },
   created() {
-    // this.klass.students.forEach(student=>{
-    //     this.scores[student.pivot.klass_student_id]={};
-    //     this.terms.forEach(term=>{
-    //         this.scores[student.pivot.klass_student_id][term.value]={klass_student_id:student.pivot.klass_student_id, term_id:term.value};
-    //         this.habitColumns.forEach(column=>{
-    //             this.scores[student.pivot.klass_student_id][term.value][column.name]='';
-    //         });
-    //     })
-    // });
-    // this.habits.forEach(habit=>{
-    //     this.habitColumns.forEach(column=>{
-    //         this.scores[habit.klass_student_id][habit.term_id][column.name]=habit[column.name];
-    //     });
-    // })
   },
   mounted() {
     this.$refs.scoreTable.addEventListener("keydown", (e) => {
@@ -203,14 +192,14 @@ export default {
     onImport(e){
         this.$inertia.post(route('manage.pre.klass.habit.import',this.klass.id),{'importFile':e.target.files[0]},{
             onSuccess:(page)=>{
+                console.log("import response");
                 console.log(page);
             },
             onError:(err)=>{
                 console.log(err);
             }
         })
-    }
-
+    },
   },
 };
 </script>

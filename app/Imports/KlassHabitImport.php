@@ -18,7 +18,7 @@ class KlassHabitImport implements ToModel, WithStartRow
      */
     public function startRow(): int
     {
-        return 2;
+        return 1;
     }
     /**
     * @param array $row
@@ -27,7 +27,7 @@ class KlassHabitImport implements ToModel, WithStartRow
     */
     public function model(array $row)
     {
-        $habit=Habit::find(intval($row[0]));
+        $habit=Habit::find(hexdec($row[0]));
         if($habit){
             //$habit->klass_student_id=$row[0];
             //$habit->term_id=$row[1];
