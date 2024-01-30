@@ -11,17 +11,7 @@
             匯入
           </label>
       </a-form>
-
-      <a-button type="primary">滙入</a-button>
-      <a
-        :href="
-          route('manage.pre.klass.habit.export', {
-            klass: klass.id,
-            term_id: selectedTermId,
-          })
-        "
-        class="ant-btn ant-btn-primary"
-      >
+      <a :href="route('manage.pre.klass.habit.export', {klass: klass.id,term_id: selectedTermId,})" class="ant-btn ant-btn-primary">
         <DownloadOutlined /> 滙出
       </a>
     </div>

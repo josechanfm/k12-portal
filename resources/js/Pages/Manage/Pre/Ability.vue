@@ -2,6 +2,26 @@
     <AdminLayout title="學習主題" :breadcrumb="breadcrumb">
         <div class="py-12">
             <div class="mx-auto sm:px-6 lg:px-8">
+                <div class="flex gap-5">
+                    {{selectedThemeId}}
+                    <a-form ref="importlRef" >
+                        <input type="file" name="importFile" id="import-file" hidden @change="onImport" />
+                        <label for="import-file" class="ant-btn ant-btn-primary mr-5">
+                            匯入
+                        </label>
+                    </a-form>
+                    <a :href="route('manage.pre.klass.ability.export', 
+                        {
+                            klass: klass.id,
+                            term_id: selectedTermId,
+                            theme_id: selectedThemeId,
+                        }
+                    )"
+                    class="ant-btn ant-btn-primary">
+                        <DownloadOutlined /> 滙出
+                    </a>
+                </div>
+
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <a-button type="primary" @click="saveAbilities">更新並保存</a-button>
                     <a-divider type="vertical" />
@@ -79,10 +99,12 @@
 
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
+import { DownloadOutlined } from "@ant-design/icons-vue";
 
 export default {
     components: {
-        AdminLayout
+        AdminLayout,
+        DownloadOutlined
     },
     props: ['yearTerms','klass','themes', 'topics','students_abilities','abilities'],
     data() {
@@ -176,6 +198,18 @@ export default {
             this.tableCell.row=event.target.closest('tr').rowIndex;
             this.tableCell.col=event.target.closest('td').cellIndex;
         },
+        onImport(e){
+            this.$inertia.post(route('manage.pre.klass.ability.import',this.klass.id),{'importFile':e.target.files[0]},{
+                onSuccess:(page)=>{
+                    console.log("import response");
+                    console.log(page);
+                },
+                onError:(err)=>{
+                    console.log(err);
+                }
+            })
+        },
+
     },
 }
 </script>

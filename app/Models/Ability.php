@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Ability extends Model
 {
+    use \Znck\Eloquent\Traits\BelongsToThrough;
     use HasFactory;
     protected $fillable=['klass_student_id','term_id','topic_id','credit','remark'];
 
@@ -16,6 +17,13 @@ class Ability extends Model
 
     public function topic(){
         return $this->belongsTo(Topic::class);
+    }
+
+    public function klass(){
+        return $this->belongsToThrough(
+            Klass::class,
+            KlassStudent::class
+        );
     }
 
 }

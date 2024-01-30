@@ -204,10 +204,19 @@ Route::group([
             })->name('manage.pre.klass.habit.import');
             Route::post('/klass/{klass}/habit/importConfirmed',[App\Http\Controllers\Manage\Pre\HabitController::class,'importConfirmed'])->name('manage.pre.klass.habit.importConfirmed');
 
+
             Route::get('/klass/{klass}/abilities',[App\Http\Controllers\Manage\Pre\AbilityController::class,'klass'])->name('manage.pre.klass.abilities');
             Route::get('/klass/{klass}/abilities/pdf',[App\Http\Controllers\Manage\Pre\AbilityController::class,'pdf'])->name('manage.pre.klass.abilities.pdf');
             Route::get('/klass/{klass}/abilities/mpdf',[App\Http\Controllers\Manage\Pre\AbilityController::class,'mpdf'])->name('manage.pre.klass.abilities.mpdf');
             Route::post('/klass/{klass}/abilities/update',[App\Http\Controllers\Manage\Pre\AbilityController::class,'update'])->name('manage.pre.klass.abilities.update');
+            Route::get('/klass/{klass}/ability/export',[App\Http\Controllers\Manage\Pre\AbilityController::class,'export'])->name('manage.pre.klass.ability.export');
+            Route::post('/klass/{klass}/ability/import',[App\Http\Controllers\Manage\Pre\AbilityController::class,'import'])->name('manage.pre.klass.ability.import');
+            Route::get('/klass/{klass}/ability/import',function(App\Models\Klass $klass){
+                return redirect()->route('manage.pre.klass.habits',$klass->id);
+            })->name('manage.pre.klass.ability.import');
+            Route::post('/klass/{klass}/ability/importConfirmed',[App\Http\Controllers\Manage\Pre\AbilityController::class,'importConfirmed'])->name('manage.pre.klass.ability.importConfirmed');
+
+
             //Route::get('pre/theme/{theme}/student/{klassStudent}/{format?}',[App\Http\Controllers\Manage\Pre\StudentController::class,'theme'])->name('manage.pre.theme.student');
             Route::get('klass_student/{klassStudent}/theme/{theme}/{format?}',[App\Http\Controllers\Manage\Pre\ThemeController::class,'klassStudent'])->name('manage.pre.klassStudent.theme');
             Route::get('klass/{klass}/theme/{theme}/{format?}',[App\Http\Controllers\Manage\Pre\ThemeController::class,'klass'])->name('manage.pre.klass.theme');

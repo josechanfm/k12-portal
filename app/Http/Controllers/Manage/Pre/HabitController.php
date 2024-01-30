@@ -7,11 +7,9 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Config;
 use App\Models\Klass;
-use App\Models\KlassStudent;
 use App\Models\Habit;
 use App\Exports\KlassHabitExport;
 use App\Imports\KlassHabitImport;
-use Exception;
 use Maatwebsite\Excel\Facades\Excel;
 
 class HabitController extends Controller
@@ -130,7 +128,13 @@ class HabitController extends Controller
     }
 
     public function export(Klass $klass, Request $request){
-        return Excel::download(new KlassHabitExport($klass,$request->term_id??1),'KlassHabit.xlsx');
+        $yearTerms=Config::item('year_terms');
+        $termId=$request->term_id;
+        $term = array_reduce($yearTerms, static function ($carry, $item) use($termId) {
+            return $carry ?? ($item->value == $termId ? $item : $carry);
+        }, null);
+        $fileName=$klass->tag.'_'.$term->label.'_生活習慣和態度.xlsx';
+        return Excel::download(new KlassHabitExport($klass,$request->term_id??1),$fileName);
     }
 
     public function import(Klass $klass, Request $request){
@@ -139,14 +143,21 @@ class HabitController extends Controller
             return redirect()->back();
         }
         $habits=Excel::toArray(new KlassHabitImport($klass), $importFile);
-        //remove first row of the heading
-        array_splice($habits[0],0,1);
         foreach($habits[0] as $key=>$habit){
+            //skip first row of header
+            if($key==0) continue;
+            //check Control code, remove row if not match
             $controlCode=explode('-',$habit[0]);
             $hash=hash('crc32',$klass->id.hexdec($controlCode[1]));
             if($hash != $controlCode[0]){
                 array_splice($habits[0],$key,1);
             };
+            //tream from right 1 charactor
+            for($i=4;$i<=count($habit)-1;$i++){
+                if(!empty($habits[0][$key])){
+                    $habits[0][$key][$i]=substr($habits[0][$key][$i],-1);
+                }
+            }
         }
         return Inertia::render('Manage/Pre/KlassHabitsImport',[
             'klass'=>$klass,
@@ -155,6 +166,17 @@ class HabitController extends Controller
     }
 
     public function importConfirmed(Klass $klass, Request $request){
-        dd($request->all());
+        $importData=$request->importData;
+        array_splice($importData,0,1);
+        $habitColumns=Config::item('habit_columns');
+        foreach($importData as $import){
+            $controlCode=explode('-',$import[0]);
+            $habit=Habit::find(hexdec($controlCode[1]));
+            foreach($habitColumns as $id=>$column){
+                $habit->{$column->name}=$import[$id+4];
+            };
+            $habit->save();
+        };
+        return redirect()->route('manage.pre.klass.habits',$klass);
     }
 }
