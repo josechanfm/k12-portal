@@ -159,64 +159,70 @@ class AbilityController extends Controller
     public function export(Klass $klass, Request $request){
         $yearTerms=Config::item('year_terms');
         $termId=$request->term_id;
+        $themeId=$request->theme_id;
         $term = array_reduce($yearTerms, static function ($carry, $item) use($termId) {
             return $carry ?? ($item->value == $termId ? $item : $carry);
         }, null);
+        $theme=Theme::find($themeId);
+        
         $fileName=$klass->tag.'_'.$term->label.'_';
         $fileName.=Theme::find($request->theme_id)->title.'.xlsx';
-        //return Excel::download(new KlassAbilityExport($klass,$request->term_id,$request->theme_id), $fileName);
-
-        $topics=Topic::where('theme_id',$request->theme_id)->get()->pluck('id');
-        dd($topics);
-        // $ability=Ability::find(1);
-        // dd($ability->klass);
-        $abilities=$klass->abilities;
-        dd($abilities->whereIn($topics)->get());
-
-
+        return Excel::download(new KlassAbilityExport($klass,$term,$theme), $fileName);
     }
 
     public function import(Klass $klass, Request $request){
+        $theme=Theme::find($request->themeId);
         $importFile=$request->file('importFile');
         if(empty($importFile)){
             return redirect()->back();
         }
-        $habits=Excel::toArray(new KlassAbilityImport($klass), $importFile);
-        foreach($habits[0] as $key=>$habit){
+        $abilities=Excel::toArray(new KlassAbilityImport($klass), $importFile);
+        foreach($abilities[0] as $key=>$ability){
             //skip first row of header
             if($key==0) continue;
             //check Control code, remove row if not match
-            $controlCode=explode('-',$habit[0]);
-            $hash=hash('crc32',$klass->id.hexdec($controlCode[1]));
+            $controlCode=explode('-',$ability[0]);
+            if(count($controlCode)!==3){
+                return redirect()->back();
+            }
+            $hash=hash('crc32',hexdec($controlCode[1]).hexdec($controlCode[2]));
             if($hash != $controlCode[0]){
-                array_splice($habits[0],$key,1);
+                unset($abilities[0][$key]);
+                //array_splice($abilities[0],$key,1);
+                //continue;
             };
-            //tream from right 1 charactor
-            for($i=4;$i<=count($habit)-1;$i++){
-                if(!empty($habits[0][$key])){
-                    $habits[0][$key][$i]=substr($habits[0][$key][$i],-1);
-                }
+            if($ability[1]!=$theme->id){
+                unset($abilities[0][$key]);
             }
         }
-        return Inertia::render('Manage/Pre/KlassHabitsImport',[
+
+        return Inertia::render('Manage/Pre/KlassAbilitiesImport',[
             'klass'=>$klass,
-            'importData'=>$habits[0],
+            'theme'=>$theme,
+            'importData'=>$abilities[0],
         ]);
     }
 
     public function importConfirmed(Klass $klass, Request $request){
+        $themeId=$request->themeId;
         $importData=$request->importData;
         array_splice($importData,0,1);
-        $habitColumns=Config::item('habit_columns');
+        $topics=Topic::where('theme_id',$themeId)->orderBy('sequence')->get();
         foreach($importData as $import){
             $controlCode=explode('-',$import[0]);
-            $habit=Habit::find(hexdec($controlCode[1]));
-            foreach($habitColumns as $id=>$column){
-                $habit->{$column->name}=$import[$id+4];
+            $termId=$import[1];
+            $themeId=$import[1];
+            //first 5 columns are controlCode, theme_id, term_id,student_name and student_name
+            //the rest of $import are same as topics sequence
+            array_splice($import,0,5);
+            foreach($topics as $id=>$topic){
+                Ability::where('klass_student_id',hexdec($controlCode[2]))
+                ->where('term_id',$termId)
+                ->where('topic_id',$topic->id)
+                ->update(['credit'=>$import[$id]]);
             };
-            $habit->save();
         };
-        return redirect()->route('manage.pre.klass.habits',$klass);
+        return redirect()->route('manage.pre.klass.abilities',$klass);
     }
 
 }

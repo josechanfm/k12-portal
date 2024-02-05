@@ -148,7 +148,10 @@ class HabitController extends Controller
             if($key==0) continue;
             //check Control code, remove row if not match
             $controlCode=explode('-',$habit[0]);
-            $hash=hash('crc32',$klass->id.hexdec($controlCode[1]));
+            if(count($controlCode)!==3){
+                return redirect()->back();
+            }
+            $hash=hash('crc32',hexdec($controlCode[1]).hexdec($controlCode[2]));
             if($hash != $controlCode[0]){
                 array_splice($habits[0],$key,1);
             };
@@ -171,7 +174,10 @@ class HabitController extends Controller
         $habitColumns=Config::item('habit_columns');
         foreach($importData as $import){
             $controlCode=explode('-',$import[0]);
-            $habit=Habit::find(hexdec($controlCode[1]));
+            //$habit=Habit::find(hexdec($controlCode[1]));
+            $habit=Habit::where('id',hexdec($controlCode[1]))
+                ->where('klass_student_id',hexdec($controlCode[2]))
+                ->first();
             foreach($habitColumns as $id=>$column){
                 $habit->{$column->name}=$import[$id+4];
             };

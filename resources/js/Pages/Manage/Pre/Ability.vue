@@ -3,7 +3,6 @@
         <div class="py-12">
             <div class="mx-auto sm:px-6 lg:px-8">
                 <div class="flex gap-5">
-                    {{selectedThemeId}}
                     <a-form ref="importlRef" >
                         <input type="file" name="importFile" id="import-file" hidden @change="onImport" />
                         <label for="import-file" class="ant-btn ant-btn-primary mr-5">
@@ -199,7 +198,11 @@ export default {
             this.tableCell.col=event.target.closest('td').cellIndex;
         },
         onImport(e){
-            this.$inertia.post(route('manage.pre.klass.ability.import',this.klass.id),{'importFile':e.target.files[0]},{
+            console.log(this.selectedTermId);
+            this.$inertia.post(route('manage.pre.klass.ability.import',this.klass.id),{
+                'themeId':this.selectedThemeId,
+                'importFile':e.target.files[0]
+                },{
                 onSuccess:(page)=>{
                     console.log("import response");
                     console.log(page);

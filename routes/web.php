@@ -212,7 +212,7 @@ Route::group([
             Route::get('/klass/{klass}/ability/export',[App\Http\Controllers\Manage\Pre\AbilityController::class,'export'])->name('manage.pre.klass.ability.export');
             Route::post('/klass/{klass}/ability/import',[App\Http\Controllers\Manage\Pre\AbilityController::class,'import'])->name('manage.pre.klass.ability.import');
             Route::get('/klass/{klass}/ability/import',function(App\Models\Klass $klass){
-                return redirect()->route('manage.pre.klass.habits',$klass->id);
+                return redirect()->route('manage.pre.klass.abilities',$klass->id);
             })->name('manage.pre.klass.ability.import');
             Route::post('/klass/{klass}/ability/importConfirmed',[App\Http\Controllers\Manage\Pre\AbilityController::class,'importConfirmed'])->name('manage.pre.klass.ability.importConfirmed');
 
