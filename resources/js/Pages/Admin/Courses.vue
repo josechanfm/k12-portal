@@ -98,8 +98,8 @@
                 <a-form-item label="科任老師" name="teachers_ids">
                     <a-select v-model:value="modal.data.teacher_ids" :options="teachers" :fieldNames="{value:'id',label:'name_zh'}"  mode="multiple"/>
                 </a-form-item>
-                <a-form-item label="評操行" name="behaviour">
-                    <a-checkbox-group :key="modal.data.teacher_ids" name="canGiveBehaviours" v-model:value="modal.data.canGivebehaviours">
+                <a-form-item label="評操行.." name="behaviour">
+                    <a-checkbox-group name="canGiveBehaviours" v-model:value="modal.data.canGiveBehaviours">
                         <template v-for="teacherId in modal.data.teacher_ids">
                             <a-checkbox :value="teacherId" >
                                 {{teachers.find(t=>t.id==teacherId).name_zh}}
@@ -107,7 +107,6 @@
                         </template>
                     </a-checkbox-group>
                 </a-form-item>
-
             </a-form>
         <template #footer>
             <a-button key="back" @click="modalCancel">Return</a-button>
@@ -136,12 +135,13 @@ export default {
     props: ['klass','courses','subjects','teachers'],
     data() {
         return {
+            testCheckbox:[],
             modal: {
                 mode:null,
                 isOpen: false,
                 title:'Subjects',
                 data:{
-                    canGivebehaviours:[2,3]
+                    canGiveBehaviours:[]
                 }
             },
             selectedSubjects:[],
@@ -232,22 +232,6 @@ export default {
         modalCancel(){
             this.modal.isOpen=false;
         },
-        // updateSubjectHeads(record){
-        //     console.log('chnage')
-        //     console.log(record)
-        //     //this.$inertia.post(route('admin.course.updateSubjectHeads',record.id), record, {
-        //     this.$inertia.put(route('admin.course.updateSubjectHeads',record.id), record, {
-        //             onSuccess: (page) => {
-        //                 console.log(page);
-        //             },
-        //             onError: (err) => {
-        //                 console.log(err);
-        //             }
-        //         });
-
-        //     //record.subject_head_changed=false;
-        //     console.log(record);
-        // },
         updateCourseTeachers(record){
             this.$inertia.put(route('admin.course.updateCourseTeachers',record.id), record, {
                     onSuccess: (page) => {
@@ -263,18 +247,18 @@ export default {
             this.modal.data={...record}
             this.modal.isOpen=true
             this.modal.mode='EDIT'
-            this.modal.data.canGivebehaviours=this.modal.data.teaching.filter(
+            this.modal.data.canGiveBehaviours=this.modal.data.teaching.filter(
                 t=>(t.pivot.behaviour==true)
             ).map(t=>t.id);
-            //this.modal.data.canGivebehaviours=[3,2]
         },
         updateTeachers(){
-            this.modal.data.syncCourseTeacher={}
+            
+            this.modal.data.syncCourseTeachers={}
             this.modal.data.teacher_ids.forEach(t=>{
-                this.modal.data.syncCourseTeacher[t]={
-                    "behaviour":this.modal.data.canGivebehaviours?this.modal.data.canGivebehaviours.includes(t):false}
+                this.modal.data.syncCourseTeachers[t]={
+                    "behaviour":this.modal.data.canGiveBehaviours?this.modal.data.canGiveBehaviours.includes(t):false}
             })
-            console.log(this.modal.data.syncCourseTeacher);
+            console.log(this.modal.data);
             this.$inertia.put(route('admin.course.updateCourseTeachers',this.modal.data.id), this.modal.data, {
                     onSuccess: (page) => {
                         // console.log(page)
@@ -284,7 +268,8 @@ export default {
                         console.log(err);
                     }
                 });
-        }
+        },
+    
     },
 }
 </script>

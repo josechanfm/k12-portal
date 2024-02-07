@@ -5,11 +5,11 @@
                 升班操作
             </h2>
         </template>
-        {{ currentYear }}
         <hr/>
         <ul>
-            <li v-for="grade in grades">{{ grade }}</li>
+            <li v-for="grade in grades">{{ grade.tag }}</li>
         </ul>
+        <p>You may change the additiveStyle from Config table "additive_styles"</p>
     </AdminLayout>
 
 </template>

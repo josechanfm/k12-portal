@@ -19,7 +19,7 @@ class CourseController extends Controller
     public function index(Klass $klass)
     {
         $courses=Course::whereBelongsTo($klass)->with('staffs')->get();
-        return Inertia::render('Admin/KlassCourses',[
+        return Inertia::render('Admin/Courses',[
             'klass'=>$klass,
             'courses'=>$courses,
             'teachers'=>Staff::all()
@@ -114,7 +114,7 @@ class CourseController extends Controller
     public function updateCourseTeachers(Course $course, Request $request){
         $course->subject_head_ids=$request->subject_head_ids;
         $course->save();
-        $course->staffs()->sync($request->teacher_ids);
+        $course->staffs()->sync($request->syncCourseTeachers);
         return redirect()->back();
     }
     // public function updateCourseTeachers(Course $course, Request $request){

@@ -9,6 +9,7 @@
             <p>The collection of route "teacher" is for the general operation management such as serach and preview, which
                 not included setup of year, class or subject etc.</p>
             <a-typography-title :level="4">{{ staff.name_zh }}</a-typography-title>
+            <a-typography-title :level="4">任教科目</a-typography-title>
             <div class="ant-table">
                 <div class="ant-table-container">
                     <div class="ant-table-content">
@@ -61,7 +62,8 @@
                     </div>
                 </div>
             </div>
-            <p></p>
+            <a-divider/>
+            <a-typography-title :level="4">班主任</a-typography-title>
             <div class="ant-table">
                 <div class="ant-table-container">
                     <div class="ant-table-content">
@@ -70,18 +72,73 @@
                                 <tr>
                                     <th>班級代號</th>
                                     <th>學生人數</th>
+                                    <th>班主任</th>
                                     <th>科目數</th>
                                     <th>操作</th>
                                 </tr>
                             </thead>
                             <tbody class="ant-table-tbody">
-                                <template v-for="klass in staff.klasses">
+                                <template v-for="klass in staff.headKlasses">
                                 <tr>
                                     <td>{{ klass.tag }}</td>
                                     <td>{{ klass.student_count}}</td>
+                                    <td>
+                                        <ol>
+                                            <li v-for="staff in klass.klass_heads">
+                                                {{staff.name_zh}}
+                                            </li>
+                                        </ol>
+                                    </td>
                                     <td>{{ klass.course_count}}</td>
                                     <td>
                                         <inertia-link :href="route('teacher.klass.behaviours',klass.id)" class="ant-btn">操行</inertia-link>
+                                    </td>
+                                </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <a-divider/>
+            <a-typography-title :level="4">科代表</a-typography-title>
+            <div class="ant-table">
+                <div class="ant-table-container">
+                    <div class="ant-table-content">
+                        <table style="table-layout: auto;">
+                            <thead class="ant-table-thead">
+                                <tr>
+                                    <th>班級代號</th>
+                                    <th>科目名稱</th>
+                                    <th>學生人數</th>
+                                    <th>班主任</th>
+                                    <th>任教老師</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody class="ant-table-tbody">
+                                <template v-for="course in staff.headSubjects">
+                                <tr>
+                                    <td>{{ course.klass.tag }}</td>
+                                    <td>{{ course.code }} {{ course.title_zh }}</td>
+                                    <td>{{ course.student_count }}</td>
+                                    <td>
+                                        <ol>
+                                            <li v-for="staff in course.klass.klass_heads">
+                                                {{staff.name_zh}}
+                                            </li>
+                                        </ol>
+                                    </td>
+                                    <td>
+                                        <ol>
+                                            <li v-for="staff in course.teaching">
+                                                {{staff.name_zh}}
+                                            </li>
+                                        </ol>
+                                    </td>
+                                    <td>
+                                        <inertia-link :href="route('teacher.klass.behaviours',course.klass.id)" class="ant-btn">操行</inertia-link>
                                     </td>
                                 </tr>
                                 </template>

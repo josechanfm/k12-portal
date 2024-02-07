@@ -4,7 +4,6 @@
         <div class="py-5">
             <KlassSelector routePath="manage.klass.finalScores" :param="{type:'summary'}" :currentKlass="klass"/>
         </div>
-
         <div>
             <div class="ant-table">
                 <div class="ant-table-container">
@@ -14,7 +13,7 @@
                                 <tr>
                                     <th>學生姓名</th>
                                     <th v-for="column in finalScores.score_columns">
-                                        {{transcriptTemplates['SUBJECT'][column.course_code].title_zh}}
+                                        {{transcriptTemplates['SUBJECT'][column.course_code][9]['FINAL'].title_zh}}
                                     </th>
                                     <th>不合格單位數</th>
                                 </tr>

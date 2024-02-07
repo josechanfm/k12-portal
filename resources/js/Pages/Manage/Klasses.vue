@@ -18,15 +18,15 @@
         <a-divider type="vertical" />
             <inertia-link :href="route('manage.klass.behaviours.index', klass.id)" class="ant-btn">操行</inertia-link>
         <a-divider type="vertical" />
-        <template v-if="additiveStyle=='default'">
+        <template v-if="additiveStyles=='default'">
             <template v-for="group in additiveGroups">
                 <inertia-link :href="route('manage.klass.additive',[klass.id,group.category.toLowerCase()])" class="ant-btn">{{group.label}}</inertia-link>
             </template>
         </template>
-        <template v-else-if="additiveStyle=='page'">
+        <template v-else-if="additiveStyles=='page'">
             <inertia-link :href="route('manage.klass.additive.page', klass.id)" class="ant-btn">單頁模式</inertia-link>
         </template>
-        <template v-else-if="additiveStyle=='direct'">
+        <template v-else-if="additiveStyles=='direct'">
             <inertia-link :href="route('manage.klass.additive.direct', klass.id)" class="ant-btn">直接輸入</inertia-link>
         </template>
         <a-divider type="vertical" />
@@ -81,7 +81,7 @@ export default {
     components: {
         AdminLayout
     },
-    props: ['currentTerm','klass','additiveTemplates','additiveStyle','additiveGroups'],
+    props: ['currentTerm','klass','additiveTemplates','additiveStyles','additiveGroups'],
     data() {
         return {
             breadcrumb:[

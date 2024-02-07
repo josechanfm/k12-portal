@@ -22,13 +22,13 @@ class DashboardController extends Controller
             ]);
             };
         $staff->courses;
-        //dd($staff->courses);
-        
+       
         //$klasses=Klass::whereRaw('json_contains(klass_head_ids,'.$staff->id.')')->get();
         //dd($staff->klasses());
-
-        $staff->klasses=$staff->klasses();
-        
+        $staff->headKlasses=$staff->headKlasses();
+        $staff->headSubjects=$staff->headSubjects();
+        // dd($staff->klasses());
+        // dd($staff);
         return Inertia::render('Teacher/Dashboard',[
             'staff'=>$staff
         ]);

@@ -21,8 +21,13 @@ class Staff extends Model
     public function courses(){
         return $this->belongsToMany(Course::class)->with('klass');
     }
-    public function klasses(){
-        return Klass::whereRaw('json_contains(klass_head_ids,'.$this->id.')')->get();
+    public function headKlasses(){
+        return Klass::whereJsonContains('klass_head_ids',$this->id)->get();
+        //return Klass::whereRaw('json_contains(klass_head_ids,'.$this->id.')')->get();
+    }
+    public function headSubjects(){
+        return Course::whereJsonContains('subject_head_ids',$this->id)->with('klass')->get();
+        //return Klass::whereRaw('json_contains(klass_head_ids,'.$this->id.')')->get();
     }
 
     public function coursesBehaviours(){

@@ -83,7 +83,7 @@ class KlassController extends Controller
                 //'courses' => $courses,
                 //'students'=>$students,
                 'additiveTemplates'=>AdditiveTemplate::all(),
-                'additiveStyle'=>Config::item('additive_style'),
+                'additiveStyles'=>Config::item('additive_styles'),
                 'additiveGroups'=>Config::item('additive_groups')
             ]);
         //}

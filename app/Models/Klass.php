@@ -304,8 +304,12 @@ class Klass extends Model
 
             foreach ($courses as $course) {
                 $scoreColumn = $course->scoreColumns->where('term_id', 9)->first();
-                if (isset($tmpScores[$student->id][$course->code])) {
+                if (isset($tmpScores[$student->id][$course->code][$scoreColumn->id])) {
                     ///$data['scores'][$student->pivot->klass_student_id][$scoreColumn->id]['score']=$tmpScores[$student->id][$course->id][$scoreColumn->id];
+                    //dd($scoreColumn->id);
+                    //dd($tmpScores[$student->id][$course->code]);
+                    // dd($course->code);
+                    // dd($data['scores'][$student->pivot->klass_student_id]);
                     $data['scores'][$student->pivot->klass_student_id][$course->code]['score']=$tmpScores[$student->id][$course->code][$scoreColumn->id];
                     if($tmpScores[$student->id][$course->code][$scoreColumn->id]<=$passing){
                         $data['scores'][$student->pivot->klass_student_id]['fail_units']++;

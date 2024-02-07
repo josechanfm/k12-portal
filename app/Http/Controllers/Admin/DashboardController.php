@@ -14,7 +14,7 @@ class DashboardController extends Controller
         $currentYear=Year::currentYear();
         return  Inertia::render('Admin/Dashboard',[
             'currentYear'=>$currentYear,
-            'grades'=>Grade::with('klasses')->whereBelongsTo($currentYear)->get()
+            'grades'=>Grade::with('klasses')->whereBelongsTo($currentYear)->get(),
         ]);    
     }
 }
