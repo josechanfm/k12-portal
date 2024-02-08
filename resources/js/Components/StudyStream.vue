@@ -3,8 +3,10 @@ export default {
   props: ['stream'],
   data(){
     return {
-      studyStream:{"ART":"Art Stream","SCI":"Science Stream"},
+      studyStream:{"ART":"文科","SCI":"理科"},
     }
+  },
+  created(){
   }
 }
 </script>

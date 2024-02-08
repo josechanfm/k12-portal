@@ -5,7 +5,7 @@
             <template #bodyCell="{column, text, record, index}">
                 <template v-if="column.dataIndex == 'action'">
                     <inertia-link :href="route('manage.klass.student.transcript',record.pivot.klass_student_id)" class="ant-btn">成績表</inertia-link>
-                    <inertia-link class="ant-btn">[操行]</inertia-link>
+                    <a :href="route('manage.students.show',record.pivot.klass_student_id)" class="ant-btn" target="_blank">學生檔案</a>
                 </template>
                 <template v-else>
                     {{record[column.dataIndex]}}

@@ -45,58 +45,6 @@
             </div>
         </div>
         <a-divider/>
-
-        <div class="ant-table">
-            <div class="ant-table-container">
-                <div class="ant-table-content">
-                    <table style="table-layout: auto;">
-                        <thead class="ant-table-thead">
-                            <tr>
-                                <th class="text-left">年級代號</th>
-                                <th class="text-left">年級名稱</th>
-                                <th class="text-left">班別代號</th>
-                                <th class="text-left">班別學生數目</th>
-                                <th class="text-left">科目</th>
-                            </tr>
-                        </thead>
-                        <tbody class="ant-table-tbody">
-                            <tr v-for="(grade, gradeKey) in grades" :grade_id="grade.id">
-                                <td class="text-left">{{ grade.tag }}</td>
-                                <td class="text-left">{{ grade.title_zh }}</td>
-                                <td class="text-left">
-                                    <ul>
-                                        <li v-for="(klass, klassKey) in grade.klasses" :klass_id="klass.id">
-                                            {{ grade.tag }}{{ klass.letter }}
-                                        </li>
-                                    </ul>
-                                </td>
-                                <td class="text-left">
-                                    <ul>
-                                        <li v-for="(klass, klassKey) in grade.klasses" :klass_id="klass.id">
-                                            {{ klass.student_count }}
-                                        </li>
-                                    </ul>
-                                </td>
-                                <td class="text-left">
-                                    <ul>
-                                        <li v-for="klass in grade.klasses" :klass_id="klass.id">
-                                            <template v-if="klass.grade_year <=3">
-                                                <inertia-link :href="route('manage.pre.klasses.show', klass.id)"
-                                                class="ant-btn">Panel</inertia-link>
-                                            </template>
-                                            <template v-else>
-                                                <inertia-link :href="route('manage.klasses.show', klass.id)"
-                                                class="ant-btn">Panel</inertia-link>
-                                            </template>
-                                        </li>
-                                    </ul>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
     </AdminLayout>
 </template>
 

@@ -3,7 +3,7 @@ export default {
   props: ['state'],
   data(){
     return {
-      promoteLabel:{"-1":"Fail","0":"Uncertain","1":"Pass","2":"Promoted"},
+      promoteLabel:{"-1":"不合格","0":"不確定","1":"Pass","2":"准予升班"},
     }
   }
 }

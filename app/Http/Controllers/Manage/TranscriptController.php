@@ -44,9 +44,13 @@ class TranscriptController extends Controller
 
     public function KlassStudent(KlassStudent $klassStudent){
         $templates=$klassStudent->klass->grade->transcriptTemplates();
+        //dd($templates);
         $transcripts=array_column(Transcript::where('klass_student_id',$klassStudent->id)->get()->toArray(),null,'transcript_template_id');
+        dd('no transcripts record will prompt error!');
+        // dd($transcripts);
         $klassStudent->student;
         $pathTofile=$klassStudent->klass->grade->year->code.'/'.$klassStudent->klass->tag.'/'.$klassStudent->student_number.'_'.(String) Str::uuid().'.pdf';
+        // dd($pathTofile);
         $pdf=PDF::loadView('pdf.transcript',[
             'templates'=>$templates,
             'klassStudent'=>$klassStudent,

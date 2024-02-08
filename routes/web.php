@@ -39,6 +39,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
+    Route::get('api/config/item',[App\Http\Controllers\Api\ConfigController::class,'getItem'])->name('api.config.getItem');
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
@@ -138,7 +139,7 @@ Route::group([
         Route::get('/',[App\Http\Controllers\Manage\DashboardController::class,'index'])->name('manage');
         Route::resource('grades',App\Http\Controllers\Manage\GradeController::class)->names('manage.grades');
         Route::resource('course',App\Http\Controllers\Manage\CourseController::class);
-        Route::resource('/student',App\Http\Controllers\Manage\StudentController::class);
+        Route::resource('/students',App\Http\Controllers\Manage\StudentController::class)->names('manage.students');
         Route::get('/students/get_by_klass_id/{klass}',[App\Http\Controllers\Manage\StudentController::class,'getByKlassId'])->name('manage.students.getByKlassId');
         Route::post('/students/get_by_names',[App\Http\Controllers\Manage\StudentController::class,'getByNames'])->name('manage.students.getByNames');
         Route::resource('/klasses',App\Http\Controllers\Manage\KlassController::class)->names('manage.klasses');

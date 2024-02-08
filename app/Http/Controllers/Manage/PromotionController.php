@@ -43,7 +43,7 @@ class PromotionController extends Controller
         // echo $year;
         // echo $nextYear;
         //***** Check if any of the varible not completed  jump to the error page******/
-        return Inertia::render('Manage/Promotes',[
+        return Inertia::render('Manage/PromoteList',[
             'year'=>$year,
             'grades'=>$grades,
             'nextYear'=>$nextYear,
@@ -64,7 +64,7 @@ class PromotionController extends Controller
         //dd($nextKlasses);
         $students=$klass->students;
         //$courses=Klass::find($klassId)->courses;
-        return Inertia::render('Manage/KlassPromotion',[
+        return Inertia::render('Manage/Promotes',[
             'year'=>$year,
             'nextYear'=>$nextYear,
             'grade'=>$grade,
