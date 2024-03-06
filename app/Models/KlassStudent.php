@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class KlassStudent extends Model
 {
@@ -23,6 +24,10 @@ class KlassStudent extends Model
     }
     public function habits(){
         return $this->hasMany(Habit::class);
+    }
+
+    public function archives(){
+        return $this->morphMany(Archive::class, 'archivable');
     }
 
 }

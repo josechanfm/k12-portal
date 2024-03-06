@@ -43,21 +43,36 @@ class TranscriptController extends Controller
     }
 
     public function KlassStudent(KlassStudent $klassStudent){
+
+
         $templates=$klassStudent->klass->grade->transcriptTemplates();
-        //dd($templates);
-        $transcripts=array_column(Transcript::where('klass_student_id',$klassStudent->id)->get()->toArray(),null,'transcript_template_id');
-        dd('no transcripts record will prompt error!');
-        // dd($transcripts);
+        $transcripts=array_column(Transcript::where('klass_student_id',$klassStudent->id)->orderBy('transcript_template_id')->get()->toArray(),null,'transcript_template_id');
         $klassStudent->student;
-        $pathTofile=$klassStudent->klass->grade->year->code.'/'.$klassStudent->klass->tag.'/'.$klassStudent->student_number.'_'.(String) Str::uuid().'.pdf';
-        // dd($pathTofile);
+        $fileDisk='profile';
+        $filePath=$klassStudent->klass->grade->year->code.'/'.$klassStudent->klass->tag;
+        $fileName=$klassStudent->student_number.'_'.(String) Str::uuid().'.pdf';
+        $fileType='transcript_year';
+
+        
+        $klassStudent->archives()->updateOrCreate(
+            [
+                'file_type'=>$fileType
+            ],
+            [
+                'file_type'=>$fileType,
+                'original_name'=>'original_name',
+                'file_name'=>$fileName,
+                'file_path'=>'/'.$fileDisk.'/'.$filePath.'/'.$fileName
+            ]
+        );
         $pdf=PDF::loadView('pdf.transcript',[
             'templates'=>$templates,
             'klassStudent'=>$klassStudent,
             'transcripts'=>$transcripts
         ]);
-        Storage::disk('public')->put(
-            $pathTofile,
+        
+        Storage::disk($fileDisk)->put(
+            $filePath.'/'.$fileName,
             $pdf->output()
         );
         
@@ -94,86 +109,163 @@ class TranscriptController extends Controller
     {
         $klassCourses=array_column($klass->courses->toArray(),null,'code');
         $templateCategories=$klass->grade->transcriptTemplates();
+        //dd($templateCategories);
         $klassScores=$klass->transcriptsScores()['scores'];
+        // dd($klassScores[316]);
         foreach($klass->students as $student){
             $ksid=$student->pivot->klass_student_id;
             $data=[];
             $data[]=[
                 'klass_student_id'=>$ksid,
                 'transcript_template_id'=>$templateCategories['PERSONAL']['name_zh']['id'],
+                'term_id'=>9,
+                'category'=>'PERSONAL',
+                'column'=>null,
+                'reference_code'=>'name_zh',
+                'field_name'=>null,
                 'value'=>$student->name_zh
             ];
             $data[]=[
                 'klass_student_id'=>$ksid,
                 'transcript_template_id'=>$templateCategories['PERSONAL']['name_fn']['id'],
+                'term_id'=>9,
+                'category'=>'PERSONAL',
+                'column'=>null,
+                'reference_code'=>'name_fn',
+                'field_name'=>null,
                 'value'=>$student->name_fn
             ];
             $data[]=[
                 'klass_student_id'=>$ksid,
                 'transcript_template_id'=>$templateCategories['PERSONAL']['academic_year']['id'],
+                'term_id'=>9,
+                'category'=>'PERSONAL',
+                'column'=>null,
+                'reference_code'=>'academic_year',
+                'field_name'=>null,
                 'value'=>Year::find($student->pivot->pivotParent->grade->year_id)->title
             ];
             $data[]=[
                 'klass_student_id'=>$ksid,
                 'transcript_template_id'=>$templateCategories['PERSONAL']['grade_class']['id'],
+                'term_id'=>9,
+                'category'=>'PERSONAL',
+                'column'=>null,
+                'reference_code'=>'grade_class',
+                'field_name'=>null,
                 'value'=>$student->pivot->pivotParent->grade->tag
             ];
             $data[]=[
                 'klass_student_id'=>$ksid,
                 'transcript_template_id'=>$templateCategories['PERSONAL']['student_number']['id'],
+                'term_id'=>9,
+                'category'=>'PERSONAL',
+                'column'=>null,
+                'reference_code'=>'student_number',
+                'field_name'=>null,
                 'value'=>$student->pivot->student_number
             ];
             $data[]=[
                 'klass_student_id'=>$ksid,
                 'transcript_template_id'=>$templateCategories['PERSONAL']['id_number']['id'],
-                'value'=>'birm_number'
+                'term_id'=>9,
+                'category'=>'PERSONAL',
+                'column'=>null,
+                'reference_code'=>'id_number',
+                'field_name'=>null,
+                'value'=>isset($student->identity_documents()['BIRM'])?$student->identity_documents()['BIRM']['number']:'null'
             ];
             $data[]=[
                 'klass_student_id'=>$ksid,
                 'transcript_template_id'=>$templateCategories['PERSONAL']['issue_date']['id'],
-                'value'=>'birm issue date'
+                'term_id'=>9,
+                'category'=>'PERSONAL',
+                'column'=>null,
+                'reference_code'=>'issue_date',
+                'field_name'=>null,
+                'value'=>isset($student->identity_documents()['BIRM'])?$student->identity_documents()['BIRM']['issue_date']:'null'
             ];
 
             //SUMMARY
             $data[]=[
                 'klass_student_id'=>$ksid,
                 'transcript_template_id'=>$templateCategories['SUMMARY']['total_score']['id'],
+                'term_id'=>9,
+                'category'=>'SUMMARY',
+                'column'=>null,
+                'reference_code'=>'total_score',
+                'field_name'=>null,
                 'value'=>'0'
             ];
             $data[]=[
                 'klass_student_id'=>$ksid,
                 'transcript_template_id'=>$templateCategories['SUMMARY']['average_score']['id'],
+                'term_id'=>9,
+                'category'=>'SUMMARY',
+                'column'=>null,
+                'reference_code'=>'average_score',
+                'field_name'=>null,
                 'value'=>'0'
             ];
             $data[]=[
                 'klass_student_id'=>$ksid,
                 'transcript_template_id'=>$templateCategories['SUMMARY']['class_size']['id'],
+                'term_id'=>9,
+                'category'=>'SUMMARY',
+                'column'=>null,
+                'reference_code'=>'class_size',
+                'field_name'=>null,
                 'value'=>'0'
             ];
             $data[]=[
                 'klass_student_id'=>$ksid,
                 'transcript_template_id'=>$templateCategories['SUMMARY']['ranking']['id'],
+                'term_id'=>9,
+                'category'=>'SUMMARY',
+                'column'=>null,
+                'reference_code'=>'ranking',
+                'field_name'=>null,
                 'value'=>'0'
             ];
             $data[]=[
                 'klass_student_id'=>$ksid,
                 'transcript_template_id'=>$templateCategories['SUMMARY']['late']['id'],
+                'term_id'=>9,
+                'category'=>'SUMMARY',
+                'column'=>null,
+                'reference_code'=>'late',
+                'field_name'=>null,
                 'value'=>'0'
             ];
             $data[]=[
                 'klass_student_id'=>$ksid,
                 'transcript_template_id'=>$templateCategories['SUMMARY']['absent']['id'],
+                'term_id'=>9,
+                'category'=>'SUMMARY',
+                'column'=>null,
+                'reference_code'=>'absent',
+                'field_name'=>null,
                 'value'=>'0'
             ];
             //Exception for template based
             $data[]=[
                 'klass_student_id'=>$ksid,
                 'transcript_template_id'=>$templateCategories['APPRAISAL']['appraisal']['id'],
+                'term_id'=>9,
+                'category'=>'SUMMARY',
+                'column'=>null,
+                'reference_code'=>'appraisal',
+                'field_name'=>null,
                 'value'=>'---'
             ];
             $data[]=[
                 'klass_student_id'=>$ksid,
                 'transcript_template_id'=>$templateCategories['PASSING']['passing']['id'],
+                'term_id'=>9,
+                'category'=>'SUMMARY',
+                'column'=>null,
+                'reference_code'=>'passing',
+                'field_name'=>null,
                 'value'=>'50'
             ];
 
@@ -183,7 +275,12 @@ class TranscriptController extends Controller
                     $data[]=[
                         'klass_student_id'=>$ksid,
                         'transcript_template_id'=>$item->id,
-                        'value'=>'0'
+                        'term_id'=>$termId,
+                        'category'=>'GENERAL',
+                        'column'=>null,
+                        'reference_code'=>$referenceCode,
+                        'field_name'=>null,
+                        'value'=>$item->value
                     ];
                 };
             }
@@ -197,6 +294,11 @@ class TranscriptController extends Controller
                                 $data[]=[
                                     'klass_student_id'=>$ksid,
                                     'transcript_template_id'=>$fieldName['id'],
+                                    'term_id'=>$termId,
+                                    'category'=>'SUBJECT',
+                                    'column'=>null,
+                                    'reference_code'=>$fieldName['reference_code'],
+                                    'field_name'=>$fieldName['field_name'],
                                     'value'=>$klassScores[$ksid][$course['id']][$column['id']]['point']??''
                                 ];
                             }
@@ -204,14 +306,24 @@ class TranscriptController extends Controller
                     }
                 };
             }
-
+            $data[]=[
+                'klass_student_id'=>$ksid,
+                'transcript_template_id'=>$templateCategories['PASSING']['passing']['id'],
+                'term_id'=>9,
+                'category'=>'APPRAISAL',
+                'column'=>null,
+                'reference_code'=>'appraisal',
+                'field_name'=>null,
+                'value'=>'appraisal comments...'
+            ];
+            // dd($data);
             Transcript::upsert(
                 $data, 
                 ['klass_student_id','transcript_template_id'],
                 ['value']
             );
         }
-        dd($data);
+        //dd($data);
     }    
 
 }

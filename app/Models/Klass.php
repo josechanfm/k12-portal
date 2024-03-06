@@ -14,12 +14,20 @@ class Klass extends Model
 
     use HasFactory;
     protected $fillable=['grade_id','initial','tag','room'];
-    protected $casts=['klass_head_ids'=>'json'];
-    // public function subjects(){
-    //     return $this->belongsToMany(Subject::class);
-    // }
-   
-    protected $appends= ['klass_heads','course_count','student_count','promoted_count','year_code','grade_year'];
+    protected $casts=[
+        'klass_head_ids'=>'json',
+        'transcript_migrated'=>'boolean',
+        'transcript_locked'=>'boolean',
+        'lock_courses'=>'boolean'
+    ];
+    protected $appends= [
+        'klass_heads',
+        'course_count',
+        'student_count',
+        'promoted_count',
+        'year_code',
+        'grade_year'
+    ];
     
 
     public function hasRight(){
@@ -71,6 +79,20 @@ class Klass extends Model
         return $this->belongsToMany(Student::class)
                 ->withPivot(['id as pivot_klass_student_id','student_number','stream','state','promote','promote_to']);
     }
+    public function studentsWithArchives(){
+        return $this->belongsToMany(Student::class)
+                ->withPivot(['id as pivot_klass_student_id','student_number','stream','state','promote','promote_to'])
+                ->with('klassStudentWithArchives');
+    }
+    // public function studentsWithArchives(){
+    //     $students=$this->students;
+    //     foreach($students as $student){
+    //         //dd($student->pivot->klass_student_id);
+    //         $student->archives=KlassStudent::find($student->pivot->klass_student_id)->archives;
+    //     }
+    //     return $students;
+        
+    // }
     public function medicnotes(){
         return $this->belongsToMany(Student::class)->with('medicnote');
     }

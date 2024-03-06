@@ -6,9 +6,9 @@
                 <a-button type="primary" @click="onClickAddScoreColumn">新增學分欄</a-button>
                 <a-button v-for="term in year_terms" @click="selectedTerm = term.value" class="ml-4"
                     :type="selectedTerm == term.value ? 'primary' : ''">{{ term.label }}</a-button>
+                
             </div>
         </div>
-        {{course.klass.tag}}
         <div class="py-6">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -36,9 +36,9 @@
                                     </td>
                                     <td><span v-if="record.merge">是</span></td>
                                     <td style="width:250px">
-                                        <a-button @click="onClickEditScoreColumn(record)">修改</a-button>
+                                        <a-button @click="onClickEditScoreColumn(record)" :disabled="disabledByTerm()">修改</a-button>
                                         <span v-if="record.for_transcript == 0">
-                                            <a-button @click="onClickDeleteScoreColumn(record.id)">刪除</a-button>
+                                            <a-button @click="onClickDeleteScoreColumn(record.id)"  :disabled="disabledByTerm()">刪除</a-button>
                                         </span>
                                     </td>
                                 </tr>
@@ -80,8 +80,14 @@
                                                 {{ score.point }} 
                                             </span>
                                             <span v-else>
-                                                <a-input v-model:value="score.point" @blur="onScoreChange(student, cid)"
-                                                    @keyup.arrow-keys="onKeypressed" />
+                                                <a-input v-if="!disabledByTerm()"
+                                                    v-model:value="score.point" 
+                                                    @blur="onScoreChange(student, cid)"
+                                                    @keyup.arrow-keys="onKeypressed"
+                                                />
+                                                <span v-else>
+                                                    {{score.point}}
+                                                </span>
                                             </span>
 
                                         </td>
@@ -558,6 +564,9 @@ export default {
         yearFinalFormular() {
             const yearFinal = this.score_columns.find(c => c.term_id == 9)
             return yearFinal ? yearFinal.formular : 'No year final formular';
+        },
+        disabledByTerm(){
+            return !(this.selectedTerm==this.course.current_term);
         }
 
     },

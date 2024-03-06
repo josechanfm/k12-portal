@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Config;
 use App\Models\Klass;
 use App\Models\Course;
 use App\Models\Staff;
@@ -20,6 +21,7 @@ class CourseController extends Controller
     {
         $courses=Course::whereBelongsTo($klass)->with('staffs')->get();
         return Inertia::render('Admin/Courses',[
+            'yearTerms'=>Config::item('year_terms'),
             'klass'=>$klass,
             'courses'=>$courses,
             'teachers'=>Staff::all()

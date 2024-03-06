@@ -112,7 +112,7 @@ export default {
                     return false;
                 }
             }
-            this.$inertia.get(route("manage.klass.transcript.migrate",this.klass.id), {
+            this.$inertia.get(route("manage.klass.transcripts.migrate",this.klass.id), {
                 onSuccess: (page) => {
                         this.modal.isOpen=false;
                         console.log('Cancelled')

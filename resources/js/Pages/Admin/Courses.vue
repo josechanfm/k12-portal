@@ -15,9 +15,23 @@
             
             <a-table :dataSource="courses" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
-                    <template v-if="column.dataIndex=='students'">
+                    <template v-if="column.dataIndex=='operation'">
                         <a-button @click="changeTeachers(record)">Teachers</a-button>
                         <inertia-link :href="route('admin.select.students.index',{type:'course',id:record.id})" class="ant-btn">Students</inertia-link>
+                        <br>
+                        <template v-for="term in yearTerms">
+                            <a-button 
+                                @click="onClickSelectedTermLock(record.id, term.value)" 
+                                :type="record.current_term==term.value?'primary':''"
+                                :disabled="klass.lock_courses"
+                            >{{term.label}}
+                            </a-button>
+                        </template>
+                        <a-button 
+                            @click="onClickSelectedTermLock(record.id,0)" 
+                            :type="record.current_term==0?'primary':''"
+                            :disabled="klass.lock_courses"
+                            >Lock</a-button>
                     </template>
                     <template v-else-if="column.dataIndex=='subject_heads'">
                         <div v-if="toAssignTeachers">
@@ -132,7 +146,7 @@ export default {
         StopOutlined,
         EyeOutlined
     },
-    props: ['klass','courses','subjects','teachers'],
+    props: ['yearTerms','klass','courses','subjects','teachers'],
     data() {
         return {
             testCheckbox:[],
@@ -171,8 +185,8 @@ export default {
                     title: '老師',
                     dataIndex: 'course_teachers',
                 },{
-                    title: '學生',
-                    dataIndex: 'students',
+                    title: '操作',
+                    dataIndex: 'operation',
                 }
             ],
             rules:{
@@ -269,6 +283,16 @@ export default {
                     }
                 });
         },
+        onClickSelectedTermLock(courseId,termId){
+            this.$inertia.post(route('admin.lock.course',{courseId:courseId,termId:termId}),{},{
+                onSuccess: (page)=>{
+                    console.log(page);
+                },
+                onError:(err)=>{
+                    alert(err.message)                        
+                }
+            })
+        }
     
     },
 }

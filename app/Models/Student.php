@@ -22,6 +22,12 @@ class Student extends Model
     public function klasses(){
         return $this->belongsToMany(Klass::class)->withPivot('student_number');
     }
+    public function klassStudents(){
+        return $this->hasMany(KlassStudent::class);
+    }
+    public function klassStudentWithArchives(){
+        return $this->hasOne(KlassStudent::class)->with('archives');
+    }
     public function courses(){
         return $this->belongsToMany(Course::class,'course_student');
     }
@@ -35,11 +41,15 @@ class Student extends Model
     public function address(){
         return $this->morphOne(Address::class, 'addressable')->latestOfMany();
     }
+    public function identity_documents(){
+        $documents=$this->morphMany(IdentityDocument::class, 'identity_documentable')->get()->toArray();
+        return array_column($documents,null,'document_type');
+    }
     public function identity_document(){
         return $this->morphOne(IdentityDocument::class, 'identity_documentable')->latestOfMany();
     }
     public function bank(){
-        return $this->morphOne(Bank::class, 'bankable')->latestOfMany();
+        return $this->morphMany(Bank::class, 'bankable');
     }
     public function detail(){
         return $this->hasOne(StudentDetail::class);
@@ -62,10 +72,16 @@ class Student extends Model
     public function abilities(){
         return $this->hasManyThrough(Ability::class, KlassStudent::class, 'student_id','klass_student_id')->with('topic');
     }
+    public function archives(){
+        $klassStudent=$this->hasOne(KlassStudent::class)->first();
+        return $klassStudent->archives;
+    }
     public function activities(){
         return $this->belongsToMany(Student::class);
     }
-
+    public function klassStudent(){
+        return $this->hasOne(KlassStudent::class)->latestOfMany();
+    }
     public static function getBehaviours($klassStudentId, $staff, $terms, $referenceId,$actor='SUBJECT'){
         $behaviours=[];
         foreach($terms as $term){

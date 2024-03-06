@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('byname')->nullable();
             $table->string('room')->nullable();
             $table->string('klass_head_ids')->nullable();
-            $table->boolean('transcript_migrated')->nullable();
+            $table->tinyInteger('clock_course')->default(0);
             $table->timestamps();
         });
     }

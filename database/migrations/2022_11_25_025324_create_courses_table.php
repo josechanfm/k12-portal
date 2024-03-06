@@ -29,6 +29,7 @@ return new class extends Migration
             $table->tinyInteger('unit');
             $table->boolean('active');
             $table->string('subject_head_ids')->default('[]');
+            $table->tinyInteger('current_term')->default(1);
             $table->timestamps();
             $table->unique(['klass_id','code'],'klass_id_code');
         });

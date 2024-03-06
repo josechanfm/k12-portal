@@ -29,6 +29,7 @@ return new class extends Migration
             $table->foreignId('transcript_template_id');
             $table->integer('version')->nullable();
             $table->boolean('active')->default(true);
+            $table->boolean('transcript_locked')->default(false);
             $table->timestamps();
         });
     }

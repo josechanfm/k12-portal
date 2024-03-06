@@ -18,6 +18,7 @@
                 </a-row>
             </h2>
         </template>
+       
         <div :class="isEdit?'formEditOn':'formEditOff'">
             <a-switch v-model:checked="isEdit" @change="onChangeEditMode"/>
             <a-form
@@ -295,6 +296,12 @@
                 </a-collapse>
             </a-form>
         </div>
+        <a-typography-title :level="3">Personal Files</a-typography-title>
+        <ol>
+            <li v-for="file in student.archives">
+                {{file.file_type}}: {{file.file_name}}
+            </li>
+        </ol>
     </AdminLayout>
 </template>
 

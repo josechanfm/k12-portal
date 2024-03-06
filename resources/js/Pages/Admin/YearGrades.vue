@@ -24,7 +24,14 @@
                     <inertia-link :href="route('admin.grade.klasses.index',record.id)" class="ant-btn">班別</inertia-link>
                     <a-button @click="editRecord(record)">修改</a-button>
                     <a-button @click="deleteRecord(record)">刪除</a-button>
-                    <a-button @click="lockTranscript(record)">鎖定成積表</a-button>
+                    <a-popconfirm
+                        title='是否確定鎖定 "全級" 的成積表?'
+                        ok-text="Yes"
+                        cancel-text="No"
+                        @confirm="lockTranscript(record)"
+                    >
+                    <a-button >鎖定成積表</a-button>
+                    </a-popconfirm>
                 </template>
                 <template v-if="column.dataIndex=='active'">
                     <check-square-outlined v-if="text=='1'" :style="{color:'green'}"/>
@@ -243,8 +250,7 @@ export default {
             this.modal.data.level=tmp.level;
         },
         lockTranscript(record){
-            if(!confirm('鎖定成積表分數轉換功能，是不確定？')) return;
-            this.$inertia.get(route('admin.lockTranscripts'),{scope:'grade',id:record.id},{
+            this.$inertia.get(route('admin.transcript.lock'),{scope:'grade',id:record.id},{
                 onSuccess: (page)=>{
                     console.log(page);
                 },

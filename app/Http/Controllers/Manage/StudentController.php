@@ -52,9 +52,18 @@ class StudentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Student $student)
     {
-        $student=Student::with('address')->with('identity_document')->with('bank')->with('detail')->with('parent')->with('guardian')->find($id);
+        $student->with('address')->with('identity_document')->with('bank')->with('detail')->with('parent')->with('guardian');
+        $student->address;
+        $student->identity_document;
+        $student->bank;
+        $student->detail;
+        $student->parent;
+        $student->guardian;
+        $student->archives=$student->archives();
+       
+        //$student=Student::with('address')->with('identity_document')->with('bank')->with('detail')->with('parent')->with('guardian')->find($id);
         // echo json_encode($student);
         return Inertia::render('Manage/StudentProfile',[
             'student'=>$student

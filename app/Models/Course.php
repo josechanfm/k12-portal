@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Course extends Model
 {
     use HasFactory;
+    protected $fillable=['klass_id','code','title_zh','title_en','type','stream','elective','description','score_column','score_scheme','in_transcript','unit','active','subject_head_ids','transcript_locked'];
     protected $appends=['student_count','subject_heads','teacher_ids','teaching'];
     protected $casts=['subject_head_ids'=>'array'];
 

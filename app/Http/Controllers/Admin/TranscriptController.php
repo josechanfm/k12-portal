@@ -14,18 +14,32 @@ class TranscriptController extends Controller
         if(!isset($request->scope) || !isset($request->id)){
             echo 'nono';
         }
+        // $klass=Klass::find($request->id);
+        // $klass->transcript_locked=!$klass->transcript_locked;
+        // $klass->save();
+        // return redirect()->back();
+
+        //dd($klass);
+        //dd($request->all());
         switch($request->scope){
             case 'klass':
-                Klass::where('id',$request->id)->update(['transcript_migrated'=>9]);
+                $klass=Klass::find($request->id);
+                if(!$klass->grade->transcript_locked){
+                    $klass->transcript_locked=!$klass->transcript_locked;
+                    $klass->save();
+                }else{
+                    return redirect()->back()->withErrors(['message'=>'transcript is locked']);
+                }
                 break;
             case 'grade':
-                Klass::where('grade_id',$request->id)->update(['transcript_migrated'=>9]);
+                //dd($request->all());
+                Klass::where('grade_id',$request->id)->update(['transcript_locked'=>true]);
                 break;
-            case 'year':
-                $year=Year::currentYear();
-                if($year->id != $request->id) break;
-                Klass::whereIn('grade_id',$year->grades->pluck('id'))->update(['transcript_migrated'=>9]);
-                break;
+            // case 'year':
+            //     $year=Year::currentYear();
+            //     if($year->id != $request->id) break;
+            //     Klass::whereIn('grade_id',$year->grades->pluck('id'))->update(['transcript_migrated'=>true]);
+            //     break;
             }
         return redirect()->back();
     }

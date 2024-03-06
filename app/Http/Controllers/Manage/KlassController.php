@@ -8,7 +8,7 @@ use Inertia\Inertia;
 use App\Models\Config;
 use App\Models\Year;
 use App\Models\Klass;
-use App\Models\Teacher;
+use App\Models\Student;
 use App\Models\Transcript;
 use App\Models\AdditiveTemplate;
 
@@ -131,9 +131,15 @@ class KlassController extends Controller
 
     public function students(Klass $klass)
     {
+        
+        //$abc=$klass->studentsWithArchives;
+        //dd($klass->studentsWithArchives->where('klassStudentWithArchives.archives.file_type','transcript_year'));
+        // dd($abc[0]->klassStudentWithArchives);
+        //dd($abc[0]->klassStudentWithArchives->archives->where('file_type','transcript_year'));
+        //dd($klass->studentsWithArchives()[0]->archives);
         return Inertia::render('Manage/KlassStudents', [
             'klass' => $klass,
-            'students' => $klass->students,
+            'students' => $klass->studentsWithArchives,
         ]);
     }
 

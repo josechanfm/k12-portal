@@ -118,12 +118,15 @@ Route::group([
 
     Route::resource('/courses',App\Http\Controllers\Admin\CourseController::class)->names('admin.courses');
     Route::resource('/students',App\Http\Controllers\Admin\StudentController::class)->names('admin.students');
-    Route::get('/lock_transcripts',[App\Http\Controllers\Admin\TranscriptController::class,'lockTranscripts'])->name('admin.lockTranscripts');
+    Route::get('/transcript/lock',[App\Http\Controllers\Admin\TranscriptController::class,'lockTranscripts'])->name('admin.transcript.lock');
     Route::resource('extracurriculars',App\Http\Controllers\Admin\ExtracurricularController::class)->names('admin.extracurriculars');
     Route::resource('activities',App\Http\Controllers\Admin\ActivityController::class)->names('admin.activities');
     Route::resource('certificates',App\Http\Controllers\Admin\CertificateController::class)->names('admin.certificates');
     Route::get('certificate/print',[App\Http\Controllers\Admin\CertificateController::class,'print'])->name('admin.certificate.print');
     Route::resource('klass/{klass}/behaviours',App\Http\Controllers\Admin\BehaviourController::class)->names('admin.klass.behaviours');
+
+    Route::post('lock/course/{courseId}/{termId}',[\App\Http\Controllers\Admin\LockController::class,'course'])->name('admin.lock.course');
+    Route::post('lock/klass/{klassId}/{termId}',[\App\Http\Controllers\Admin\LockController::class,'klass'])->name('admin.lock.klass');
 });
 //Route::prefix('manage/')->middleware([ 'checkRole:master|admin|director|teacher'])->group(function(){
 //manage
@@ -200,9 +203,9 @@ Route::group([
             Route::put('/klass/{klass}/habits',[App\Http\Controllers\Manage\Pre\HabitController::class,'update'])->name('manage.pre.klass.habits.update');
             Route::get('/klass/{klass}/habit/export',[App\Http\Controllers\Manage\Pre\HabitController::class,'export'])->name('manage.pre.klass.habit.export');
             Route::post('/klass/{klass}/habit/import',[App\Http\Controllers\Manage\Pre\HabitController::class,'import'])->name('manage.pre.klass.habit.import');
-            Route::get('/klass/{klass}/habit/import',function(App\Models\Klass $klass){
-                return redirect()->route('manage.pre.klass.habits',$klass->id);
-            })->name('manage.pre.klass.habit.import');
+            // Route::get('/klass/{klass}/habit/import',function(App\Models\Klass $klass){
+            //     return redirect()->route('manage.pre.klass.habits',$klass->id);
+            // })->name('manage.pre.klass.habit.import');
             Route::post('/klass/{klass}/habit/importConfirmed',[App\Http\Controllers\Manage\Pre\HabitController::class,'importConfirmed'])->name('manage.pre.klass.habit.importConfirmed');
 
 
@@ -212,9 +215,9 @@ Route::group([
             Route::post('/klass/{klass}/abilities/update',[App\Http\Controllers\Manage\Pre\AbilityController::class,'update'])->name('manage.pre.klass.abilities.update');
             Route::get('/klass/{klass}/ability/export',[App\Http\Controllers\Manage\Pre\AbilityController::class,'export'])->name('manage.pre.klass.ability.export');
             Route::post('/klass/{klass}/ability/import',[App\Http\Controllers\Manage\Pre\AbilityController::class,'import'])->name('manage.pre.klass.ability.import');
-            Route::get('/klass/{klass}/ability/import',function(App\Models\Klass $klass){
-                return redirect()->route('manage.pre.klass.abilities',$klass->id);
-            })->name('manage.pre.klass.ability.import');
+            // Route::get('/klass/{klass}/ability/import',function(App\Models\Klass $klass){
+            //     return redirect()->route('manage.pre.klass.abilities',$klass->id);
+            // })->name('manage.pre.klass.ability.import');
             Route::post('/klass/{klass}/ability/importConfirmed',[App\Http\Controllers\Manage\Pre\AbilityController::class,'importConfirmed'])->name('manage.pre.klass.ability.importConfirmed');
 
 

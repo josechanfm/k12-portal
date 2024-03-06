@@ -4,7 +4,12 @@
         <a-table :dataSource="students" :columns="columns">
             <template #bodyCell="{column, text, record, index}">
                 <template v-if="column.dataIndex == 'action'">
-                    <inertia-link :href="route('manage.klass.student.transcript',record.pivot.klass_student_id)" class="ant-btn">成績表</inertia-link>
+                    <span v-for="archive in record.klass_student_with_archives.archives">
+                        <span v-if="archive.file_type=='transcript_year'">
+                            <a :href="archive.file_path">成績表</a>
+                        </span>
+                    </span>
+                    <inertia-link :href="route('manage.klass.student.transcript',record.pivot.klass_student_id)" class="ant-btn">Gen成績表</inertia-link>
                     <a :href="route('manage.students.show',record.pivot.klass_student_id)" class="ant-btn" target="_blank">學生檔案</a>
                 </template>
                 <template v-else>

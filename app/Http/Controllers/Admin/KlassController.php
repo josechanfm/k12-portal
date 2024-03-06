@@ -36,9 +36,10 @@ class KlassController extends Controller
     public function index(Grade $grade){
         $grade->year;
         $grades=Grade::where('year_id',$grade->year_id)->get();
-        $klasses=Klass::with('grade')->with('courses')->whereBelongsTo($grade)->get();
+        $klasses=Klass::with('grade')->whereBelongsTo($grade)->get();
         $studies=Study::where('active',1)->get();
         return Inertia::render('Admin/GradeKlasses',[
+            'yearTerms'=>Config::item('year_terms'),
             'grade'=>$grade,
             'grades'=>$grades,
             'klasses'=>$klasses,
