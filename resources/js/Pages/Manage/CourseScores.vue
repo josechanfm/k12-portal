@@ -1,7 +1,7 @@
 <template>
     <AdminLayout :title="course.klass.tag+'科學分管理'" :breadcrumb="breadcrumb">
         <div class="py-6">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="mx-auto sm:px-6 lg:px-8">
                 <inertia-link :href="route('manage.klasses.show', course.klass_id)" class="ant-btn">Back</inertia-link>
                 <a-button type="primary" @click="onClickAddScoreColumn">新增學分欄</a-button>
                 <a-button v-for="term in year_terms" @click="selectedTerm = term.value" class="ml-4"
@@ -10,11 +10,12 @@
             </div>
         </div>
         <div class="py-6">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <table class="itxst" component='VueDraggableNext' animation="500" force-fallback="true" width="100%">
                         <thead>
                             <tr>
+                                <td width="20px">#</td>
                                 <th>排序</th>
                                 <th>學段</th>
                                 <th>學分欄名稱</th>
@@ -27,6 +28,9 @@
                         <draggable tag="tbody" class="dragArea list-group w-full" :list="score_columns" @change="rowChange">
                             <transition-group v-for="(record, idx) in score_columns" :key="record.id">
                                 <tr v-if="record.term_id == selectedTerm">
+                                    <td>
+                                        <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M8 6.5C9.38071 6.5 10.5 5.38071 10.5 4C10.5 2.61929 9.38071 1.5 8 1.5C6.61929 1.5 5.5 2.61929 5.5 4C5.5 5.38071 6.61929 6.5 8 6.5Z" fill="#000000"></path> <path d="M15.5 6.5C16.8807 6.5 18 5.38071 18 4C18 2.61929 16.8807 1.5 15.5 1.5C14.1193 1.5 13 2.61929 13 4C13 5.38071 14.1193 6.5 15.5 6.5Z" fill="#000000"></path> <path d="M10.5 12C10.5 13.3807 9.38071 14.5 8 14.5C6.61929 14.5 5.5 13.3807 5.5 12C5.5 10.6193 6.61929 9.5 8 9.5C9.38071 9.5 10.5 10.6193 10.5 12Z" fill="#000000"></path> <path d="M15.5 14.5C16.8807 14.5 18 13.3807 18 12C18 10.6193 16.8807 9.5 15.5 9.5C14.1193 9.5 13 10.6193 13 12C13 13.3807 14.1193 14.5 15.5 14.5Z" fill="#000000"></path> <path d="M10.5 20C10.5 21.3807 9.38071 22.5 8 22.5C6.61929 22.5 5.5 21.3807 5.5 20C5.5 18.6193 6.61929 17.5 8 17.5C9.38071 17.5 10.5 18.6193 10.5 20Z" fill="#000000"></path> <path d="M15.5 22.5C16.8807 22.5 18 21.3807 18 20C18 18.6193 16.8807 17.5 15.5 17.5C14.1193 17.5 13 18.6193 13 20C13 21.3807 14.1193 22.5 15.5 22.5Z" fill="#000000"></path> </g></svg>
+                                    </td>
                                     <td>{{ record.column_letter }}</td>
                                     <td>{{ year_terms.find(t => t.value == record.term_id).label }}</td>
                                     <td>{{ record.field_label }}</td>
@@ -51,7 +55,7 @@
         </div>
 
         <div class="py-6">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <a-button type="primary" @click="saveScores">更新並保存</a-button>
                     <a-button @click="sampleData">Sample Data</a-button>

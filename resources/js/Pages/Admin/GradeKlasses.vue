@@ -31,7 +31,7 @@
                     <template v-for="term in yearTerms">
                         <a-button 
                             @click="onClickSelectedTermLock(record.id,term.value)" 
-                            :type="record.current_term==term.value?'primary':''"
+                            :type="record.current_term==term.value?'secondary':''"
                             :disabled="record.lock_courses"
                         >{{term.label}}</a-button>
                     </template>

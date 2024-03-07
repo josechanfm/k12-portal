@@ -22,14 +22,14 @@
                         <template v-for="term in yearTerms">
                             <a-button 
                                 @click="onClickSelectedTermLock(record.id, term.value)" 
-                                :type="record.current_term==term.value?'primary':''"
+                                :type="record.current_term==term.value?'secondary':''"
                                 :disabled="klass.lock_courses"
                             >{{term.label}}
                             </a-button>
                         </template>
                         <a-button 
                             @click="onClickSelectedTermLock(record.id,0)" 
-                            :type="record.current_term==0?'primary':''"
+                            :type="record.current_term==0?'secondary':''"
                             :disabled="klass.lock_courses"
                             >Lock</a-button>
                     </template>

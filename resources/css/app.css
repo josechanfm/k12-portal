@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.ant-btn-secondary{
+    background: lightgreen!important;
+    border-color: lightgreen!important;
+}
