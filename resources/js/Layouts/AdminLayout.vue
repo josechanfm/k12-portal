@@ -50,11 +50,9 @@
                   
                 </nav>
               </header>
-            <main>
-              <slot />
-            </main>
-
-
+              <main>
+                <slot />
+              </main>
             </a-layout-content>
         </a-layout>
     </a-layout>

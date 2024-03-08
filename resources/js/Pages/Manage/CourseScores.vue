@@ -6,7 +6,6 @@
                 <a-button type="primary" @click="onClickAddScoreColumn">新增學分欄</a-button>
                 <a-button v-for="term in year_terms" @click="selectedTerm = term.value" class="ml-4"
                     :type="selectedTerm == term.value ? 'primary' : ''">{{ term.label }}</a-button>
-                
             </div>
         </div>
         <div class="py-6">
@@ -36,6 +35,7 @@
                                     </td>
                                     <td><span v-if="record.merge">是</span></td>
                                     <td style="width:250px">
+                                        {{ record }}
                                         <a-button @click="onClickEditScoreColumn(record)" :disabled="disabledByTerm()">修改</a-button>
                                         <span v-if="record.for_transcript == 0">
                                             <a-button @click="onClickDeleteScoreColumn(record.id)"  :disabled="disabledByTerm()">刪除</a-button>
@@ -104,13 +104,13 @@
         </div>
 
         <a-modal v-model:visible="modal.isOpen" :title="modal.title" @ok="handleScoreColumnChange">
-            <a-form :model="modal.data" name="course_score" ref="modalScoreColumn" @finish="onModalFinish">
+            <a-form :model="modal.data" name="course_score" ref="modalScoreColumn" @finish="onModalFinish" :label-col="{span:6}">
+                <a-form-item label="學段" :name="['term_id']" >
+                    <a-select v-model:value="modal.data.term_id" :options="year_terms" :disabled="true"/>
+                </a-form-item>
                 <a-form-item label="學分欄名稱 " :name="['field_label']"
                     :rules="[{ required: true, message: 'Please input score column name' }]">
                     <a-input v-model:value="modal.data.field_label" />
-                </a-form-item>
-                <a-form-item label="學段" :name="['term_id']">
-                    <a-select v-model:value="modal.data.term_id" :options="year_terms" />
                 </a-form-item>
                 <a-form-item label="序號" :name="['sequence']">
                     <a-input v-model:value="modal.data.sequence" />
@@ -143,7 +143,7 @@
                         </li>
                     </ol>
                 </div>
-
+                {{ modal.data }}
                 <a-collapse v-if="$page.props.currentUserRoles.includes('admin')">
                     <a-collapse-panel key="1" header="新增分數合計">
                         <a-form-item label="科目">
@@ -171,6 +171,7 @@
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { ContactsOutlined } from '@ant-design/icons-vue';
+import { defaultsDeep } from 'lodash';
 import { VueDraggableNext } from 'vue-draggable-next'
 
 export default {
@@ -282,6 +283,8 @@ export default {
             this.modal.data = {};
             this.modal.data.course_id = this.course.id;
             this.modal.data.type = 'SUB';
+            this.modal.data.term_id=this.selectedTerm;
+            this.modal.data.merge=[];
             this.modal.title = "Add Score Column";
             this.modal.mode = 'ADD';
             this.modal.isOpen = true;
@@ -291,7 +294,7 @@ export default {
             if (record.merge == null || record.merge == '') {
                 this.modal.data.merge = [];
             } else if (!Array.isArray(record.merge)) {
-                this.modal.data.merge = JSON.parse(record.merge);
+                this.modal.data.merge = record.merge;
             }
             this.modal.title = "Edit Score Column";
             this.modal.mode = 'EDIT';
@@ -302,7 +305,7 @@ export default {
             console.log(recordId);
         },
         createScoreColumn(data) {
-            this.$inertia.post('/manage/score_column/', data, {
+            this.$inertia.post(route("manage.scoreColumns.store"), data, {
                 onSuccess: (page) => {
                     this.modal.mode = null;
                     this.modal.isOpen = false;
@@ -314,7 +317,7 @@ export default {
         },
         updateScoreColumn(data) {
             //this.$inertia.put('/manage/score_column/'+data.id, data, {
-            this.$inertia.put(route("manage.score_column.update", data.id), data, {
+            this.$inertia.put(route("manage.scoreColumns.update", data.id), data, {
                 onSuccess: (page) => {
                     this.modal.mode = null;
                     this.modal.isOpen = false;
@@ -378,7 +381,10 @@ export default {
                 }
                 if (column.term_id == 9) {
                     termTotals.forEach((t, i) => {
-                        column.formular = column.formular.replace('T' + (i + 1), termTotals[i])
+                        if(column.formular){
+                            column.formular = column.formular.replace('T' + (i + 1), termTotals[i])
+                        }
+                        
                     })
                 }
             })
@@ -485,7 +491,7 @@ export default {
             this.score_columns.forEach(column => {
                 column.sequence = i++
             })
-            this.$inertia.post(route("manage.score_column.reorder"), this.score_columns, {
+            this.$inertia.post(route("manage.scoreColumn.reorder"), this.score_columns, {
                 onSuccess: (page) => {
                     console.log(page);
                 },
@@ -517,7 +523,7 @@ export default {
         //     })
         //     //set the select score column as is_total=true
         //     record.is_total=1;
-        //     this.$inertia.post(route("manage.score_column.update_is_total"), this.score_columns, {
+        //     this.$inertia.post(route("manage.scoreColumn.update_is_total"), this.score_columns, {
         //             onSuccess: (page) => {
         //                 console.log(page);
         //             },
@@ -530,11 +536,13 @@ export default {
             return row.scores[this.score_columns.find(c => c.term_id == 9).id]
         },
         addMerge() {
+            console.log(this.modal.data)
             console.log(this.merge)
             if (this.merge.course_id === null || this.merge.score_column_id === null || this.merge.percentage === null) {
                 alert("Please also select Score item and input percentage")
                 return false
             }
+
             this.modal.data.merge.push({ ...this.merge })
         },
         deleteMerge(idx) {
@@ -544,6 +552,8 @@ export default {
             }
         },
         onChangeMergeCourse(courseId) {
+            console.log(this.merge);
+            console.log(this.klass_courses)
             this.merge.score_column_id = null;
             var course = this.klass_courses.find(c => c.id == this.merge.course_id)
             if (course) {

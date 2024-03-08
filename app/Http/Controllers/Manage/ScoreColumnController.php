@@ -38,21 +38,14 @@ class ScoreColumnController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request);
+        //dd($request->all());
         $letter=ScoreColumn::where('course_id',$request->course_id)->orderBy('column_letter','DESC')->first()->column_letter;
-        $ScoreColumn=new ScoreColumn;
-        $ScoreColumn->term_id=$request->term_id;
-        $ScoreColumn->course_id=$request->course_id;
-        $ScoreColumn->field_label=$request->field_label;
-        $ScoreColumn->field_name=Str::uuid();
-        $ScoreColumn->sequence=$request->sequence;
-        $ScoreColumn->column_letter=++$letter;
-        //$ScoreColumn->type=$request->type;
-        $ScoreColumn->formular=$request->formular;
-        $ScoreColumn->description=$request->description;
-        $ScoreColumn->for_transcript=false;
-        $ScoreColumn->is_total=false;
-        $ScoreColumn->save();
+        $data=$request->all();
+        $data['field_name']=Str::uuid();
+        $data['column_letter']=++$letter;
+        $data['for_transcript']=false;
+        $data['is_total']=false;
+        ScoreColumn::create($data);
         return redirect()->back();
     }
 
@@ -87,20 +80,8 @@ class ScoreColumnController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $ScoreColumn=ScoreColumn::find($id);
-        $ScoreColumn->term_id=$request->term_id;
-        $ScoreColumn->course_id=$request->course_id;
-        $ScoreColumn->field_label=$request->field_label;
-        $ScoreColumn->field_name=Str::uuid()->toString();
-        $ScoreColumn->sequence=$request->sequence;
-        $ScoreColumn->column_letter=$request->column_letter;
-        // $ScoreColumn->type=$request->type;
-        $ScoreColumn->formular=$request->formular;
-        $ScoreColumn->merge=json_encode($request->merge);
-        $ScoreColumn->description=$request->description;
-        $ScoreColumn->for_transcript=false;
-        $ScoreColumn->is_total=false;
-        $ScoreColumn->save();
+        $data=$request->all();
+        ScoreColumn::find($id)->update($data);
         return redirect()->back();
     }
 

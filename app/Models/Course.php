@@ -107,22 +107,43 @@ class Course extends Model
     public function studentsScores(){
         $students=$this->students;
         $scores=$this->allScores;
+        // foreach($students as $student){
+        //     echo json_encode($student->pivot);
+        //     echo '<br>';
+
+        // };
+        // foreach($scores as $score){
+        //     echo json_encode($score);
+        //     echo '<br>';
+        // }
+        //dd($scores);
         // dd($scores[2]);
         $scoreColumns=$this->scoreColumns;
         $table=[];
-
         foreach($students as $student){
             $tmp=[];
             $tmp['student_id']=$student->id;
             $tmp['student_name']=$student->name_zh;
             $tmp['course_student_id']=$student->pivot->course_student_id;
+
             foreach($scoreColumns as $column){
                 $tmp['scores'][$column->id]=[];
                 foreach($scores as $score){
                     if($score->course_student_id==$tmp['course_student_id'] && $score->score_column_id==$column->id){
                         $score['column_letter']=$column->column_letter;
-                            $tmp['scores'][$score->score_column_id]=$score;
+                        $tmp['scores'][$score->score_column_id]=$score;
                     }
+                    // if($column->merge){
+                    //     foreach($column->merge as $merge){
+                    //         $mergeScores=Score::where('score_column_id',$merge['score_column_id'])
+                    //             ->where('student_id',$student->pivot->student_id)
+                    //             ->first();
+                    //         if($mergeScores){
+                    //             $tmp['scores'][$column->id]['point']=$mergeScores->point;
+                    //         }
+                    //     }
+                    // }
+    
                 }
                 if(empty($tmp['scores'][$column->id])){
                     $tmp['scores'][$column->id]=(object)[
@@ -137,6 +158,7 @@ class Course extends Model
             $table[$student->id]=$tmp;
             //array_push($table, $tmp);
         }
+        //dd($table[316]);
         return $table;
     }
 
