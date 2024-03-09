@@ -108,22 +108,9 @@ class CourseController extends Controller
     //     dd($klass);
     // }
 
-    public function scores(Course $course){
-        $this->authorize('scores',$course);
-        $klassCourses=Klass::find($course->klass_id)->courses;
-        $course=Course::with('klass')->find($course->id);
-        return Inertia::render('Manage/CourseScores',[
-            'year_terms'=>Config::item('year_terms'),
-            'course'=>$course,
-            'score_columns'=>$course->scoreColumns,
-            'students_scores'=>$course->studentsScores(),
-            'klass_courses'=>$klassCourses
-        ]);
-    }
-
     public function makeups(Course $course){
         // dd($course->studentsMakeups());
-        $course->klass;
+        $course->klass; 
         return Inertia::render('Manage/CourseMakeups',[
             'course' => $course,
             'students_makeups'=>$course->studentsMakeups()

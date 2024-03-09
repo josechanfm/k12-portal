@@ -2,10 +2,10 @@
     <AdminLayout :title="course.klass.tag+'科學分管理'" :breadcrumb="breadcrumb">
         <div class="py-6">
             <div class="mx-auto sm:px-6 lg:px-8">
-                <inertia-link :href="route('manage.klasses.show', course.klass_id)" class="ant-btn">Back</inertia-link>
-                <a-button type="primary" @click="onClickAddScoreColumn">新增學分欄</a-button>
-                <a-button v-for="term in year_terms" @click="selectedTerm = term.value" class="ml-4"
+                <inertia-link :href="route('manage.klasses.show', course.klass_id)" class="ant-btn mr-4">Back</inertia-link>
+                <a-button v-for="term in yearTerms" @click="selectedTerm = term.value" class="mr-4"
                     :type="selectedTerm == term.value ? 'primary' : ''">{{ term.label }}</a-button>
+                <a-button type="primary" @click="onClickAddScoreColumn" :disabled="disabledByTerm()">新增學分欄</a-button>
             </div>
         </div>
         <div class="py-6">
@@ -24,14 +24,14 @@
                                 <th>操作</th>
                             </tr>
                         </thead>
-                        <draggable tag="tbody" class="dragArea list-group w-full" :list="score_columns" @change="rowChange">
-                            <transition-group v-for="(record, idx) in score_columns" :key="record.id">
+                        <draggable tag="tbody" class="dragArea list-group w-full" :list="scoreColumns" @change="rowChange">
+                            <transition-group v-for="(record, idx) in scoreColumns" :key="record.id">
                                 <tr v-if="record.term_id == selectedTerm">
                                     <td>
                                         <svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M8 6.5C9.38071 6.5 10.5 5.38071 10.5 4C10.5 2.61929 9.38071 1.5 8 1.5C6.61929 1.5 5.5 2.61929 5.5 4C5.5 5.38071 6.61929 6.5 8 6.5Z" fill="#000000"></path> <path d="M15.5 6.5C16.8807 6.5 18 5.38071 18 4C18 2.61929 16.8807 1.5 15.5 1.5C14.1193 1.5 13 2.61929 13 4C13 5.38071 14.1193 6.5 15.5 6.5Z" fill="#000000"></path> <path d="M10.5 12C10.5 13.3807 9.38071 14.5 8 14.5C6.61929 14.5 5.5 13.3807 5.5 12C5.5 10.6193 6.61929 9.5 8 9.5C9.38071 9.5 10.5 10.6193 10.5 12Z" fill="#000000"></path> <path d="M15.5 14.5C16.8807 14.5 18 13.3807 18 12C18 10.6193 16.8807 9.5 15.5 9.5C14.1193 9.5 13 10.6193 13 12C13 13.3807 14.1193 14.5 15.5 14.5Z" fill="#000000"></path> <path d="M10.5 20C10.5 21.3807 9.38071 22.5 8 22.5C6.61929 22.5 5.5 21.3807 5.5 20C5.5 18.6193 6.61929 17.5 8 17.5C9.38071 17.5 10.5 18.6193 10.5 20Z" fill="#000000"></path> <path d="M15.5 22.5C16.8807 22.5 18 21.3807 18 20C18 18.6193 16.8807 17.5 15.5 17.5C14.1193 17.5 13 18.6193 13 20C13 21.3807 14.1193 22.5 15.5 22.5Z" fill="#000000"></path> </g></svg>
                                     </td>
                                     <td>{{ record.column_letter }}</td>
-                                    <td>{{ year_terms.find(t => t.value == record.term_id).label }}</td>
+                                    <td>{{ yearTerms.find(t => t.value == record.term_id).label }}</td>
                                     <td>{{ record.field_label }}</td>
                                     <td>{{ record.formular }}</td>
                                     <td><span v-if="record.is_total">是</span>
@@ -39,7 +39,6 @@
                                     </td>
                                     <td><span v-if="record.merge">是</span></td>
                                     <td style="width:250px">
-                                        {{ record }}
                                         <a-button @click="onClickEditScoreColumn(record)" :disabled="disabledByTerm()">修改</a-button>
                                         <span v-if="record.for_transcript == 0">
                                             <a-button @click="onClickDeleteScoreColumn(record.id)"  :disabled="disabledByTerm()">刪除</a-button>
@@ -57,13 +56,13 @@
         <div class="py-6">
             <div class="mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <a-button type="primary" @click="saveScores">更新並保存</a-button>
-                    <a-button @click="sampleData">Sample Data</a-button>
+                    <a-button type="primary" @click="saveScores" :disabled="disabledByTerm()">更新並保存</a-button>
+                    <a-button @click="sampleData" :disabled="disabledByTerm()">Sample Data</a-button>
                     <table id="dataTable" ref="dataTable">
                         <thead>
                             <tr>
                                 <th width="100px">學生姓名</th>
-                                <template v-for="(column, idx) in score_columns">
+                                <template v-for="(column, idx) in scoreColumns">
                                     <th v-if="column.term_id == selectedTerm">
                                         <span :title="column.formular">
                                             ( {{ column.column_letter }} ) {{ column.field_label }}
@@ -74,10 +73,10 @@
                                 <td>全年總平均分</td>
                             </tr>
                         </thead>
-                        <template v-for="(student, sid) in students_scores">
+                        <template v-for="(student, sid) in studentsScores">
                             <tr>
                                 <td>{{ student['student_name'] }}</td>
-                                <template v-for="column in score_columns">
+                                <template v-for="column in scoreColumns">
                                     <template v-for="(score, cid) in student.scores">
                                         <td v-if="column.term_id == selectedTerm && column.id == cid" class="text-center">
                                             <span v-if="column.merge || column.formular">
@@ -97,7 +96,7 @@
                                         </td>
                                     </template>
                                 </template>
-                                <template v-for="column in score_columns">
+                                <template v-for="column in scoreColumns">
                                     <td v-if="column.term_id == 9">{{ student.scores[column.id].point }}</td>
                                 </template>
                             </tr>
@@ -110,7 +109,7 @@
         <a-modal v-model:visible="modal.isOpen" :title="modal.title" @ok="handleScoreColumnChange">
             <a-form :model="modal.data" name="course_score" ref="modalScoreColumn" @finish="onModalFinish" :label-col="{span:6}">
                 <a-form-item label="學段" :name="['term_id']" >
-                    <a-select v-model:value="modal.data.term_id" :options="year_terms" :disabled="true"/>
+                    <a-select v-model:value="modal.data.term_id" :options="yearTerms" :disabled="true"/>
                 </a-form-item>
                 <a-form-item label="學分欄名稱 " :name="['field_label']"
                     :rules="[{ required: true, message: 'Please input score column name' }]">
@@ -127,9 +126,10 @@
                     <a-input v-model:value="modal.data.description" />
                 </a-form-item>
 
-                <a-divider style="height: 2px; background-color: #7cb305" />
 
-                <div>
+                <div v-if="modal.data.can_merge">
+                    <a-divider style="height: 2px; background-color: #7cb305" />
+
                     <label>分數合計欄</label>
                     <ol class="ml-5">
                         <li v-for="(item, idx) in modal.data.merge" class="list-disc">
@@ -146,13 +146,11 @@
                             </div>
                         </li>
                     </ol>
-                </div>
-                {{ modal.data }}
-                <a-collapse v-if="$page.props.currentUserRoles.includes('admin')">
+                    <a-collapse v-if="$page.props.currentUserRoles.includes('admin')">
                     <a-collapse-panel key="1" header="新增分數合計">
                         <a-form-item label="科目">
                             <a-select v-model:value="merge.course_id"
-                                :options="klass_courses.map(c => ({ value: c.id, label: c.code + '-' + c.title_zh }))"
+                                :options="klassCourses.map(c => ({ value: c.id, label: c.code + '-' + c.title_zh }))"
                                 @change="onChangeMergeCourse"></a-select>
                         </a-form-item>
                         <a-form-item label="分數欄">
@@ -166,6 +164,8 @@
                         <a-button @click="addMerge">Add</a-button>
                     </a-collapse-panel>
                 </a-collapse>
+
+                </div>
 
             </a-form>
         </a-modal>
@@ -183,7 +183,7 @@ export default {
         AdminLayout,
         draggable: VueDraggableNext,
     },
-    props: ['year_terms', 'course', 'score_columns', 'students_scores', 'klass_courses'],
+    props: ['yearTerms', 'course', 'scoreColumns', 'studentsScores', 'klassCourses'],
     data() {
         return {
             breadcrumb:[
@@ -207,8 +207,8 @@ export default {
             tableCell: {
                 row: 0,
                 col: 0,
-                maxRow: this.students_scores.length,
-                maxCol: this.score_columns.length
+                maxRow: this.studentsScores.length,
+                maxCol: this.scoreColumns.length
             },
             scores: [],
             columns: [
@@ -321,6 +321,7 @@ export default {
         },
         updateScoreColumn(data) {
             //this.$inertia.put('/manage/score_column/'+data.id, data, {
+            console.log(data);
             this.$inertia.put(route("manage.scoreColumns.update", data.id), data, {
                 onSuccess: (page) => {
                     this.modal.mode = null;
@@ -337,7 +338,7 @@ export default {
         },
         saveScores() {
             var data = [];
-            Object.entries(this.students_scores).forEach(([sid, student]) => {
+            Object.entries(this.studentsScores).forEach(([sid, student]) => {
                 Object.entries(student.scores).forEach(([cid, score]) => {
                     data.push({
                         course_student_id: score.course_student_id,
@@ -347,12 +348,8 @@ export default {
                     })
                 })
             })
-            // axios.post(route('manage.score.update'),data)
-            //     .then(resp=> 
-            //         console.log("update "+resp.data+" records")
-            //     );
             console.log(data);
-            this.$inertia.post(route("manage.score.update"), data, {
+            this.$inertia.post(route("manage.course.scores.batchUpdate",this.course), data, {
                 onSuccess: (page) => {
                     console.log("update " + page)
                 },
@@ -379,7 +376,7 @@ export default {
             var fields = [];
             //change year total formular formular
             var termTotals = [];
-            this.score_columns.forEach((column, idx) => {
+            this.scoreColumns.forEach((column, idx) => {
                 if (column.is_total == 1) {
                     termTotals.push(column.column_letter);
                 }
@@ -394,7 +391,7 @@ export default {
             })
 
 
-            this.score_columns.forEach(column => {
+            this.scoreColumns.forEach(column => {
                 var formular = '';
                 fields[column.id] = { 'point': '', 'letter': column.column_letter };
                 if (column.formular !== null) {
@@ -420,11 +417,11 @@ export default {
                 console.log(row);
             })
             for (const [key, obj] of Object.entries(this.scores)) {
-                this.runFormular(this.score_columns, obj, key);
+                this.runFormular(this.scoreColumns, obj, key);
             }
         },
         runFormular(columns, row, courseStudentId) {
-            //console.log(this.students_scores);
+            //console.log(this.studentsScores);
             var fields = {};
             var termTotals = [];
             //init column letters
@@ -492,10 +489,10 @@ export default {
         },
         rowChange(event) {
             let i = 1;
-            this.score_columns.forEach(column => {
+            this.scoreColumns.forEach(column => {
                 column.sequence = i++
             })
-            this.$inertia.post(route("manage.scoreColumn.reorder"), this.score_columns, {
+            this.$inertia.post(route("manage.scoreColumn.reorder"), this.scoreColumns, {
                 onSuccess: (page) => {
                     console.log(page);
                 },
@@ -505,11 +502,11 @@ export default {
             });
         },
         sampleData() {
-            console.log(this.score_columns);
-            console.log(this.students_scores);
-            const total = this.score_columns
-            Object.entries(this.students_scores).forEach(([sid, student]) => {
-                this.score_columns.forEach(column => {
+            console.log(this.scoreColumns);
+            console.log(this.studentsScores);
+            const total = this.scoreColumns
+            Object.entries(this.studentsScores).forEach(([sid, student]) => {
+                this.scoreColumns.forEach(column => {
                     student.scores[column.id]['point'] = Math.floor(Math.random() * 100) + 1
                 })
             })
@@ -537,7 +534,7 @@ export default {
         //     });            
         // },
         getYearAverage(row) {
-            return row.scores[this.score_columns.find(c => c.term_id == 9).id]
+            return row.scores[this.scoreColumns.find(c => c.term_id == 9).id]
         },
         addMerge() {
             console.log(this.modal.data)
@@ -550,16 +547,16 @@ export default {
             this.modal.data.merge.push({ ...this.merge })
         },
         deleteMerge(idx) {
-            const selected = this.klass_courses.find(c => c.id == this.modal.data.merge[idx].course_id).title_zh;
+            const selected = this.klassCourses.find(c => c.id == this.modal.data.merge[idx].course_id).title_zh;
             if (confirm('Are you sure to delete: ' + selected)) {
                 this.modal.data.merge.splice(idx, 1)
             }
         },
         onChangeMergeCourse(courseId) {
             console.log(this.merge);
-            console.log(this.klass_courses)
+            console.log(this.klassCourses)
             this.merge.score_column_id = null;
-            var course = this.klass_courses.find(c => c.id == this.merge.course_id)
+            var course = this.klassCourses.find(c => c.id == this.merge.course_id)
             if (course) {
                 this.modal.data.scoreColumnOptions = course.score_columns.map(sc => ({ value: sc.id, label: sc.field_label }))
             } else {
@@ -568,7 +565,7 @@ export default {
             }
         },
         mergeItem(item) {
-            var course = this.klass_courses.find(c => c.id == item.course_id)
+            var course = this.klassCourses.find(c => c.id == item.course_id)
             if (course) {
                 var scoreFieldLabel = course.score_columns.find(sc => sc.id == item.score_column_id).field_label
                 return course.title_zh + ": " + scoreFieldLabel + " : " + item.percentage;
@@ -576,7 +573,7 @@ export default {
             return 'NaN';
         },
         yearFinalFormular() {
-            const yearFinal = this.score_columns.find(c => c.term_id == 9)
+            const yearFinal = this.scoreColumns.find(c => c.term_id == 9)
             return yearFinal ? yearFinal.formular : 'No year final formular';
         },
         disabledByTerm(){

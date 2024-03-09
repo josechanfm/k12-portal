@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Manage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ScoreColumn;
+use App\Models\Score;
+use App\Models\Course;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Support\Str;
 
@@ -46,6 +48,8 @@ class ScoreColumnController extends Controller
         $data['for_transcript']=false;
         $data['is_total']=false;
         ScoreColumn::create($data);
+        Course::find($data['course_id'])->upsertMergeScoreColumn();
+
         return redirect()->back();
     }
 
@@ -81,8 +85,38 @@ class ScoreColumnController extends Controller
     public function update(Request $request, $id)
     {
         $data=$request->all();
-        ScoreColumn::find($id)->update($data);
+        //dd($data);
+        $scoreColumn=ScoreColumn::find($id);
+        $scoreColumn->update($data);
+        $scoreColumn->save();
+        Course::find($scoreColumn->course_id)->upsertMergeScoreColumn();
+
+        // $this->upsertMergeColumn(
+        //     Course::find($scoreColumn->course_id),
+        //     $scoreColumn
+        // );
+
         return redirect()->back();
+    }
+
+    private function upsertMergeColumn($course,$scoreColumn){
+        $tmp=[];
+        foreach($course->students as $student){
+            $tmp[$student->pivot->student_id]=[
+                'course_student_id'=>$student->pivot->course_student_id,
+                'score_column_id'=>$scoreColumn->id,
+                'student_id'=>$student->pivot->student_id,
+                'point'=>0
+            ];
+        };
+        forEach($scoreColumn->merge as $merge){
+            $StudentScores=Score::where('score_column_id',$merge['score_column_id'])->get();
+            forEach($StudentScores as $score){
+                $tmp[$score->student_id]['point']+=($score->point * $merge['percentage'])/100;
+            }
+        }
+        Score::upsert($tmp,['course_student_id','student_id','score_column_id'],['point']);
+        return true;
     }
 
     /**

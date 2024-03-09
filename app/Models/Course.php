@@ -199,4 +199,31 @@ class Course extends Model
     // public static function students_outcomes($kid){
     //     return Course::where('klass_id',$kid)->whereNot('type','SUB')->get();
     // }
+
+    public function upsertMergeScoreColumn(){
+        forEach($this->scoreColumns as $scoreColumn){
+            if($scoreColumn->can_merge && $scoreColumn->merge){
+                $tmp=[];
+                foreach($this->students as $student){
+                    $tmp[$student->pivot->student_id]=[
+                        'course_student_id'=>$student->pivot->course_student_id,
+                        'score_column_id'=>$scoreColumn->id,
+                        'student_id'=>$student->pivot->student_id,
+                        'point'=>0
+                    ];
+                };
+                forEach($scoreColumn->merge as $merge){
+                    $StudentScores=Score::where('score_column_id',$merge['score_column_id'])->get();
+                    forEach($StudentScores as $score){
+                        $tmp[$score->student_id]['point']+=($score->point * $merge['percentage'])/100;
+                    }
+                }
+                Score::upsert($tmp,['course_student_id','student_id','score_column_id'],['point']);
+       
+            }
+        }
+
+        return true;
+
+    }
 }

@@ -58,7 +58,7 @@
                                 <td class="text-left">{{ course.active }}</td>
                                 <td class="text-left">{{ course.unit }}</td>
                                 <th class="text-left">
-                                    <inertia-link :href="route('manage.course.scores', course.id)"
+                                    <inertia-link :href="route('manage.course.scores.index', course.id)"
                                         class="ant-btn">學分</inertia-link>
                                     <inertia-link :href="route('manage.course.makeups', course.id)"
                                         class="ant-btn">補考</inertia-link>

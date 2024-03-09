@@ -23,9 +23,10 @@ return new class extends Migration
             $table->string('field_label');
             $table->string('scheme')->nullable();
             $table->string('formular')->nullable();
+            $table->boolean('can_merge')->default(false);
             $table->string('merge')->nullable();
             $table->string('description')->nullable();
-            $table->boolean('is_total')->nullable(false);
+            $table->boolean('is_total')->default(false);
             $table->boolean('for_transcript')->default(false);
             $table->timestamps();
         });

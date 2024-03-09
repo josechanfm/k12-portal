@@ -22,7 +22,6 @@ class Score extends Model
         return $this->belongsToMany(Student::class,'klass_student','student_id','klass_id');
     }
     static function updateScore($data){
-        
         foreach( $data as $i=>$d){
             if($d['point']==''){ // unsert record if point value is empty
                 unset($data[$i]);
