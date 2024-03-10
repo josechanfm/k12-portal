@@ -148,10 +148,8 @@ Route::group([
         Route::resource('/klasses',App\Http\Controllers\Manage\KlassController::class)->names('manage.klasses');
         Route::get('/klass_scores/{klassId}',[App\Http\Controllers\Manage\KlassController::class,'klass_scores']);
         Route::get('klass/{klass}/students',[App\Http\Controllers\Manage\KlassController::class,'students'])->name('manage.klass.students');
-        // Route::post('/scores/update',[App\Http\Controllers\Manage\ScoreController::class,'update'])->name('manage.scores.update');
-        // Route::post('/score_column/reorder',[App\Http\Controllers\Manage\ScoreColumnController::class,'reorder'])->name('manage.score_column.reorder');
-        // Route::post('/score_column/update_is_total',[App\Http\Controllers\Manage\ScoreColumnController::class,'update_is_total'])->name('manage.score_column.update_is_total');
-        Route::resource('score_columns',App\Http\Controllers\Manage\ScoreColumnController::class)->names('manage.scoreColumns');
+
+
         Route::get('/klass/{klass}/courses',[App\Http\Controllers\Manage\CourseController::class,'klass'])->name('manage.klass.courses');
         Route::resource('klass/{klass}/behaviours',App\Http\Controllers\Manage\BehaviourController::class)->names('manage.klass.behaviours');
         Route::get('klass/{klass}/behaviour/adjust',[App\Http\Controllers\Manage\BehaviourController::class,'adjust'])->name('manage.klass.behaviour.adjust');
@@ -167,7 +165,18 @@ Route::group([
         Route::resource('/teachers',App\Http\Controllers\Manage\TeacherController::class);
         Route::get('teaching/{teacherId}',[App\Http\Controllers\Manage\TeacherController::class,'teaching'])->name('manage.teaching');   
         //Route::get('/course/{course}/scores',[App\Http\Controllers\Manage\CourseController::class,'scores'])->name('manage.course.scores');
-        Route::resource('/course/{course}/scores',App\Http\Controllers\Manage\ScoreController::class)->names('manage.course.scores');
+
+        Route::resource('course/{course}/scores',App\Http\Controllers\Manage\ScoreController::class)->names('manage.course.scores');
+        // Route::post('/scores/update',[App\Http\Controllers\Manage\ScoreController::class,'update'])->name('manage.scores.update');
+        //Route::post('/score_column/update_is_total',[App\Http\Controllers\Manage\ScoreColumnController::class,'update_is_total'])->name('manage.score_column.update_is_total');
+        Route::post('course/{course}/score_column/reorder',[App\Http\Controllers\Manage\ScoreColumnController::class,'reorder'])->name('manage.course.scoreColumn.reorder');
+        Route::resource('course/{course}/score_columns',App\Http\Controllers\Manage\ScoreColumnController::class)->names('manage.course.scoreColumns');
+
+
+
+
+
+
         Route::post('/course/{course}/scores/batch_update',[App\Http\Controllers\Manage\ScoreController::class,'batchUpdate'])->name('manage.course.scores.batchUpdate');
         Route::get('/course/{course}/makeups',[App\Http\Controllers\Manage\CourseController::class,'makeups'])->name('manage.course.makeups');
         Route::get('/klass/{klass}/final_scores',[App\Http\Controllers\Manage\KlassController::class,'finalScores'])->name('manage.klass.finalScores');

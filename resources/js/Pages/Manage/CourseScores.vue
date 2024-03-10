@@ -2,10 +2,11 @@
     <AdminLayout :title="course.klass.tag+'科學分管理'" :breadcrumb="breadcrumb">
         <div class="py-6">
             <div class="mx-auto sm:px-6 lg:px-8">
+                <div>學段狀態: {{ showCurrentTerm() }}</div>
                 <inertia-link :href="route('manage.klasses.show', course.klass_id)" class="ant-btn mr-4">Back</inertia-link>
                 <a-button v-for="term in yearTerms" @click="selectedTerm = term.value" class="mr-4"
                     :type="selectedTerm == term.value ? 'primary' : ''">{{ term.label }}</a-button>
-                <a-button type="primary" @click="onClickAddScoreColumn" :disabled="disabledByTerm()">新增學分欄</a-button>
+                <a-button type="secondary" @click="onClickAddScoreColumn" :disabled="disabledByTerm()">新增學分欄</a-button>
             </div>
         </div>
         <div class="py-6">
@@ -15,12 +16,11 @@
                         <thead>
                             <tr>
                                 <td width="20px">#</td>
-                                <th>排序</th>
+                                <th>代號</th>
                                 <th>學段</th>
                                 <th>學分欄名稱</th>
                                 <th>計算方式</th>
-                                <th>學期總分</th>
-                                <th>分數合計</th>
+                                <th>成積表分數</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
@@ -34,14 +34,18 @@
                                     <td>{{ yearTerms.find(t => t.value == record.term_id).label }}</td>
                                     <td>{{ record.field_label }}</td>
                                     <td>{{ record.formular }}</td>
-                                    <td><span v-if="record.is_total">是</span>
-                                        <!-- <a-switch v-model:checked="record.is_total" :checked-value="1" :un-checked-value="0" @click="onChangeTotalColumn(record)"/> -->
-                                    </td>
-                                    <td><span v-if="record.merge">是</span></td>
+                                    <td><span v-if="record.for_transcript">是</span></td>
                                     <td style="width:250px">
                                         <a-button @click="onClickEditScoreColumn(record)" :disabled="disabledByTerm()">修改</a-button>
                                         <span v-if="record.for_transcript == 0">
-                                            <a-button @click="onClickDeleteScoreColumn(record.id)"  :disabled="disabledByTerm()">刪除</a-button>
+                                            <a-popconfirm
+                                                title="是否確定刪除？刪除後不可返回。"
+                                                ok-text="Yes"
+                                                cancel-text="No"
+                                                @confirm="onClickDeleteScoreColumn(record.id)"
+                                            >
+                                                <a-button :disabled="disabledByTerm()">刪除</a-button>
+                                            </a-popconfirm>
                                         </span>
                                     </td>
                                 </tr>
@@ -56,7 +60,7 @@
         <div class="py-6">
             <div class="mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <a-button type="primary" @click="saveScores" :disabled="disabledByTerm()">更新並保存</a-button>
+                    <a-button type="primary" @click="storeAllScores" :disabled="disabledByTerm()">更新並保存</a-button>
                     <a-button @click="sampleData" :disabled="disabledByTerm()">Sample Data</a-button>
                     <table id="dataTable" ref="dataTable">
                         <thead>
@@ -85,7 +89,7 @@
                                             <span v-else>
                                                 <a-input v-if="!disabledByTerm()"
                                                     v-model:value="score.point" 
-                                                    @blur="onScoreChange(student, cid)"
+                                                    @blur="onScoreCellChange(student)"
                                                     @keyup.arrow-keys="onKeypressed"
                                                 />
                                                 <span v-else>
@@ -118,7 +122,7 @@
                 <a-form-item label="序號" :name="['sequence']">
                     <a-input v-model:value="modal.data.sequence" />
                 </a-form-item>
-                <a-form-item label="計算方式" :name="['formular']">
+                <a-form-item label="計算公式" :name="['formular']">
                     <a-input v-model:value="modal.data.formular"
                         @change="() => { modal.data.formular = modal.data.formular.toUpperCase() }" />
                 </a-form-item>
@@ -305,11 +309,20 @@ export default {
             this.modal.isOpen = true;
         },
         onClickDeleteScoreColumn(recordId) {
+            this.$inertia.delete(route("manage.course.scoreColumns.destroy",{course:this.course.id,score_column:recordId}), {
+                onSuccess: (page) => {
+                    console.log(page)
+                },
+                onError: (error) => {
+                    console.log(error);
+                }
+            });
+
             console.log("Need to check if the column id already use in score table. need to double confirm or shows the existing score record again.");
             console.log(recordId);
         },
         createScoreColumn(data) {
-            this.$inertia.post(route("manage.scoreColumns.store"), data, {
+            this.$inertia.post(route("manage.course.scoreColumns.store",this.course), data, {
                 onSuccess: (page) => {
                     this.modal.mode = null;
                     this.modal.isOpen = false;
@@ -322,11 +335,11 @@ export default {
         updateScoreColumn(data) {
             //this.$inertia.put('/manage/score_column/'+data.id, data, {
             console.log(data);
-            this.$inertia.put(route("manage.scoreColumns.update", data.id), data, {
+            this.$inertia.put(route("manage.course.scoreColumns.update", {course:this.course,score_column:data.id}), data, {
                 onSuccess: (page) => {
                     this.modal.mode = null;
                     this.modal.isOpen = false;
-                    this.updateAllScores();
+                    this.storeAllScores();
                 },
                 onError: (error) => {
                     console.log(error);
@@ -336,9 +349,10 @@ export default {
         onModalFinish() {
             console.log("modal finish");
         },
-        saveScores() {
+        storeAllScores() {
             var data = [];
             Object.entries(this.studentsScores).forEach(([sid, student]) => {
+                this.onScoreCellChange(student);
                 Object.entries(student.scores).forEach(([cid, score]) => {
                     data.push({
                         course_student_id: score.course_student_id,
@@ -348,7 +362,6 @@ export default {
                     })
                 })
             })
-            console.log(data);
             this.$inertia.post(route("manage.course.scores.batchUpdate",this.course), data, {
                 onSuccess: (page) => {
                     console.log("update " + page)
@@ -371,8 +384,9 @@ export default {
             }).catch(err => {
                 console.log(err);
             })
+
         },
-        onScoreChange(student, columnId) {
+        onScoreCellChange(student) {
             var fields = [];
             //change year total formular formular
             var termTotals = [];
@@ -411,14 +425,6 @@ export default {
 
             //init column letters
             //this.runFormular(this.score_columns, this.scores[key], key);
-        },
-        updateAllScores() {
-            this.scores.forEach(row => {
-                console.log(row);
-            })
-            for (const [key, obj] of Object.entries(this.scores)) {
-                this.runFormular(this.scoreColumns, obj, key);
-            }
         },
         runFormular(columns, row, courseStudentId) {
             //console.log(this.studentsScores);
@@ -468,31 +474,13 @@ export default {
                     }
                 }
             });
-            // //calculate year total, average terms total column
-            // var sum=0;
-            // var cnt=0;
-            // columns.forEach((column,idx)=>{
-            //     if(column.is_total==1 && column.term_id!=9){
-            //         cnt++
-            //         sum+=eval(row.scores[column.id])
-            //     }
-            // })
-            // //give year total to data column, default was set by term_id==9
-            // columns.forEach((column,idx)=>{
-            //     if(column.term_id==9){
-            //         row.scores[column.id]=sum/cnt
-            //     }
-            // })
-        },
-        countYearAverage() {
-            console.log(this.scores);
         },
         rowChange(event) {
             let i = 1;
             this.scoreColumns.forEach(column => {
                 column.sequence = i++
             })
-            this.$inertia.post(route("manage.scoreColumn.reorder"), this.scoreColumns, {
+            this.$inertia.post(route("manage.course.scoreColumn.reorder",this.course), this.scoreColumns, {
                 onSuccess: (page) => {
                     console.log(page);
                 },
@@ -502,37 +490,14 @@ export default {
             });
         },
         sampleData() {
-            console.log(this.scoreColumns);
-            console.log(this.studentsScores);
             const total = this.scoreColumns
             Object.entries(this.studentsScores).forEach(([sid, student]) => {
                 this.scoreColumns.forEach(column => {
                     student.scores[column.id]['point'] = Math.floor(Math.random() * 100) + 1
                 })
             })
-            this.updateAllScores();
+            this.storeAllScores();
         },
-        // onChangeTotalColumn(record){
-        //     if(confirm('Are you sure??')==false){
-        //         record.is_total=!record.is_total;
-        //         return false;
-        //     }
-        //     //set all is_total to false, according to term_id selected
-        //     this.score_columns.map(item=>{
-        //         if(item.term_id==this.selectedTerm)
-        //             item.is_total=0
-        //     })
-        //     //set the select score column as is_total=true
-        //     record.is_total=1;
-        //     this.$inertia.post(route("manage.scoreColumn.update_is_total"), this.score_columns, {
-        //             onSuccess: (page) => {
-        //                 console.log(page);
-        //             },
-        //             onError: (error) => {
-        //                 console.log(error);
-        //             }
-        //     });            
-        // },
         getYearAverage(row) {
             return row.scores[this.scoreColumns.find(c => c.term_id == 9).id]
         },
@@ -578,7 +543,14 @@ export default {
         },
         disabledByTerm(){
             return !(this.selectedTerm==this.course.current_term);
-        }
+        },
+        showCurrentTerm(){
+            if(this.course.current_term==0){
+                return '已上鎖';
+            }else{
+                return this.yearTerms.find(t=>t.value==this.course.current_term).label;
+            }
+    }
 
     },
 

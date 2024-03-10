@@ -37,7 +37,7 @@
                                     <td>{{ course.student_count }}</td>
                                     <td>
                                         <inertia-link :href="route('teacher.course.behaviours.index',course.id)" class="ant-btn">操行</inertia-link>
-                                        <inertia-link :href="route('manage.course.scores',course.id)" class="ant-btn">學分</inertia-link>
+                                        <inertia-link :href="route('manage.course.scores.index',course.id)" class="ant-btn">學分</inertia-link>
                                         <a-button @click="course.operation=!course.operation">其他</a-button>
                                     </td>
                                 </tr>

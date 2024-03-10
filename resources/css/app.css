@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 .ant-btn-secondary{
-    background: lightgreen!important;
-    border-color: lightgreen!important;
+    background: #10b981 !important;
+    border-color: #10b981 !important;
+    color: white!important;
 }

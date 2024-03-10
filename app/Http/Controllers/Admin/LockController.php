@@ -32,12 +32,19 @@ class LockController extends Controller
         return redirect()->back();
     }
     public function klass($klassId, $termId){
+        
         $klass=Klass::find($klassId);
         if($termId!=0){ //班別下所有科目同時修改學段,同時更新班別current_term
             Course::whereBelongsTo($klass)->update(['current_term'=>$termId]);
             $klass->current_term=$termId;
             $klass->save();
         }else{//班別上鎖,科目不可以修改學段
+            
+            if($klass->lock_courses){
+                Course::whereBelongsTo($klass)->update(['current_term'=>$klass->current_term]);
+            }else{
+                Course::whereBelongsTo($klass)->update(['current_term'=>0]);
+            }
             $klass->lock_courses=!$klass->lock_courses;
             $klass->save();
         }

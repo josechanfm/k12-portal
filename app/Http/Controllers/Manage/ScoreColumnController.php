@@ -38,7 +38,7 @@ class ScoreColumnController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Course $course, Request $request)
     {
         //dd($request->all());
         $letter=ScoreColumn::where('course_id',$request->course_id)->orderBy('column_letter','DESC')->first()->column_letter;
@@ -82,11 +82,11 @@ class ScoreColumnController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Course $course, ScoreColumn $scoreColumn, Request $request)
     {
         $data=$request->all();
         //dd($data);
-        $scoreColumn=ScoreColumn::find($id);
+        //$scoreColumn=ScoreColumn::find($id);
         $scoreColumn->update($data);
         $scoreColumn->save();
         Course::find($scoreColumn->course_id)->upsertMergeScoreColumn();
@@ -125,9 +125,11 @@ class ScoreColumnController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Course $course, ScoreColumn $scoreColumn)
     {
-        //
+        Score::where('score_column_id',$scoreColumn->id)->delete();
+        $scoreColumn->delete();
+        return redirect()->back();
     }
 
     public function reorder(Request $request){

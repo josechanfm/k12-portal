@@ -11,7 +11,6 @@
               </template>
             </tr>
           </thead>
-
           <tbody class="ant-table-tbody">
             <tr v-for="(student, ksid) in behaviours['students']">
               <td>
@@ -19,7 +18,7 @@
               </td>
               <template v-for="term in yearTerms">
                 <td>
-                  <template v-if="term.value == currentTerm.value">
+                  <template v-if="term.value == currentTermId">
                     <a-input-number
                       v-model:value="behaviours['scores'][ksid][term.value]['score']"
                       :min="0"
@@ -46,7 +45,7 @@
 <script>
 export default {
   components: {},
-  props: ["yearTerms", "currentTerm", "behaviours"],
+  props: ["yearTerms", "currentTermId", "behaviours"],
   data() {
     return {
       tempBehaviour: null,

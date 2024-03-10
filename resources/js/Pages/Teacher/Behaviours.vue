@@ -16,7 +16,8 @@
             <div v-else-if="klass">
                 <p>{{klass.tag}}</p>
             </div>
-            <BehaviourTable :yearTerms="yearTerms" :currentTerm="currentTerm" :behaviours="behaviours"/>
+            {{ course.current_term }}
+            <BehaviourTable :yearTerms="yearTerms" :currentTermId="course.current_term" :behaviours="behaviours"/>
         </div>
     </AdminLayout>
 </template>

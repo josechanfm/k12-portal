@@ -6,13 +6,15 @@
             </div>
             <a-typography-title :level="4">{{ staff.name_zh }}</a-typography-title>
             <div v-if="course">
+                <p>科目操行</p>
                 <p>{{course.klass.tag}}</p>
                 <p>{{course.code}}-{{course.title_zh}}</p>
             </div>
             <div v-else-if="klass">
+                <p>班別操行</p>
                 <p>{{klass.tag}}</p>
             </div>
-            <BehaviourTable :yearTerms="yearTerms" :currentTerm="currentTerm" :behaviours="behaviours"/>
+            <BehaviourTable :yearTerms="yearTerms" :currentTermId="this.klass.lock_courses?0:this.klass.current_term" :behaviours="behaviours"/>
         </div>
     </AdminLayout>
 </template>
@@ -28,7 +30,7 @@ export default {
         BehaviourTable,
         KlassSelector
     },
-    props: ['year','yearTerms','currentTerm','staff','course','klass','behaviours'],
+    props: ['year','yearTerms','course','currentTerm','staff','klass','behaviours'],
     data() {
         return {
             breadcrumb:[
