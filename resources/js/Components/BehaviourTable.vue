@@ -5,6 +5,7 @@
         <table style="table-layout: auto" ref="behaviourTable">
           <thead class="ant-table-thead">
             <tr>
+              <th>學生編號</th>
               <th>學生姓名</th>
               <template v-for="term in yearTerms">
                 <th>{{ term.label }}操行分</th>
@@ -13,6 +14,7 @@
           </thead>
           <tbody class="ant-table-tbody">
             <tr v-for="(student, ksid) in behaviours['students']">
+              <td>{{ student.pivot.student_number}}</td>
               <td>
                 {{ student.name_zh }}
               </td>

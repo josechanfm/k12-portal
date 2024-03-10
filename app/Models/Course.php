@@ -87,37 +87,23 @@ class Course extends Model
     public function behaviours(){
         $terms=Config::item('year_terms');
         $staff=auth()->user()->staff;
-        $klass=$this->klass;
         $students=$this->students;
         $actor="SUBJECT";
         $referenceId=$this->id;
         $data=[];
-        // collect($students)->map(function($student) use($terms,$staff,$klass, $referenceId, $actor){
-        //     $klassStudentId=KlassStudent::where('klass_id',$klass->id)->where('student_id',$student->id)->pluck('id')->first();
-        //     $student->behaviours=$student->getBehaviours($klassStudentId, $staff, $terms, $referenceId , $actor);
-        // });
         foreach($students as $student){
-            $klassStudentId=KlassStudent::where('klass_id',$klass->id)->where('student_id',$student->id)->pluck('id')->first();
-            $data['students'][$klassStudentId]=$student;
-            $data['scores'][$klassStudentId]=$student->getBehaviours($klassStudentId, $staff, $terms, $referenceId , $actor);
+            $klassStudent=KlassStudent::where('klass_id',$this->klass_id)->where('student_id',$student->id)->first();
+            $student->pivot->student_number=$klassStudent->student_number;
+            $data['students'][$klassStudent->id]=$student;
+            $data['scores'][$klassStudent->id]=$student->getBehaviours($klassStudent->id, $staff, $terms, $referenceId , $actor);
         }
         return $data;
         //return $students;
     }
     public function studentsScores(){
+
         $students=$this->students;
         $scores=$this->allScores;
-        // foreach($students as $student){
-        //     echo json_encode($student->pivot);
-        //     echo '<br>';
-
-        // };
-        // foreach($scores as $score){
-        //     echo json_encode($score);
-        //     echo '<br>';
-        // }
-        //dd($scores);
-        // dd($scores[2]);
         $scoreColumns=$this->scoreColumns;
         $table=[];
         foreach($students as $student){
@@ -125,6 +111,7 @@ class Course extends Model
             $tmp['student_id']=$student->id;
             $tmp['student_name']=$student->name_zh;
             $tmp['course_student_id']=$student->pivot->course_student_id;
+            $tmp['student_number']=KlassStudent::where('klass_id',$this->klass_id)->where('student_id',$student->id)->pluck('student_number')->first();
 
             foreach($scoreColumns as $column){
                 $tmp['scores'][$column->id]=[];
@@ -133,17 +120,6 @@ class Course extends Model
                         $score['column_letter']=$column->column_letter;
                         $tmp['scores'][$score->score_column_id]=$score;
                     }
-                    // if($column->merge){
-                    //     foreach($column->merge as $merge){
-                    //         $mergeScores=Score::where('score_column_id',$merge['score_column_id'])
-                    //             ->where('student_id',$student->pivot->student_id)
-                    //             ->first();
-                    //         if($mergeScores){
-                    //             $tmp['scores'][$column->id]['point']=$mergeScores->point;
-                    //         }
-                    //     }
-                    // }
-    
                 }
                 if(empty($tmp['scores'][$column->id])){
                     $tmp['scores'][$column->id]=(object)[

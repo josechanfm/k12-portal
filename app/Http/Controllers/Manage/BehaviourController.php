@@ -35,14 +35,9 @@ class BehaviourController extends Controller
             ]);
     
         }
-        $year=Year::find(Year::currentYear()->id);
-        $year->klasses;
-        $year->grades;
         //dd($klass->behaviours('DIRECTOR')['scores'][316][1]);
         return Inertia::render('Manage/KlassBehaviours',[
-            'year'=>$year,
             'yearTerms'=>Config::item('year_terms'),
-            'currentTerm'=>Year::currentTerm(),
             'staff'=>auth()->user()->staff,
             'klass'=>$klass,
             'behaviours'=>$klass->behaviours('DIRECTOR')
@@ -128,14 +123,8 @@ class BehaviourController extends Controller
     }
 
     public function adjust(Klass $klass){
-        $year=Year::find(Year::currentYear()->id);
-        $year->klasses;
-        $year->grades;
         $klass->grade;
-        //dd($klass->behaviourSummary());
         return Inertia::render('Manage/BehaviourAdjust',[
-            'year'=>$year,
-            'yearTerms'=>Config::item('year_terms'),
             'currentTerm'=>Year::currentTerm(),
             'staff'=>auth()->user()->staff,
             'klass'=>$klass,

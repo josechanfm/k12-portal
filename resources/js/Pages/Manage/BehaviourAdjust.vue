@@ -5,8 +5,9 @@
     </template>
     <div>
       <div class="py-5">
-        <KlassSelector routePath="manage.klass.behaviour.adjust" :param="[]" showTerms="true" @changeTerm="changeSelectedTerm"/>
+        <KlassSelector routePath="manage.klass.behaviour.adjust" :param="[]" showTerms="true" @changeTerm="changeTerm" :currentKlass="klass" />
       </div>
+      
       <a-typography-title :level="4" v-if="staff">{{ staff.name_zh }}</a-typography-title>
       <div v-if="course">
         <p>{{ course.klass.tag }}</p>
@@ -22,9 +23,10 @@
             <table style="table-layout: auto" id="dataTable" ref="dataTable">
               <thead class="ant-table-thead">
                 <tr>
-                  <th>Student Name</th>
-                  <th>訓導</th>
-                  <th>調整</th>
+                  <th>學生編號</th>
+                  <th width="150px">學生姓名</th>
+                  <th width="50px">訓導</th>
+                  <th width="50px">調整</th>
                   <th>總分</th>
                   <th>班主任</th>
                   <th v-for="c in klass.courses">
@@ -33,8 +35,9 @@
                 </tr>
               </thead>
               <tr v-for="(student,ksid) in behaviours['students']">
-                <td width="150px">{{ student.name_zh }}</td>
-                <td width="50px">
+                <td class="text-center">{{ student.pivot.student_number }}</td>
+                <td>{{ student.name_zh }}</td>
+                <td>
                   <span v-if="behaviours['director'][ksid][selectedTermId]">
                     <a-input 
                             v-model:value="behaviours['director'][ksid][selectedTermId].score"
@@ -44,23 +47,13 @@
                              class="text-center"
                         />
                   </span>
-                    <!-- <span v-if="student.director[selectedTermId]">
-                        <a-input 
-                            v-model:value="student.director[selectedTermId].score"
-                            @blur="onBlurScoreInput(student.director[selectedTermId])"
-                            @focus="onFocusScoreInput(student.director[selectedTermId])"
-                            @keyup.arrow-keys="onKeypressed"
-                             class="text-center"
-                        />
-                        {{ student.director[selectedTermId].score_total }}
-                    </span> -->
                 </td>
-                <td width="50px">
+                <td>
                     <span v-if="behaviours['adjust'][ksid][selectedTermId]">
                         <a-input 
                             v-model:value="behaviours['adjust'][ksid][selectedTermId].score"
-                            @blur="onBlurScoreInput(behaviours['adjust'][ksid][selectedTermId])"
                             @focus="onFocusScoreInput(behaviours['adjust'][ksid][selectedTermId])"
+                            @blur="onBlurScoreInput(behaviours['adjust'][ksid][selectedTermId])"
                             @keyup.arrow-keys="onKeypressed"
                             class="text-center"
                         />
@@ -101,13 +94,11 @@ export default {
     KlassSelector
   },
   props: [
-    "year",
-    "yearTerms",
-    "currentTerm",
     "staff",
     "course",
     "klass",
     "behaviours",
+    
   ],
   data() {
     return {
@@ -124,7 +115,7 @@ export default {
     };
   },
   mounted() {
-    this.selectedTermId = this.currentTerm.value;
+    this.selectedTermId = this.klass.current_term;
         //add Click EventListenter to dataTable
         this.$refs.dataTable.addEventListener('click', (e) => {
             this.tableCell.row = e.target.closest('tr').rowIndex;
@@ -172,10 +163,7 @@ export default {
       this.tempBehaviour = { ...behaviour };
     },
     onBlurScoreInput(behaviour) {
-      console.log('bb');
-
       if (this.tempBehaviour.score === behaviour.score) { return false }
-      console.log('aa');
       axios.post(route("teacher.course.behaviours.store", behaviour.reference_id),behaviour)
            .then((resp) => console.log(resp.data) );
     },
@@ -200,7 +188,12 @@ export default {
     },
     changeSelectedTerm(termId){
       this.selectedTermId=termId
+    },
+    changeTerm(termId){
+      this.selectedTermId=termId;
+      
     }
+
 
   }
 };

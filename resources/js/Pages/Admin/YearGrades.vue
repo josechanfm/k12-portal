@@ -30,7 +30,6 @@
                         cancel-text="No"
                         @confirm="lockTranscript(record)"
                     >
-                    <a-button >鎖定成積表</a-button>
                     </a-popconfirm>
                 </template>
                 <template v-if="column.dataIndex=='active'">

@@ -22,8 +22,7 @@ class BehaviourController extends Controller
         if($klass->isKlassHead() ){
             return Inertia::render('Teacher/Behaviours',[
                 'yearTerms'=>Config::item('year_terms'),
-                'currentTerm'=>Year::currentTerm(),
-                'staff'=>auth()->user()->staff,
+                'staff'=>auth()->user()->staff, 
                 //'course'=>$course,
                 'klass'=>$klass,
                 'behaviours'=>$klass->behaviours('KLASS_HEAD')
@@ -32,26 +31,16 @@ class BehaviourController extends Controller
     }
     public function index(Course $course)
     {
-        //dd($staff->coursesBehaviours[0]->studentsBehaviours);
-        //dd(in_array(2,$course->subject_head_ids));
-        // if($course->isTeacher() || $course->isSubjectHead()){
-        
+        $course->klass;
         if($course->isTeacher() ){
             return Inertia::render('Teacher/Behaviours',[
                 'yearTerms'=>Config::item('year_terms'),
-                'currentTerm'=>Year::currentTerm(),
                 'staff'=>auth()->user()->staff,
+                //'klass'=>$course->klass,
                 'course'=>$course,
                 'behaviours'=>$course->behaviours()
             ]);
         }
-        // if($course->isKlassHead() ){
-        //     return Inertia::render('Teacher/Behaviours',[
-        //         'staff'=>auth()->user()->staff,
-        //         'behaviours'=>$course->behaviours()
-        //     ]);
-        // }
-
         return Inertia::render('Error',[
             'message'=>"You are not subject teacher."
         ]);

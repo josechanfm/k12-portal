@@ -1,5 +1,5 @@
 <template>
-    <AdminLayout title="Dashboard">
+    <AdminLayout :title="course?'科目操行':'班別操行'">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Teacher Dashboard
@@ -10,14 +10,17 @@
                 not included setup of year, class or subject etc.</p>
             <a-typography-title :level="4">{{ staff.name_zh }}</a-typography-title>
             <div v-if="course">
+                <div>學段狀態: {{ showCurrentTerm() }}</div>
                 <p>{{course.klass.tag}}</p>
                 <p>{{course.code}}-{{course.title_zh}}</p>
+                <BehaviourTable :yearTerms="yearTerms" :currentTermId="course.current_term" :behaviours="behaviours"/>
             </div>
             <div v-else-if="klass">
+                <div>學段狀態: {{ showCurrentTerm() }}</div>
                 <p>{{klass.tag}}</p>
+                <BehaviourTable :yearTerms="yearTerms" :currentTermId="klass.current_term" :behaviours="behaviours"/>
             </div>
-            {{ course.current_term }}
-            <BehaviourTable :yearTerms="yearTerms" :currentTermId="course.current_term" :behaviours="behaviours"/>
+            
         </div>
     </AdminLayout>
 </template>
@@ -31,7 +34,7 @@ export default {
         AdminLayout,
         BehaviourTable
     },
-    props: ['yearTerms','currentTerm','staff','course','klass','behaviours'],
+    props: ['yearTerms','staff','course','klass','behaviours'],
     data() {
         return {
             tempBehaviour:null,
@@ -64,7 +67,21 @@ export default {
             }else{
                 return null
             }
+        },
+        showCurrentTerm(){
+            if(this.course){
+                var currentTerm=this.course.current_term
+            }else{
+                var currentTerm=this.klass.current_term
+            }
+
+            if(currentTerm==0){
+                return '已上鎖';
+            }else{
+                return this.yearTerms.find(t=>t.value==currentTerm).label;
+            }
         }
+
 
     },
 }

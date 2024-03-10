@@ -65,7 +65,8 @@
                     <table id="dataTable" ref="dataTable">
                         <thead>
                             <tr>
-                                <th width="100px">學生姓名</th>
+                                <th>學生編號</th>
+                                <th>學生姓名</th>
                                 <template v-for="(column, idx) in scoreColumns">
                                     <th v-if="column.term_id == selectedTerm">
                                         <span :title="column.formular">
@@ -79,7 +80,8 @@
                         </thead>
                         <template v-for="(student, sid) in studentsScores">
                             <tr>
-                                <td>{{ student['student_name'] }}</td>
+                                <td class="text-center">{{ student.student_number }}</td>
+                                <td>{{ student.student_name }}</td>
                                 <template v-for="column in scoreColumns">
                                     <template v-for="(score, cid) in student.scores">
                                         <td v-if="column.term_id == selectedTerm && column.id == cid" class="text-center">
@@ -101,7 +103,7 @@
                                     </template>
                                 </template>
                                 <template v-for="column in scoreColumns">
-                                    <td v-if="column.term_id == 9">{{ student.scores[column.id].point }}</td>
+                                    <td v-if="column.term_id == 9" class="text-center">{{ student.scores[column.id].point }}</td>
                                 </template>
                             </tr>
                         </template>
@@ -550,7 +552,7 @@ export default {
             }else{
                 return this.yearTerms.find(t=>t.value==this.course.current_term).label;
             }
-    }
+        }
 
     },
 

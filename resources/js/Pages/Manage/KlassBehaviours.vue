@@ -1,17 +1,17 @@
 <template>
-    <AdminLayout title="操行" :breadcrumb="breadcrumb">
+    <AdminLayout title="班別操行" :breadcrumb="breadcrumb">
         <div>
             <div class="py-5">
             <KlassSelector routePath="manage.klass.behaviours.index" :param="[]" :currentKlass="klass" />
             </div>
-            <a-typography-title :level="4">{{ staff.name_zh }}</a-typography-title>
+            <a-typography-title :level="4">老師名稱：{{ staff.name_zh }}</a-typography-title>
             <div v-if="course">
                 <p>科目操行</p>
                 <p>{{course.klass.tag}}</p>
                 <p>{{course.code}}-{{course.title_zh}}</p>
             </div>
             <div v-else-if="klass">
-                <p>班別操行</p>
+                <p>學段狀態:{{ showCurrentTerm() }}</p>
                 <p>{{klass.tag}}</p>
             </div>
             <BehaviourTable :yearTerms="yearTerms" :currentTermId="this.klass.lock_courses?0:this.klass.current_term" :behaviours="behaviours"/>
@@ -30,7 +30,7 @@ export default {
         BehaviourTable,
         KlassSelector
     },
-    props: ['year','yearTerms','course','currentTerm','staff','klass','behaviours'],
+    props: ['yearTerms','course','staff','klass','behaviours'],
     data() {
         return {
             breadcrumb:[
@@ -70,6 +70,13 @@ export default {
                 return null
             }
         },
+        showCurrentTerm(){
+            if(this.klass.lock_courses || this.klass.current_term==0){
+                return '已上鎖';
+            }else{
+                return this.yearTerms.find(t=>t.value==this.klass.current_term).label;
+            }
+        }
 
     },
 }

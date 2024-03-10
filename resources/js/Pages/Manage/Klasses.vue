@@ -17,6 +17,7 @@
         </template>
         <a-divider type="vertical" />
             <inertia-link :href="route('manage.klass.behaviours.index', klass.id)" class="ant-btn">操行</inertia-link>
+            <inertia-link :href="route('manage.klass.behaviour.adjust', klass.id)" class="ant-btn">操行調整</inertia-link>
         <a-divider type="vertical" />
         <template v-if="additiveStyles=='default'">
             <template v-for="group in additiveGroups">
