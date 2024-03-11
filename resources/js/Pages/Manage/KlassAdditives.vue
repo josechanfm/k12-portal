@@ -3,23 +3,29 @@
         <p>當前學段: {{currentTerm.label}}</p>
         <p></p>
         <div>
+            {{ selectedTermId }}
+            <a-radio-group v-model:value="selectedTermId" button-style="solid">
+                <template v-for="term in yearTerms">
+                    <a-radio-button :value="term.value">{{term.label}}</a-radio-button>
+                </template>
+            </a-radio-group>
             <div class="ant-table">
                 <div class="ant-table-container">
                     <div class="ant-table-content">
                         <table class="table-layout: auto;">
                             <thead class="ant-table-thead">
                                 <tr>
-                                    <th>調整</th>
+                                    <th width="60px">編號</th>
                                     <th>學生姓名</th>
+                                    <th>調整</th>
                                     <th v-for="column in additives.templates">{{ column.title_zh }}</th>
                                 </tr>
                             </thead>
                             <tbody class="ant-table-tbody">
                                 <tr v-for="(student, ksid) in additives.students">
+                                    <td class="text-center">{{ student.student_number }}</td>
+                                    <td>{{ student.name_zh }}</td>
                                     <td class="w-24"><a-button @click="onClickStudent(student)">變更</a-button></td>
-                                    <td>
-                                        {{ student.name_zh }}
-                                    </td>
                                     <td v-for="column in additives.templates">
                                         {{ additives['additives'][ksid][column.reference_code] }}
                                     </td>
@@ -48,7 +54,7 @@
                     </a-form-item>
                 </div>
                 <a-row v-else>
-                    <a-col :span="3">
+                    <a-col :span="3" v-if="!modal.data.disabledVolumn">
                         <a-form-item label="數量" name="value" :rules="[{required:true}]">
                             <a-input-number v-model:value="modal.data.newItem.value" :min="0" :max="modal.data.newItem.max"/>
                         </a-form-item>
@@ -95,7 +101,7 @@ export default {
     components: {
         AdminLayout, ButtonLink
     },
-    props: ['klass','currentTerm','additiveTemplates','additives'],
+    props: ['yearTerms','klass','additiveTemplates','additives'],
     data() {
         return {
             breadcrumb:[
@@ -104,6 +110,7 @@ export default {
                 {label:this.klass.tag+'年級' ,url:route('manage.klasses.show', this.klass.id)},                
                 {label:'操行' ,url:null}
             ],
+            selectedTermid:null,
             modal: {
                 mode:null,
                 isOpen: false,
@@ -124,6 +131,13 @@ export default {
             ]
         }
     },
+    created(){
+        this.currentTerm=this.yearTerms.find(t=>t.value==this.klass.current_term)
+        this.selectedTermId=this.klass.current_term
+    },
+    mounted(){
+
+    },
     methods: {
         onClickStudent(student){
             this.modal.isOpen = true
@@ -134,6 +148,8 @@ export default {
         initModalNewItem(student){
             this.modal.data.newItem = {term_id:this.currentTerm.value,max:null,value:1}
             this.modal.data.newItem.selection=Object.keys(this.additives.templates)[0]
+            console.log(this.modal.data.newItem);
+            console.log(this.modal.data.newItem.selection);
         },
         onClickSubmitAdditive(){
             this.$inertia.post(route("manage.additives.store"),this.modal.data.list, {
@@ -160,10 +176,12 @@ export default {
             console.log(this.modal.data.list);
             this.initModalNewItem()
         },
-        onChangeSelection(event){
+        onChangeSelection(){
             this.modal.data.newItem.value=1;
             var item=this.additives.templates[this.modal.data.newItem.selection]
-            return this.modal.data.newItem.max=parseInt(item.max)
+            this.modal.data.disabledVolumn=true;
+            this.modal.data.newItem.max=parseInt(item.max)
+            return true;
 
         },
         getRecordItem(record){

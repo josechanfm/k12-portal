@@ -2,7 +2,7 @@
     <AdminLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                班別管理
+                班別管理...
             </h2>
         </template>
         <p>Klass: {{ klass.tag }}</p>
@@ -19,7 +19,8 @@
                     <table style="table-layout: auto;">
                         <thead class="ant-table-thead">
                             <tr>
-                                <th width="200px">Name</th>
+                                <th width="60px">編號</th>
+                                <th width="200px">學生姓名</th>
                                 <template v-for="additive in additives.templates">
                                     <th v-if="additive.category==additiveSelected">
                                         {{additive.title_zh}}
@@ -30,9 +31,8 @@
                         <tbody class="ant-table-tbody">
                             <template v-for="(student,ksid) in additives.students">
                                 <tr>
-                                    <th>
-                                        {{student.name_zh}}
-                                    </th>
+                                    <th  class="text-center">{{ student.student_number }}</th>
+                                    <th>{{student.name_zh}}</th>
                                     <template v-for="additive in additives.templates">
                                         <td v-if="additive.category==additiveSelected">
                                             <a-input 
@@ -60,16 +60,17 @@ export default {
     components: {
         AdminLayout
     },
-    props: ['klass','additiveTemplates','additives','additiveGroups'],
+    props: ['klass','additives','additiveGroups'],
     data() {
         return {
-            additiveSelected:'ATTENDANCE',
+            additiveSelected:null,
         }
     },
     created(){
 
     },
     mounted() {
+        this.additiveSelected=this.additiveGroups[0].category
     },
     methods: {
         additiveSum(student, additive){

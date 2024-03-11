@@ -20,7 +20,8 @@
                     <table style="table-layout: auto;">
                         <thead class="ant-table-thead">
                             <tr>
-                                <th width="200px">Name</th>
+                                <th width="60px">編號</th>
+                                <th width="200px">學生姓名</th>
                                 <template v-for="additive in additives.templates">
                                     <th v-if="additive.category==additiveSelected">
                                         {{additive.title_zh}}
@@ -31,6 +32,7 @@
                         <tbody class="ant-table-tbody">
                             <template v-for="(student,ksid) in additives.students">
                                 <tr>
+                                    <th class="text-center">{{ student.student_number }}</th>
                                     <th>
                                         <a @click="showHistory(student)">History
                                             {{student.name_zh}}
@@ -48,7 +50,7 @@
                 </div>
             </div>
         </div>
-        <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="100%" >
+        <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="100%" cancel-text="返回" :ok-button-props="{style:{ display:'none' }}">
             <p>班別:{{klass.tag}}</p>
             <p>學生名稱:{{modal.data.name_zh}}</p>
             <div class="ant-table">
@@ -116,7 +118,6 @@
                     <a-button type="default" html-type="submit">新增</a-button>
                 </div>
             </a-form>
-            <p>Demo only the submission not yet implement.</p>
         </a-modal>
     </AdminLayout>
 </template>
@@ -138,7 +139,7 @@ export default {
                 title:'Additives',
                 data:{}
             },
-            additiveSelected:'ATTENDANCE',
+            additiveSelected:null,
             course: {},
             students:{},
             defaultTemplates:[],
@@ -154,6 +155,7 @@ export default {
 
     },
     mounted() {
+        this.additiveSelected=this.additiveGroups[0].category
     },
     methods: {
         showHistory(std){

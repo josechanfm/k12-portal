@@ -86,7 +86,9 @@
                                     </td>
                                     <td>{{ klass.course_count}}</td>
                                     <td>
-                                        <inertia-link :href="route('teacher.klass.behaviours',klass.id)" class="ant-btn">操行</inertia-link>
+                                        <template v-if="headKlassBehaviour">
+                                            <inertia-link :href="route('teacher.klass.behaviours',klass.id)" class="ant-btn">操行</inertia-link>
+                                        </template>
                                     </td>
                                 </tr>
                                 </template>
@@ -133,7 +135,9 @@
                                         </ol>
                                     </td>
                                     <td>
-                                        <inertia-link :href="route('teacher.klass.behaviours',course.klass.id)" class="ant-btn">操行</inertia-link>
+                                        <template v-if="headKlassBehaviour">
+                                            <inertia-link :href="route('teacher.klass.behaviours',course.klass.id)" class="ant-btn">操行</inertia-link>
+                                        </template>
                                     </td>
                                 </tr>
                                 </template>
@@ -155,7 +159,7 @@ export default {
     components: {
         AdminLayout
     },
-    props: ['staff'],
+    props: ['headKlassBehaviour','headSubjectBehaviour','staff'],
     data() {
         return {
             columns: [

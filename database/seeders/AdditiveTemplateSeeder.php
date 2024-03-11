@@ -15,6 +15,7 @@ class AdditiveTemplateSeeder extends Seeder
      */
     public function run()
     {
+        /*
         $data=[
             'BEHAVE'=>[
                 'ATTENDANCE'=>[
@@ -50,6 +51,40 @@ class AdditiveTemplateSeeder extends Seeder
                     'VIOLATION'=>'違規'
                 ],
             ]
+        ];
+        */
+        $data=[
+            'BEHAVE'=>[
+                'POSITIVE'=>[
+                    'Award'=>'獎勵',
+                    'Merit'=>'大功',
+                    'Appreciate'=>'小功',
+                    'Virtue'=>'優點',
+                    'Praise'=>'表揚'
+                ],
+                'NEGATIVE'=>[
+                    'Punish'=>'懲罰',
+                    'Demerit'=>'大過',
+                    'Fault'=>'小過',
+                    'Deficient'=>'缺點',
+                    'Warning'=>'警告/違規'
+                ],
+                'PARTICIPATION'=>[
+                    'Truancy'=>'曠課',
+                    'Absense'=>'請假',
+                    'Late'=>'遲到',
+                    'Leave'=>'早退',
+                    'Forgot'=>'忘帶',
+                    'Missing'=>'欠交作業'
+                ]
+            ],
+            'REMARK'=>[
+                'COMMENT'=>[
+                    'COMMENT_T1'=>'上學期備註',
+                    'COMMENT_T2'=>'下學期備註',
+                    'COMMENT_FINAL'=>'學年備註',
+                ],
+            ],
         ];
 
         foreach($data as $scope=>$d){

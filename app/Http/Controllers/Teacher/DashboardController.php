@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Teacher;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Staff;
+use App\Models\Config;
 use App\Models\Teacher;
 use App\Models\Klass;
 use Illuminate\Support\Facades\Auth;
@@ -30,7 +30,9 @@ class DashboardController extends Controller
         // dd($staff->klasses());
         // dd($staff);
         return Inertia::render('Teacher/Dashboard',[
-            'staff'=>$staff
+            'staff'=>$staff,
+            'headKlassBehaviour'=>Config::item('head_klass_behaviour'),
+            'headSubjectBehaviour'=>Config::item('head_subject_behaviour')
         ]);
 
     }

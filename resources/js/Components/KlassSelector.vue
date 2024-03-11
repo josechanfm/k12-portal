@@ -38,6 +38,9 @@ export default {
     };
   },
   mounted() {
+    if(this.$emit.onChangeTerm){
+        console.log('with emit');
+    }
     if(this.param!=null){
         this.routeParam=this.param;
     }

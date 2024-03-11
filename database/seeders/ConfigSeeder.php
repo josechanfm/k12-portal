@@ -170,6 +170,14 @@ class ConfigSeeder extends Seeder
             }'
         ]);
         DB::table('configs')->insert([
+            'key'=>'head_klass_behaviour',
+            'value' =>'true'
+        ]);
+        DB::table('configs')->insert([
+            'key'=>'head_subject_behaviour',
+            'value' =>'true'
+        ]);
+        DB::table('configs')->insert([
             'key'=>'study_streams',
             'value' =>'[{"value":"ALL","label":"全科"},{"value":"ART","label":"文科"},{"value":"SCI","label":"理科"},{"value":"AAS","label":"文理科"}]'
         ]);
@@ -325,17 +333,17 @@ class ConfigSeeder extends Seeder
         DB::table('configs')->insert([
             'key'=>'additive_groups',
             'value'=>'[{
-                "category": "ATTENDANCE",
-                "label": "出勤"
+                "category": "NEGATIVE",
+                "label": "負向行為"
             }, {
-                "category": "PERFORM",
-                "label": "獎懲"
+                "category": "POSITIVE",
+                "label": "正向行為"
             }, {
-                "category": "COMMENTS",
+                "category": "PARTICIPATION",
+                "label": "參與行為"
+            }, {
+                "category": "COMMENT",
                 "label": "評語"
-            }, {
-                "category": "VIOLATION",
-                "label": "違規"
             }]'
         ]);
 

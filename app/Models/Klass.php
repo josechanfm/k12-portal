@@ -361,25 +361,36 @@ class Klass extends Model
         
         $data=[];
         foreach($students as $student){
-            $data['students'][$student->pivot->klass_student_id]['name_zh']=$student->name_zh;
-            $data['students'][$student->pivot->klass_student_id]['klass_student_id']=$student->pivot->klass_student_id;
+            $ksid=$student->pivot->klass_student_id;
+            $data['students'][$ksid]['name_zh']=$student->name_zh;
+            $data['students'][$ksid]['klass_student_id']=$ksid;
+            $data['students'][$ksid]['student_number']=$student->pivot->student_number;
             foreach($templates as $template){
                 $data['additives'][$student->pivot->klass_student_id][$template->reference_code]=null;
             }
-            $additives=Additive::where('klass_student_id',$student->pivot->klass_student_id)
-                                ->whereIn('reference_code',array_keys($data['additives'][$student->pivot->klass_student_id]))
+            $additives=Additive::where('klass_student_id',$ksid)
+                                ->whereIn('reference_code',array_keys($data['additives'][$ksid]))
                                 ->get();
-            $data['records'][$student->pivot->klass_student_id]=$additives;
+            $data['records'][$ksid]=$additives;
+
             foreach($templates as $template){
-                $data['additives'][$student->pivot->klass_student_id][$template->reference_code]=null;
+                $data['additives'][$ksid][$template->reference_code]=null;
             }
             foreach($additives as $additive){
                     //$data['students'][$student->pivot->klass_student_id]['additives'][$additive->reference_code]+=$additive->value;
-                    $data['additives'][$student->pivot->klass_student_id][$additive->reference_code]+=$additive->value;
+                    foreach(Config::item('year_terms') as $term){
+                        $abc=Additive::where('klass_student_id',$ksid)
+                            ->where('reference_code',$additive->reference_code)
+                            ->where('term_id',$term->value)
+                            ->get();
+                        $data['additives'][$ksid][$additive->reference_code][$term->value]=$abc;
+    
+                    }
             }
         };
         //$templates=AdditiveTemplate::all()->toArray();
         $data['templates']=array_column($templates->toArray(),null,'reference_code'); 
+        dd($data);
         return $data;
     }
 

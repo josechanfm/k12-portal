@@ -111,6 +111,7 @@ class AdditiveController extends Controller
             return redirect()->route('manage');
         }
         return Inertia::render('Manage/KlassAdditives',[
+            'yearTerms'=>Config::item('year_terms'),
             'klass'=>$klass,
             'currentTerm'=>Year::currentTerm(),
             'additiveTemplates'=>AdditiveTemplate::all(),
@@ -138,7 +139,6 @@ class AdditiveController extends Controller
         $klass->courses;
         //$courses = Klass::find($klass->id)->courses;
         $klass->students;
-
         // dd($courses);
         return Inertia::render('Manage/KlassAdditivesDirect', [
             'klass' => $klass,
