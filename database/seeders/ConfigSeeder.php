@@ -40,10 +40,10 @@ class ConfigSeeder extends Seeder
             'key'=>'klass_letters',
             'value'=>'[{"value":"A","label":"A"},{"value":"B","label":"B"},{"value":"C","label":"C"},{"value":"D","label":"D"},{"value":"E","label":"E"},{"value":"F","label":"F"}]'
         ]);
-        DB::table('configs')->insert([
-            'key'=>'grade_letters',
-            'value'=>'[{"value":"A","label":"A"},{"value":"B","label":"B"},{"value":"C","label":"C"},{"value":"D","label":"D"},{"value":"E","label":"E"},{"value":"F","label":"F"}]'
-        ]);
+        // DB::table('configs')->insert([
+        //     'key'=>'grade_letters',
+        //     'value'=>'[{"value":"A","label":"A"},{"value":"B","label":"B"},{"value":"C","label":"C"},{"value":"D","label":"D"},{"value":"E","label":"E"},{"value":"F","label":"F"}]'
+        // ]);
         DB::table('configs')->insert([
             'key'=>'grade_levels',
             'value' =>'[{
@@ -212,48 +212,81 @@ class ConfigSeeder extends Seeder
                 {"name":"social_4","label":"會和別人分享及輪候","short":"分享"},
                 {"name":"social_5","label":"誠實坦白肯認錯","short":"誠實"}]'
         ]);
-        DB::table('configs')->insert([
-            'key'=>'behaviour_genres',
-            'value'=>'[{"value":"LATE","label":"遲到"},
-                {"value":"ABSENT","label":"缺席"},
-                {"value":"DEMERIT","label":"缺點"},
-                {"value":"FAULT_BIG","label":"大過"},
-                {"value":"FAULT_SMALL","label":"小過"},
-                {"value":"CREDIT_BIG","label":"大功"},
-                {"value":"CREDIT_SMALL","label":"小功"},
-                {"value":"MERIT","label":"優點"}]'
-        ]);
+        // DB::table('configs')->insert([
+        //     'key'=>'behaviour_genres',
+        //     'value'=>'[{"value":"LATE","label":"遲到"},
+        //         {"value":"ABSENT","label":"缺席"},
+        //         {"value":"DEMERIT","label":"缺點"},
+        //         {"value":"FAULT_BIG","label":"大過"},
+        //         {"value":"FAULT_SMALL","label":"小過"},
+        //         {"value":"CREDIT_BIG","label":"大功"},
+        //         {"value":"CREDIT_SMALL","label":"小功"},
+        //         {"value":"MERIT","label":"優點"}]'
+        // ]);
 
         DB::table('configs')->insert([
             'key'=>'score_letters',
             'value'=>'
-                [
-                    {
-                    "letter":"A",
-                    "min":90,
-                    "max":100
-                    },{
-                    "letter":"B",
-                    "min":80,
-                    "max":90
-                    },{
-                    "letter":"C",
-                    "min":70,
-                    "max":80
-                    },{
-                    "letter":"D",
-                    "min":60,
-                    "max":80
-                    },{
-                    "letter":"E",
-                    "min":50,
-                    "max":70
-                    },{
-                    "letter":"A",
-                    "min":40,
-                    "max":0
-                    }
-                ]'
+            [
+                {
+                   "letter":"A+",
+                   "min":97,
+                   "max":100
+                },
+                {
+                   "letter":"A",
+                   "min":93,
+                   "max":96
+                },
+                {
+                   "letter":"A-",
+                   "min":90,
+                   "max":92
+                },
+                {
+                   "letter":"B+",
+                   "min":87,
+                   "max":89
+                },
+                {
+                   "letter":"B",
+                   "min":83,
+                   "max":86
+                },
+                {
+                   "letter":"B-",
+                   "min":80,
+                   "max":82
+                },{
+                   "letter":"C+",
+                   "min":77,
+                   "max":79
+                },{
+                   "letter":"C",
+                   "min":73,
+                   "max":76
+                },{
+                   "letter":"C-",
+                   "min":70,
+                   "max":72
+                },{
+                   "letter":"D+",
+                   "min":67,
+                   "max":69
+                },{
+                   "letter":"D",
+                   "min":65,
+                   "max":66
+                },{
+                   "letter":"D-",
+                   "min":60,
+                   "max":65
+                },{
+                   "letter":"F",
+                   "min":0,
+                   "max":60
+                }
+             ]'
         ]);
         DB::table('configs')->insert([
             'key'=>'certificates',
@@ -332,19 +365,21 @@ class ConfigSeeder extends Seeder
 
         DB::table('configs')->insert([
             'key'=>'additive_groups',
-            'value'=>'[{
-                "category": "NEGATIVE",
-                "label": "負向行為"
-            }, {
-                "category": "POSITIVE",
-                "label": "正向行為"
-            }, {
-                "category": "PARTICIPATION",
-                "label": "參與行為"
-            }, {
-                "category": "COMMENT",
-                "label": "評語"
-            }]'
+            'value'=>'[
+                {
+                    "category": "POSITIVE",
+                    "label": "正向行為"
+                },{
+                    "category": "NEGATIVE",
+                    "label": "負向行為"
+                },{
+                    "category": "PARTICIPATION",
+                    "label": "參與參與行為"
+                },{
+                    "category": "COMMENT",
+                    "label": "評語"
+                }
+            ]'
         ]);
 
         DB::table('configs')->insert([

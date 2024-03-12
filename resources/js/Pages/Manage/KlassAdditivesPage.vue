@@ -8,6 +8,10 @@
         <p>班別: {{ klass.tag }}</p>
         <p>學生人數: {{ klass.student_count }}</p>
         <p>當前學段: {{currentTerm.label}}</p>
+
+        <a-button v-for="term in yearTerms" @click="selectedTermId = term.value" class="mr-4"
+            :type="selectedTermId == term.value ? 'primary' : ''">{{ term.label }}</a-button>
+
         <a-radio-group v-model:value="additiveSelected">
             <template v-for="group in additiveGroups">
                 <a-radio-button :value="group.category">{{group.label}}</a-radio-button>
@@ -40,7 +44,7 @@
                                     </th>
                                     <template v-for="additive in additives.templates">
                                         <td v-if="additive.category==additiveSelected">
-                                            {{ additives.additives[ksid][additive.reference_code] }}
+                                            {{ additives.additives[ksid][additive.reference_code][selectedTermId] }}
                                         </td>
                                     </template>
                                 </tr>
@@ -53,6 +57,7 @@
         <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="100%" cancel-text="返回" :ok-button-props="{style:{ display:'none' }}">
             <p>班別:{{klass.tag}}</p>
             <p>學生名稱:{{modal.data.name_zh}}</p>
+            <p>學段狀態:  {{currentTerm.label}}</p>
             <div class="ant-table">
                 <div class="ant-table-container">
                     <div class="ant-table-content">
@@ -62,6 +67,7 @@
                                     <th>學段</th>
                                     <th>分類</th>
                                     <th>數量</th>
+                                    <th>備註</th>
                                     <th>日期</th>
                                     <th>user</th>
                                     <th>確認</th>
@@ -73,6 +79,7 @@
                                     <td>{{record.term_id}}</td>
                                     <td>{{additives.templates[record.reference_code].title_zh}}</td>
                                     <td>{{record.value}}</td>
+                                    <td>{{record.remark}}</td>
                                     <td>{{record.assign_at}}</td>
                                     <td>{{record.assign_user}}</td>
                                     <td>{{record.confirmed}}</td>
@@ -83,7 +90,7 @@
                     </div>
                 </div>
             </div>
-            <a-form :model="modal.data" layout="vertical" @finish="onFinish">
+            <a-form :model="modal.data" layout="vertical" @finish="onFinish" v-if="!klass.lock_courses && selectedTermId==klass.current_term">
                 <a-form-item label="term_id" name="term_id" hidden>
                     <a-input v-model:value="modal.data.term_id" />
                 </a-form-item>
@@ -101,7 +108,7 @@
                         </a-form-item>
                     </a-col>
                     <a-col>
-                        <a-form-item label="數量" name="value">
+                        <a-form-item label="數量" name="value" v-if="valueInput()">
                             <a-input-number
                                 v-model:value="modal.data.value"
                                 style="width:100px"
@@ -110,9 +117,7 @@
                     </a-col>
                 </a-row>
                 <a-form-item label="備註" name="remark">
-                    <a-input 
-                        v-model:value="modal.data.remark"
-                    ></a-input>
+                    <a-input v-model:value="modal.data.remark"/>
                 </a-form-item>
                 <div>
                     <a-button type="default" html-type="submit">新增</a-button>
@@ -124,13 +129,14 @@
 
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
+import { selectProps } from 'ant-design-vue/lib/vc-select';
 
 
 export default {
     components: {
         AdminLayout
     },
-    props: ['klass','additives','additiveGroups','currentTerm'],
+    props: ['yearTerms','klass','additives','additiveGroups'],
     data() {
         return {
             modal: {
@@ -139,6 +145,8 @@ export default {
                 title:'Additives',
                 data:{}
             },
+            selectedTermId:null,
+            currentTerm:null,
             additiveSelected:null,
             course: {},
             students:{},
@@ -146,6 +154,9 @@ export default {
         }
     },
     created(){
+        this.currentTerm=this.yearTerms.find(t=>t.value==this.klass.current_term)
+        this.selectedTermId=this.klass.current_term
+
             Object.values(this.additives.templates).forEach(t=>{
                 this.defaultTemplates.push({
                     value:t.reference_code,
@@ -187,6 +198,10 @@ export default {
                 }
             })
         },
+        valueInput(){
+            return this.additives.templates[this.modal.data.reference_code].category!='COMMENT'
+        }
+
     },
 }
 </script>

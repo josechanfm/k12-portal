@@ -7,6 +7,8 @@
         </template>
         <p>Klass: {{ klass.tag }}</p>
         <p>Students: {{ klass.student_count }}</p>
+        <a-button v-for="term in yearTerms" @click="selectedTermId = term.value" class="mr-4"
+            :type="selectedTermId == term.value ? 'primary' : ''">{{ term.label }}</a-button>
         <a-radio-group v-model:value="additiveSelected">
             <template v-for="group in additiveGroups">
                 <a-radio-button :value="group.category">{{group.label}}</a-radio-button>
@@ -36,7 +38,7 @@
                                     <template v-for="additive in additives.templates">
                                         <td v-if="additive.category==additiveSelected">
                                             <a-input 
-                                                v-model:value="additives.additives[ksid][additive.reference_code]" 
+                                                v-model:value="additives.additives[ksid][additive.reference_code][selectedTermId]" 
                                                 @blur="inputOnBlue(ksid,additive.reference_code,additives.additives[ksid])"
                                             />
                                         </td>
@@ -60,14 +62,17 @@ export default {
     components: {
         AdminLayout
     },
-    props: ['klass','additives','additiveGroups'],
+    props: ['yearTerms','klass','additives','additiveGroups'],
     data() {
         return {
+            selectedTermId:null,
+            currentTerm:null,
             additiveSelected:null,
         }
     },
     created(){
-
+        this.currentTerm=this.yearTerms.find(t=>t.value==this.klass.current_term)
+        this.selectedTermId=this.klass.current_term
     },
     mounted() {
         this.additiveSelected=this.additiveGroups[0].category

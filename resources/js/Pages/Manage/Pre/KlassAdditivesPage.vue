@@ -61,7 +61,7 @@
                                     <th>分類</th>
                                     <th>數量</th>
                                     <th>日期</th>
-                                    <th>user</th>
+                                    <th>老師</th>
                                     <th>確認</th>
                                     <th>日期</th>
                                 </tr>
@@ -116,7 +116,6 @@
                     <a-button type="default" html-type="submit">新增</a-button>
                 </div>
             </a-form>
-            <p>Demo only the submission not yet implement.</p>
         </a-modal>
     </AdminLayout>
 </template>

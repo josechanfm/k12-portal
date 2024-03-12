@@ -120,8 +120,8 @@ export default {
     data() {
         return {
             breadcrumb:[
-                {label:"Admin" ,url:route('admin')},
-                {label:"Grades" ,url:null},
+                {label:"行政管理" ,url:route('admin')},
+                {label:"年級" ,url:null},
             ],
             selectedYear:this.year.id,
             modal: {

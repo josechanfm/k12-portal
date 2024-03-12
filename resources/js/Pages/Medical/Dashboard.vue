@@ -24,7 +24,7 @@ export default {
     data() {
         return {
             breadcrumb:[
-                {label:"Medical" ,url:null},
+                {label:"保健醫療" ,url:null},
             ],
             dateFormat: 'YYYY-MM-DD',
         }

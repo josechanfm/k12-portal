@@ -97,8 +97,8 @@ export default {
     data() {
         return {
             breadcrumb:[
-                {label:"Medical" ,url:route('medical')},
-                {label:"Treatments" ,url:null},
+                {label:"保健醫療" ,url:route('medical')},
+                {label:"診療" ,url:null},
             ],
             dateFormat: 'YYYY-MM-DD',
             selectedGrade: 4,

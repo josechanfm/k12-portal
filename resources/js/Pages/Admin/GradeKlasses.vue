@@ -156,9 +156,9 @@ export default {
     data() {
         return {
             breadcrumb:[
-                {label:"Admin" ,url:route('admin')},
-                {label:"Grades" ,url:route('admin.year.grades.index',this.grade.year_id)},
-                {label:"Klass" ,url:null},
+                {label:"行政管理" ,url:route('admin')},
+                {label:"年級" ,url:route('admin.year.grades.index',this.grade.year_id)},
+                {label:"班別" ,url:null},
             ],
             selectedTerm: 1,
             modal: {

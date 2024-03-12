@@ -14,7 +14,11 @@ class Additive extends Model
     protected $appends=['assign_user'];
 
     public function getAssignUserAttribute(){
-        return User::find($this->user_id)->name;
+        if($this->user_id){
+            return User::find($this->user_id)->name;
+        }
+        return null;
+        
     }
     public function template(){
         return AdditiveTemplate::where('reference_code',$this->reference_code)->first();

@@ -71,7 +71,7 @@ export default {
     data() {
         return {
             breadcrumb:[
-                {label:"健康狀況" ,url:route('medical')},
+                {label:"保健醫療" ,url:route('medical')},
                 {label:this.klass.tag+"健康記錄" ,url:null},
             ],
             dateFormat: 'YYYY-MM-DD',

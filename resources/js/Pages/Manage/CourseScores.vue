@@ -193,7 +193,7 @@ export default {
     data() {
         return {
             breadcrumb:[
-                {label:"Manage", url:route('manage')},
+                {label:"主控台", url:route('manage')},
                 {label:"年級班別", url:route('manage.grades.index',{'type':'secondary'})},
                 {label:this.course.klass.tag+'科學分管理' ,url:null},
             ],

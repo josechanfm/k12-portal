@@ -29,8 +29,8 @@ export default {
     data() {
         return {
             breadcrumb:[
-                {label:"Manage" ,url:route('manage')},
-                {label:"Promotes" ,url:null},
+                {label:"主控台" ,url:route('manage')},
+                {label:"升留班" ,url:null},
             ],
             columns: [
                 {

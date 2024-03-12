@@ -372,25 +372,25 @@ class Klass extends Model
                                 ->whereIn('reference_code',array_keys($data['additives'][$ksid]))
                                 ->get();
             $data['records'][$ksid]=$additives;
-
             foreach($templates as $template){
-                $data['additives'][$ksid][$template->reference_code]=null;
+                foreach(Config::item('year_terms') as $term){
+                    $data['additives'][$ksid][$template->reference_code][$term->value]=null;
+                }
             }
             foreach($additives as $additive){
                     //$data['students'][$student->pivot->klass_student_id]['additives'][$additive->reference_code]+=$additive->value;
                     foreach(Config::item('year_terms') as $term){
-                        $abc=Additive::where('klass_student_id',$ksid)
+                        $abc=Additive::selectRaw('sum(value) as value')
+                            ->where('klass_student_id',$ksid)
                             ->where('reference_code',$additive->reference_code)
                             ->where('term_id',$term->value)
-                            ->get();
-                        $data['additives'][$ksid][$additive->reference_code][$term->value]=$abc;
-    
+                            ->groupBy('term_id')->groupBy('reference_code')
+                            ->first();
+                        $data['additives'][$ksid][$additive->reference_code][$term->value]=$abc?$abc->value:null;
                     }
             }
         };
-        //$templates=AdditiveTemplate::all()->toArray();
         $data['templates']=array_column($templates->toArray(),null,'reference_code'); 
-        dd($data);
         return $data;
     }
 

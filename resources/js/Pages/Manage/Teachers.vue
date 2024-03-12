@@ -1,10 +1,5 @@
 <template>
-    <AdminLayout title="Teacher" :breadcrumb="breadcrumb">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Teacher
-            </h2>
-        </template>
+    <AdminLayout title="老師" :breadcrumb="breadcrumb">
         <div>
             <a-table :dataSource="teachers" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
@@ -42,8 +37,8 @@ export default {
     data() {
         return {
             breadcrumb:[
-                {label:"Manage" ,url:route('manage')},
-                {label:"Teachers" ,url:null},
+                {label:"主控台" ,url:route('manage')},
+                {label:"老師" ,url:null},
             ],
             columns:[
                 {

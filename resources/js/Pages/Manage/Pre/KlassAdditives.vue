@@ -99,7 +99,7 @@ export default {
     data() {
         return {
             breadcrumb:[
-                {label:"Manage", url:route('manage')},
+                {label:"主控台", url:route('manage')},
                 {label:"小學", url:route('manage.grades.index',{'type':'primary'})},
                 {label:this.klass.tag+'班' ,url:route('manage.pre.klasses.show',this.klass.id)},
                 {label:this.scopeCategory ,url:null},
@@ -149,7 +149,6 @@ export default {
         },
         //add item to modal.data.list
         onFinish(values){
-            console.log(this.modal.data);
             this.modal.data.list.push({
                 'term_id':this.modal.data.newItem.term_id,
                 'klass_student_id':this.modal.data.student.klass_student_id,
@@ -157,7 +156,6 @@ export default {
                 'value':values.value,
                 'remark':values.remark,
             })
-            console.log(this.modal.data.list);
             this.initModalNewItem()
         },
         onChangeSelection(event){

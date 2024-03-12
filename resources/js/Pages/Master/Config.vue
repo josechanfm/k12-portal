@@ -5,6 +5,9 @@
                 總科目列表
             </h2>
         </template>
+        <div>
+
+        </div>
         <button @click="onClickCreate()"
             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Create Subject template</button>
             <a-table :dataSource="configs" :columns="columns">
@@ -35,6 +38,9 @@
             >
                 <a-form-item label="Key" name="key">
                     <a-input v-model:value="modal.data.key" />
+                </a-form-item>
+                <a-form-item label="Label" name="label">
+                    <a-input v-model:value="modal.data.label" placeholder="textarea with clear icon" allow-clear />
                 </a-form-item>
                 <a-form-item label="Value" name="value">
                     <a-textarea v-model:value="modal.data.value" placeholder="textarea with clear icon" allow-clear />
@@ -76,6 +82,9 @@ export default {
                 {
                     title: 'Key',
                     dataIndex: 'key',
+                },{
+                    title: 'Lable',
+                    dataIndex: 'label',
                 },{
                     title: 'Operation',
                     dataIndex: 'operation',

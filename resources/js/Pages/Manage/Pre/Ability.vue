@@ -109,7 +109,7 @@ export default {
     data() {
         return {
             breadcrumb:[
-                {label:"Manage", url:route('manage')},
+                {label:"主控台", url:route('manage')},
                 {label:"小學", url:route('manage.grades.index',{'type':'primary'})},
                 {label:this.klass.tag+'班' ,url:route('manage.pre.klasses.show',this.klass.id)},
                 {label:'學習主題' ,url:null},

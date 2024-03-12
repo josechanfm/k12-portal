@@ -17,11 +17,16 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Klass $klass)
     {
-        $students=Student::paginate(10);
-        return Inertia::render('Manage/Student',[
-            'students'=>$students
+
+        if($klass->id==null){
+            dd('empyt');
+        }
+        //$students=Student::paginate(10);
+        return Inertia::render('Manage/KlassStudents', [
+            'klass' => $klass,
+            'students' => $klass->studentsWithArchives,
         ]);
     }
 

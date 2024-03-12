@@ -150,7 +150,7 @@
       url:'/manage/teachers',
     },{
       key: '2.3',
-      title: '升班預處理',
+      title: '升留班預處理',
       url:'/manage/promotes',
     }],
   },{
@@ -165,7 +165,7 @@
   },{
     key: '4',
     roles:['master','admin','director'],
-    title: '健康狀況',
+    title: '保健醫療',
     children: [{
       key: '4.1',
       title: '健康記錄',

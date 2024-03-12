@@ -39,7 +39,9 @@ class ConfigController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Config::create($request->all());
+        return redirect()->back();
+
     }
 
     /**
@@ -71,9 +73,10 @@ class ConfigController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Config $config)
     {
-        //
+        $config->update($request->all());
+        return redirect()->back();
     }
 
     /**

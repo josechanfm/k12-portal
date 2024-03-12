@@ -68,7 +68,7 @@ export default {
     data() {
         return {
             breadcrumb:[
-                {label:"Manage", url:route('manage')},
+                {label:"主控台", url:route('manage')},
                 {label:"小學", url:route('manage.grades.index',{'type':'primary'})},
                 {label:this.klass.tag+'班' ,url:null},
             ],

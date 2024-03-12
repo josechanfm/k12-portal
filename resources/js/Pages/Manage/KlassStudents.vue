@@ -4,12 +4,14 @@
         <a-table :dataSource="students" :columns="columns">
             <template #bodyCell="{column, text, record, index}">
                 <template v-if="column.dataIndex == 'action'">
-                    <span v-for="archive in record.klass_student_with_archives.archives">
-                        <span v-if="archive.file_type=='transcript_year'">
-                            <a :href="archive.file_path">成績表</a>
+                    <template v-if="record.klass_student_with_archives.archives.length>0">
+                        <span v-for="archive in record.klass_student_with_archives.archives">
+                            <a v-if="archive.file_type=='transcript_year'" :href="archive.full_path" class="ant-btn ant-btn-default">成績表</a>
                         </span>
-                    </span>
-                    <inertia-link :href="route('manage.klass.student.transcript',record.pivot.klass_student_id)" class="ant-btn">Gen成績表</inertia-link>
+                    </template>
+                    <template v-else>
+                        <inertia-link :href="route('manage.klass.student.transcript',record.pivot.klass_student_id)" class="ant-btn">Gen成績表</inertia-link>
+                    </template>
                     <a :href="route('manage.students.show',record.pivot.klass_student_id)" class="ant-btn" target="_blank">學生檔案</a>
                 </template>
                 <template v-else>
@@ -32,7 +34,7 @@ export default {
     data() {
         return {
             breadcrumb:[
-                {label:"Manage", url:route('manage')},
+                {label:"主控台", url:route('manage')},
                 {label:"年級班別", url:route('manage.grades.index',{'type':'secondary'})},
                 {label:this.klass.tag+'年級' ,url:route('manage.klasses.show', this.klass.id)},
                 {label:'學生名單' ,url:null}

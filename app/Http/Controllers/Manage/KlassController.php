@@ -110,19 +110,19 @@ class KlassController extends Controller
         echo $scores;
     }
 
-    public function students(Klass $klass)
-    {
+    // public function students(Klass $klass)
+    // {
         
-        //$abc=$klass->studentsWithArchives;
-        //dd($klass->studentsWithArchives->where('klassStudentWithArchives.archives.file_type','transcript_year'));
-        // dd($abc[0]->klassStudentWithArchives);
-        //dd($abc[0]->klassStudentWithArchives->archives->where('file_type','transcript_year'));
-        //dd($klass->studentsWithArchives()[0]->archives);
-        return Inertia::render('Manage/KlassStudents', [
-            'klass' => $klass,
-            'students' => $klass->studentsWithArchives,
-        ]);
-    }
+    //     //$abc=$klass->studentsWithArchives;
+    //     //dd($klass->studentsWithArchives->where('klassStudentWithArchives.archives.file_type','transcript_year'));
+    //     // dd($abc[0]->klassStudentWithArchives);
+    //     //dd($abc[0]->klassStudentWithArchives->archives->where('file_type','transcript_year'));
+    //     //dd($klass->studentsWithArchives()[0]->archives);
+    //     return Inertia::render('Manage/KlassStudents', [
+    //         'klass' => $klass,
+    //         'students' => $klass->studentsWithArchives,
+    //     ]);
+    // }
 
     public function finalScoresK(Klass $klass){
         $year=Year::find(Year::currentYear()->id);

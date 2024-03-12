@@ -42,7 +42,7 @@ export default {
     data() {
         return {
             breadcrumb:[
-                {label:"Manage" ,url:null},
+                {label:"主控台" ,url:null},
             ],
         }
     },

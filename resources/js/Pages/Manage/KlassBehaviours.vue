@@ -34,7 +34,7 @@ export default {
     data() {
         return {
             breadcrumb:[
-                {label:"Manage", url:route('manage')},
+                {label:"主控台", url:route('manage')},
                 {label:"年級班別", url:route('manage.grades.index',{'type':'secondary'})},
                 {label:this.klass.tag+'年級' ,url:route('manage.klasses.show', this.klass.id)},
                 {label:'操行' ,url:null}

@@ -127,6 +127,7 @@ class AdditiveController extends Controller
 
         // dd($courses);
         return Inertia::render('Manage/KlassAdditivesPage', [
+            'yearTerms'=>Config::item('year_terms'),
             'klass' => $klass,
             'additives'=>$klass->additives(),
             'additiveGroups'=>Config::item('additive_groups'),
@@ -141,6 +142,7 @@ class AdditiveController extends Controller
         $klass->students;
         // dd($courses);
         return Inertia::render('Manage/KlassAdditivesDirect', [
+            'yearTerms'=>Config::item('year_terms'),
             'klass' => $klass,
             'additives'=>$klass->additives(),
             'additiveGroups'=>Config::item('additive_groups')
@@ -151,10 +153,14 @@ class AdditiveController extends Controller
         //return response()->json($request->all());
         if(isset($request->value)){
             //return response()->json($request->all());
-            Additive::updateOrCreate(
-                ['klass_student_id'=>$request->klass_student_id, 'reference_code'=>$request->reference_code],
-                ['value'=>$request->value,'user_id'=>auth()->user()->id,'submit_at'=>date('Y-m-d')]
-            );
+            forEach($request->value as $termId=>$value){
+                if($value){
+                    Additive::updateOrCreate(
+                        ['klass_student_id'=>$request->klass_student_id, 'term_id'=>$termId, 'reference_code'=>$request->reference_code],
+                        ['value'=>$value,'user_id'=>auth()->user()->id,'submit_at'=>date('Y-m-d')]
+                    );
+                }
+            }
         }else{
             Additive::where('klass_student_id',$request->klass_student_id)->where('reference_code',$request->reference_code)->delete();
         }

@@ -1,5 +1,5 @@
 <template>
-    <AdminLayout title="Dashboard">
+    <AdminLayout title="學人個人檔案">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Students

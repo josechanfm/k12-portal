@@ -147,7 +147,7 @@ Route::group([
         Route::post('/students/get_by_names',[App\Http\Controllers\Manage\StudentController::class,'getByNames'])->name('manage.students.getByNames');
         Route::resource('/klasses',App\Http\Controllers\Manage\KlassController::class)->names('manage.klasses');
         Route::get('/klass_scores/{klassId}',[App\Http\Controllers\Manage\KlassController::class,'klass_scores']);
-        Route::get('klass/{klass}/students',[App\Http\Controllers\Manage\KlassController::class,'students'])->name('manage.klass.students');
+        //Route::get('klass/{klass}/students',[App\Http\Controllers\Manage\KlassController::class,'students'])->name('manage.klass.students');
 
 
         Route::get('/klass/{klass}/courses',[App\Http\Controllers\Manage\CourseController::class,'klass'])->name('manage.klass.courses');
@@ -162,7 +162,7 @@ Route::group([
         Route::get('/klass/student/{klassStudent}/transcript',[App\Http\Controllers\Manage\TranscriptController::class,'klassStudent'])->name('manage.klass.student.transcript');
         Route::get('klass/{klass}/generate_transcripts',[App\Http\Controllers\Manage\TranscriptController::class,'generateTranscripts'])->name('manage.klass.generateTranscripts');
         
-        Route::resource('/teachers',App\Http\Controllers\Manage\TeacherController::class);
+        Route::resource('/teachers',App\Http\Controllers\Manage\TeacherController::class)->names('manage.teachers');
         Route::get('teaching/{teacherId}',[App\Http\Controllers\Manage\TeacherController::class,'teaching'])->name('manage.teaching');   
         //Route::get('/course/{course}/scores',[App\Http\Controllers\Manage\CourseController::class,'scores'])->name('manage.course.scores');
 
@@ -200,6 +200,7 @@ Route::group([
         Route::get('certificate/get_by_conditions',[App\Http\Controllers\Manage\CertificateController::class,'getByConditions'])->name('manage.certificate.getByConditions');
         Route::get('promotes',[App\Http\Controllers\Manage\PromotionController::class,'list'])->name('manage.promotes');
         Route::resource('klass/{klass}/promotes/',App\Http\Controllers\Manage\PromotionController::class)->names('manage.klass.promotes');
+        Route::resource('klass/{klass}/students',App\Http\Controllers\Manage\StudentController::class)->names('manage.klass.students');
         // Route::get('klass/{klassId}/promote',[App\Http\Controllers\Manage\PromotionController::class,'klass'])->name('manage.klass.promote');
         // Route::get('getStudents/{klassId}/promote',[App\Http\Controllers\Manage\PromotionController::class,'getStudents'])->name('manage.getStudents.promote');;
         // Route::get('getPromotedStudents/{klassId}/promote',[App\Http\Controllers\Manage\PromotionController::class,'getPromotedStudents'])->name('manage.getPromotedStudents.promote');;

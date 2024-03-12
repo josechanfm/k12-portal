@@ -4,13 +4,13 @@
         <p>Students: {{ klass.student_count }}</p>
         <p>Current Term: {{currentTerm.label}}</p>
         <template v-if="klass.grade_year<=3">
-            <inertia-link :href="route('manage.klass.students', klass.id)" class="ant-btn">學生名單</inertia-link>
+            <inertia-link :href="route('manage.klass.students.index', klass.id)" class="ant-btn">學生名單</inertia-link>
             <inertia-link :href="route('manage.klass.habits', klass.id)" class="ant-btn">生活習摜</inertia-link>
             <inertia-link :href="route('manage.klass.abilities', klass.id)" class="ant-btn">學習主題</inertia-link>
             <inertia-link :href="route('manage.pre.klass.finalScores', klass.id)" class="ant-btn">期末成績</inertia-link>
         </template>
         <template v-else>
-            <inertia-link :href="route('manage.klass.students', klass.id)" class="ant-btn">學生名單</inertia-link>
+            <inertia-link :href="route('manage.klass.students.index', klass.id)" class="ant-btn">學生名單</inertia-link>
             <inertia-link :href="route('manage.klass.finalScores', klass.id)" class="ant-btn">期末成績</inertia-link>
             <inertia-link :href="route('manage.klass.transcripts', {'klass':klass.id,'type':'summary'})" class="ant-btn">成積總表</inertia-link>
             <inertia-link :href="route('manage.klass.transcripts', klass.id)" class="ant-btn">成積大表</inertia-link>
@@ -31,7 +31,7 @@
             <inertia-link :href="route('manage.klass.additive.page', klass.id)" class="ant-btn">紀律行為</inertia-link>
         </template>
         <a-divider type="vertical" />
-        <inertia-link :href="route('manage.klass.promotes.index',klass.id)" class="ant-btn">升留班</inertia-link>
+        <inertia-link :href="route('manage.klass.promotes.index',klass.id)" class="ant-btn">升留班預處理</inertia-link>
 
         <p>&nbsp;</p>
 
@@ -86,7 +86,7 @@ export default {
     data() {
         return {
             breadcrumb:[
-                {label:"Manage", url:route('manage')},
+                {label:"主控台", url:route('manage')},
                 {label:"年級班別", url:route('manage.grades.index',{'type':'secondary'})},
                 {label:this.klass.grade.initial+'年級' ,url:null},
             ],

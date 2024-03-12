@@ -1,6 +1,6 @@
 <template>
-    <AdminLayout title="Dashboard">
-        <template #header>
+    <AdminLayout title="學人個人檔案" :breadcrumb="breadcrumb">
+        <div>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 <a-row type="flex">
                     <a-col flex="230px">
@@ -17,7 +17,7 @@
                     </a-col>
                 </a-row>
             </h2>
-        </template>
+        </div>
        
         <div :class="isEdit?'formEditOn':'formEditOff'">
             <a-switch v-model:checked="isEdit" @change="onChangeEditMode"/>
@@ -316,6 +316,10 @@ export default {
     props: ['student'],
     data() {
         return {
+            breadcrumb:[
+                {label:"主控台", url:route('manage')},
+                {label:"學人個人檔案",url:null}
+            ],
             activeKey: ['basic'],
             isEdit:false,
             labelCol: {span: 10},

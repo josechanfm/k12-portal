@@ -43,8 +43,6 @@ class TranscriptController extends Controller
     }
 
     public function KlassStudent(KlassStudent $klassStudent){
-
-
         $templates=$klassStudent->klass->grade->transcriptTemplates();
         $transcripts=array_column(Transcript::where('klass_student_id',$klassStudent->id)->orderBy('transcript_template_id')->get()->toArray(),null,'transcript_template_id');
         $klassStudent->student;
@@ -52,17 +50,21 @@ class TranscriptController extends Controller
         $filePath=$klassStudent->klass->grade->year->code.'/'.$klassStudent->klass->tag;
         $fileName=$klassStudent->student_number.'_'.(String) Str::uuid().'.pdf';
         $fileType='transcript_year';
-
-        
+        $transcriptYear=$klassStudent->archives()->where('file_type','transcript_year')->first();
+        if($transcriptYear){
+            $file=Storage::disk($fileDisk)->move(
+                $transcriptYear->file_path,
+                '/trash/'.$filePath.'/'.$transcriptYear->file_name);
+        }
         $klassStudent->archives()->updateOrCreate(
             [
                 'file_type'=>$fileType
-            ],
-            [
+            ],[
                 'file_type'=>$fileType,
                 'original_name'=>'original_name',
                 'file_name'=>$fileName,
-                'file_path'=>'/'.$fileDisk.'/'.$filePath.'/'.$fileName
+                'file_disk'=>$fileDisk,
+                'file_path'=>'/'.$filePath.'/'.$fileName
             ]
         );
         $pdf=PDF::loadView('pdf.transcript',[
@@ -105,13 +107,12 @@ class TranscriptController extends Controller
         }
     }
 
-    public function migrate(Klass $klass)
-    {
+    public function migrate(Klass $klass){
         $klassCourses=array_column($klass->courses->toArray(),null,'code');
         $templateCategories=$klass->grade->transcriptTemplates();
         //dd($templateCategories);
         $klassScores=$klass->transcriptsScores()['scores'];
-        // dd($klassScores[316]);
+        //  dd($klassScores[316]);
         foreach($klass->students as $student){
             $ksid=$student->pivot->klass_student_id;
             $data=[];
@@ -322,6 +323,8 @@ class TranscriptController extends Controller
                 ['klass_student_id','transcript_template_id'],
                 ['value']
             );
+            $klass->transcript_migrated=1;
+            $klass->save();
         }
         //dd($data);
     }    
