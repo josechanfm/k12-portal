@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Year;
 use App\Models\Grade;
 use App\Models\Klass;
+use App\Models\Course;
 
 class KlassSeeder extends Seeder
 {
@@ -21,19 +22,20 @@ class KlassSeeder extends Seeder
 
 
         $initial=['A','B','C','D','E'];
-        
-        for($g=1;$g<=12;$g++){
-            $grade=Grade::find($g);
+        $grades=Grade::where('year_id',1)->get();
+        foreach($grades as $grade){
             foreach($initial as $ini){
                 // DB::table('klasses')->insert([
                 //KlassObserver will autometically create course according to study plan with subjects
                 Klass::create([
-                    'grade_id'=>$g,
+                    'grade_id'=>$grade->id,
                     'letter'=>$ini,
                     'tag'=>$grade->tag.$ini,
-                    'study_id'=>1
+                    'study_id'=>1,
+                    'klass_head_ids'=>[rand(1,50)]
                 ]);
             }
+
         }
 
         //enroll student in to Klass
@@ -56,15 +58,14 @@ class KlassSeeder extends Seeder
         }
 
 
-        $courses=Klass::where('tag','P1A')->first()->courses;
-        $students=Klass::where('tag','P1A')->first()->students;
-        foreach($courses as $course){
-            foreach($students as $student){
-                DB::table('course_student')->insert([
-                    'course_id'=>$course->id,
-                    'student_id'=>$student->id
-                ]);
-            }
+        $courses=Course::all();
+        foreach($courses as $c=>$course){
+            $course->subject_head_ids=[rand(1,50)];
+            $course->save();
+            $course->staffs()->attach(rand(1,50));
+            $klass=Klass::find($course->klass_id);
+            $students=$klass->students->pluck('id')->toArray();
+            $course->students()->sync($students);
         }
 
 

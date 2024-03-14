@@ -15,14 +15,6 @@ return new class extends Migration
     {
         Schema::create('studies', function (Blueprint $table) {
             $table->id();
-            // $table->integer('version');
-            // $table->string('title_zh');
-            // $table->string('title_en')->nullable();
-            // $table->string('stream');
-            // $table->string('grade');
-            // $table->string('description')->nullable();
-            // $table->string('active');
-
             $table->integer('version');
             $table->string('grade_level');
             $table->integer('sequence')->nullable();

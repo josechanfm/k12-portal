@@ -40,6 +40,7 @@
                     <a :href="route('manage.pre.klass.theme',{klass:klass.id,theme:selectedThemeId,format:'pdf'})" class="ant-btn" target="_blank">所選主題所有學生</a>
                     <a-divider type="vertical" />
                     <a :href="route('manage.pre.klass.themes',{klass:klass.id,format:'pdf'})" class="ant-btn" target="_blank">年度總表</a>
+                    <a-button @click="sampleData()">Sample Data</a-button>
                     <table id="abilityTable" ref="abilityTable">
                         <thead>
                             <tr>
@@ -212,6 +213,22 @@ export default {
                 }
             })
         },
+        sampleData(){
+            const letter='ABCDEFG';
+            Object.entries(this.abilities['scores']).forEach(([i,ability])=>{
+                Object.entries(ability).forEach(([j,term])=>{
+                    term.credit=1
+                    var num=Math.floor(Math.random() * 4)+1
+                    //term.credit=num;
+                    term.credit=letter.substring(num,num+1);
+
+                    // Object.entries(term).forEach(([k,t])=>{
+                    //      console.log(t)
+                    // })
+
+                })
+            })
+        }
 
     },
 }

@@ -51,6 +51,8 @@ class YearController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($gradeLetters);
+        // dd($request->all());
         if(Year::where('code',$request->code)->get()->count()>0){
             return redirect()->back()->withErrors(['message'=>'Duplicate Year Code.']);
         }
@@ -66,94 +68,11 @@ class YearController extends Controller
             'sgrade'=> ['required'],
         ])->validate();
 
-        $year=new Year;
-        $year->code = $request->code;
-        $year->title = $request->title;
-        $year->start = date('Y-m-d', strtotime($request->period[0]));
-        $year->end = date('Y-m-d', strtotime($request->period[1]));
-        $year->description= $request->description ?? "";
-        $year->active=1;
-        $year->current_term=$request->current_term;
-        $year->save();
-        $yearId=$year->id;
-        $kklass=$request->kklass;
-        $kgrade=$request->kgrade;
-        $pklass=$request->pklass;
-        $pgrade=$request->pgrade;
-        $sklass=$request->sklass;
-        $sgrade=$request->sgrade;
-
-        //start grade year from 1
-        //Grade year 1-3, kindergarten
-        //Grade year 4-9, kindergarten
-        //Grade year 10-13, kindergarten
-        $gradeYear=1; 
-        $letters=['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','W','X','Y','Z'];
-        for($i=1;$i<=$kgrade;$i++){ //$i is going to transfer to letter
-            $grade=new Grade;
-            $grade->year_id=$yearId;
-            $grade->grade_year=$gradeYear++;
-            $grade->initial='K';
-            $grade->level=$i;
-            $grade->tag=$grade->initial.($i);
-            $grade->transcript_template_id=Config::item('transcript_template');
-            $grade->behaviour_scheme=json_encode(Config::item('behaviour_scheme'));
-            $grade->active=1;
-            $grade->save();
-            $gradeId=$grade->id;
-            for($j=1;$j<=$kklass;$j++){
-                $klass=new Klass;
-                $klass->grade_id=$gradeId;
-                $klass->letter=$letters[$j-1];
-                $klass->tag=$grade->tag.$letters[$j-1];
-                $klass->study_id=Study::where('active',true)->where('grade_year',$grade->grade_year)->latest()->first()->id??1;
-                $klass->save();
-            }
-        }
-
-        for($i=1;$i<=$pgrade;$i++){
-            $grade=new Grade;
-            $grade->year_id=$yearId;
-            $grade->grade_year=$gradeYear++;
-            $grade->initial='P';
-            $grade->level=$i;
-            $grade->tag=$grade->initial.($i);
-            $grade->active=1;
-            $grade->transcript_template_id=Config::item('transcript_template');
-            $grade->behaviour_scheme=json_encode(Config::item('behaviour_scheme'));
-            $grade->save();
-            $gradeId=$grade->id;
-            for($j=1;$j<=$pklass;$j++){
-                $klass=new Klass;
-                $klass->grade_id=$gradeId;
-                $klass->letter=$letters[$j-1];
-                $klass->tag=$grade->tag.$letters[$j-1];
-                $klass->study_id=Study::where('active',true)->where('grade_year',$grade->grade_year)->latest()->first()->id??1;
-                $klass->save();
-            }
-        }
-        for($i=1;$i<=$sgrade;$i++){
-            $grade=new Grade;   
-            $grade->year_id=$yearId;
-            $grade->grade_year=$gradeYear++;
-            $grade->initial='S';
-            $grade->level=$i;
-            $grade->tag=$grade->initial.($i);
-            $grade->active=1;
-            $grade->transcript_template_id=Config::item('transcript_template');
-            $grade->behaviour_scheme=json_encode(Config::item('behaviour_scheme'));
-            $grade->save();
-            $gradeId=$grade->id;
-            for($j=1;$j<=$sklass;$j++){
-                $klass=new Klass;
-                $klass->grade_id=$gradeId;
-                $klass->letter=$letters[$j-1];
-                $klass->tag=$grade->tag.$letters[$j-1];
-                $klass->study_id=Study::where('active',true)->where('grade_year',$grade->grade_year)->latest()->first()->id??1;
-                $klass->save();
-            }
-        }
-  
+        $data=$request->all();
+        $data['start']=date('Y-m-d', strtotime($request->period[0]));
+        $data['end']=date('Y-m-d', strtotime($request->period[1]));
+        $year=Year::create($data);
+        $year->autoGenerate($data);  
         return redirect()->back()
                     ->with('message', 'Article Created Successfully.');
     }

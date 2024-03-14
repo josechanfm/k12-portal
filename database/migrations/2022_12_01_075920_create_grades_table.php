@@ -20,16 +20,14 @@ return new class extends Migration
             $table->char('initial',2);
             $table->integer('level');            
             $table->string('tag',5)->nullable();
-            $table->string('byname',5)->nullable();
             $table->string('title_zh')->nullable();
             $table->string('title_en')->nullable();
-            $table->integer('klass_num')->default(0);
             $table->text('description')->nullable();
-            $table->text('behaviour_scheme')->nullable();
             $table->foreignId('transcript_template_id');
+            $table->text('behaviour_scheme')->nullable();
             $table->integer('version')->nullable();
-            $table->boolean('active')->default(true);
             $table->boolean('transcript_locked')->default(false);
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }

@@ -45,7 +45,7 @@ class ConfigSeeder extends Seeder
         //     'value'=>'[{"value":"A","label":"A"},{"value":"B","label":"B"},{"value":"C","label":"C"},{"value":"D","label":"D"},{"value":"E","label":"E"},{"value":"F","label":"F"}]'
         // ]);
         DB::table('configs')->insert([
-            'key'=>'grade_levels',
+            'key'=>'grade_letters',
             'value' =>'[{
                 "value": 1,
                 "label": "K1",
@@ -170,11 +170,11 @@ class ConfigSeeder extends Seeder
             }'
         ]);
         DB::table('configs')->insert([
-            'key'=>'head_klass_behaviour',
+            'key'=>'klass_head_behaviour',
             'value' =>'true'
         ]);
         DB::table('configs')->insert([
-            'key'=>'head_subject_behaviour',
+            'key'=>'subject_head_behaviour',
             'value' =>'true'
         ]);
         DB::table('configs')->insert([

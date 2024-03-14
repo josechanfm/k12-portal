@@ -10,7 +10,7 @@
                     <template v-else-if="column.dataIndex=='courses'">
                         <ul>
                             <li v-for="course in record.courses">
-                                {{ course.abbr }}-{{ course.title_zh }}
+                                {{ course.klass.tag }} - {{ course.code }}-{{ course.title_zh }}
                                 <Link :href="'score?kid='+course.klass_id + '&cid='+course.id" method="get" as="button" type="button">Score</Link>
                             </li>
                         </ul>

@@ -39,7 +39,8 @@ class ManualController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Manual::create($request->all());
+        return redirect()->back();
     }
 
     /**
@@ -71,9 +72,10 @@ class ManualController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Manual $manual)
     {
-        //
+        $manual->update($request->all());
+        return redirect()->back();
     }
 
     /**

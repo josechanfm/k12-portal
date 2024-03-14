@@ -9,33 +9,30 @@
 
         </div>
         <button @click="onClickCreate()"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Create Subject template</button>
-            <a-table :dataSource="configs" :columns="columns">
-                <template #bodyCell="{column, text, record, index}">
-                    <template v-if="column.dataIndex=='operation'">
-                        <a-button @click="onClickEdit(record)">Edit</a-button>
-                        <a-button @click="onClickDelete(record.id)">Delete</a-button>
-                    </template>
-                    <template v-else-if="column.dataIndex=='courses'">
-                        <ul>
-                            <li v-for="klass in record['klasses']">Class: {{klass.acronym}}</li>
-                        </ul>
-                    </template>
-                    <template v-else>
-                        {{record[column.dataIndex]}}
-                    </template>
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Create Subject
+            template</button>
+        <a-table :dataSource="configs" :columns="columns">
+            <template #bodyCell="{ column, text, record, index }">
+                <template v-if="column.dataIndex == 'operation'">
+                    <a-button @click="onClickEdit(record)">Edit</a-button>
+                    <a-button @click="onClickDelete(record.id)">Delete</a-button>
                 </template>
-            </a-table>
+                <template v-else-if="column.dataIndex == 'courses'">
+                    <ul>
+                        <li v-for="klass in record['klasses']">Class: {{ klass.acronym }}</li>
+                    </ul>
+                </template>
+                <template v-else>
+                    {{ record[column.dataIndex] }}
+                </template>
+            </template>
+        </a-table>
 
         <!-- Modal Start-->
-        <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="60%" @update="updateRecord()" @onCancel="closeModal()">
-            <a-form
-                :model="modal.data"
-                name="Config"
-                ref="modalRef"
-                :rules="rules"
-                :validate-messages="validateMessages"
-            >
+        <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="60%" @update="updateRecord()"
+            @onCancel="closeModal()">
+            <a-form :model="modal.data" name="Config" ref="modalRef" :rules="rules"
+                :validate-messages="validateMessages">
                 <a-form-item label="Key" name="key">
                     <a-input v-model:value="modal.data.key" />
                 </a-form-item>
@@ -48,14 +45,16 @@
                 <a-form-item label="簡介" name="description">
                     <a-textarea v-model:value="modal.data.remark" placeholder="textarea with clear icon" allow-clear />
                 </a-form-item>
-\            </a-form>
-        <template #footer>
-            <a-button key="back" @click="modalCancel">Return</a-button>
-            <a-button v-if="modal.mode=='EDIT'" key="Update" type="primary" @click="updateRecord()">Update</a-button>
-            <a-button v-if="modal.mode=='CREATE'"  key="Store" type="primary" @click="storeRecord()">Create</a-button>
-        </template>
-    </a-modal>    
-    <!-- Modal End-->
+            </a-form>
+            <template #footer>
+                <a-button key="back" @click="modalCancel">Return</a-button>
+                <a-button v-if="modal.mode == 'EDIT'" key="Update" type="primary"
+                    @click="updateRecord()">Update</a-button>
+                <a-button v-if="modal.mode == 'CREATE'" key="Store" type="primary"
+                    @click="storeRecord()">Create</a-button>
+            </template>
+        </a-modal>
+        <!-- Modal End-->
     </AdminLayout>
 
 </template>
@@ -72,45 +71,45 @@ export default {
     data() {
         return {
             modal: {
-                mode:null,
+                mode: null,
                 isOpen: false,
-                title:'Configs',
-                data:{}
+                title: 'Configs',
+                data: {}
             },
-            dataSource:[],
-            columns:[
+            dataSource: [],
+            columns: [
                 {
                     title: 'Key',
                     dataIndex: 'key',
-                },{
+                }, {
                     title: 'Lable',
                     dataIndex: 'label',
-                },{
+                }, {
                     title: 'Operation',
                     dataIndex: 'operation',
                 },
             ],
-            rules:{
-                code:{
-                    required:true,
+            rules: {
+                code: {
+                    required: true,
                 },
-                title_zh:{
-                    required:true,
+                title_zh: {
+                    required: true,
                 },
-                title_en:{
-                    required:true,
+                title_en: {
+                    required: true,
                 },
-                type:{
-                    required:true,
+                type: {
+                    required: true,
                 },
-                stream:{
-                    required:true,
+                stream: {
+                    required: true,
                 },
-                eletive:{
-                    required:true,
+                eletive: {
+                    required: true,
                 },
             },
-            validateMessages:{
+            validateMessages: {
                 required: '${label} is required!',
                 types: {
                     email: '${label} is not a valid email!',
@@ -122,7 +121,7 @@ export default {
             },
             labelCol: {
                 style: {
-                width: '150px',
+                    width: '150px',
                 },
             },
             layout2col: {
@@ -137,26 +136,26 @@ export default {
         }
     },
     methods: {
-        onClickCreate(record){
-            this.modal.data={};
-            this.modal.title="Edit Config";
-            this.modal.mode='CREATE';
+        onClickCreate(record) {
+            this.modal.data = {};
+            this.modal.title = "Edit Config";
+            this.modal.mode = 'CREATE';
             this.modal.isOpen = true;
         },
-        onClickEdit(record){
-            this.modal.data={...record};
-            this.modal.title="Edit Config";
-            this.modal.mode='EDIT';
+        onClickEdit(record) {
+            this.modal.data = { ...record };
+            this.modal.title = "Edit Config";
+            this.modal.mode = 'EDIT';
             this.modal.isOpen = true;
         },
-        storeRecord(){
-            this.$refs.modalRef.validateFields().then(()=>{
-                this.$inertia.post('/master/configs/', this.modal.data,{
-                    onSuccess:(page)=>{
+        storeRecord() {
+            this.$refs.modalRef.validateFields().then(() => {
+                this.$inertia.post(route('master.configs.store'), this.modal.data, {
+                    onSuccess: (page) => {
                         console.log(page);
-                        this.modal.isOpen=false;
+                        this.modal.isOpen = false;
                     },
-                    onError:(err)=>{
+                    onError: (err) => {
                         console.log(err);
                     }
                 });
@@ -164,40 +163,40 @@ export default {
                 console.log(err);
             });
         },
-        updateRecord(){
-            this.$refs.modalRef.validateFields().then(()=>{
-                this.$inertia.put('/master/configs/' + this.modal.data.id, this.modal.data,{
-                    onSuccess:(page)=>{
+        updateRecord() {
+            this.$refs.modalRef.validateFields().then(() => {
+                this.$inertia.put(route('master.configs.update', this.modal.data.id), this.modal.data, {
+                    onSuccess: (page) => {
                         console.log(page);
-                        this.modal.isOpen=false;
+                        this.modal.isOpen = false;
                     },
-                    onError:(error)=>{
+                    onError: (error) => {
                         console.log(error);
                     }
                 });
             }).catch(err => {
                 console.log("error", err);
             });
-           
+
         },
-        onClickDelete(recordId){
+        onClickDelete(recordId) {
             if (!confirm('Are you sure want to remove?')) return;
-            this.$inertia.delete('/master/configs/' + recordId,{
-                onSuccess: (page)=>{
+            this.$inertia.delete('/master/configs/' + recordId, {
+                onSuccess: (page) => {
                     console.log(page);
                 },
-                onError: (error)=>{
+                onError: (error) => {
                     console.log(error);
                 }
             });
             this.ChangeModalMode('Close');
         },
-        modalCancel(){
-            this.modal.data={}
-            this.modal.isOpen=false
+        modalCancel() {
+            this.modal.data = {}
+            this.modal.isOpen = false
         },
-        onFinishFailed(errorInfo){
-            console.log('errorInfo: '+errorInfo);
+        onFinishFailed(errorInfo) {
+            console.log('errorInfo: ' + errorInfo);
         }
     },
 }

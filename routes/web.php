@@ -82,9 +82,12 @@ Route::group([
         Route::resource('/transcriptTemplate',App\Http\Controllers\Master\TranscriptTemplateController::class)->names('master.transcriptTemplate');
         Route::resource('/roles',App\Http\Controllers\Master\RoleController::class)->names('master.roles');
         Route::resource('/users',App\Http\Controllers\Master\UserController::class)->names('master.users');
+        Route::resource('/theme_templates',App\Http\Controllers\Master\ThemeTemplateController::class)->names('master.themeTemplates');
+        Route::resource('/topic_templates',App\Http\Controllers\Master\TopicTemplateController::class)->names('master.topicTemplates');
         Route::resource('/grade/{gradeYear}/theme_templates',App\Http\Controllers\Master\ThemeTemplateController::class)->names('master.grade.themeTemplates');
         Route::resource('/grade/{gradeYear}/topic_templates',App\Http\Controllers\Master\TopicTemplateController::class)->names('master.grade.topicTemplates');
         Route::get('/theme_templates',[App\Http\Controllers\Master\ThemeTemplateController::class,'list'])->name('master.themeTemplates');
+
     });
 
 //admin
@@ -179,7 +182,7 @@ Route::group([
 
         Route::post('/course/{course}/scores/batch_update',[App\Http\Controllers\Manage\ScoreController::class,'batchUpdate'])->name('manage.course.scores.batchUpdate');
         Route::get('/course/{course}/makeups',[App\Http\Controllers\Manage\CourseController::class,'makeups'])->name('manage.course.makeups');
-        Route::get('/klass/{klass}/final_scores',[App\Http\Controllers\Manage\KlassController::class,'finalScores'])->name('manage.klass.finalScores');
+        Route::get('/klass/{klass}/final_scores',[App\Http\Controllers\Manage\ScoreController::class,'finalScores'])->name('manage.klass.finalScores');
         Route::post('/makeup/create_or_cancel',[App\Http\Controllers\Manage\MakeupController::class,'createOrCancel'])->name('manage.makeup.createOrCancel');
         Route::post('/makeup/update',[App\Http\Controllers\Manage\MakeupController::class,'update'])->name('manage.makeup.update');
         

@@ -31,8 +31,8 @@ class DashboardController extends Controller
         // dd($staff);
         return Inertia::render('Teacher/Dashboard',[
             'staff'=>$staff,
-            'headKlassBehaviour'=>Config::item('head_klass_behaviour'),
-            'headSubjectBehaviour'=>Config::item('head_subject_behaviour')
+            'klassHeadBehaviour'=>Config::item('klass_head_behaviour'),
+            'subjectHeadBehaviour'=>Config::item('subject_head_behaviour')
         ]);
 
     }

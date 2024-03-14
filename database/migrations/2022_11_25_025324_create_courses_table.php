@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('courses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('klass_id')->on('courses')->onDelete('restrict')->onUpdate('cascade');
+            $table->foreignId('klass_id')->on('klasses')->onDelete('restrict')->onUpdate('restrict');;
             $table->string('code');
             $table->string('title_zh');
             $table->string('title_en')->nullable();
@@ -33,6 +33,7 @@ return new class extends Migration
             $table->timestamps();
             $table->unique(['klass_id','code'],'klass_id_code');
         });
+
     }
 
     /**

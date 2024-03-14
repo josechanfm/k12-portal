@@ -3,13 +3,20 @@
         <div class="py-6">
             <div class="mx-auto sm:px-6 lg:px-8">
                 <div>學段狀態: {{ showCurrentTerm() }}</div>
+                <div>科組長:
+                    <span v-for="staff in course.subject_heads">{{ staff.name_zh }}</span>
+                </div>
+                <div>任教老師:
+                    <span v-for="staff in course.staffs">{{ staff.name_zh }}</span>
+                </div>
+                <a-divider/>
                 <inertia-link :href="route('manage.klasses.show', course.klass_id)" class="ant-btn mr-4">Back</inertia-link>
                 <a-button v-for="term in yearTerms" @click="selectedTerm = term.value" class="mr-4"
                     :type="selectedTerm == term.value ? 'primary' : ''">{{ term.label }}</a-button>
                 <a-button type="secondary" @click="onClickAddScoreColumn" :disabled="disabledByTerm()">新增學分欄</a-button>
             </div>
         </div>
-        <div class="py-6">
+        <div class="py-2">
             <div class="mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <table class="itxst" component='VueDraggableNext' animation="500" force-fallback="true" width="100%">

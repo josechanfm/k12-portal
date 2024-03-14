@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('theme_templates', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('grade_id');
+            $table->integer('grade_year');
             $table->integer('term_id');
             $table->integer('sequence')->nullable();
             $table->string('title');

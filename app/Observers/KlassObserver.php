@@ -19,6 +19,9 @@ class KlassObserver
     public function created(Klass $klass)
     {
         //$subjects=Subject::where('grade_id',$klass->grade_id)->get();
+        if($klass->grade->grade_year <= 3){
+            return true;
+        }
         if(empty($klass->study_id)){
             if($klass->grade->level<=3){
                 

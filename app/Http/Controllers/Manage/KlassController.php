@@ -104,26 +104,6 @@ class KlassController extends Controller
         //
     }
 
-    public function klass_scores($klassId)
-    {
-        $scores = Klass::klass_scores($klassId);
-        echo $scores;
-    }
-
-    // public function students(Klass $klass)
-    // {
-        
-    //     //$abc=$klass->studentsWithArchives;
-    //     //dd($klass->studentsWithArchives->where('klassStudentWithArchives.archives.file_type','transcript_year'));
-    //     // dd($abc[0]->klassStudentWithArchives);
-    //     //dd($abc[0]->klassStudentWithArchives->archives->where('file_type','transcript_year'));
-    //     //dd($klass->studentsWithArchives()[0]->archives);
-    //     return Inertia::render('Manage/KlassStudents', [
-    //         'klass' => $klass,
-    //         'students' => $klass->studentsWithArchives,
-    //     ]);
-    // }
-
     public function finalScoresK(Klass $klass){
         $year=Year::find(Year::currentYear()->id);
         $year->klasses;
@@ -153,18 +133,6 @@ class KlassController extends Controller
         ]);
     }
 
-    //public function behaviours(Klass $klass){
-        // $year=Year::find(Year::currentYear()->id);
-        // $year->klasses;
-        // $year->grades;
-        // return Inertia::render('Manage/KlassBehaviours',[
-        //     'year'=>$year,
-        //     'yearTerms'=>Config::item('year_terms'),
-        //     'currentTerm'=>Year::currentTerm(),
-        //     'staff'=>auth()->user()->staff,
-        //     'klass'=>$klass,
-        //     'behaviours'=>$klass->behaviours('DIRECTOR')
-        // ]);
 
     //}
 }

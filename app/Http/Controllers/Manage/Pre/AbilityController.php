@@ -25,6 +25,7 @@ class AbilityController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function klass(Klass $klass){
+        //dd($klass->abilitiesScores()['scores'][1][1]);
         return Inertia::render('Manage/Pre/Ability',[
             'yearTerms'=>Config::item('year_terms'),
             'klass'=>$klass,

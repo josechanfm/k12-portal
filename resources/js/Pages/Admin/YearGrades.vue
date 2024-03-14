@@ -18,7 +18,8 @@
         <button @click="createRecord()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">
             新增學年級別
         </button>
-        <a-table :dataSource="grades" :columns="columns">
+        <a-table :dataSource="grades" :columns="columns" :pagination="{ pageSize: 20 }"
+>
             <template #bodyCell="{column, text, record, index}">
                 <template v-if="column.dataIndex=='operation'">
                     <inertia-link :href="route('admin.grade.klasses.index',record.id)" class="ant-btn">班別</inertia-link>
@@ -130,22 +131,6 @@ export default {
                 title:'建立學年級別',
                 data:{}
             },
-            rules:{
-                grade_year:{required:true},
-                title_zh:{required:true},
-                title_en:{required:true},
-                transcript_template_id:{required:true},
-            },
-            validateMessages:{
-                required: '${label} is required!',
-                types: {
-                    email: '${label} is not a valid email!',
-                    number: '${label} is not a valid number!',
-                },
-                number: {
-                    range: '${label} must be between ${min} and ${max}',
-                },
-            },
             columns:[
                 {
                     title: '年級代號',
@@ -163,7 +148,22 @@ export default {
                     title: '操作',
                     dataIndex: 'operation',
                 }
-            ]
+            ],
+            rules:{
+                grade_year:{required:true},
+                title_zh:{required:true},
+                transcript_template_id:{required:true},
+            },
+            validateMessages:{
+                required: '${label} is required!',
+                types: {
+                    email: '${label} is not a valid email!',
+                    number: '${label} is not a valid number!',
+                },
+                number: {
+                    range: '${label} must be between ${min} and ${max}',
+                },
+            },
         }
     },
     mounted() {

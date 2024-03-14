@@ -45,7 +45,7 @@
                                 <td>{{student.display_name}}</td>
                                 <td>{{student.gender}}</td>
                                 <td>{{student.dob}}</td>
-                                <td>Personal records </td>
+                                <td><inertia-link :href="route('manage.students.show',student.id)">學生檔案</inertia-link></td>
                             </tr>
                         </tbody>
                     </table>

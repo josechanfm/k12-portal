@@ -6,7 +6,7 @@
             </h2>
         </template>
         <button @click="onClickCreate()"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Create Subject template</button>
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Create Manual Item</button>
             <a-table :dataSource="manuals" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
@@ -42,7 +42,7 @@
                 <a-form-item label="Description" name="description">
                     <a-textarea v-model:value="modal.data.description" placeholder="textarea with clear icon" allow-clear />
                 </a-form-item>
-\            </a-form>
+            </a-form>
         <template #footer>
             <a-button key="back" @click="modalCancel">Return</a-button>
             <a-button v-if="modal.mode=='EDIT'" key="Update" type="primary" @click="updateRecord()">Update</a-button>
@@ -145,7 +145,7 @@ export default {
         },
         storeRecord(){
             this.$refs.modalRef.validateFields().then(()=>{
-                this.$inertia.post('/master/configs/', this.modal.data,{
+                this.$inertia.post(route('master.manuals.store'), this.modal.data,{
                     onSuccess:(page)=>{
                         console.log(page);
                         this.modal.isOpen=false;
@@ -160,7 +160,7 @@ export default {
         },
         updateRecord(){
             this.$refs.modalRef.validateFields().then(()=>{
-                this.$inertia.put('/master/configs/' + this.modal.data.id, this.modal.data,{
+                this.$inertia.put(route('master.manuals.update', this.modal.data.id), this.modal.data,{
                     onSuccess:(page)=>{
                         console.log(page);
                         this.modal.isOpen=false;

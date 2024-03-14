@@ -48,6 +48,8 @@
                                 <th class="text-left">Active</th>
                                 <th class="text-left">Units</th>
                                 <th class="text-left">Score</th>
+                                <th class="text-left">Subject Head</th>
+                                <th class="text-left">Teacher</th>
                             </tr>
                         </thead>
                         <tbody class="ant-table-tbody">
@@ -58,6 +60,17 @@
                                 <td class="text-left">{{ course.elective }}</td>
                                 <td class="text-left">{{ course.active }}</td>
                                 <td class="text-left">{{ course.unit }}</td>
+                                <td class="text-left">
+                                    <ol>
+                                        <li v-for="staff in course.subject_heads">{{ staff.name_zh }}</li>
+                                    </ol>
+                                </td>
+
+                                <td class="text-left">
+                                    <ol>
+                                        <li v-for="staff in course.staffs">{{ staff.name_zh }}</li>
+                                    </ol>
+                                </td>
                                 <th class="text-left">
                                     <inertia-link :href="route('manage.course.scores.index', course.id)"
                                         class="ant-btn">學分</inertia-link>

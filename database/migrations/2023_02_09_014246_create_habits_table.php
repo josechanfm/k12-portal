@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('habits', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('klass_student_id');
+            $table->foreignId('klass_student_id')->on('klass_student')->onDelete('restrict')->onUpdate('cascade');;
             $table->integer('term_id');
             $table->char('health_1',1)->nullable();
             $table->char('health_2',1)->nullable();

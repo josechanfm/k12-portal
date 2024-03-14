@@ -9,7 +9,7 @@ class Grade extends Model
 {
     use HasFactory;
 
-    protected $fillable=['year_id','rank','initial','level','tag','title_zh','title_en','description','transcript_template_id','behaviour_scheme','version','active','transcript_locked'];
+    protected $fillable=['year_id','grade_year','initial','level','tag','title_zh','title_en','description','behaviour_scheme','transcript_template_id','version','transcript_locked','active'];
     protected $casts=['behaviour_scheme'=>'json'];
 
     public function klasses(){

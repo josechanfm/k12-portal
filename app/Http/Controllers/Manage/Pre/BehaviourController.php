@@ -14,14 +14,7 @@ use PDO;
 class BehaviourController extends Controller
 {
 
-/*
-    public function list(){
-        $year=Year::find(Year::currentYear()->id);
-        $grade=$year->grades->where('grade_year',4)->first();
-//        dd($grade->klasses->first()->id);     
-        return redirect()->route('manage.klass.behaviour.summary',$grade->klasses->first());   
-    }
-    */
+
     /**
      * Display a listing of the resource.
      *
@@ -29,6 +22,7 @@ class BehaviourController extends Controller
      */
     public function index(Klass $klass)
     {
+        dd(auth()->user());
         if(empty(auth()->user()->staff)){
             return Inertia::render('Error',[
                 'message'=>"You are not subject teacher."

@@ -43,7 +43,7 @@ class TopicTemplateController extends Controller
         $data['sequence']=TopicTemplate::where('theme_template_id',$request->theme_template_id)->get()->count()+1;
         
         //$data['section']=>Config:
-        $sections=array_column(Config::item('topic_abilities'),'label','value');
+        $sections=array_column(Config::item('topic_sections'),'label','value');
         $data['section']=$sections[$request->section_code];
         TopicTemplate::create($data);
         return redirect()->back();
@@ -78,7 +78,7 @@ class TopicTemplateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Grade $grade, TopicTemplate $topicTemplate, Request $request)
+    public function update(TopicTemplate $topicTemplate, Request $request)
     {
         $topicTemplate->update($request->all());
         return redirect()->back();

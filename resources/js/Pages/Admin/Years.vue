@@ -66,7 +66,6 @@
                             v-model:value="modal.data.kgrade"
                             :options="kgradeOptions"
                             style="width: 80px"
-                            disabled 
                             />
                         </a-form-item>
                     </a-col>
@@ -89,7 +88,6 @@
                             v-model:value="modal.data.pgrade"
                             :options="pgradeOptions"
                             style="width: 80px"
-                            disabled 
                             />
                         </a-form-item>
                     </a-col>
@@ -112,7 +110,6 @@
                             v-model:value="modal.data.sgrade"
                             :options="sgradeOptions"
                             style="width: 80px"
-                            disabled 
                             />
                         </a-form-item>
                     </a-col>

@@ -77,10 +77,16 @@ class UserSeeder extends Seeder
                 'name' => explode(' ', $user->name, 2)[0]."'s Team",
                 'personal_team' => true,
             ]));
+            $user->username='user'.$user->id;
+            $user->email='user'.$user->id."@example.com";
+            $user->save();
     
         }
 
-        User::whereNull('username')->update(['username'=>DB::raw("concat('user',id)")]);
+        // User::whereNull('username')->update([
+        //     'username'=>DB::raw("concat('user',id)"),
+            
+        // ]);
 
     }
 }

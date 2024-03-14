@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Config;
+use App\Models\Year;
 use App\Models\Course;
 use App\Models\Klass;
 use App\Models\Score;
@@ -38,6 +39,7 @@ class ScoreController extends Controller
         $this->authorize('scores',$course);
         $klassCourses=Klass::find($course->klass_id)->courses;
         $course=Course::with('klass')->find($course->id);
+        //dd($course->studentsScores());
         return Inertia::render('Manage/CourseScores',[
             'yearTerms'=>Config::item('year_terms'),
             'course'=>$course,
@@ -121,5 +123,35 @@ class ScoreController extends Controller
         return redirect()->back();
 
     }
+
+    public function finalScoresK(Klass $klass){
+        $year=Year::find(Year::currentYear()->id);
+        $year->klasses;
+        $year->grades;
+        //  dd($klass->finalScoresK());
+        return Inertia::render('Manage/KlassFinalScoresK', [
+            'yearTerms'=>Config::item('year_terms'),
+            'year'=>$year,
+            'klass' => $klass,
+            'transcriptTemplates' => $klass->grade->transcriptTemplates(),
+            'finalScoresK' => $klass->finalScoresK()
+        ]);
+    }
+    public function finalScores(Klass $klass)
+    {
+        if($klass->grade->grade_year<=3){
+            return redirect()->route('manage.klass.finalScoresK',$klass);
+        }
+        $year=Year::find(Year::currentYear()->id);
+        $year->klasses;
+        $year->grades;
+        return Inertia::render('Manage/KlassFinalScores', [
+            'year'=>$year,
+            'klass' => $klass,
+            'transcriptTemplates' => $klass->grade->transcriptTemplates(),
+            'finalScores' => $klass->finalScores()
+        ]);
+    }
+
 
 }

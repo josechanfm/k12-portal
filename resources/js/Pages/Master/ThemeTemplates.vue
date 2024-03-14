@@ -1,34 +1,38 @@
 <template>
-    <AdminLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                學習主題
-            </h2>
-        </template>
-        {{ themeTemplates }}
+    <AdminLayout title="學習主題">
         <div class="bg-white shadow sm:rounded-lg my-5 p-5">
             <a-row>
                 <a-col :sm="24" :lg="12">
-                    <a-typography-title :level="3">年級: {{ year.title }}</a-typography-title>
+                    <a-typography-title :level="3">學年: {{ year.title }}</a-typography-title>
+                    <a-typography-title :level="3">年級: {{ grade.tag }}</a-typography-title>
                 </a-col>
                 <a-col :sm="24" :lg="12">
-                    <template v-for="grade in grades">
-                        <inertia-link class="ant-btn" :href="route('master.grade.themeTemplates.index',grade.id)">{{ grade.tag }}</inertia-link>
+                    <template v-for="grade in year.k_grades">
+                        <inertia-link class="ant-btn" :href="route('master.grade.themeTemplates.index', grade.id)">{{
+                    grade.tag }}</inertia-link>
                     </template>
                 </a-col>
             </a-row>
             <a-row class="pt-5">
                 <a-col :span="24">
-                    <a-typography-title :level="3">年級: {{ grade.tag }}</a-typography-title>
-                    <a-typography-title :level="3">年級全稱: {{ grade.title_zh }}</a-typography-title>
+
                 </a-col>
             </a-row>
         </div>
+        <div class="bg-white sm:rounded-lg my-5 p-5">
+            <div class="float-right">
+                Modify <a-switch v-model:checked="themeEditable" />
+                <span class="pr-5">&nbsp;</span>
+                <button @click="themeCreate()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">新增主題</button>
+            </div>
 
-        <a-typography-title :level="3">年級: {{ grade.tag }}</a-typography-title>
-        <button @click="themeCreate()"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">新增主題</button>
-        <div class="ant-table">
+            <div  v-if="!themeEditable">
+                <a-select v-model:value="selectedThemeId" :options="themeTemplates" :fieldNames="{ value: 'id', label: 'title' }"
+                    @change="onChangeSelectedTheme" />
+            </div>
+            <div v-else class="pb-5">{{ selectedTheme.title }}</div>
+
+            <div class="ant-table" v-if="themeEditable">
             <div class="ant-table-container">
                 <div class="ant-table-content">
                     <table style="table-layout: auto;">
@@ -41,8 +45,12 @@
                         </thead>
                         <tbody class="ant-table-tbody">
                             <tr v-for="theme in themeTemplates">
-                                <td>{{ theme.term_id }}</td>
-                                <td>{{ theme.title }}</td>
+                                <td>{{ theme.term_id }}/{{ theme.id }}</td>
+                                <td>
+                                    <a @click="selectedTheme = theme">
+                                        {{ theme.title }}
+                                    </a>
+                                </td>
                                 <td>
                                     <a-button @click="themeEdit(theme)" :style="'Edit'">修改</a-button>
                                     <a-button @click="themeDelete(theme)" :style="'Delete'">刪除</a-button>
@@ -53,17 +61,16 @@
                 </div>
             </div>
         </div>
-
-        <template v-if="themeTemplates.length > 0">
-            <button @click="topicCreate()"
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">新增內容</button>
-            <a-divider type="vertical"></a-divider>
-            <a-select v-model:value="selectedThemeId" :options="themeTemplates" :fieldNames="{ value: 'id', label: 'title' }"
-                style="width:150px" />
-            <a-table :dataSource="themeTemplates.find(theme => theme.id == selectedThemeId).topic_templates" :columns="columns">
+        
+        </div>
+        <div>
+            <div class="text-right">
+                <button @click="topicCreate()"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">新增內容</button>
+            </div>
+            <a-table :dataSource="selectedTheme.topic_templates" :columns="topicColumns">
                 <template #bodyCell="{ column, text, record, index }">
                     <template v-if="column.dataIndex == 'operation'">
-                        {{ record.topics }}
                         <a-button @click="topicEdit(record)" :style="'Edit'">修改</a-button>
                         <a-button @click="topicDelete(record)" :style="'Delete'">刪除</a-button>
                     </template>
@@ -72,33 +79,30 @@
                     </template>
                 </template>
             </a-table>
-        </template>
+        </div>
 
         <!-- modalTheme Start-->
-        <a-modal v-model:visible="modalTheme.isOpen" :title="modalTheme.title">
+        <a-modal v-model:visible="modalTheme.isOpen" :title="modalTheme.title" @ok="themeOnOk">
             <a-form :model="modalTheme.data" name="Theme" ref="modalThemeRef" :rules="themeRules"
                 :validate-messages="validateMessages" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
-                <a-form-item label="學段" name="section_code">
+                <a-form-item label="學段" name="term_id">
                     <a-select v-model:value="modalTheme.data.term_id" :options="yearTerms" />
                 </a-form-item>
                 <a-form-item label="主題名稱" name="title">
                     <a-input v-model:value="modalTheme.data.title" />
                 </a-form-item>
+                <a-form-item label="主題名稱" name="description">
+                    <a-textarea v-model:value="modalTheme.data.description" />
+                </a-form-item>
+
             </a-form>
-            <template #footer>
-                <a-button key="back" @click="themeModalTopicCancel()">Return</a-button>
-                <a-button v-if="modalTheme.mode == 'EDIT'" key="Update" type="primary"
-                    @click="themeUpdate()">Update</a-button>
-                <a-button v-if="modalTheme.mode == 'CREATE'" key="Store" type="primary"
-                    @click="themeStore()">Create</a-button>
-            </template>
         </a-modal>
         <!-- modalTopic Start-->
-        <a-modal v-model:visible="modalTopic.isOpen" :title="modalTopic.title">
+        <a-modal v-model:visible="modalTopic.isOpen" :title="modalTopic.title" @ok="topicOnOK">
             <a-form :model="modalTopic.data" name="Topic" ref="modalTopicRef" :rules="topicRules"
                 :validate-messages="validateMessages" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
                 <a-form-item label="分類" name="section_code">
-                    <a-select v-model:value="modalTopic.data.section_code" :options="topicAbilities" />
+                    <a-select v-model:value="modalTopic.data.section_code" :options="topicSections" />
                 </a-form-item>
                 <a-form-item label="分組標題" name="abbr">
                     <a-input v-model:value="modalTopic.data.abbr" />
@@ -107,13 +111,6 @@
                     <a-input v-model:value="modalTopic.data.title" />
                 </a-form-item>
             </a-form>
-            <template #footer>
-                <a-button key="back" @click="topicModalTopicCancel()">Return</a-button>
-                <a-button v-if="modalTopic.mode == 'EDIT'" key="Update" type="primary"
-                    @click="topicUpdate()">Update</a-button>
-                <a-button v-if="modalTopic.mode == 'CREATE'" key="Store" type="primary"
-                    @click="topicStore()">Create</a-button>
-            </template>
         </a-modal>
 
     </AdminLayout>
@@ -129,10 +126,12 @@ export default {
     components: {
         AdminLayout, Modal, createVNode, ExclamationCircleOutlined
     },
-    props: ['yearTerms','year','grades', 'topicAbilities', 'grade', 'themeTemplates'],
+    props: ['yearTerms', 'year', 'grade', 'themeTemplates', 'topicSections'],
     data() {
         return {
+            themeEditable: false,
             selectedThemeId: null,
+            selectedTheme: null,
             modalTheme: {
                 mode: null,
                 isOpen: false,
@@ -145,12 +144,15 @@ export default {
                 title: 'Topic',
                 data: {}
             },
-            columns: [
+            topicColumns: [
                 {
                     title: '分類名稱',
-                    dataIndex: 'section',
+                    dataIndex: 'section_code_label',
                 }, {
                     title: '分組標題',
+                    dataIndex: 'section',
+                }, {
+                    title: '分組全稱',
                     dataIndex: 'abbr',
                 }, {
                     title: '分組全稱',
@@ -193,6 +195,7 @@ export default {
         }
     },
     created() {
+        this.selectedTheme = this.themeTemplates[0]
         if (this.themeTemplates.length > 0) {
             this.selectedThemeId = this.themeTemplates[0].id
         }
@@ -205,36 +208,40 @@ export default {
             this.modalTheme.title = "新增"
             this.modalTheme.mode = 'CREATE'
             this.modalTheme.isOpen = true
-
         },
-        themeUpdate() {
-            this.$refs.modalThemeRef.validateFields().then(() => {
-                this.$inertia.put(route('master.grade.themeTemplates.update', [this.grade.id, this.modalTheme.data.id]), this.modalTheme.data, {
-                    onSuccess: (page) => {
-                        this.modalTheme.data = {}
-                        this.modalTheme.isOpen = false;
-                    },
-                    onError: (error) => {
-                        console.log(error);
-                    }
-                });
-            }).catch(err => {
-                console.log("error", err);
-            });
+        themeEdit(theme) {
+            this.modalTheme.data = { ...theme }
+            this.modalTheme.isOpen = true
+            this.modalTheme.mode = 'EDIT'
+            this.modalTheme.title = "修改"
+        },
+        themeOnOk() {
+            if (this.modalTheme.mode == 'CREATE') {
+                this.themeStore();
+            } else {
+                this.themeUpdate();
+            }
         },
         themeStore() {
-            this.$refs.modalThemeRef.validateFields().then(() => {
-                this.$inertia.post(route('master.grade.themeTemplates.store', this.grade.id), this.modalTheme.data, {
-                    onSuccess: (page) => {
-                        this.modalTheme.data = {}
-                        this.modalTheme.isOpen = false;
-                    },
-                    onError: (error) => {
-                        console.log(error);
-                    }
-                });
-            }).catch(err => {
-                console.log("error", err);
+            this.$inertia.post(route('master.themeTemplates.store', this.modalTheme.data.id), this.modalTheme.data, {
+                onSuccess: (page) => {
+                    this.modalTheme.data = {}
+                    this.modalTheme.isOpen = false;
+                },
+                onError: (error) => {
+                    console.log(error);
+                }
+            });
+        },
+        themeUpdate() {
+            this.$inertia.put(route('master.themeTemplates.update', this.modalTheme.data.id), this.modalTheme.data, {
+                onSuccess: (page) => {
+                    this.modalTheme.data = {}
+                    this.modalTheme.isOpen = false;
+                },
+                onError: (error) => {
+                    console.log(error);
+                }
             });
         },
         themeDelete(theme) {
@@ -257,12 +264,6 @@ export default {
                 }
             })
         },
-        themeEdit(theme) {
-            this.modalTheme.data = { ...theme }
-            this.modalTheme.isOpen = true
-            this.modalTheme.mode = 'EDIT'
-            this.modalTheme.title = "修改"
-        },
         topicCreate() {
             this.modalTopic.data = {}
             this.modalTopic.data.theme_template_id = this.selectedThemeId
@@ -277,20 +278,12 @@ export default {
             this.modalTopic.mode = 'EDIT'
             this.modalTopic.title = "修改"
         },
-        topicUpdate() {
-            this.$refs.modalTopicRef.validateFields().then(() => {
-                this.$inertia.put(route('master.grade.topicTemplates.update', [this.grade.id, this.modalTopic.data.id]), this.modalTopic.data, {
-                    onSuccess: (page) => {
-                        this.modalTopic.data = {}
-                        this.modalTopic.isOpen = false;
-                    },
-                    onError: (error) => {
-                        console.log(error);
-                    }
-                });
-            }).catch(err => {
-                console.log("error", err);
-            });
+        topicOnOK() {
+            if (this.modalTopic.mode == 'CREATE') {
+                this.topicStore()
+            } else {
+                this.topicUpdate()
+            }
         },
         topicStore() {
             console.log(this.modalTopic.data);
@@ -306,6 +299,18 @@ export default {
                 });
             }).catch(err => {
                 console.log("error", err);
+            });
+        },
+        topicUpdate() {
+            this.$inertia.put(route('master.topicTemplates.update', this.modalTopic.data.id), this.modalTopic.data, {
+                onSuccess: (page) => {
+                    this.modalTopic.data = {}
+                    this.modalTopic.isOpen = false;
+                    this.selectedTheme = this.themeTemplates.find(t => t.id == this.selectedTheme.id)
+                },
+                onError: (error) => {
+                    console.log(error);
+                }
             });
         },
         topicDelete(topic) {
@@ -328,15 +333,12 @@ export default {
                 },
             });
         },
-        themeModalTopicCancel() {
-            this.modalTheme.isOpen = false
-        },
-        topicModalTopicCancel() {
-            this.modalTopic.isOpen = false
+
+        onChangeSelectedTheme() {
+            console.log('selected Theme changed');
+            this.selectedTheme = this.themeTemplates.find(t => t.id == this.selectedThemeId)
+            console.log(this.selectedTheme)
         }
-
-
     },
 }
 </script>
-

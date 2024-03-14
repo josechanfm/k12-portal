@@ -25,6 +25,7 @@
           :type="selectedTermId == term.value ? 'primary' : ''"
           >{{ term.label }}</a-button
         >
+        <a-button @click="sampleData()">Sample Data</a-button>
         <p></p>
         <table id="scoreTable" ref="scoreTable">
           <tr>
@@ -190,6 +191,17 @@ export default {
             }
         })
     },
+    sampleData(){
+      const letter='ABCDFGH';
+      Object.entries(this.habits['scores']).forEach(([i,std])=>{
+        Object.entries(std).forEach(([j,term])=>{
+          this.habitColumns.forEach(column=>{
+            var num=Math.floor(Math.random() * 4)
+            term[column.name]=letter.substring(num,num+1);
+          })
+        })
+      })
+    }
   },
 };
 </script>

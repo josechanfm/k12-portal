@@ -23,15 +23,21 @@ class ThemeTemplateController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($gradeYear)
+    public function index($gradeId)
     {
         
-        //dd($gradeYear);
-        $t=ThemeTemplate::find(1);
-        //dd($t->topicTemplates);
-        $tempTopics=Config::item('topic_templates');
-        dd($tempTopics);
-        $themeTemplates=ThemeTemplate::where('grade_year',$gradeYear)->with('TopicTemplates')->get();
+        $grade=Grade::find($gradeId);
+        $year=Year::with('kGrades')->find($grade->year_id);
+
+        $themeTemplates=ThemeTemplate::where('grade_year',$grade->grade_year)->with('TopicTemplates')->get();
+        return Inertia::render('Master/ThemeTemplates',[
+            'year'=>$year,
+            'grade'=>$grade,
+            'yearTerms'=>Config::item('year_terms'),
+            'themeTemplates'=>$themeTemplates,
+            'topicSections'=>Config::item('topic_sections'),
+        ]);
+        dd($themeTemplates);
         if($themeTemplates->count()<=0){
             echo 'add themetemplate';
         }else{
@@ -103,9 +109,11 @@ class ThemeTemplateController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Grade $grade, Request $request)
+    public function store(ThemeTemplate $themeTemplate, Request $request)
     {
+        
         ThemeTemplate::create($request->all());
+        // dd($request->all());
         return redirect()->back();
     }
 
@@ -138,7 +146,7 @@ class ThemeTemplateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Grade $grade, ThemeTemplate $themeTemplate, Request $request)
+    public function update(ThemeTemplate $themeTemplate, Request $request)
     {
         $themeTemplate->update($request->all());
         return redirect()->back();
