@@ -1,6 +1,10 @@
 <template>
     <AdminLayout title="Dashboard">
         Avatars
+
+
+
+        
         <div class="flex items-center justify-center w-full">
             <label for="dropzone-file"
                 class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
@@ -36,7 +40,7 @@ export default {
     props: [],
     data() {
         return {
-            fileList: [],
+            klassStudentIds: [],
             dragging: false,
         }
     },
@@ -65,7 +69,15 @@ export default {
         },
         handleFileChange() {
             var files = this.$refs.fileInput.files;
-            this.$inertia.post(route('manage.avatar.upload'),files,{
+            Object.entries(files).forEach(([i,file])=>{
+                this.verifyFile(file)
+            })
+        },
+        uploadFile(klassStudentId, file){
+            this.$inertia.post(route('manage.avatar.upload'),{
+                avatar:file,
+                klassStudentId:klassStudentId
+            },{
                 onSuccess: (page) => {
                     console.log(page);
                 },
@@ -74,10 +86,6 @@ export default {
                 }
             })
 
-            // Array.from(files).forEach(file=>{  
-            //     formData.append('avatas',file.value);
-            //     console.log(file)
-            // })
         },
         handleFile(file) {
             // Perform any necessary file handling logic
@@ -114,8 +122,9 @@ export default {
                 filename: file.name
             }),).then(res => {
                 console.log(res.data);
+                this.uploadFile(res.data.pivot.klass_student_id,file)
             })
-            return isJpgOrPng && isLt2M;
+            //return isJpgOrPng && isLt2M;
         },
         handleDrop() {
             console.log('handle drop');

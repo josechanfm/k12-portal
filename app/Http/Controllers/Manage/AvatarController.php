@@ -4,7 +4,11 @@ namespace App\Http\Controllers\Manage;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
+use App\Models\KlassStudent;
+use App\Models\Grade;
 
 class AvatarController extends Controller
 {
@@ -86,11 +90,31 @@ class AvatarController extends Controller
         //
     }
     public function upload(Request $request){
-        return response()->json([
-            'message' => 'Photo uploaded successfully',
-            'photo_path' => 'okok path',
-            'file2'=>$request->all() 
-        ]);
-        
+        $uploadFile=$request->file('avatar');
+        $klassStudent=KlassStudent::find($request->klassStudentId);
+
+        $fileDisk='profile';
+        $filePath=$klassStudent->klass->grade->year->code.'/'.$klassStudent->klass->tag;
+        $fileName=$klassStudent->student_number.'_'.(String) Str::uuid().'.'.$uploadFile->getClientOriginalExtension();
+        $fileType='avatar';
+        $klassStudent->archives()->updateOrCreate(
+            [
+                'file_type'=>$fileType
+            ],[
+                'file_type'=>$fileType,
+                'original_name'=>'original_name',
+                'file_name'=>$fileName,
+                'file_disk'=>$fileDisk,
+                'file_path'=>'/'.$filePath.'/'.$fileName
+            ]
+        );
+
+
+        Storage::disk($fileDisk)->put(
+            $filePath,
+            $uploadFile
+        );
+        return redirect()->back();
+
     }
 }

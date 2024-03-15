@@ -21,21 +21,14 @@ class AvatarController extends Controller
         $gradeTag=substr($filename,0,strlen($filename)-3);
         $klassLetter=substr($filename,strlen($filename)-3,strlen($filename)-4);
         $studentNumber=intval(substr($filename,-2));
-        $student=Year::currentYear()->grades->where('tag',$gradeTag)->first()->klasses->where('letter',$klassLetter)->first()->students->where('pivot.student_number',$studentNumber)->first();
-        return json_encode($student);
-    }
-    public function upload(Request $request){
-        //Storage::put($request->file[0]['originFileObj'],'abc123.png');
-        return response()->json([
-            'message' => 'Photo uploaded successfully, bjose',
-            'photo_path' => 'okok path',
-            'file'=>$request->file('file')
-        ]);
-
-        // return response()->json([
-        //     'message' => 'No photo uploaded',
-        // ], 400);
-
-        
+        //return $gradeTag.'/'.$klassLetter.'/'.$studentNumber;
+        $student=Year::currentYear()
+            ->grades->where('tag',$gradeTag)->first()
+            ->klasses->where('letter',$klassLetter)->first()
+            ->students->where('pivot.student_number',$studentNumber)->first();
+        if($student){
+            return json_encode($student);
+        }
+        return false;
     }
 }

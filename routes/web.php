@@ -202,7 +202,7 @@ Route::group([
         Route::resource('klass/{klass}/promotes/',App\Http\Controllers\Manage\PromotionController::class)->names('manage.klass.promotes');
         
         Route::resource('avatars/',App\Http\Controllers\Manage\AvatarController::class)->names('manage.avatars');
-        Route::post('avatar/upload',[App\Http\Controllers\Api\AvatarController::class,'upload'])->name('manage.avatar.upload');
+        Route::post('avatar/upload',[App\Http\Controllers\Manage\AvatarController::class,'upload'])->name('manage.avatar.upload');
 
         Route::group(['prefix'=>'pre',],function () {
             Route::get('/klass/{klass}/final_scores',[App\Http\Controllers\Manage\Pre\KlassController::class,'finalScores'])->name('manage.pre.klass.finalScores');
