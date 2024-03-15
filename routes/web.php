@@ -143,20 +143,22 @@ Route::group([
     ]
 ],function () {
         Route::get('/',[App\Http\Controllers\Manage\DashboardController::class,'index'])->name('manage');
+
         Route::resource('grades',App\Http\Controllers\Manage\GradeController::class)->names('manage.grades');
         Route::resource('course',App\Http\Controllers\Manage\CourseController::class);
-        Route::resource('/students',App\Http\Controllers\Manage\StudentController::class)->names('manage.students');
-        Route::get('/students/get_by_klass_id/{klass}',[App\Http\Controllers\Manage\StudentController::class,'getByKlassId'])->name('manage.students.getByKlassId');
-        Route::post('/students/get_by_names',[App\Http\Controllers\Manage\StudentController::class,'getByNames'])->name('manage.students.getByNames');
-        Route::resource('/klasses',App\Http\Controllers\Manage\KlassController::class)->names('manage.klasses');
-        Route::get('/klass_scores/{klassId}',[App\Http\Controllers\Manage\KlassController::class,'klass_scores']);
-        //Route::get('klass/{klass}/students',[App\Http\Controllers\Manage\KlassController::class,'students'])->name('manage.klass.students');
-
-
+        Route::get('/course/{course}/makeups',[App\Http\Controllers\Manage\CourseController::class,'makeups'])->name('manage.course.makeups');
         Route::get('/klass/{klass}/courses',[App\Http\Controllers\Manage\CourseController::class,'klass'])->name('manage.klass.courses');
+
+        Route::resource('klasses',App\Http\Controllers\Manage\KlassController::class)->names('manage.klasses');
+        Route::get('/klass_scores/{klassId}',[App\Http\Controllers\Manage\KlassController::class,'klass_scores']);
+
+        Route::resource('students',App\Http\Controllers\Manage\StudentController::class)->names('manage.students');
+        Route::resource('klass/{klass}/students',App\Http\Controllers\Manage\StudentController::class)->names('manage.klass.students');
+        Route::get('students/get_by_klass_id/{klass}',[App\Http\Controllers\Manage\StudentController::class,'getByKlassId'])->name('manage.students.getByKlassId');
+        Route::post('students/get_by_names',[App\Http\Controllers\Manage\StudentController::class,'getByNames'])->name('manage.students.getByNames');
+
         Route::resource('klass/{klass}/behaviours',App\Http\Controllers\Manage\BehaviourController::class)->names('manage.klass.behaviours');
         Route::get('klass/{klass}/behaviour/adjust',[App\Http\Controllers\Manage\BehaviourController::class,'adjust'])->name('manage.klass.behaviour.adjust');
-        //Route::get('behaviours',[App\Http\Controllers\Manage\BehaviourController::class,'list'])->name('manage.behaviours');
 
         Route::get('/year/{year}/transcripts',[App\Http\Controllers\Manage\TranscriptController::class,'yearTranscripts'])->name('manage.year.transcripts');
         Route::get('/grade/{grade}/transcripts',[App\Http\Controllers\Manage\TranscriptController::class,'gradeTranscripts'])->name('manage.grade.transcripts');
@@ -167,22 +169,13 @@ Route::group([
         
         Route::resource('/teachers',App\Http\Controllers\Manage\TeacherController::class)->names('manage.teachers');
         Route::get('teaching/{teacherId}',[App\Http\Controllers\Manage\TeacherController::class,'teaching'])->name('manage.teaching');   
-        //Route::get('/course/{course}/scores',[App\Http\Controllers\Manage\CourseController::class,'scores'])->name('manage.course.scores');
 
         Route::resource('course/{course}/scores',App\Http\Controllers\Manage\ScoreController::class)->names('manage.course.scores');
-        // Route::post('/scores/update',[App\Http\Controllers\Manage\ScoreController::class,'update'])->name('manage.scores.update');
-        //Route::post('/score_column/update_is_total',[App\Http\Controllers\Manage\ScoreColumnController::class,'update_is_total'])->name('manage.score_column.update_is_total');
         Route::post('course/{course}/score_column/reorder',[App\Http\Controllers\Manage\ScoreColumnController::class,'reorder'])->name('manage.course.scoreColumn.reorder');
         Route::resource('course/{course}/score_columns',App\Http\Controllers\Manage\ScoreColumnController::class)->names('manage.course.scoreColumns');
-
-
-
-
-
-
         Route::post('/course/{course}/scores/batch_update',[App\Http\Controllers\Manage\ScoreController::class,'batchUpdate'])->name('manage.course.scores.batchUpdate');
-        Route::get('/course/{course}/makeups',[App\Http\Controllers\Manage\CourseController::class,'makeups'])->name('manage.course.makeups');
         Route::get('/klass/{klass}/final_scores',[App\Http\Controllers\Manage\ScoreController::class,'finalScores'])->name('manage.klass.finalScores');
+
         Route::post('/makeup/create_or_cancel',[App\Http\Controllers\Manage\MakeupController::class,'createOrCancel'])->name('manage.makeup.createOrCancel');
         Route::post('/makeup/update',[App\Http\Controllers\Manage\MakeupController::class,'update'])->name('manage.makeup.update');
         
@@ -191,25 +184,26 @@ Route::group([
         Route::get('klass/{klass}/additive_page',[App\Http\Controllers\Manage\AdditiveController::class,'page'])->name('manage.klass.additive.page');
         Route::get('klass/{klass}/additive_direct',[App\Http\Controllers\Manage\AdditiveController::class,'direct'])->name('manage.klass.additive.direct');
         Route::post('klass/{klass}/additive_direct_input',[App\Http\Controllers\Manage\AdditiveController::class,'directInput'])->name('manage.klass.additive.directInput');
+
         Route::resource('makeups',App\Http\Controllers\Manage\MakeupController::class)->names('manage.makeups');
         Route::resource('tasks',App\Http\Controllers\Manage\TaskController::class)->names('manage.tasks');
+
         Route::resource('activities',App\Http\Controllers\Manage\ActivityController::class)->names('manage.activities');
         Route::get('activity/{activity}/students',[App\Http\Controllers\Manage\ActivityController::class,'students'])->name('manage.activity.students');
         Route::put('activity/{activity}/students/sync',[App\Http\Controllers\Manage\ActivityController::class,'studentsSync'])->name('manage.activity.students.sync');
         Route::get('activity/{activity}/students/scores',[App\Http\Controllers\Manage\ActivityController::class,'studentsScores'])->name('manage.activity.students.scores');
         Route::put('activity/{activity}/students/scores/update',[App\Http\Controllers\Manage\ActivityController::class,'studentsScoresUpdate'])->name('manage.activity.students.scores.update');
         Route::get('activity/{activity}/students/scores/report',[App\Http\Controllers\Manage\ActivityController::class,'scoreReport'])->name('manage.activity.students.scores.report');
+
         Route::resource('certificates',App\Http\Controllers\Manage\CertificateController::class)->names('manage.certificates');
         Route::get('certificate/get_by_conditions',[App\Http\Controllers\Manage\CertificateController::class,'getByConditions'])->name('manage.certificate.getByConditions');
+
         Route::get('promotes',[App\Http\Controllers\Manage\PromotionController::class,'list'])->name('manage.promotes');
         Route::resource('klass/{klass}/promotes/',App\Http\Controllers\Manage\PromotionController::class)->names('manage.klass.promotes');
-        Route::resource('klass/{klass}/students',App\Http\Controllers\Manage\StudentController::class)->names('manage.klass.students');
-        // Route::get('klass/{klassId}/promote',[App\Http\Controllers\Manage\PromotionController::class,'klass'])->name('manage.klass.promote');
-        // Route::get('getStudents/{klassId}/promote',[App\Http\Controllers\Manage\PromotionController::class,'getStudents'])->name('manage.getStudents.promote');;
-        // Route::get('getPromotedStudents/{klassId}/promote',[App\Http\Controllers\Manage\PromotionController::class,'getPromotedStudents'])->name('manage.getPromotedStudents.promote');;
-        // Route::post('updateStudents/promote',[App\Http\Controllers\Manage\PromotionController::class,'updateStudents'])->name('manage.updateStudents.promote');;
-        // Route::get('data/{yearId}/promote',[App\Http\Controllers\Manage\PromotionController::class, 'data'])->name('manage.data.promote');;
-    
+        
+        Route::resource('avatars/',App\Http\Controllers\Manage\AvatarController::class)->names('manage.avatars');
+        Route::post('avatar/upload',[App\Http\Controllers\Api\AvatarController::class,'upload'])->name('manage.avatar.upload');
+
         Route::group(['prefix'=>'pre',],function () {
             Route::get('/klass/{klass}/final_scores',[App\Http\Controllers\Manage\Pre\KlassController::class,'finalScores'])->name('manage.pre.klass.finalScores');
             Route::resource('/klasses',App\Http\Controllers\Manage\Pre\KlassController::class)->names('manage.pre.klasses');
@@ -222,7 +216,6 @@ Route::group([
             //     return redirect()->route('manage.pre.klass.habits',$klass->id);
             // })->name('manage.pre.klass.habit.import');
             Route::post('/klass/{klass}/habit/importConfirmed',[App\Http\Controllers\Manage\Pre\HabitController::class,'importConfirmed'])->name('manage.pre.klass.habit.importConfirmed');
-
 
             Route::get('/klass/{klass}/abilities',[App\Http\Controllers\Manage\Pre\AbilityController::class,'klass'])->name('manage.pre.klass.abilities');
             Route::get('/klass/{klass}/abilities/pdf',[App\Http\Controllers\Manage\Pre\AbilityController::class,'pdf'])->name('manage.pre.klass.abilities.pdf');

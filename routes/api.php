@@ -17,3 +17,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('avatar/verify_filename',[App\Http\Controllers\Api\AvatarController::class,'verifyFilename'])->name('avatar.verifyFilename');
+
+
+
