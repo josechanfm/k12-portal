@@ -166,7 +166,6 @@ class GradeController extends Controller
         // dd($grade->klasses);
         // dd(Klass::whereBelongsTo($grade)->get());
         //dd($year);
-        dd($grade);
         if(Klass::whereBelongsTo($grade)->get()->count()==0){
             return redirect()->back()->withErrors(['message'=>'Could not delete, foreign key used in Klass table.']);
         }else{
