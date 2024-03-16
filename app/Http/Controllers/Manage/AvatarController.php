@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+use App\Models\Student;
 use App\Models\KlassStudent;
 use App\Models\Grade;
 
@@ -92,11 +93,14 @@ class AvatarController extends Controller
     public function upload(Request $request){
         $uploadFile=$request->file('avatar');
         $klassStudent=KlassStudent::find($request->klassStudentId);
-
+        $student=Student::find($klassStudent->student_id);
+        $student->addMedia($uploadFile)->toMediaCollection('avatar');
+        return redirect()->back();
         $fileDisk='profile';
         $filePath=$klassStudent->klass->grade->year->code.'/'.$klassStudent->klass->tag;
         $fileName=$klassStudent->student_number.'_'.(String) Str::uuid().'.'.$uploadFile->getClientOriginalExtension();
         $fileType='avatar';
+        
         $klassStudent->archives()->updateOrCreate(
             [
                 'file_type'=>$fileType
