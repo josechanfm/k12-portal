@@ -45,7 +45,20 @@ class TranscriptController extends Controller
     public function KlassStudent(KlassStudent $klassStudent){
         $templates=$klassStudent->klass->grade->transcriptTemplates();
         $transcripts=array_column(Transcript::where('klass_student_id',$klassStudent->id)->orderBy('transcript_template_id')->get()->toArray(),null,'transcript_template_id');
-        $klassStudent->student;
+        $pdf=PDF::loadView('pdf.transcript',[
+            'templates'=>$templates,
+            'klassStudent'=>$klassStudent,
+            'transcripts'=>$transcripts
+        ]);
+        $tmpPathName='tmp/'.$klassStudent->id.'_'.(String) Str::uuid().'.pdf';
+        Storage::disk('profile')->put(
+            $tmpPathName,
+            $pdf->output()
+        );
+
+        $klassStudent->addMedia(Storage::disk('profile')->path($tmpPathName))->toMediaCollection('transcript');
+        return redirect()->back();
+
         $fileDisk='profile';
         $filePath=$klassStudent->klass->grade->year->code.'/'.$klassStudent->klass->tag;
         $fileName=$klassStudent->student_number.'_'.(String) Str::uuid().'.pdf';

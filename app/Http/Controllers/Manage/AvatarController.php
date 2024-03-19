@@ -93,9 +93,11 @@ class AvatarController extends Controller
     public function upload(Request $request){
         $uploadFile=$request->file('avatar');
         $klassStudent=KlassStudent::find($request->klassStudentId);
-        $student=Student::find($klassStudent->student_id);
-        $student->addMedia($uploadFile)->toMediaCollection('avatar');
+        $klassStudent->addMedia($uploadFile)->toMediaCollection('avatar');
+        // $student=Student::find($klassStudent->student_id);
+        // $student->addMedia($uploadFile)->toMediaCollection('avatar');
         return redirect()->back();
+
         $fileDisk='profile';
         $filePath=$klassStudent->klass->grade->year->code.'/'.$klassStudent->klass->tag;
         $fileName=$klassStudent->student_number.'_'.(String) Str::uuid().'.'.$uploadFile->getClientOriginalExtension();

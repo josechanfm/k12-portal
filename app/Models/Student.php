@@ -13,7 +13,7 @@ class Student extends Model implements HasMedia
 {
     use HasFactory;
     use InteractsWithMedia;
-
+    
     protected $fillable=['name_zh','name_fn','gender','dob'];
 
     // public function klasses(){
@@ -32,6 +32,9 @@ class Student extends Model implements HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('avatar')
+            ->singleFile()
+            ->useDisk('profile');
+        $this->addMediaCollection('transcript')
             ->singleFile()
             ->useDisk('profile');
     }         
