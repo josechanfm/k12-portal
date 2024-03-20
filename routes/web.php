@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\PromotionController;
 |
 */
 
+Route::get('excel/read_file',[App\Http\Controllers\ExcelController::class,'readFile']);
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -31,7 +32,7 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-})->name('abc');
+})->name('home');
 
 
 Route::middleware([
