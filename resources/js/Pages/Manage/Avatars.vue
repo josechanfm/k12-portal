@@ -1,11 +1,9 @@
 <template>
     <AdminLayout title="Dashboard">
         Avatars
-
-
-
-        
-        <div class="flex items-center justify-center w-full">
+        <a-row>
+            <a-col :span="6">
+                <div class="flex items-center justify-center w-full">
             <label for="dropzone-file"
                 class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                 <div class="flex flex-col items-center justify-center pt-5 pb-6">
@@ -22,6 +20,18 @@
             </label>
         </div>
 
+            </a-col>
+            <a-col :span="18">
+                <div class="grid grid-cols-8 gap-4">
+                <div v-for="avatar in avatars">
+                    <img :src="avatar.url" width="100"/>
+                    {{ avatar.full_tag }}
+                    {{ avatar.student_name }}
+                </div>
+            </div>
+
+            </a-col>
+        </a-row>
 
     </AdminLayout>
 </template>
@@ -29,7 +39,7 @@
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { InboxOutlined } from '@ant-design/icons-vue';
-import { message } from 'ant-design-vue';
+import { AvatarGroup, message } from 'ant-design-vue';
 
 export default {
     components: {
@@ -40,7 +50,7 @@ export default {
     props: [],
     data() {
         return {
-            klassStudentIds: [],
+            avatars: [],
             dragging: false,
         }
     },
@@ -74,16 +84,17 @@ export default {
             })
         },
         uploadFile(klassStudentId, file){
-            this.$inertia.post(route('manage.avatar.upload'),{
+            axios.post(route('manage.avatars.store'),{
                 avatar:file,
                 klassStudentId:klassStudentId
             },{
-                onSuccess: (page) => {
-                    console.log(page);
-                },
-                onError: (error) => {
-                    console.log(error);
+            headers: {
+                'Content-Type': 'multipart/form-data'
                 }
+            }).then(resp=>{
+                this.avatars.push(resp.data)
+            }).catch(err=>{
+                console.log(err);
             })
 
         },

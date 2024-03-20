@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 use Inertia\Inertia;
 use App\Models\Student;
 use App\Models\KlassStudent;
-use App\Models\Grade;
+use App\Models\Klass;
 
 class AvatarController extends Controller
 {
@@ -43,7 +43,21 @@ class AvatarController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $uploadFile=$request->file('avatar');
+        $klassStudent=KlassStudent::find($request->klassStudentId);
+        if(isset($uploadFile)){
+            //$media=$klassStudent->addMediaFromRequest($uploadFile)->toMediaCollection('avatar');
+            $media=$klassStudent->addMedia($uploadFile)->toMediaCollection('avatar');
+        }
+        
+        // $student=Student::find($klassStudent->student_id);
+        // $student->addMedia($uploadFile)->toMediaCollection('avatar');
+        return response()->json([
+            'student_name'=>$klassStudent->student->name_zh,
+            'student_number'=>$klassStudent->student_number,
+            'full_tag'=>$media->name,
+            'url'=>$media->getFullUrl()
+        ]);
     }
 
     /**
@@ -91,36 +105,17 @@ class AvatarController extends Controller
         //
     }
     public function upload(Request $request){
-        $uploadFile=$request->file('avatar');
-        $klassStudent=KlassStudent::find($request->klassStudentId);
-        $klassStudent->addMedia($uploadFile)->toMediaCollection('avatar');
-        // $student=Student::find($klassStudent->student_id);
-        // $student->addMedia($uploadFile)->toMediaCollection('avatar');
-        return redirect()->back();
-
-        $fileDisk='profile';
-        $filePath=$klassStudent->klass->grade->year->code.'/'.$klassStudent->klass->tag;
-        $fileName=$klassStudent->student_number.'_'.(String) Str::uuid().'.'.$uploadFile->getClientOriginalExtension();
-        $fileType='avatar';
-        
-        $klassStudent->archives()->updateOrCreate(
-            [
-                'file_type'=>$fileType
-            ],[
-                'file_type'=>$fileType,
-                'original_name'=>'original_name',
-                'file_name'=>$fileName,
-                'file_disk'=>$fileDisk,
-                'file_path'=>'/'.$filePath.'/'.$fileName
-            ]
-        );
-
-
-        Storage::disk($fileDisk)->put(
-            $filePath,
-            $uploadFile
-        );
-        return redirect()->back();
+    }
+    public function student(Student $student){
+        return response()->json($student->avatars());
+ 
+    }
+    public function klass(Klass $klass){
+        return Inertia::render('Manage/KlassAvatars', [
+            'klass' => $klass,
+            'students' => $klass->studentsWithAvatar(),
+        ]);
 
     }
+
 }

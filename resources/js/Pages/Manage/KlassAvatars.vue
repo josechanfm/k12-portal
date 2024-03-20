@@ -1,21 +1,17 @@
 <template>
     <AdminLayout title="學生名單" :breadcrumb="breadcrumb">
-        <inertia-link :href="route('manage.klass.avatars',klass.id)" class="ant-btn ant-btn-default float-right">學生照片</inertia-link>
+        <inertia-link :href="route('manage.avatars.index')" class="ant-btn ant-btn-default float-right">學生上載</inertia-link>
         <a-typography-title :level="3">班別: {{ klass.tag }}</a-typography-title>
-        <a-table :dataSource="students" :columns="columns">
-            <template #bodyCell="{column, text, record, index}">
-                <template v-if="column.dataIndex == 'action'">
-                    <inertia-link :href="route('manage.klass.student.transcript',record.pivot.klass_student_id)" class="ant-btn">Gen成績表</inertia-link>
-                    <a :href="route('manage.student',record.pivot.klass_student_id)" class="ant-btn" target="_blank">學生檔案</a>
-                </template>
-                <template v-else-if="column.dataIndex=='avatar'">
-                    <a-image v-if="record.avatar" width="100px" :src="record.avatar.preview_url"/>
-                </template>
-                <template v-else>
-                    {{record[column.dataIndex]}}
-                </template>
-            </template>
-        </a-table>
+        <a-row>
+            <a-col :span="4" v-for="student in students">
+                <p class="height-100">
+                    <a-image v-if="student.avatar" width="100px" :src="student.avatar.preview_url"/>
+                    <br>
+                    {{ student.pivot.student_number }} | 
+                    {{ student.name_zh }}
+                </p>
+            </a-col>
+        </a-row>
     </AdminLayout>
 </template>
 

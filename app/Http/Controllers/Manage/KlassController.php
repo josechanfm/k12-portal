@@ -60,7 +60,7 @@ class KlassController extends Controller
         $klass->grade;
         $klass->courses;
         $klass->students;
-        return Inertia::render('Manage/Klasses', [
+        return Inertia::render('Manage/Klass', [
             'yearTerms'=>Config::item('year_terms'),
             'currentTerm'=>Year::currentTerm(),
             'klass' => $klass,

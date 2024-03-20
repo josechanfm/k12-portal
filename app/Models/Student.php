@@ -16,12 +16,6 @@ class Student extends Model implements HasMedia
     
     protected $fillable=['name_zh','name_fn','gender','dob'];
 
-    // public function klasses(){
-    //     return $this->belongsToMany(Klass::class,'klass_students','student_id','klass_id');
-    // }
-    // public static function scores(){
-    //     return $this->hasManyThrough(Score::class, KlassStudent::class);
-    // }
     public function registerMediaConversions(Media $media = null): void
     {
         $this
@@ -37,7 +31,20 @@ class Student extends Model implements HasMedia
         $this->addMediaCollection('transcript')
             ->singleFile()
             ->useDisk('profile');
-    }         
+    }
+    public function avatars(){
+        $klassStudents=KlassStudent::where('student_id',$this->id)->orderBy('id','DESC')->get();
+        $avatars=[];
+        foreach($klassStudents as $i=>$ks){
+            $avatars[]=[
+                'full_tag'=>$ks->klass->tag.substr('00'.$ks->student_number,-2),
+                'student_name'=>$ks->student->name_zh,
+                'student_number'=>$ks->student_number,
+                'image'=>$ks->getMedia('avatar')->first(),
+            ];
+        }
+        return $avatars;
+    }
     public function treatments(){
         return $this->hasMany(Treatment::class);
     }
@@ -47,8 +54,10 @@ class Student extends Model implements HasMedia
     public function klassStudents(){
         return $this->hasMany(KlassStudent::class);
     }
-    public function klassStudentWithArchives(){
-        return $this->hasOne(KlassStudent::class)->with('archives');
+    public function klassStudentWithAvatar(){
+        $klassStudent=$this->hasOne(KlassStudent::class);
+        dd($klassStudent->getMedia('avatar')->first());
+        return $klassStudent->getMedia('avatar')->first();
     }
     public function courses(){
         return $this->belongsToMany(Course::class,'course_student');

@@ -26,7 +26,7 @@ class StudentController extends Controller
         //$students=Student::paginate(10);
         return Inertia::render('Manage/KlassStudents', [
             'klass' => $klass,
-            'students' => $klass->studentsWithArchives,
+            'students' => $klass->studentsWithAvatar(),
         ]);
     }
 
@@ -67,9 +67,8 @@ class StudentController extends Controller
         $student->parent;
         $student->guardian;
         $student->archives=$student->archives();
-       
-        //$student=Student::with('address')->with('identity_document')->with('bank')->with('detail')->with('parent')->with('guardian')->find($id);
-        // echo json_encode($student);
+        $student->avatars=$student->avatars();
+        
         return Inertia::render('Manage/StudentProfile',[
             'student'=>$student
         ]);

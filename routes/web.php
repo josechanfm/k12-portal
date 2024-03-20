@@ -152,8 +152,11 @@ Route::group([
         Route::resource('klasses',App\Http\Controllers\Manage\KlassController::class)->names('manage.klasses');
         Route::get('/klass_scores/{klassId}',[App\Http\Controllers\Manage\KlassController::class,'klass_scores']);
 
-        Route::resource('students',App\Http\Controllers\Manage\StudentController::class)->names('manage.students');
+        //Route::resource('students',App\Http\Controllers\Manage\StudentController::class)->names('manage.students');
+        Route::get('student/{student}',[App\Http\Controllers\Manage\StudentController::class,'show'])->name('manage.student');
+        Route::get('student/{student}/avatars',[App\Http\Controllers\Manage\AvatarController::class,'student'])->name('manage.student.avatars');
         Route::resource('klass/{klass}/students',App\Http\Controllers\Manage\StudentController::class)->names('manage.klass.students');
+        Route::get('klass/{klass}/avatars',[App\Http\Controllers\Manage\AvatarController::class,'klass'])->name('manage.klass.avatars');
         Route::get('students/get_by_klass_id/{klass}',[App\Http\Controllers\Manage\StudentController::class,'getByKlassId'])->name('manage.students.getByKlassId');
         Route::post('students/get_by_names',[App\Http\Controllers\Manage\StudentController::class,'getByNames'])->name('manage.students.getByNames');
 

@@ -79,20 +79,14 @@ class Klass extends Model
         return $this->belongsToMany(Student::class)
                 ->withPivot(['id as pivot_klass_student_id','student_number','stream','state','promote','promote_to']);
     }
-    public function studentsWithArchives(){
-        return $this->belongsToMany(Student::class)
-                ->withPivot(['id as pivot_klass_student_id','student_number','stream','state','promote','promote_to'])
-                ->with('klassStudentWithArchives');
+    public function studentsWithAvatar(){
+        $students=$this->belongsToMany(Student::class)
+                ->withPivot(['id as pivot_klass_student_id','student_number','stream','state','promote','promote_to'])->get();
+        foreach($students as $student){
+            $student->avatar=KlassStudent::find($student->pivot->klass_student_id)->getMedia('avatar')->first();
+        }
+        return $students;
     }
-    // public function studentsWithArchives(){
-    //     $students=$this->students;
-    //     foreach($students as $student){
-    //         //dd($student->pivot->klass_student_id);
-    //         $student->archives=KlassStudent::find($student->pivot->klass_student_id)->archives;
-    //     }
-    //     return $students;
-        
-    // }
     public function medicnotes(){
         return $this->belongsToMany(Student::class)->with('medicnote');
     }

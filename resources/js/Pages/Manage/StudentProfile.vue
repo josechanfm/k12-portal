@@ -3,10 +3,11 @@
         <div>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 <a-row type="flex">
-                    <a-col flex="230px">
+                    <a-col flex="230px" >
                         <a-image
                             :width="200"
-                            src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                            v-if="student.avatars[0].image"
+                            :src="student.avatars[0].image.original_url"
                         />
                     </a-col>
                     <a-col flex="auto">
@@ -18,7 +19,7 @@
                 </a-row>
             </h2>
         </div>
-       
+        
         <div :class="isEdit?'formEditOn':'formEditOff'">
             <a-switch v-model:checked="isEdit" @change="onChangeEditMode"/>
             <a-form
@@ -28,6 +29,15 @@
                 :model="student"
                 >
                 <a-collapse v-model:activeKey="activeKey">
+                    <a-collapse-panel key="avatar" header="頭象相片">
+                    <a-row>
+                        <a-col :span="4" v-for="avatar in student.avatars">
+                            <a-image :width="200" :src="avatar.image.preview_url"/>
+                            <br>
+                            {{ avatar.full_tag }}
+                        </a-col>
+                    </a-row>
+                    </a-collapse-panel>
                     <a-collapse-panel key="basic" header="學生基本資料">
                         <a-row>
                             <a-col :span="6">
@@ -337,7 +347,7 @@ export default {
     methods: {
         onChangeEditMode(){
             console.log(this.isEdit);
-        }
+        },
     },
 }
 </script>

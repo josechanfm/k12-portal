@@ -48,6 +48,9 @@ class KlassStudent extends Model implements HasMedia
     public function habits(){
         return $this->hasMany(Habit::class);
     }
+    public function avatar(){
+        return $this->getMedia('avatar');
+    }
 
     public function archives(){
         return $this->morphMany(Archive::class, 'archivable');

@@ -3,6 +3,7 @@
         <p>Klass: {{ klass.tag }}</p>
         <p>Students: {{ klass.student_count }}</p>
         <p>Current Term: {{currentTerm.label}}</p>
+        
         <template v-if="klass.grade_year<=3">
             <inertia-link :href="route('manage.klass.students.index', klass.id)" class="ant-btn">學生名單</inertia-link>
             <inertia-link :href="route('manage.klass.habits', klass.id)" class="ant-btn">生活習摜</inertia-link>
@@ -11,6 +12,7 @@
         </template>
         <template v-else>
             <inertia-link :href="route('manage.klass.students.index', klass.id)" class="ant-btn">學生名單</inertia-link>
+            <inertia-link :href="route('manage.klass.avatars',klass.id)" class="ant-btn ant-btn-default">學生照片</inertia-link>
             <inertia-link :href="route('manage.klass.finalScores', klass.id)" class="ant-btn">期末成績</inertia-link>
             <inertia-link :href="route('manage.klass.transcripts', {'klass':klass.id,'type':'summary'})" class="ant-btn">成積總表</inertia-link>
             <inertia-link :href="route('manage.klass.transcripts', klass.id)" class="ant-btn">成積大表</inertia-link>
