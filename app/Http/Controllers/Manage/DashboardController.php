@@ -10,7 +10,9 @@ use App\Models\Klass;
 
 class DashboardController extends Controller
 {
+    
     public function index(){
+        //dd(auth()->user()->guardian);
         $year=Year::find(Year::currentYear()->id);
         $grade=$year->grades->where('grade_year',4)->first();
         return Inertia::render('Manage/Dashboard',[

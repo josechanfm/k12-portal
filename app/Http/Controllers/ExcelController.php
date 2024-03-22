@@ -14,51 +14,119 @@ class ExcelController extends Controller
 {
     //
 
-    
-    public function readFile(){
-        //Vendor/phpoffice/phpspreadsheet/src/PhpSpreadsheet/Writer/Pdf/Mpdf line 43
-        //$config = ['tempDir' => $this->tempDir . '/mpdf', 'mode'=>'+aCJK','autoScriptToLang'=>true,'autoLangToFont'=>true];
-        //$config = ['mode'=>'+aCJK','autoScriptToLang'=>true,'autoLangToFont'=>true];
+    public function readFile(Request $request){
+        if($request->form==1){
+            $this->form1();
+        }elseif($request->form==2){
+            $this->form2();
+        }
+    }
+
+    public function form1(){
         $file=storage_path('template//CK_B4_StudentRegistrationForm.xlsx');
-        //$file=storage_path('template//ExcelSheetDemo.xlsx');
         $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader("Xlsx");
         $spreadsheet = $reader->load($file);
-
+        $data=[
+            "B1"=>"2024",
+            "B2"=>"初一",
+            "B3"=>"A",
+            "B4"=>"13",
+            "B5"=>"陳輝民",
+            "B6"=>"Jose Chan",
+            "B7"=>"M",
+            "B8"=>"1970",
+            "C8"=>"07",
+            "D8"=>"18",
+            "B9"=>"中國",
+            "B22"=>"陳大文",
+            "C22"=>"父親",
+            "D22"=>"54",
+            "E22"=>"programmer",
+            "F22"=>"my address ....",
+            "G22"=>"63860836",
+            "B23"=>"",
+            "C23"=>"",
+            "D23"=>"",
+            "E23"=>"",
+            "F23"=>"",
+            "G23"=>"",
+            "B28"=>"YES",
+            "B32"=>"2024-03-20",
+        ];
         $sheet1=$spreadsheet->getSheet(1);
-        $sheet1->getCell("B1")->setValue('2024');
-        $sheet1->getCell("B2")->setValue('初一');
-        $sheet1->getCell("B3")->setValue('A');
-        $sheet1->getCell("B4")->setValue('13');
-        $sheet1->getCell("B5")->setValue('陳輝民');
-        $sheet1->getCell("B6")->setValue('Jose Chan');
-        $sheet1->getCell("B7")->setValue('M');
-        $sheet1->getCell("B8")->setValue('1970');
-        $sheet1->getCell("C8")->setValue('07');
-        $sheet1->getCell("D8")->setValue('18');
-        $sheet1->getCell("B9")->setValue('中國');
-
-        $sheet1->getCell("B22")->setValue('陳大文');
-        $sheet1->getCell("C22")->setValue('父親');
-        $sheet1->getCell("D22")->setValue('54');
-        $sheet1->getCell("E22")->setValue('programmer');
-        $sheet1->getCell("F22")->setValue('my address ....');
-        $sheet1->getCell("G22")->setValue('63860836');
-
-        $sheet1->getCell("B23")->setValue('');
-        $sheet1->getCell("C23")->setValue('');
-        $sheet1->getCell("D23")->setValue('');
-        $sheet1->getCell("E23")->setValue('');
-        $sheet1->getCell("F23")->setValue('');
-        $sheet1->getCell("G23")->setValue('');
-
-        $sheet1->getCell("B28")->setValue('YES');
-        $sheet1->getCell("B32")->setValue('2024-03-20');
-
-        //$spreadsheet->setActiveSheetIndex(2);
+        foreach($data as $key=>$value){
+            $sheet1->getCell($key)->setValue($value);
+        }
         
         $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Mpdf');
-        $writer->save(storage_path('template//abc123.xlsx'));
-        $writer->save(storage_path('template//abc123.pdf'));
+        $writer->save(storage_path('template//form1.pdf'));
 
+    }
+
+    public function form2(){
+        
+        $file=storage_path('template//CK_2022F1A01_student_registration.xlsx');
+        $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader("Xlsx");
+        $spreadsheet = $reader->load($file);
+        $data=[
+            "B1"=>"陳輝民",
+            "B2"=>"Jose Chan",
+            "B3"=>"2016-04-04",
+            "B4"=>"13",
+            "B5"=>"F",
+            "B6"=>"No",
+            "B7"=>"M",
+            "C7"=>"",
+            "B8"=>"Primary",
+            "B9"=>"M",
+            "C9"=>"",
+            "B10"=>"52031200",
+            "B11"=>"M",
+            "C11"=>"",
+            "B12"=>"2016-12-12",
+            "B13"=>"2036-12-12",
+            "B14"=>"2025-12-12",
+            "B15"=>"2026-12-12",
+            "B16"=>"China",
+            "B17"=>"GuangZhou",
+            "B18"=>"12345678",
+            "B19"=>"Macao address 1 ...",
+            "B20"=>"28123456",
+            "B21"=>"Macao address 2 ...",
+            "B22"=>"Building...",
+            "B23"=>"Father",
+            "B24"=>"F. job",
+            "B25"=>"F. mobile",
+            "B26"=>"Mother",
+            "B27"=>"M. Job",
+            "B28"=>"M. mobile",
+            "B29"=>"Relation",
+            "B30"=>"G. Mobile",
+            "B31"=>"Bros",
+            "B32"=>"Parents",
+            "B33"=>"G. name",
+            "B34"=>"G. mobile",
+            "B35"=>"G. job",
+            "B36"=>"G. phone",
+            "B37"=>"M",
+            "C37"=>"M",
+            "B38"=>"Y",
+            "B39"=>"Macao Address 3 ...",
+            "B40"=>"building",
+            "B41"=>"M",
+            "C41"=>"",
+            "B42"=>"Remarks .... student description here ....",
+            "B43"=>"note 1.....",
+            "B44"=>"Note 2....",
+            "B45"=>"Note 3......",
+            "B46"=>"Note 4.....",
+        ];
+        $sheet1=$spreadsheet->getSheet(1);
+        foreach($data as $key=>$value){
+            $sheet1->getCell($key)->setValue($value);
+        }
+        
+        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Mpdf');
+        $writer->save(storage_path('template//form2.pdf'));
     }
 }

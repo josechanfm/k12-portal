@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('gardians', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id');
             $table->string('name_zh');
             $table->string('name_fn');
             $table->char('gender',1);

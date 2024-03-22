@@ -13,4 +13,9 @@ class Guardian extends Model
     {
         return $this->belongsTo(Student::class);
     }
+
+    public function user(){
+        $this->belongsTo(User::class);
+    }
+
 }
