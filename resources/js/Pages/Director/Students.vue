@@ -11,9 +11,13 @@
             class="ant-advanced-search-form"
             :model="search"
         >
-            <a-form-item label="姓名" >
+            <a-form-item label="" >
+                <a-select v-model:value="search.column" :options="searchColumns"/>
+            </a-form-item>
+            <a-form-item label="" >
                 <a-input v-model:value="search.content" />
             </a-form-item>
+            <a-button @click="onSearch">Search</a-button>
         </a-form>
         
         <div>
@@ -21,6 +25,35 @@
                 <template #bodyCell="{ column, text, record, index }">
                     <template v-if="column.dataIndex == 'operation'">
                         <Link :href="'student/' + record.id" method="get" as="button" type="button">Profile</Link>
+                    </template>
+                    <template v-if="column.dataIndex=='name_zh'">
+                        <a :href="route('director.student',record.id)" target="_blank">{{record.name_zh}}</a>
+                    </template>
+                    <template v-else-if="column.dataIndex=='guardians'">
+                        <ol>
+                            <li v-for="guardian in record.guardians_with_relatives">
+                                {{guardian.name_zh}}
+                                ({{guardian.pivot.relationship}})
+                            </li>
+                        </ol>
+                    </template>
+                    <template v-else-if="column.dataIndex=='relatives'">
+                        <ol>
+                            <li v-for="guardian in record.guardians_with_relatives">
+                                <ol v-if="guardian.students">
+                                    <li v-for="std in guardian.students">
+                                        <a :href="route('director.student',std.id)" target="_blank">{{std.name_zh}}</a>
+                                    </li>
+                                </ol>
+                            </li>
+                        </ol>
+                    </template>
+                    <template v-else-if="column.dataIndex=='klass'">
+                        <ol>
+                            <li v-for="klass in record.klasses">
+                                {{klass.tag}}
+                            </li>
+                        </ol>
                     </template>
                     <template v-else>
                         {{ record[column.dataIndex] }}
@@ -40,30 +73,59 @@ export default {
     components: {
         AdminLayout, Link
     },
-    props: ['students'],
+    props: [],
     data() {
         return {
-            serach:{
-                content:null
+            students:[],
+            search:{
+                column:'name_zh',
+                content:''
             },
+            searchColumns:[
+                {value:'name_zh',label:'中文姓名'},
+                {value:'name_fn',label:'外文姓名'},
+                {value:'id_num',label:'證件編號'}
+            ],
             columns: [
                 {
-                    title: 'Name zh',
+                    title: '中文姓名',
                     dataIndex: 'name_zh',
                 }, {
-                    title: 'Name fn',
+                    title: '外文姓名',
                     dataIndex: 'name_fn',
                 }, {
-                    title: 'Gender',
+                    title: '性別',
                     dataIndex: 'gender',
                 }, {
-                    title: 'Operation',
+                    title: '家長/監護人',
+                    dataIndex: 'guardians',
+                }, {
+                    title: '兄弟姊要',
+                    dataIndex: 'relatives',
+                }, {
+                    title: '就讀班別',
+                    dataIndex: 'klass',
+                }, {
+                    title: '操作',
                     dataIndex: 'operation',
                 }
             ]
         }
     },
     methods: {
+        onSearch(){
+            if(this.search.content==''){
+                return false;
+            }
+            axios.post(route('director.student.search'), this.search)
+            .then(resp => {
+                console.log(resp.data)
+                this.students=resp.data
+                
+            })
+
+
+        }
     },
 }
 </script>

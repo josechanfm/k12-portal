@@ -74,7 +74,7 @@ class ExcelController extends Controller
         $drawing->setPath(storage_path('template//P1A01.png')); /* put your path and image here */
         $drawing->setCoordinates('K4');
         $drawing->setWidth(150);
-        //$drawing->setHeight(250);
+        $drawing->setHeight(150);
         //$drawing->setOffsetX(110);
         //$drawing->setRotation(25);
         //$drawing->getShadow()->setVisible(true);

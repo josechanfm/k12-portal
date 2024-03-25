@@ -16,7 +16,7 @@ class GuardianSeeder extends Seeder
      */
     public function run()
     {
-        //Guardian::factory()->count(1000)->create();
+        Guardian::factory()->count(1000)->create();
         Guardian::find(1)->update(["user_id"=>100]);
         Guardian::find(2)->update(["user_id"=>101]);
         Guardian::find(3)->update(["user_id"=>102]);

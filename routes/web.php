@@ -153,8 +153,11 @@ Route::group([
         Route::resource('klasses',App\Http\Controllers\Director\KlassController::class)->names('director.klasses');
         Route::get('/klass_scores/{klassId}',[App\Http\Controllers\Director\KlassController::class,'klass_scores']);
 
-        Route::resource('students',App\Http\Controllers\Director\StudentController::class)->names('director.students');
-        //Route::get('student/{student}',[App\Http\Controllers\Director\StudentController::class,'show'])->name('director.student');
+        //Route::resource('students',App\Http\Controllers\Director\StudentController::class)->names('director.students');
+        Route::get('student/finder',[App\Http\Controllers\Director\StudentController::class,'finder'])->name('director.student.finder');
+        Route::post('student/search',[App\Http\Controllers\Director\StudentController::class,'search'])->name('director.student.search');
+        Route::get('student/{student}',[App\Http\Controllers\Director\StudentController::class,'show'])->name('director.student');
+
 
         Route::get('student/{student}/avatars',[App\Http\Controllers\Director\AvatarController::class,'student'])->name('director.student.avatars');
         Route::resource('klass/{klass}/students',App\Http\Controllers\Director\StudentController::class)->names('director.klass.students');

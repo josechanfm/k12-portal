@@ -93,10 +93,15 @@ class Student extends Model implements HasMedia
     {
         return $this->belongsToMany(Guardian::class);
     }
-    public function guardian()
+    public function guardiansWithRelatives()
     {
-        return $this->hasOne(Guardian::class)->latestOfMany();
+        return $this->belongsToMany(Guardian::class)->with('students')->withPivot('relationship');
     }
+    
+    // public function guardian()
+    // {
+    //     return $this->hasOne(Guardian::class)->latestOfMany();
+    // }
     public function medicnote(){
         return $this->hasOne(Medicnote::class);
     }

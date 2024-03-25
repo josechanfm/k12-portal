@@ -17,7 +17,39 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Klass $klass)
+    public function finder(){
+        // $student=Student::find(319);
+        // dd($student->relatives());
+        // $students=Student::where('id',319)->with('klasses')->with('guardiansWithRelatives')->get();
+        // dd($students);
+        return Inertia::render('Director/Students',[
+            'students'=>Student::all()
+        ]);
+    }
+    public function search(Request $request){
+        //return response()->json($request->all());
+        //return response()->json("UPPER({$request->column}) LIKE '%".strtoupper($request->content)."%'");
+        //return response()->json("{$request->column} LIKE '%{$request->content}%'");
+        //$students=Student::all();
+        //dd("UPPER('{$request->column}') LIKE '%'");
+
+        switch($request->column){
+            case 'name_zh':
+                $students=Student::whereRaw(
+                    "{$request->column} LIKE '%{$request->content}%'"
+                )->with('klasses')->with('guardiansWithRelatives')->get();
+                break;
+            case 'name_fn':
+                $students=Student::whereRaw(
+                    "UPPER({$request->column}) LIKE '%".strtoupper($request->content)."%'"
+                )->with('klasses')->with('guardians')->get();
+                break;
+        }
+        return response()->json($students);
+        
+    }
+
+    public function index(Klass $klass, Request $request)
     {
         if($klass->id==null){
             return Inertia::render('Director/Students',[
