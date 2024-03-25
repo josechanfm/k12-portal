@@ -91,7 +91,7 @@ class Student extends Model implements HasMedia
     }
     public function guardians()
     {
-        return $this->hasMany(Guardian::class);
+        return $this->belongsToMany(Guardian::class);
     }
     public function guardian()
     {

@@ -1,7 +1,7 @@
 <template>
     <a-layout>
         <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible >
-            <inertia-link :href="route('manage')"><div class="logo" >AIMS</div></inertia-link>
+            <inertia-link :href="route('director.dashboard')"><div class="logo" >AIMS</div></inertia-link>
             <AdminMenu />
         </a-layout-sider>
         <a-layout>
@@ -37,7 +37,7 @@
                         </inertia-link>
                       </span>
                       <span v-else>
-                        <inertia-link :href="route('manage')">
+                        <inertia-link :href="route('director.dashboard')">
                           Home
                         </inertia-link>
                       </span>

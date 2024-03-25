@@ -14,7 +14,7 @@
                     <inertia-link v-else :href="route('admin.klass.courses.index', record.id)" class="ant-btn">科目</inertia-link>
                     <inertia-link :href="route('admin.select.students.index', {type:'klass',id:record.id})" class="ant-btn">學生</inertia-link>
                     <a-button @click="editRecord(record)">修改</a-button>
-                    <inertia-link :href="route('manage.klasses.show',record.id)" class="ant-btn">班別管理</inertia-link>
+                    <inertia-link :href="route('director.klasses.show',record.id)" class="ant-btn">班別管理</inertia-link>
                     <a-popconfirm
                         :title="(record.lock_courses?'是否確定解鎖':'是否確定鎖定')+record.tag+'的成積表?'"
                         ok-text="Yes"

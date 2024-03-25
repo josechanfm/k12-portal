@@ -37,18 +37,18 @@
                                     <td>{{ course.student_count }}</td>
                                     <td>
                                         <inertia-link :href="route('teacher.course.behaviours.index',course.id)" class="ant-btn">操行</inertia-link>
-                                        <inertia-link :href="route('manage.course.scores.index',course.id)" class="ant-btn">學分</inertia-link>
+                                        <inertia-link :href="route('director.course.scores.index',course.id)" class="ant-btn">學分</inertia-link>
                                         <a-button @click="course.operation=!course.operation">更多...</a-button>
                                     </td>
                                 </tr>
                                 <tr class="ant-table-expanded-row ant-table-expanded-row-level-1" :style="course.operation==true?'display:true':'display:none'">
                                     <td colspan="7" class="ant-table-cell text-right">
-                                        <inertia-link :href="route('manage.klass.students.index', course.klass.id)" class="ant-btn">學生名單</inertia-link>
-                                        <inertia-link :href="route('manage.klass.finalScores', course.klass.id)" class="ant-btn">期末成績</inertia-link>
-                                        <inertia-link :href="route('manage.klass.additive', [course.klass.id, 'attendance'])" class="ant-btn">考勤</inertia-link>
-                                        <inertia-link :href="route('manage.klass.additive', [course.klass.id, 'perform'])" class="ant-btn">功過</inertia-link>
-                                        <inertia-link :href="route('manage.klass.additive', [course.klass.id, 'conduct'])" class="ant-btn">操行</inertia-link>
-                                        <inertia-link :href="route('manage.klass.additive', [course.klass.id, 'comments'])" class="ant-btn">評語</inertia-link>
+                                        <inertia-link :href="route('director.klass.students.index', course.klass.id)" class="ant-btn">學生名單</inertia-link>
+                                        <inertia-link :href="route('director.klass.finalScores', course.klass.id)" class="ant-btn">期末成績</inertia-link>
+                                        <inertia-link :href="route('director.klass.additive', [course.klass.id, 'attendance'])" class="ant-btn">考勤</inertia-link>
+                                        <inertia-link :href="route('director.klass.additive', [course.klass.id, 'perform'])" class="ant-btn">功過</inertia-link>
+                                        <inertia-link :href="route('director.klass.additive', [course.klass.id, 'conduct'])" class="ant-btn">操行</inertia-link>
+                                        <inertia-link :href="route('director.klass.additive', [course.klass.id, 'comments'])" class="ant-btn">評語</inertia-link>
                                     </td>
                                 </tr>
                                 </template>

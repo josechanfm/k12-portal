@@ -31,7 +31,7 @@ class ExcelController extends Controller
             "B2"=>"初一",
             "B3"=>"A",
             "B4"=>"13",
-            "B5"=>"陳輝民",
+            "B5"=>"陳輝民 陳輝民 陳輝民 陳輝民 陳輝民 陳輝民 陳輝民 陳輝民 陳輝民 陳輝民 陳輝民 陳輝民 陳輝民 陳輝民 陳輝民 陳輝民 陳輝民 陳輝民 陳輝民 陳輝民 陳輝民 陳輝民 陳輝民 陳輝民 陳輝民 陳輝民 陳輝民 陳輝民 陳輝民 陳輝民 陳輝民 陳輝民 陳輝民 陳輝民 陳輝民",
             "B6"=>"Jose Chan",
             "B7"=>"M",
             "B8"=>"1970",
@@ -53,13 +53,42 @@ class ExcelController extends Controller
             "B28"=>"YES",
             "B32"=>"2024-03-20",
         ];
+        $spreadsheet->getActiveSheet()->getPageMargins()->setTop(1);
+        $spreadsheet->getActiveSheet()->getPageMargins()->setBottom(0.5);
+        $spreadsheet->getActiveSheet()->getPageMargins()->setLeft(0.5);
+        $spreadsheet->getActiveSheet()->getPageMargins()->setRight(0.4);
+
+        $spreadsheet->getActiveSheet()->getPageSetup()->setPrintArea('A1:K27');
+        $spreadsheet->getActiveSheet()->getPageSetup()->setFitToWidth(1);
+        $spreadsheet->getActiveSheet()->getPageSetup()->setFitToHeight(1);
+        
+        
+
+        //$spreadsheet->getActiveSheet()->getPageMargins()->setFooter(0.5);
+        //$spreadsheet->getActiveSheet()->getHeaderFooter()->setFirstFooter('First footer');
+        // $spreadsheet->getActiveSheet()->getHeaderFooter()->setEvenFooter('abc');
+        // $spreadsheet->getActiveSheet()->getHeaderFooter()->setOddFooter('abc');
+        $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+        $drawing->setName('Paid');
+        $drawing->setDescription('Paid');
+        $drawing->setPath(storage_path('template//P1A01.png')); /* put your path and image here */
+        $drawing->setCoordinates('K4');
+        $drawing->setWidth(150);
+        //$drawing->setHeight(250);
+        //$drawing->setOffsetX(110);
+        //$drawing->setRotation(25);
+        //$drawing->getShadow()->setVisible(true);
+        //$drawing->getShadow()->setDirection(45);
+        $drawing->setWorksheet($spreadsheet->getActiveSheet());
+        $spreadsheet->getActiveSheet()->getCell('k4')->setValue('');
+    
         $sheet1=$spreadsheet->getSheet(1);
         foreach($data as $key=>$value){
             $sheet1->getCell($key)->setValue($value);
         }
         
-        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Mpdf');
-        $writer->save(storage_path('template//form1.pdf'));
+       $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Mpdf');
+       $writer->save(storage_path('template//form1.pdf'));
 
     }
 

@@ -9,9 +9,9 @@ class Guardian extends Model
 {
     use HasFactory;
 
-    public function student()
+    public function students()
     {
-        return $this->belongsTo(Student::class);
+        return $this->belongsToMany(Student::class);
     }
 
     public function user(){
