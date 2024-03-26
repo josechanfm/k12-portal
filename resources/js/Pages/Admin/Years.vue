@@ -153,7 +153,7 @@ export default {
     data() {
         return {
             breadcrumb:[
-                {label:"行政管理" ,url:route('admin')},
+                {label:"行政管理" ,url:route('admin.dashboard')},
                 {label:"Years" ,url:null},
             ],
             kgrade:0,

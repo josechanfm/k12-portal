@@ -104,7 +104,7 @@ Route::group([
     Route::get('/',[App\Http\Controllers\Admin\DashboardController::class,'index'])->name('admin.dashboard');
     Route::resource('staffs',App\Http\Controllers\Admin\StaffController::class)->names('admin.staffs');
     Route::resource('years',App\Http\Controllers\Admin\YearController::class)->names('admin.years');
-    
+    Route::resource('registrations',App\Http\Controllers\Admin\RegistrationController::class)->names('admin.registrations');
     //Route::get('year/{year}/grades',[App\Http\Controllers\Admin\YearController::class,'grades'])->name('admin.year.grades');
 
     Route::resource('year/{year}/grades',App\Http\Controllers\Admin\GradeController::class)->names('admin.year.grades');

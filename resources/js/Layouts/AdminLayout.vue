@@ -18,7 +18,7 @@
 
                   
             </a-layout-header>
-            <a-layout-content :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }">
+            <a-layout-content :style="{ margin: '24px 16px', background: '#fff', minHeight: '280px' }">
               <header class="flex justify-between items-center bg-gray-200 py-4 px-6 mb-5 bg-white shadow sm:rounded-lg">
                 <div class="text-lg font-bold">
                   {{ title }}
