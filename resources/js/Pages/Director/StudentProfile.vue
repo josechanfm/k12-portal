@@ -16,7 +16,6 @@
                 </a-row>
             </h2>
         </div>
-        {{ student.bank }}
         <div :class="isEdit ? 'formEditOn' : 'formEditOff'">
             <a-switch v-model:checked="isEdit" @change="onChangeEditMode" />
             <a-form ref="formRef" name="advanced_search" class="ant-advanced-search-form" :model="student"
@@ -168,7 +167,7 @@
                     </a-collapse-panel>
 
                     <a-collapse-panel key="address" header="地址資料">
-                        <a-descriptions bordered>
+                        <a-descriptions bordered v-if="student.address">
                             <a-descriptions-item label="住址街名" :span="2">
                                 <a-input v-model:value="student.address.road_name" />
                             </a-descriptions-item>
@@ -304,7 +303,7 @@
                                 <a-input v-model:value="student.health.status" />
                             </a-descriptions-item>
                             <a-descriptions-item label="慢性疾患">
-                                <a-input v-model:value="student.health.chrionic" />
+                                <a-input v-model:value="student.health.chronic" />
                             </a-descriptions-item>
                             <a-descriptions-item label="遺傳性疾病">
                                 <a-input v-model:value="student.health.hereditary" />
@@ -401,15 +400,43 @@ export default {
     },  
     methods: {
         init(){
-            //if (this.student.address == null) this.student.address = {}
+            if (this.student.address == null) this.student.address = {}
             if (this.student.identity_document == null) this.student.identity_document = {}
             if (this.student.bank == null) this.student.bank = {}
             if (this.student.detail == null) this.student.detail = {}
-            if (this.student.guardian == null) this.student.guardian = {}
             if (this.student.health == null) this.student.health = {}
-            this.student.father=this.student.relatives.find(r=>r.relation=='1FATHER')
-            this.student.mother=this.student.relatives.find(r=>r.relation=='0MOTHER')
-            this.student.guardian=this.student.relatives.find(r=>r.relation=='2GUARDIAN')
+            if(this.student.relations){
+                var mother=this.student.relations.find(r=>r.relation=='0MOTHER')
+                var father=this.student.relations.find(r=>r.relation=='1FATHER')
+                var guardian=this.student.relations.find(r=>r.relation=='0MOTHER')
+            }else{
+                this.student.relations=[];
+            }
+            if(mother){
+                this.student.mother=mother
+            }else{
+                this.student.mother={"relation":'0MOTHER'}
+                this.student.relations.push({"relation":'0MOTHER'})
+            }
+            if(father){
+                this.student.father=father
+            }else{
+                this.student.father={"relation":'1FATHER'}
+                this.student.relations.push(this.student.father)
+            }
+            if(guardian){
+                this.student.guardian=guardian
+            }else{
+                this.student.guardian={"relation":'2GUARDIAN'}
+                this.student.relations.push(this.student.guardian)
+            }
+            // this.student.father=father??{"relation":'1FATHER'};
+            // this.student.mother=mother??{"relation":'0MONTHER'};
+            // this.student.guardian=guardian??{"relation":'2GUARDIAN'};
+
+            // this.student.father=this.student.relations.find(r=>r.relation=='1FATHER')
+            // this.student.mother=this.student.relations.find(r=>r.relation=='0MOTHER')
+            // this.student.guardian=this.student.relations.find(r=>r.relation=='2GUARDIAN')
         },
         onChangeEditMode() {
             console.log(this.isEdit);
@@ -442,12 +469,13 @@ export default {
     font-weight: bold;
 }
 
-.formEditOn .ant-input {
+.formEditOn .ant-input, .formEditOn .ant-picker {
     border: 1px solid #ccc
 }
 
-.formEditOff .ant-input {
+.formEditOff .ant-input, .formEditOff .ant-picker, .formEditOff .ant-select:not(.ant-select-customize-input) .ant-select-selector{
     border: none;
     pointer-events: none;
 }
+
 </style>

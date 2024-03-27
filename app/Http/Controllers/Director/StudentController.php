@@ -19,21 +19,11 @@ class StudentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function finder(){
-        // $student=Student::find(319);
-        // dd($student->relatives());
-        // $students=Student::where('id',319)->with('klasses')->with('guardiansWithRelatives')->get();
-        // dd($students);
         return Inertia::render('Director/Students',[
             'students'=>Student::all()
         ]);
     }
     public function search(Request $request){
-        //return response()->json($request->all());
-        //return response()->json("UPPER({$request->column}) LIKE '%".strtoupper($request->content)."%'");
-        //return response()->json("{$request->column} LIKE '%{$request->content}%'");
-        //$students=Student::all();
-        //dd("UPPER('{$request->column}') LIKE '%'");
-
         switch($request->column){
             case 'name_zh':
                 $students=Student::whereRaw(
