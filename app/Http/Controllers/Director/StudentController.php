@@ -6,8 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Student;
+use App\Models\StudentDetail;
 use App\Models\Klass;
-use App\Models\Grade;
+use App\Models\Relative;
 use App\Models\Year;
 
 class StudentController extends Controller
@@ -92,13 +93,13 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
-
-        $student->with('address')->with('identity_document')->with('bank')->with('detail')->with('parent')->with('guardian');
+        //$student->with('address')->with('identity_document')->with('bank')->with('detail')->with('parent')->with('guardian');
+        $student->detail;
         $student->address;
+        $student->health;
         $student->identity_document;
         $student->bank;
-        $student->detail;
-        $student->parent;
+        $student->relatives;
         $student->guardians;
         $student->archives=$student->archives();
         $student->avatars=$student->avatars();
@@ -125,9 +126,39 @@ class StudentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Student $student)
     {
-        //
+        $student->update($request->all());
+        Relative::upsert(
+            $request->relatives,
+            uniqueBy:['id'],
+            update:['relation','kinship','name_zh','name_fn','birth_year','occupation','mobile']
+        );
+
+        if(isset($request->address['id'])){
+            $student->address->update($request->address);
+        }else{
+            $student->address()->create($request->address);
+        }
+        if(isset($request->bank['id'])){
+            $student->bank->update($request->bank);
+        }else{
+            $student->bank()->create($request->bank);
+        }
+        
+
+        if(isset($request->detail['id'])){
+            $student->detail->update($request->detail);
+        }else{
+            $student->detail()->create($request->detail);
+        }
+        if(isset($request->health['id'])){
+            $student->health->update($request->health);
+        }else{
+            $student->health()->create($request->health);
+        }
+       
+        return redirect()->back();
     }
 
     /**

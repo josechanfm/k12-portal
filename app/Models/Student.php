@@ -14,8 +14,27 @@ class Student extends Model implements HasMedia
     use HasFactory;
     use InteractsWithMedia;
     
-    protected $fillable=['name_zh','name_fn','gender','dob'];
+    protected $fillable=['name_zh','name_fn','name_display','gender','dob','pob','pob_other','nationality','native','religion',
+    'sid','id_num','id_type','id_type_other','id_issue','id_expired','hrc_num','hrc_issue','hrc_expired','dsedj_num','ssm_num',
+    'entry_date','previour_school','previour_grade','start_klass',
+    'phone','phone_sms','phone_home'
+    ];
 
+    /*
+    public static function boot(){
+        parent::boot();
+        self::created(function($model){
+            $model->relatives->create([
+                'relation'=>'1Father',
+                'kinship'=>'Father',
+            ]);
+            $model->relatives->create([
+                'relation'=>'0MONTHER',
+                'kinship'=>'Mother',
+            ]);
+        });
+    }
+    */
     public function registerMediaConversions(Media $media = null): void
     {
         $this
@@ -65,12 +84,14 @@ class Student extends Model implements HasMedia
     public function coursesScores(){
         return $this->belongsToMany(Course::class,'course_students')->with('scores');
     }
-    public function addresses(){
-        return $this->morphMany(Address::class, 'addressable');
-    }
-
     public function address(){
-        return $this->morphOne(Address::class, 'addressable')->latestOfMany();
+        return $this->morphOne(Address::class, 'addressable');
+    }
+    public function detail(){
+        return $this->hasOne(Detail::class);
+    }
+    public function health(){
+        return $this->hasOne(Health::class);
     }
     public function identity_documents(){
         $documents=$this->morphMany(IdentityDocument::class, 'identity_documentable')->get()->toArray();
@@ -80,19 +101,20 @@ class Student extends Model implements HasMedia
         return $this->morphOne(IdentityDocument::class, 'identity_documentable')->latestOfMany();
     }
     public function bank(){
-        return $this->morphMany(Bank::class, 'bankable');
+        return $this->morphOne(Bank::class, 'bankable');
     }
-    public function detail(){
-        return $this->hasOne(StudentDetail::class);
-    }
-    public function parent()
+    public function parents()
     {
-        return $this->hasOne(Parental::class);
+        return $this->hasMany(Relative::class)->whereIn('relation',['1FATHER','0MOTHER'])->orderBy('relation','DESC');
+    }
+    public function relatives(){
+        return $this->hasMany(Relative::class)->orderBy('relation','DESC');
     }
     public function guardians()
     {
         return $this->belongsToMany(Guardian::class);
     }
+
     public function guardiansWithRelatives()
     {
         return $this->belongsToMany(Guardian::class)->with('students')->withPivot('relationship');

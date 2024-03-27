@@ -1,3 +1,4 @@
+
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -13,18 +14,20 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('student_details', function (Blueprint $table) {
+        Schema::create('details', function (Blueprint $table) {
             $table->id();
             $table->foreignId('student_id')->on('students')->onDelete('restrict')->onUpdate('cascade');;
             $table->string('holy_name')->nullable();
             $table->date('baptized')->nullable();
             $table->date('first_communion')->nullable();
-            $table->string('past_entry_grade')->nullable();
-            $table->date('past_entry_date')->nullable();
-            $table->string('past_grade')->nullable();
-            $table->date('valid_stay')->nullable();
             $table->integer('sibling')->nullable();
             $table->integer('sibling_at_work')->nullable();
+            $table->string('previour_school')->nullable();
+            $table->string('previour_grade')->nullable();
+            $table->date('entry_date')->nullable();
+            $table->string('entry_klass')->nullable();
+            $table->date('stay_issue')->nullable();
+            $table->date('stay_expired')->nullable();
             $table->timestamps();
         });
     }
@@ -36,6 +39,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('student_details');
+        Schema::dropIfExists('details');
     }
 };

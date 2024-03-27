@@ -17,11 +17,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('addressable_id');
             $table->string('addressable_type');
-            $table->string('zone');
-            $table->string('road_name');
-            $table->string('building');
-            $table->string('overnight');
-            $table->string('overnight_address');
+            $table->string('zone')->nullable();
+            $table->string('stree_name')->nullable();
+            $table->string('building')->nullable();
+            $table->string('postal_code')->nullable();
+            $table->string('postal_address')->nullable();
             $table->timestamps();
         });
     }

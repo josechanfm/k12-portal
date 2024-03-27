@@ -21,23 +21,31 @@ return new class extends Migration
             $table->char('gender',1);
             $table->date('dob')->nullable();
             $table->string('pob')->nullable();
-            $table->string('start_letter')->nullable();
-            $table->string('start_grade')->nullable();
-            $table->string('sic')->nullable();
-            $table->string('phone')->nullable();
-            $table->string('dsej_num')->nullable();
-            $table->string('medical_num')->nullable();
-            $table->date('entry_date')->nullable();
-
-            $table->string('past_school_name')->nullable();
+            $table->string('pob_other')->nullable();
+            $table->string('nationality')->nullable();
+            $table->string('native')->nullable();
             $table->string('religion')->nullable();
+
+            $table->string('id_num')->nullable();
+            $table->string('id_type')->nullable();
+            $table->string('id_type_other')->nullable();
+            $table->string('id_issue')->nullable();
+            $table->string('id_expired')->nullable();
+            $table->string('hrc_num')->nullable();
+            $table->string('hrc_issue')->nullable();
+            $table->string('hrc_expired')->nullable();
+            $table->string('sid')->nullable();
+            $table->string('dsedj_num')->nullable();
+            $table->string('ssm_num')->nullable();
+
+            $table->date('entry_date')->nullable();
+            $table->string('previour_school')->nullable();
+            $table->string('previour_grade')->nullable();
+            $table->string('start_klass')->nullable();
+            
+            $table->string('phone')->nullable();
             $table->string('phone_sms')->nullable();
             $table->string('phone_home')->nullable();
-            $table->string('carer')->nullable();
-
-            $table->text('parent')->nullable();
-            $table->text('garidan')->nullable();
-            $table->text('liaison')->nullable();
 
             $table->timestamps();
         });
