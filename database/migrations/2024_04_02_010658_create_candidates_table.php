@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('students', function (Blueprint $table) {
+        Schema::create('candidates', function (Blueprint $table) {
             $table->id();
             $table->string('name_zh');
             $table->string('name_fn')->nullable();
@@ -34,19 +34,17 @@ return new class extends Migration
             $table->string('hrc_num')->nullable();
             $table->string('hrc_issue')->nullable();
             $table->string('hrc_expired')->nullable();
-            $table->string('sid')->nullable();
             $table->string('dsedj_num')->nullable();
             $table->string('ssm_num')->nullable();
 
-            $table->date('entry_date')->nullable();
             $table->string('previour_school')->nullable();
             $table->string('previour_grade')->nullable();
             $table->string('start_klass')->nullable();
             
             $table->string('phone')->nullable();
-            $table->string('phone_sms')->nullable();
             $table->string('phone_home')->nullable();
-            $table->uuid('sibling_uuid')->nullable();
+            $table->boolean('confirmed')->default('false');
+
             $table->timestamps();
         });
     }
@@ -58,6 +56,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('students');
+        Schema::dropIfExists('candidates');
     }
 };

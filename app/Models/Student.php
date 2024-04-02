@@ -180,4 +180,12 @@ class Student extends Model implements HasMedia
         }
         return $behaviours;
     }
+
+    public function siblings(){
+        if($this->sibling_uuid){
+            return Student::where('sibling_uuid',$this->sibling_uuid)->with('guardians')->with('klasses')->get();
+        }
+        return null;
+        
+    }
 }

@@ -16,7 +16,6 @@
                 </a-row>
             </h2>
         </div>
-        {{ student.bank }}
         <div :class="isEdit ? 'formEditOn' : 'formEditOff'">
             <a-switch v-model:checked="isEdit" @change="onChangeEditMode" />
             <a-form ref="formRef" name="advanced_search" class="ant-advanced-search-form" :model="student"
@@ -170,7 +169,7 @@
                     <a-collapse-panel key="address" header="地址資料">
                         <a-descriptions bordered>
                             <a-descriptions-item label="住址街名" :span="2">
-                                <a-input v-model:value="student.address.road_name" />
+                                <a-input v-model:value="student.address.road" />
                             </a-descriptions-item>
                             <a-descriptions-item label="門牌大廈">
                                 <a-input v-model:value="student.address.building" />

@@ -11,7 +11,7 @@
             <template #bodyCell="{column, text, record, index}">
                 <template v-if="column.dataIndex == 'action'">
                     <inertia-link :href="route('director.klass.student.transcript',record.pivot.klass_student_id)" class="ant-btn">Gen成績表</inertia-link>
-                    <a :href="route('director.student',record.pivot.klass_student_id)" class="ant-btn" target="_blank">學生檔案</a>
+                    <a :href="route('director.students.show',record.pivot.klass_student_id)" class="ant-btn" target="_blank">學生檔案</a>
                 </template>
                 <template v-else-if="column.dataIndex=='avatar'">
                     <a-image v-if="record.avatar" width="100px" :src="record.avatar.preview_url"/>

@@ -10,6 +10,7 @@ use App\Models\StudentDetail;
 use App\Models\Klass;
 use App\Models\Relative;
 use App\Models\Year;
+use PDO;
 
 class StudentController extends Controller
 {
@@ -103,6 +104,7 @@ class StudentController extends Controller
         $student->guardians;
         $student->archives=$student->archives();
         $student->avatars=$student->avatars();
+
         return Inertia::render('Director/StudentProfile',[
             'student'=>$student
         ]);
@@ -132,7 +134,7 @@ class StudentController extends Controller
         Relative::upsert(
             $request->relatives,
             uniqueBy:['id'],
-            update:['relation','kinship','name_zh','name_fn','birth_year','occupation','mobile']
+            update:['relation','kinship','name_zh','name_fn','birth_year','age','organization','occupation','mobile']
         );
 
         if(isset($request->address['id'])){
@@ -191,6 +193,14 @@ class StudentController extends Controller
             $students[$i]->klass=$student->klasses()->latest()->first();
         }
         return response()->json($students);
+    }
+
+    public function siblings(Student $student){
+        $student->klasses;
+        return Inertia::render('Director/Siblings',[
+                'student'=>$student,
+                'siblings'=>$student->siblings()
+        ]);
     }
 
 }

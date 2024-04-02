@@ -16,8 +16,10 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index ($type, $id){
-        
+    public function index ($type=null, $id=null){
+        if($type==null || $id==null){
+            return 'error';
+        }
         if($type=='course'){
             $course=Course::find($id);
             return Inertia::render('Admin/CourseStudents',[

@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('job')->nullable();
             $table->string('stay_together')->nullable();
             $table->string('zone')->nullable();
-            $table->string('road_name')->nullable();
+            $table->string('road')->nullable();
             $table->string('address')->nullable();
             $table->string('post_code')->nullable();
             $table->timestamps();

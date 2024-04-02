@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Year;
+use App\Models\Student;
 
 class RegistrationController extends Controller
 {
@@ -40,7 +41,34 @@ class RegistrationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //dd($request->all());
+
+        $std=Student::where('id_type',$request->student['id_type'])->where('id_num',$request->student['id_num'])->first();
+        if($std){
+            return redirect()->back()->withErrors([
+                'code'=>'duplicated',
+                'message'=>'Student ID duplicated!'
+            ]);
+        }
+        $student=Student::create($request->student);
+        $student->detail()->create($request->detail);
+        $student->address()->create($request->address);
+        $student->health()->create($request->health);
+        foreach($request->parents as $parent){
+            $student->parents()->create($parent);
+        }
+        $student->relatives()->create($request->guardian);
+        $student->address()->create($request->guardian);;
+
+        foreach($request->relatives as $relative){
+            $student->relatives()->create($relative);
+        }
+        $student->detail;
+        $student->address;
+        $student->health;
+        $student->relatives;
+        dd($student);
+        dd($request->all());
     }
 
     /**
@@ -51,7 +79,7 @@ class RegistrationController extends Controller
      */
     public function show($id)
     {
-        //
+        
     }
 
     /**
