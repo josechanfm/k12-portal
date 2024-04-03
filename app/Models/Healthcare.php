@@ -16,4 +16,7 @@ class Healthcare extends Model
     public function klass(){
         return $this->belongsTo(Klass::class)->with('students');
     }
+    public function klasses(){
+        return $this->hasMany(Physical::class)->with('klass');
+    }
 }

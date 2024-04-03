@@ -159,7 +159,7 @@ Route::group([
         Route::post('student/search',[App\Http\Controllers\Director\StudentController::class,'search'])->name('director.student.search');
         // Route::get('student/{student}',[App\Http\Controllers\Director\StudentController::class,'show'])->name('director.student');
         Route::get('student/{student}/siblings',[App\Http\Controllers\Director\StudentController::class,'siblings'])->name('director.student.siblings');
-
+        Route::patch('student/{student}/join_sibling',[App\Http\Controllers\Director\StudentController::class,'joinSibling'])->name('director.student.joinSibling');
 
         Route::get('student/{student}/avatars',[App\Http\Controllers\Director\AvatarController::class,'student'])->name('director.student.avatars');
         Route::resource('klass/{klass}/students',App\Http\Controllers\Director\StudentController::class)->names('director.klass.students');

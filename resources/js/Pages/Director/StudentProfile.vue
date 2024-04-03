@@ -226,6 +226,7 @@
                             </a-descriptions-item>
                         </a-descriptions>
                     </a-collapse-panel>
+
                     <a-collapse-panel key="parent" header="父母資料" >
                         <a-descriptions bordered  v-if="student.father">
                             <a-form-item label="父親姓名">
@@ -260,6 +261,7 @@
                             </a-form-item>
                         </a-descriptions>
                     </a-collapse-panel>
+
                     <a-collapse-panel key="guardian" header="監護人資料">
                         <a-descriptions bordered v-if="student.guardian">
                             <a-descriptions-item label="監護人姓名">
@@ -294,6 +296,7 @@
                             </a-descriptions-item>
                         </a-descriptions>
                     </a-collapse-panel>
+
                     <a-collapse-panel key="health" header="健康相關">
                         <a-descriptions bordered v-if="student.health">
                             <a-descriptions-item label="醫院">
@@ -328,7 +331,26 @@
                             </a-descriptions-item>
                         </a-descriptions>
                     </a-collapse-panel>
+
+                    <a-collapse-panel key="siblings" header="兄弟姊妹">
+                        <a-table :dataSource="student.siblings" :columns="columnSiblings">
+                            <template #bodyCell="{ column, text, record, index }">
+                                <template v-if="column.dataIndex == 'klasses'">
+                                    <ol>
+                                        <li v-for="klass in record.klasses">{{ klass.school_year }}-{{ klass.tag }}</li>
+                                    </ol>
+                                </template> 
+                                <template v-else>
+                                    {{record[column.dataIndex]}}
+                                </template>
+                            </template>
+                        </a-table>
+
+                        <inertia-link :href="route('director.student.siblings',student.id)" class="ant-btn">Join Sibling</inertia-link>
+                    </a-collapse-panel>
+
                 </a-collapse>
+
                 <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
                     <a-button type="primary" html-type="submit">Submit</a-button>
                 </a-form-item>
@@ -358,6 +380,12 @@ export default {
             breadcrumb: [
                 { label: "主控台", url: route('director.dashboard') },
                 { label: "學人個人檔案", url: null }
+            ],
+            columnSiblings:[
+                {title:'姓名', dataIndex: 'name_zh'},
+                {title:'性別', dataIndex: 'gender'},
+                {title:'出生日期', dataIndex: 'dob'},
+                {title:'就讀班級', dataIndex: 'klasses'},
             ],
             rules: {
                 name_zh: { required: true },

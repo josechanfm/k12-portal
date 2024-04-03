@@ -20,12 +20,15 @@
             class="ant-advanced-search-form"
             :model="search"
         >
-            <a-form-item label="" >
+            <a-space direction="horizontal">
+                <a-form-item label="" >
                 <a-select v-model:value="search.column" :options="searchColumns"/>
-            </a-form-item>
-            <a-form-item label="" >
-                <a-input v-model:value="search.content" />
-            </a-form-item>
+                </a-form-item>
+                <a-form-item label="" >
+                    <a-input v-model:value="search.content" />
+                </a-form-item>
+
+            </a-space>
             <a-button @click="onSearch">Search</a-button>
         </a-form>
 
@@ -37,54 +40,42 @@
                     <template v-if="column.dataIndex == 'operation'">
                         <a-button @click="clickLinkSibling(record)">Link Sibling</a-button>
                     </template>
+                    <template v-else-if="column.dataIndex == 'guardians'">
+                        <ol>
+                            <li v-for="guardian in record.guardians">{{ guardian.name_zh }}</li>
+                        </ol>
+                    </template>
+                    <template v-else-if="column.dataIndex == 'klasses'">
+                        <ol>
+                            <li v-for="klass in record.klasses">{{ klass.school_year }} - {{ klass.tag }}</li>
+                        </ol>
+                    </template>
                     <template v-else>
                         {{ record[column.dataIndex] }}
                     </template>
                 </template>
             </a-table>
 
-            <div class="ant-table ant-table-empty"><!---->
-                <div class="ant-table-container">
-                    <div class="ant-table-content">
-                        <table style="table-layout: auto;">
-                            <thead class="ant-table-thead">
-                                <tr>
-                                    <th class="ant-table-cell" colstart="0" colend="0"><!---->中文姓名<!----></th>
-                                    <th class="ant-table-cell" colstart="1" colend="1"><!---->外文姓名<!----></th>
-                                    <th class="ant-table-cell" colstart="2" colend="2"><!---->性別<!----></th>
-                                    <th class="ant-table-cell" colstart="4" colend="4"><!---->兄弟姊要<!----></th>
-                                    <th class="ant-table-cell" colstart="3" colend="3"><!---->家長/監護人<!----></th>
-                                    <th class="ant-table-cell" colstart="5" colend="5"><!---->就讀班別<!----></th>
-                                    <th class="ant-table-cell" colstart="6" colend="6"><!---->操作<!----></th>
-                                </tr>
-                            </thead>
-                            <tbody class="ant-table-tbody"><!---->
-                                <tr class="ant-table" v-for="sibling in siblings">
-                                    <td class="ant-table-cell">{{ sibling.name_zh }}</td>
-                                    <td class="ant-table-cell">{{ sibling.name_fn }}</td>
-                                    <td class="ant-table-cell">{{ sibling.gender }}</td>
-                                    <td class="ant-table-cell">{{ sibling.siblings }}</td>
-                                    <td class="ant-table-cell">
-                                        <ol>
-                                            <li v-for="guardian in sibling.guardians">
-                                                {{ guardian.name_zh }}
-                                            </li>
-                                        </ol>
-                                    </td>
-                                    <td class="ant-table-cell">
-                                        <ol>
-                                            <li v-for="klass in sibling.klasses">
-                                                {{ klass.school_year }}-{{ klass.tag }}
-                                            </li>
-                                        </ol>
-                                    </td>
-                                    <td class="ant-table-cell">operation</td>
-                                </tr>
-                            </tbody><!---->
-                        </table>
-                    </div>
-                </div><!---->
-            </div>
+
+            <a-table :dataSource="siblings" :columns="columns">
+                <template #bodyCell="{ column, text, record, index }">
+                    <template v-if="column.dataIndex == 'guardians'">
+                        <ol>
+                            <li v-for="guardian in record.guardians">{{ guardian.name_zh }}</li>
+                        </ol>
+                    </template>
+                    <template v-else-if="column.dataIndex == 'klasses'">
+                        <ol>
+                            <li v-for="klass in record.klasses">{{ klass.school_year }} - {{ klass.tag }}</li>
+                        </ol>
+                    </template>
+                    <template v-else>
+                        {{ record[column.dataIndex] }}
+                    </template>
+                </template>
+            </a-table>
+
+
 
 
 
@@ -128,11 +119,11 @@ export default {
                     title: '家長/監護人',
                     dataIndex: 'guardians',
                 }, {
-                    title: '兄弟姊要',
-                    dataIndex: 'relatives',
+                    title: '兄弟姊妹',
+                    dataIndex: 'sibling_uuid',
                 }, {
                     title: '就讀班別',
-                    dataIndex: 'klass',
+                    dataIndex: 'klasses',
                 }, {
                     title: '操作',
                     dataIndex: 'operation',
@@ -153,17 +144,14 @@ export default {
             })
         },
         clickLinkSibling(sibling){
-            this.$inertia.post(route('director.student.linkSiblings'),{
-                student:this.student,
-                sibling:sibling,
-            },
-            onSuccess: (page) => {
-                    this.init()                    
+            this.$inertia.patch(route('director.student.joinSibling',this.student.id), sibling, {
+                onSuccess: (page) => {
+                    console.log(page)
                 },
-            onError: (error) => {
-                console.log(error);
-            }
-)           })
+                onError: (error) => {
+                    console.log(error);
+                }
+            })
 
             console.log(this.student.sibling_uuid);
         }

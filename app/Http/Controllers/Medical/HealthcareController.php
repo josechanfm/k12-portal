@@ -77,6 +77,7 @@ class HealthcareController extends Controller
     {
         $healthcare->physicals;
         $healthcare->klass;
+        dd($healthcare->klasses);
         return Inertia::render('Medical/Healthcare',[
             'healthcare'=>$healthcare
         ]);
