@@ -26,7 +26,8 @@ class Klass extends Model
         'student_count',
         'promoted_count',
         'year_code',
-        'grade_year'
+        'grade_year',
+        'school_year'
     ];
     
 
@@ -51,6 +52,9 @@ class Klass extends Model
     //     $this->students;
     //     return $this->hasMany(KlassStudent::class)->with('habits');
     // }
+    public function getSchoolYearAttribute(){
+        return $this->grade->year->code;
+    }
     public function getKlassHeadsAttribute(){
         if(is_array($this->klass_head_ids)){
             return Staff::whereIn('id',$this->klass_head_ids)->get();

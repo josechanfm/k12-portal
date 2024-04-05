@@ -5,35 +5,42 @@
                 健康記錄
             </h2>
         </template>
-        <p>Klass: {{healthcare.klass.tag}}</p>
+        <!-- <p>Klass: {{healthcare.klass.tag}}</p>
         <p>Title: {{healthcare.title}}</p>
         <p>Data: {{healthcare.date}}</p>
         <a-button @click="sampleData">Sample Data</a-button>
         Min: <input v-model="random.min"/>
         Max: <input v-model="random.max"/>
-        <a-button @click="saveRecords">Save</a-button>
+        <a-button @click="saveRecords">Save</a-button> -->
+
+        <ol>
+            <li v-for="klass in healthcare.klasses">
+                <a-button @click="clickGetByKlass(klass)">{{ klass.tag }}</a-button>
+            </li>
+        </ol>
+        
+        <ol>
+            <li v-for="physical in physicals">
+                {{ physical.field_name }} - {{ physical.value }} : {{ physical.klass_student.student.name_zh }}
+            </li>
+        </ol>
         <a-card>
             <table id="dataTable" ref="dataTable">
                 <thead>
                     <tr>
+                        <td>klass id</td>
                         <td>Student Name</td>
                         <template v-for="field in healthcare.data_fields">
                             <td>{{ field.label }}</td>
                         </template>
                     </tr>
                 </thead>
-                <template v-for="student in healthcare.klass.students">
+                <template v-for="physical in physicals">
                     <tr>
-                        <td>{{ student.name_zh }}</td>
-                        <template v-for="field in healthcare.data_fields">
-                            <template v-for="physical in healthcare.physicals">
-                                <td v-if="physical.klass_student_id==student.pivot.klass_student_id && physical.field_name==field.value">
-                                    <a-input v-model:value="physical.value" @blur="onScoreChange(student, cid)"
-                                                        @keyup.arrow-keys="onKeypressed" />
-                                </td>
-                            </template>
-
-                        </template>
+                        <td>{{ physical.klass_student.klass_id }}</td>
+                        <td>{{ physical.klass_student.student.name_zh }}</td>
+                        <td>{{ physical.field_name }}</td>
+                        <td>{{ physical.value }}</td>
                     </tr>
                 </template>
             </table>
@@ -46,6 +53,7 @@
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import dayjs from 'dayjs';
 import KlassSelector from '@/Components/KlassSelector.vue';
+import axios from 'axios';
 
 export default {
     components: {
@@ -56,6 +64,7 @@ export default {
     props: ['healthcare'],
     data() {
         return {
+            physicals:[],
             random:{
                 min:10,
                 max:30
@@ -64,8 +73,8 @@ export default {
             tableCell: {
                 row: 0,
                 col: 0,
-                maxRow: this.healthcare.klass.students.length,
-                maxCol: this.healthcare.data_fields.length
+                //maxRow: this.healthcare.klass.students.length,
+                //maxCol: this.healthcare.data_fields.length
             },
 
         }
@@ -137,6 +146,18 @@ export default {
         },
         randomBetween(min, max){
             return Math.floor(Math.random() * (max - min + 1) + min)
+        },
+        clickGetByKlass(klass){
+            axios.post(route('medical.healthcare.getByKlass',{healthcare:this.healthcare,klass:klass}))
+                .then(response=>{
+                    console.log(response.data);
+                    this.physicals=response.data
+                })
+                .catch(error=>{
+                    console.log(error);
+                })
+
+            console.log(klass);
         }
 
     },

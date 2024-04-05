@@ -10,6 +10,8 @@ use App\Models\StudentDetail;
 use App\Models\Klass;
 use App\Models\Relative;
 use App\Models\Year;
+use App\Models\Grade;
+use PDO;
 
 class StudentController extends Controller
 {
@@ -28,7 +30,7 @@ class StudentController extends Controller
             case 'name_zh':
                 $students=Student::whereRaw(
                     "{$request->column} LIKE '%{$request->content}%'"
-                )->with('klasses')->with('guardiansWithRelatives')->get();
+                )->with('klasses')->with('guardians')->with('guardiansWithRelatives')->get();
                 break;
             case 'name_fn':
                 $students=Student::whereRaw(
@@ -43,11 +45,10 @@ class StudentController extends Controller
     public function index(Klass $klass, Request $request)
     {
         if($klass->id==null){
-            return Inertia::render('Director/Students',[
-                'students'=>Student::all()
-            ]);
+            //$klass=Klass::whereBelongsTo(Grade::whereBelongsTo(Year::currentYear())->where('grade_year',4)->first())->first();
+            return to_route('director.klass.students.index',Klass::whereBelongsTo(Grade::whereBelongsTo(Year::currentYear())->where('grade_year',4)->first())->first());
         };
-        //$students=Student::paginate(10);
+
         return Inertia::render('Director/KlassStudents', [
             'klass' => $klass,
             'students' => $klass->studentsWithAvatar(),
@@ -93,6 +94,8 @@ class StudentController extends Controller
         $student->guardians;
         $student->archives=$student->archives();
         $student->avatars=$student->avatars();
+        $student->siblings=$student->siblings();
+
         return Inertia::render('Director/StudentProfile',[
             'student'=>$student
         ]);
@@ -118,11 +121,14 @@ class StudentController extends Controller
      */
     public function update(Request $request, Student $student)
     {
+        if($student->id != $request->id){
+            return redirect()->back()->withErrors(['code'=>'match','message'=>'Student Id not match.']);
+        }
         $student->update($request->all());
         Relative::upsert(
             $request->relatives,
             uniqueBy:['id'],
-            update:['relation','kinship','name_zh','name_fn','birth_year','occupation','mobile']
+            update:['relation','kinship','name_zh','name_fn','birth_year','age','organization','occupation','mobile']
         );
 
         if(isset($request->address['id'])){
@@ -181,6 +187,22 @@ class StudentController extends Controller
             $students[$i]->klass=$student->klasses()->latest()->first();
         }
         return response()->json($students);
+    }
+
+    public function siblings(Student $student){
+        $student->klasses;
+        return Inertia::render('Director/Siblings',[
+                'student'=>$student,
+                'siblings'=>$student->siblings()
+        ]);
+    }
+
+    public function joinSibling(Student $student, Request $request){
+        // dd($student->sibling_uuid);
+        // dd(Student::find($request->id));
+        // dd($request->all());
+        Student::where('id',$request->id)->update(['sibling_uuid'=>$student->sibling_uuid]);
+        return redirect()->back();
     }
 
 }

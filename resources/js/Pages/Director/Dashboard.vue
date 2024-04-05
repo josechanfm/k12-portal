@@ -6,6 +6,7 @@
             <inertia-link :href="route('director.klass.finalScores',defaultKlass.id)" class="ant-btn">期末成績</inertia-link>
             <inertia-link :href="route('director.klass.transcripts',defaultKlass.id)" class="ant-btn">成積大表</inertia-link>
             <inertia-link :href="route('director.klass.transcripts',[defaultKlass.id,{type:'summary'}])" class="ant-btn">成積總表</inertia-link>
+            <inertia-link :href="route('director.student.finder')" class="ant-btn">查找學生</inertia-link>
             <p>The collection of route "Director" is for the general operation management such as serach and preview, which not included setup of year, class or subject etc.</p>
         </div>
 

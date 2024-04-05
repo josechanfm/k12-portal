@@ -11,23 +11,24 @@
             class="ant-advanced-search-form"
             :model="search"
         >
-            <a-form-item label="" >
-                <a-select v-model:value="search.column" :options="searchColumns"/>
-            </a-form-item>
-            <a-form-item label="" >
-                <a-input v-model:value="search.content" />
-            </a-form-item>
+            <a-space direction="horizontal">
+                <a-form-item label="" >
+                    <a-select v-model:value="search.column" :options="searchColumns"/>
+                </a-form-item>
+                <a-form-item label="" >
+                    <a-input v-model:value="search.content" />
+                </a-form-item>
+            </a-space>
             <a-button @click="onSearch">Search</a-button>
         </a-form>
-        
         <div>
             <a-table :dataSource="students" :columns="columns">
                 <template #bodyCell="{ column, text, record, index }">
                     <template v-if="column.dataIndex == 'operation'">
-                        <Link :href="'student/' + record.id" method="get" as="button" type="button">Profile</Link>
+                        <inertia-link :href="route('director.students.show',record.id)" class="ant-btn">學生檔案</inertia-link>
                     </template>
                     <template v-if="column.dataIndex=='name_zh'">
-                        <a :href="route('director.student',record.id)" target="_blank">{{record.name_zh}}</a>
+                        <a :href="route('director.students.show',record.id)" target="_blank">{{record.name_zh}}</a>
                     </template>
                     <template v-else-if="column.dataIndex=='guardians'">
                         <ol>
@@ -42,7 +43,7 @@
                             <li v-for="guardian in record.guardians_with_relatives">
                                 <ol v-if="guardian.students">
                                     <li v-for="std in guardian.students">
-                                        <a :href="route('director.student',std.id)" target="_blank">{{std.name_zh}}</a>
+                                        <a :href="route('director.students.show',std.id)" target="_blank">{{std.name_zh}}</a>
                                     </li>
                                 </ol>
                             </li>
@@ -67,11 +68,11 @@
 
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
-import { Link } from '@inertiajs/inertia-vue3';
+
 
 export default {
     components: {
-        AdminLayout, Link
+        AdminLayout
     },
     props: [],
     data() {

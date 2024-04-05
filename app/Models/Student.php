@@ -68,7 +68,7 @@ class Student extends Model implements HasMedia
         return $this->hasMany(Treatment::class);
     }
     public function klasses(){
-        return $this->belongsToMany(Klass::class)->withPivot('student_number');
+        return $this->belongsToMany(Klass::class)->withPivot('student_number')->orderBy('klass_student.created_at','DESC');
     }
     public function klassStudents(){
         return $this->hasMany(KlassStudent::class);
@@ -179,5 +179,13 @@ class Student extends Model implements HasMedia
             $behaviours[$term->value]=$tmp;
         }
         return $behaviours;
+    }
+
+    public function siblings(){
+        if($this->sibling_uuid){
+            return Student::where('sibling_uuid',$this->sibling_uuid)->with('guardians')->with('klasses')->get();
+        }
+        return null;
+        
     }
 }

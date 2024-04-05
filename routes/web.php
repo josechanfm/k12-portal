@@ -157,8 +157,9 @@ Route::group([
         
         Route::get('student/finder',[App\Http\Controllers\Director\StudentController::class,'finder'])->name('director.student.finder');
         Route::post('student/search',[App\Http\Controllers\Director\StudentController::class,'search'])->name('director.student.search');
-        Route::get('student/{student}',[App\Http\Controllers\Director\StudentController::class,'show'])->name('director.student');
-
+        // Route::get('student/{student}',[App\Http\Controllers\Director\StudentController::class,'show'])->name('director.student');
+        Route::get('student/{student}/siblings',[App\Http\Controllers\Director\StudentController::class,'siblings'])->name('director.student.siblings');
+        Route::patch('student/{student}/join_sibling',[App\Http\Controllers\Director\StudentController::class,'joinSibling'])->name('director.student.joinSibling');
 
         Route::get('student/{student}/avatars',[App\Http\Controllers\Director\AvatarController::class,'student'])->name('director.student.avatars');
         Route::resource('klass/{klass}/students',App\Http\Controllers\Director\StudentController::class)->names('director.klass.students');
@@ -289,6 +290,7 @@ Route::group([
     Route::get('klass/{klass}',[App\Http\Controllers\Medical\DashboardController::class,'klass'])->name('medical.klass');
     Route::resource('treatments',App\Http\Controllers\Medical\TreatmentController::class)->names('medical.treatments');
     Route::resource('healthcares',App\Http\Controllers\Medical\HealthcareController::class)->names('medical.healthcares');
+    Route::post('healthcare/{healthcare}/get_by_klass/{klass}',[App\Http\Controllers\Medical\HealthcareController::class,'getByKlass'])->name('medical.healthcare.getByKlass');
     Route::get('medicnote',[App\Http\Controllers\Medical\MedicnoteController::class,'dashboard'])->name('medical.medicnote');
     Route::resource('klass/{klass}/medicnotes',App\Http\Controllers\Medical\MedicnoteController::class)->names('medical.klass.medicnotes');
     Route::resource('physicals',App\Http\Controllers\Medical\PhysicalController::class)->names('medical.physicals');
