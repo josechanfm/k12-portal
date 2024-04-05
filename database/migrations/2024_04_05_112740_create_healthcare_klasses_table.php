@@ -13,17 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('healthcares', function (Blueprint $table) {
+        Schema::create('healthcare_klasses', function (Blueprint $table) {
             $table->id();
-            $table->string('category');
-            $table->date('date');
-            $table->string('title');
-            $table->string('data_fields');
-            $table->string('responsible')->nullable();
+            $table->foreignId('healthcare_id');
+            $table->foreignId('klass_id');
             $table->date('start_at')->nullable();
             $table->date('finish_at')->nullable();
-            $table->boolean('is_active')->default(false);
-            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
@@ -35,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('healthcares');
+        Schema::dropIfExists('healthcare_klasses');
     }
 };

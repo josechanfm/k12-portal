@@ -23,11 +23,12 @@ class HealthcareController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Klass $klass)
+    public function index()
     {
-        $klass->healthcares;
-        return Inertia::render('Medical/Healthcare',[
-            'klass'=>$klass
+        //$klass->healthcares;
+
+        return Inertia::render('Medical/Healthcares',[
+            'healthcares'=>Healthcare::with('klasses')->get()
         ]);
     }
 
@@ -77,7 +78,7 @@ class HealthcareController extends Controller
      */
     public function show(Healthcare $healthcare)
     {
-        //dd($healthcare);
+        
         $healthcare->physicals;
         // dd($healthcare->physicals[0]);
         //$healthcare->klass;
