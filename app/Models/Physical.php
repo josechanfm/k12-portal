@@ -16,6 +16,6 @@ class Physical extends Model
         return $this->belongsTo(Healthcare::class);
     }
     public function klassStudent(){
-        return $this->belongsTo(KlassStudent::class);
+        return $this->belongsTo(KlassStudent::class)->with('student');
     }
 }

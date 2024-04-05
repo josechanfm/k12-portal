@@ -290,6 +290,7 @@ Route::group([
     Route::get('klass/{klass}',[App\Http\Controllers\Medical\DashboardController::class,'klass'])->name('medical.klass');
     Route::resource('treatments',App\Http\Controllers\Medical\TreatmentController::class)->names('medical.treatments');
     Route::resource('healthcares',App\Http\Controllers\Medical\HealthcareController::class)->names('medical.healthcares');
+    Route::post('healthcare/{healthcare}/get_by_klass/{klass}',[App\Http\Controllers\Medical\HealthcareController::class,'getByKlass'])->name('medical.healthcare.getByKlass');
     Route::get('medicnote',[App\Http\Controllers\Medical\MedicnoteController::class,'dashboard'])->name('medical.medicnote');
     Route::resource('klass/{klass}/medicnotes',App\Http\Controllers\Medical\MedicnoteController::class)->names('medical.klass.medicnotes');
     Route::resource('physicals',App\Http\Controllers\Medical\PhysicalController::class)->names('medical.physicals');

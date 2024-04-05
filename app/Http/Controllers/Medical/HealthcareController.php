@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Klass;
+use App\Models\KlassStudent;
+use App\Models\Student;
 use App\Models\Healthcare;
 use App\Models\Physical;
 
@@ -75,11 +77,15 @@ class HealthcareController extends Controller
      */
     public function show(Healthcare $healthcare)
     {
+        //dd($healthcare);
         $healthcare->physicals;
-        $healthcare->klass;
-        dd($healthcare->klasses);
+        // dd($healthcare->physicals[0]);
+        //$healthcare->klass;
+        //dd($healthcare->klass);
+        $healthcare->klasses=$healthcare->klasses();
         return Inertia::render('Medical/Healthcare',[
-            'healthcare'=>$healthcare
+            'healthcare'=>$healthcare,
+            'klasses'=>$healthcare->klasses()
         ]);
     }
 
@@ -119,5 +125,18 @@ class HealthcareController extends Controller
     public function destroy($id)
     {
         //
+    }
+    //public function getByKlass(Request $request){
+        public function getByKlass(Healthcare $healthcare, Klass $klass){
+        //return response()->json($healthcare);
+        
+        $students=Student::whereIn('id',KlassStudent::where('klass_id',$klass->id)->pluck('student_id'))->get();
+        
+        return response()->json($students);
+        $klassStudentIds=KlassStudent::where('klass_id',$klass->id)->pluck('id');
+
+        $physicals=$healthcare->physicals->whereIn('klass_student_id',$klassStudentIds);
+
+        return response()->json($physicals);
     }
 }
