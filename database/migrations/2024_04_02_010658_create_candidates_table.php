@@ -43,7 +43,7 @@ return new class extends Migration
             
             $table->string('phone')->nullable();
             $table->string('phone_home')->nullable();
-            $table->boolean('confirmed')->default('false');
+            $table->boolean('confirmed')->default(false);
 
             $table->timestamps();
         });

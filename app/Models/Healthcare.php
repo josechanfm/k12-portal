@@ -18,7 +18,8 @@ class Healthcare extends Model
         return $this->belongsTo(Klass::class)->with('students');
     }
     public function klasses(){
-        $klassStudentsIds=$this->physicals()->pluck('klass_student_id');
-        return Klass::where('id',KlassStudent::whereIn('id',$klassStudentsIds)->groupBy('klass_id')->pluck('klass_id'))->get();
+        return $this->belongsToMany(Klass::class);
+        // $klassStudentsIds=$this->physicals()->pluck('klass_student_id');
+        // return Klass::where('id',KlassStudent::whereIn('id',$klassStudentsIds)->groupBy('klass_id')->pluck('klass_id'))->get();
     }
 }

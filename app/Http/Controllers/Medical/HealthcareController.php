@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Medical;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Year;
+use App\Models\Grade;
 use App\Models\Klass;
 use App\Models\KlassStudent;
 use App\Models\Student;
@@ -28,6 +30,7 @@ class HealthcareController extends Controller
         //$klass->healthcares;
 
         return Inertia::render('Medical/Healthcares',[
+            'grades'=>Grade::where('year_id',Year::currentYear()->id)->with('klasses')->get(),
             'healthcares'=>Healthcare::with('klasses')->get()
         ]);
     }
@@ -110,10 +113,13 @@ class HealthcareController extends Controller
      */
     public function update(Healthcare $healthcare, Request $request)
     {
+
+        // dd($request->all());
         $input=$request->all();
-        $input['data_fields']=json_decode($request->data_fields);
+        // $input['data_fields']=json_decode($request->data_fields);
  
         $healthcare->update($input);
+        $healthcare->klasses()->sync($input['klass_ids']);
         return redirect()->back();
     }
 

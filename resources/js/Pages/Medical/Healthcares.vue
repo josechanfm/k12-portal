@@ -7,7 +7,6 @@
         Min: <input v-model="random.min"/>
         Max: <input v-model="random.max"/>
         <a-button @click="saveRecords">Save</a-button> -->
-        {{healthcares}}
         <a-button>Create</a-button>
         <a-table :dataSource="healthcares" :columns="columns">
             <template #bodyCell="{ column, text, record, index }">
@@ -39,9 +38,13 @@
                 <a-form-item label="Data Fields" name="data_fields">
                     <a-textarea v-model:value="modal.data.data_fields"/>
                 </a-form-item>
-                <div>
+                <a-form-item label="klass" name="klass_id">
+                    <a-select v-model:value="modal.data.klass_tags" mode="tags" :options="klasses" :fieldNames="{value:'tag'}"/>
+                </a-form-item>
+                
+                <!-- <div>
                     <a-button type="default" html-type="submit">新增</a-button>
-                </div>
+                </div> -->
 
             </a-form>
             
@@ -69,10 +72,11 @@ export default {
         dayjs,
         KlassSelector
     },
-    props: ['healthcares'],
+    props: ['healthcares','grades'],
     data() {
         return {
             physicals:[],
+            klasses:[],
             random:{
                 min:10,
                 max:30
@@ -131,6 +135,11 @@ export default {
         }
     },
     created() {
+        this.grades.forEach(g=>{
+            g.klasses.forEach(k=>{
+                this.klasses.push(k)
+            })
+        })
     },
     mounted(){
     },
@@ -147,13 +156,37 @@ export default {
         },
         editRecord(record){
             this.modal.data={...record}
+            this.modal.data.klasses={...record.klasses} //not really necessary
+            delete this.modal.data.klasses //could be delete
+            this.modal.data.klass_tags=record.klasses.map(k=>k.tag)
+            this.modal.mode='EDIT'
             this.modal.isOpen=true
         },
         onChangeCategory(){
             console.log('category changed')
         },
         onFormSubmit(){
-            console.log('submit');
+            if(this.modal.mode=='EDIT'){
+                this.modal.isOpen=false
+                this.modal.data.klass_ids=[];
+                this.modal.data.klass_tags.forEach(tag=>{
+                    this.modal.data.klass_ids.push(this.klasses.find(k=>k.tag==tag).id)
+                })
+                delete this.modal.data['klass_tags'];
+                //delete this.modal.data['klasses']; //could be delete
+                this.$inertia.put(route("medical.healthcares.update",this.modal.data.id), this.modal.data, {
+                    onSuccess: (page) => {
+                        console.log(page)
+                    },
+                    onError: (error) => {
+                        console.log(error);
+                    }
+                })
+
+            }else{
+
+            }
+
         },
         saveRecords(){
             this.$inertia.put(route("medical.physicals.update",0), this.healthcare.physicals, {
