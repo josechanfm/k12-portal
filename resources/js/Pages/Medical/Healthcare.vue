@@ -5,42 +5,42 @@
                 健康記錄
             </h2>
         </template>
-        <!-- <p>Klass: {{healthcare.klass.tag}}</p>
+        <!-- <p>Klass: {{healthcare.klass.tag}}</p> -->
         <p>Title: {{healthcare.title}}</p>
         <p>Data: {{healthcare.date}}</p>
-        <a-button @click="sampleData">Sample Data</a-button>
+        <div>
+            Fields: 
+            <span v-for="column in healthcare.bodycheck_columns">{{ columnLabel(column) }}, </span>
+        </div>
+        <!-- <a-button @click="sampleData">Sample Data</a-button>
         Min: <input v-model="random.min"/>
-        Max: <input v-model="random.max"/>
-        <a-button @click="saveRecords">Save</a-button> -->
-
-        <ol>
-            <li v-for="klass in healthcare.klasses">
-                <a-button @click="clickGetByKlass(klass)">{{ klass.tag }}</a-button>
-            </li>
-        </ol>
+        Max: <input v-model="random.max"/> -->
+        <a-button @click="clickSaveRecords" class="ant-btn ant-btn-primary float-right">Save</a-button>
+        <a-button @click="sampleData" class="ant-btn float-right">Sample Data</a-button>
+        <a-radio-group v-model:value="selectedKlass" @change="onChangeKlass" @click="onClickKlass" button-style="solid">
+            <template v-for="klass in healthcare.klasses">
+                <a-radio-button :value="klass.id">{{ klass.tag }}</a-radio-button>
+            </template>
+        </a-radio-group>
         
-        <ol>
-            <li v-for="physical in physicals">
-                {{ physical.field_name }} - {{ physical.value }} : {{ physical.klass_student.student.name_zh }}
-            </li>
-        </ol>
         <a-card>
             <table id="dataTable" ref="dataTable">
                 <thead>
                     <tr>
                         <td>klass id</td>
-                        <td>Student Name</td>
-                        <template v-for="field in healthcare.data_fields">
-                            <td>{{ field.label }}</td>
+                        <template v-for="column in healthcare.bodycheck_columns">
+                            <td>{{ columnLabel(column) }}</td>
                         </template>
                     </tr>
                 </thead>
-                <template v-for="physical in physicals">
+                <template v-for="student in students">
                     <tr>
-                        <td>{{ physical.klass_student.klass_id }}</td>
-                        <td>{{ physical.klass_student.student.name_zh }}</td>
-                        <td>{{ physical.field_name }}</td>
-                        <td>{{ physical.value }}</td>
+                        <td>{{ student.name_zh }}</td>
+                        <template v-for="column in healthcare.bodycheck_columns">
+                            <td>
+                                <a-input v-model:value="student.bodychecks[column].value" @change="onScoreChange"/>
+                            </td>
+                        </template>
                     </tr>
                 </template>
             </table>
@@ -54,6 +54,9 @@ import AdminLayout from '@/Layouts/AdminLayout.vue';
 import dayjs from 'dayjs';
 import KlassSelector from '@/Components/KlassSelector.vue';
 import axios from 'axios';
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
+import { createVNode } from 'vue';
+import { Modal } from 'ant-design-vue';
 
 export default {
     components: {
@@ -61,10 +64,12 @@ export default {
         dayjs,
         KlassSelector
     },
-    props: ['healthcare'],
+    props: ['healthcare','bodycheck_columns'],
     data() {
         return {
-            physicals:[],
+            valueChanged:false,
+            students:[],
+            selectedKlass:null,
             random:{
                 min:10,
                 max:30
@@ -121,45 +126,82 @@ export default {
 
     },
     methods: {
+        columnLabel(column){
+            return this.bodycheck_columns.find(c=>c.value==column).label
+        },
         onKeypressed(event) {
             this.keypressed = event.keyCode;
         },
         onScoreChange(){
-            console.log('value changed');
+            this.valueChanged=true;
         },
-        saveRecords(){
-            this.$inertia.put(route("medical.physicals.update",0), this.healthcare.physicals, {
-                    onSuccess: (page) => {
-
-                    },
-                    onError: (error) => {
-                        console.log(error);
-                    }
+        clickSaveRecords(){
+            var bodychecks=[];
+            this.students.forEach(s=>{
+                Object.values(s.bodychecks).forEach((p)=>{
+                    delete p['klass_student']
+                     bodychecks.push(p)
                 })
+            })
+            this.$inertia.put(route("medical.bodychecks.update",0), bodychecks, {
+                onSuccess: (page) => {
+                    console.log(page.data)
+                    this.valueChange=true;
+                },
+                onError: (error) => {
+                    console.log(error);
+                }
+            })
 
         },
         sampleData(){
             console.log(this.random);
-            this.healthcare.physicals.forEach(physical => {
-                physical.value=this.randomBetween(parseInt(this.random.min),parseInt(this.random.max))
+            this.students.forEach(s=>{
+                Object.values(s.bodychecks).forEach(b=>{
+                    b.value=this.randomBetween(parseInt(this.random.min),parseInt(this.random.max))
+                })
             })
+            // this.students.bodychecks.forEach(bodycheck => {
+            //     bodycheck.value=this.randomBetween(parseInt(this.random.min),parseInt(this.random.max))
+            // })
         },
         randomBetween(min, max){
             return Math.floor(Math.random() * (max - min + 1) + min)
         },
-        clickGetByKlass(klass){
-            axios.post(route('medical.healthcare.getByKlass',{healthcare:this.healthcare,klass:klass}))
+        onClickKlass(){
+            console.log(this.valueChanged)
+            if(this.valueChanged==false){
+                return true;
+            }
+            Modal.confirm({
+                title: 'Do you want to delete these items?',
+                icon: createVNode(ExclamationCircleOutlined),
+                content: 'When clicked the OK button, this dialog will be closed after 1 second',
+                onOk() {
+                    this.selectedKlass=null;
+                },
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                onCancel() {
+                    return false;
+                },
+            });
+
+        },
+        onChangeKlass(e){
+            this.getBodychecks(e.target.value);
+
+        },
+        getBodychecks(klass){
+            axios.post(route('medical.healthcare.getBodychecks',{healthcare:this.healthcare,klass:klass}))
                 .then(response=>{
                     console.log(response.data);
-                    this.physicals=response.data
+                    this.students=response.data
                 })
                 .catch(error=>{
                     console.log(error);
                 })
 
-            console.log(klass);
         }
-
     },
 }
 </script>

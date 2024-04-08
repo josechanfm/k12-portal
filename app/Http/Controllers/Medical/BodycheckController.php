@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Medical;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Physical;
+use App\Models\Bodycheck;
 
-class PhysicalController extends Controller
+class BodycheckController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -70,9 +70,10 @@ class PhysicalController extends Controller
      */
     public function update(Request $request, $id)
     {
-        Physical::upsert(
+        //dd($request->all());
+        Bodycheck::upsert(
             $request->all(),
-            ['healthcase_id','klass_student_id','field_name'],
+            ['healthcare_id','klass_student_id','field_label'],
             ['value']
         );
         return redirect()->back();

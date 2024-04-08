@@ -5,33 +5,39 @@ namespace App\Http\Controllers\Medical;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Config;
 use App\Models\Year;
 use App\Models\Grade;
 use App\Models\Klass;
-use App\Models\KlassStudent;
-use App\Models\Student;
 use App\Models\Healthcare;
-use App\Models\Physical;
+use App\Models\Bodycheck;
 
 class HealthcareController extends Controller
 {
-    public function dashboard(){
-        $healthcare=Healthcare::find(1);
-        $healthcare->chronicles;
-        dd($healthcare);
-    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //$klass->healthcares;
+        //dd(Healthcare::with('klasses')->get());
+        if($request->scope=='all'){
+            $healthcares=Healthcare::with('klasses')->orderBy('created_at','DESC')->paginate();
+        }else{
+            $healthcares=Healthcare::with('klasses')
+                ->where('is_active',true)
+                ->where('finish_at','<',date('Y-d-m'))
+                ->orWhereNull('finish_at')
+                ->orderBy('created_at','DESC')
+                ->paginate();
+        }
 
         return Inertia::render('Medical/Healthcares',[
             'grades'=>Grade::where('year_id',Year::currentYear()->id)->with('klasses')->get(),
-            'healthcares'=>Healthcare::with('klasses')->get()
+            'healthcares'=>$healthcares,
+            'bodycheck_columns'=>Config::item('bodycheck_columns')
         ]);
     }
 
@@ -54,23 +60,25 @@ class HealthcareController extends Controller
     public function store(Request $request)
     {
         $input=$request->all();
-        $input['data_fields']=json_decode($request->data_fields);
         $healthcare=Healthcare::create($input);
-        foreach($healthcare->klass->students as $student){
-            foreach($healthcare->data_fields as $field){
-                $data[]=[
-                    'healthcare_id'=>$healthcare->id,
-                    'klass_student_id'=>$student->pivot->klass_student_id,
-                    'field_name'=>$field['value'],
-                    'value'=>NULL
-                ];
-            };
-        };
-        Physical::upsert(
-            $data,
-            ['healthcate_id','klass_student_id','field_name'],
-            ['value']
-        );    
+        $healthcare->klasses()->sync($input['klass_ids']);
+
+        foreach($healthcare->klasses as $klass){
+            foreach($klass->students as $student){
+                foreach($input['bodycheck_columns'] as $column){
+                    $bodycheck=Bodycheck::firstOrCreate(
+                        [
+                            'healthcare_id'=>$healthcare->id,
+                            'klass_student_id'=>$student->pivot->klass_student_id,
+                            'column_value'=>$column,
+                            'value'=>null
+                        ]
+                    );
+
+                }
+            }
+        }
+        return redirect()->back();
     }
 
     /**
@@ -81,15 +89,13 @@ class HealthcareController extends Controller
      */
     public function show(Healthcare $healthcare)
     {
-        
-        $healthcare->physicals;
         // dd($healthcare->physicals[0]);
         //$healthcare->klass;
-        //dd($healthcare->klass);
-        $healthcare->klasses=$healthcare->klasses();
+        //$healthcare->klasses=$healthcare->klasses();
         return Inertia::render('Medical/Healthcare',[
             'healthcare'=>$healthcare,
-            'klasses'=>$healthcare->klasses()
+            'klasses'=>$healthcare->klasses,
+            'bodycheck_columns'=>Config::item('bodycheck_columns')
         ]);
     }
 
@@ -116,10 +122,24 @@ class HealthcareController extends Controller
 
         // dd($request->all());
         $input=$request->all();
-        // $input['data_fields']=json_decode($request->data_fields);
- 
         $healthcare->update($input);
         $healthcare->klasses()->sync($input['klass_ids']);
+        foreach($healthcare->klasses as $klass){
+            foreach($klass->students as $student){
+                foreach($input['bodycheck_columns'] as $column){
+                    $bodycheck=Bodycheck::firstOrCreate(
+                        [
+                            'healthcare_id'=>$healthcare->id,
+                            'klass_student_id'=>$student->pivot->klass_student_id,
+                            'column_value'=>$column,
+                            'value'=>null
+                        ]
+                    );
+
+                }
+            }
+        }
+    
         return redirect()->back();
     }
 
@@ -133,17 +153,18 @@ class HealthcareController extends Controller
     {
         //
     }
-    //public function getByKlass(Request $request){
-        public function getByKlass(Healthcare $healthcare, Klass $klass){
-        //return response()->json($healthcare);
+
+
+    public function getBodychecks(Healthcare $healthcare, Klass $klass){
         
-        $students=Student::whereIn('id',KlassStudent::where('klass_id',$klass->id)->pluck('student_id'))->get();
-        
+        //return response()->json($healthcare->bodychecks);
+        $students=$klass->students;
+        foreach($students as $i=>$student){
+            // $bodychecks=array_column($healthcare->bodychecks->where('klass_student_id',$student->pivot->klass_student_id)->toArray(),null,'column_value');
+            // return response()->json($bodychecks);
+            $students[$i]->bodychecks=array_column($healthcare->bodychecks->where('klass_student_id',$student->pivot->klass_student_id)->toArray(),null,'column_value');
+        }
         return response()->json($students);
-        $klassStudentIds=KlassStudent::where('klass_id',$klass->id)->pluck('id');
 
-        $physicals=$healthcare->physicals->whereIn('klass_student_id',$klassStudentIds);
-
-        return response()->json($physicals);
     }
 }

@@ -419,6 +419,15 @@ class ConfigSeeder extends Seeder
             }]'
         ]);
 
+        DB::table('configs')->insert([
+            'key'=>'bodycheck_columns',
+            'value'=>'[
+                {"label":"身高","value":"height"},
+                {"label":"體重","value":"weight"},
+                {"label":"BMI","value":"bmi"}
+            ]'
+        ]);
+
     }
 }
 

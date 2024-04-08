@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('physicals', function (Blueprint $table) {
+        Schema::create('bodychecks', function (Blueprint $table) {
             $table->id();
             $table->foreignId('healthcare_id');
             $table->foreignId('klass_student_id');
-            $table->string('field_name');
+            $table->string('column_value');
             $table->string('value')->nullable();
             $table->timestamps();
             $table->unique(['healthcare_id','klass_student_id','field_name']);
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('physicals');
+        Schema::dropIfExists('bodychecks');
     }
 };

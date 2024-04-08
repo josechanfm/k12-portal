@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('category');
             $table->date('date');
             $table->string('title');
-            $table->string('data_fields');
+            $table->string('bodycheck_columns');
             $table->string('responsible')->nullable();
             $table->date('start_at')->nullable();
             $table->date('finish_at')->nullable();

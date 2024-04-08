@@ -1,18 +1,14 @@
 <template>
     <AdminLayout title="Healthcares">
-        <!-- <p>Klass: {{healthcare.klass.tag}}</p>
-        <p>Title: {{healthcare.title}}</p>
-        <p>Data: {{healthcare.date}}</p>
-        <a-button @click="sampleData">Sample Data</a-button>
-        Min: <input v-model="random.min"/>
-        Max: <input v-model="random.max"/>
-        <a-button @click="saveRecords">Save</a-button> -->
-        <a-button>Create</a-button>
-        <a-table :dataSource="healthcares" :columns="columns">
+        <a-button @click="onCreateRecord" class="ant-btn ant-btn-primary">Create</a-button>
+        <a-table :dataSource="healthcares.data" :columns="columns">
             <template #bodyCell="{ column, text, record, index }">
                 <template v-if="column.dataIndex == 'operation'">
-                    <a-button @click="editRecord(record)">修改</a-button>
+                    <a-button @click="onEditRecord(record)">修改</a-button>
                     <inertia-link :href="route('medical.healthcares.show',record.id)">Link</inertia-link>
+                </template>
+                <template v-else-if="column.dataIndex == 'is_active'">
+                    {{ record.is_active?'有效':'無效' }}
                 </template>
                 <template v-else>
                     {{ record[column.dataIndex] }}
@@ -29,30 +25,25 @@
                 <a-form-item label="Title" name="title">
                     <a-input v-model:value="modal.data.title"/>
                 </a-form-item>
-                <a-form-item label="Date" name="date">
-                    <a-date-picker v-model:value="modal.data.date" :format="dateFormat" :valueFormat="dateFormat"/>
+                <a-form-item label="Start at" name="start_at">
+                    <a-date-picker v-model:value="modal.data.start_at" :format="dateFormat" :valueFormat="dateFormat"/>
+                </a-form-item>
+                <a-form-item label="Finish at" name="finish_at">
+                    <a-date-picker v-model:value="modal.data.finish_at" :format="dateFormat" :valueFormat="dateFormat"/>
                 </a-form-item>
                 <a-form-item label="Responsible" name="responsible">
                     <a-input v-model:value="modal.data.responsible"/>
                 </a-form-item>
-                <a-form-item label="Data Fields" name="data_fields">
-                    <a-textarea v-model:value="modal.data.data_fields"/>
+                <a-form-item label="Bodycheck columns" name="bodycheck_columns">
+                    <a-select v-model:value="modal.data.bodycheck_columns" mode="multiple" :options="bodycheck_columns"/>
                 </a-form-item>
                 <a-form-item label="klass" name="klass_id">
                     <a-select v-model:value="modal.data.klass_tags" mode="tags" :options="klasses" :fieldNames="{value:'tag'}"/>
                 </a-form-item>
-                
-                <!-- <div>
-                    <a-button type="default" html-type="submit">新增</a-button>
-                </div> -->
-
+                <a-form-item label="Active" name="is_active">
+                    <a-switch v-model:checked="modal.data.is_active"/>
+                </a-form-item>
             </a-form>
-            
-            <!-- <template #footer>
-                <a-button key="back" @click="handleCancel">Return</a-button>
-                <a-button v-if="modal.mode == 'EDIT'" key="Update" type="primary" @click="updateRecord()">Update</a-button>
-                <a-button v-if="modal.mode == 'CREATE'" key="Store" type="primary" @click="storeRecord()">Add</a-button>
-            </template> -->
         </a-modal>
         <!-- Modal End-->
         
@@ -72,7 +63,7 @@ export default {
         dayjs,
         KlassSelector
     },
-    props: ['healthcares','grades'],
+    props: ['healthcares','grades','bodycheck_columns'],
     data() {
         return {
             physicals:[],
@@ -116,6 +107,9 @@ export default {
                     title: '結束日期',
                     dataIndex: 'finish_at',
                 },{
+                    title: '負責人',
+                    dataIndex: 'responsible',
+                },{
                     title: '有效',
                     dataIndex: 'is_active',
                 },{
@@ -144,20 +138,14 @@ export default {
     mounted(){
     },
     methods: {
-        onKeypressed(event) {
-            this.keypressed = event.keyCode;
-        },
-        onScoreChange(){
-            console.log('value changed');
-        },
-        addRecord(){
+        onCreateRecord(){
             this.modal.data={}
             this.modal.isOpen=true
         },
-        editRecord(record){
+        onEditRecord(record){
             this.modal.data={...record}
-            this.modal.data.klasses={...record.klasses} //not really necessary
-            delete this.modal.data.klasses //could be delete
+            // this.modal.data.klasses={...record.klasses} //not really necessary
+            // delete this.modal.data.klasses //could be delete
             this.modal.data.klass_tags=record.klasses.map(k=>k.tag)
             this.modal.mode='EDIT'
             this.modal.isOpen=true
@@ -166,14 +154,16 @@ export default {
             console.log('category changed')
         },
         onFormSubmit(){
+            this.modal.isOpen=false
+            this.modal.data.klass_ids=[];
+            this.modal.data.klass_tags.forEach(tag=>{
+                this.modal.data.klass_ids.push(this.klasses.find(k=>k.tag==tag).id)
+            })
+            delete this.modal.data['klass_tags'];
+            //delete this.modal.data['klasses']; //could be delete
+            console.log(this.modal.data);
+
             if(this.modal.mode=='EDIT'){
-                this.modal.isOpen=false
-                this.modal.data.klass_ids=[];
-                this.modal.data.klass_tags.forEach(tag=>{
-                    this.modal.data.klass_ids.push(this.klasses.find(k=>k.tag==tag).id)
-                })
-                delete this.modal.data['klass_tags'];
-                //delete this.modal.data['klasses']; //could be delete
                 this.$inertia.put(route("medical.healthcares.update",this.modal.data.id), this.modal.data, {
                     onSuccess: (page) => {
                         console.log(page)
@@ -182,45 +172,19 @@ export default {
                         console.log(error);
                     }
                 })
-
             }else{
-
-            }
-
-        },
-        saveRecords(){
-            this.$inertia.put(route("medical.physicals.update",0), this.healthcare.physicals, {
+                this.$inertia.post(route("medical.healthcares.store"), this.modal.data, {
                     onSuccess: (page) => {
-
+                        console.log(page)
                     },
                     onError: (error) => {
                         console.log(error);
                     }
                 })
 
-        },
-        sampleData(){
-            console.log(this.random);
-            this.healthcare.physicals.forEach(physical => {
-                physical.value=this.randomBetween(parseInt(this.random.min),parseInt(this.random.max))
-            })
-        },
-        randomBetween(min, max){
-            return Math.floor(Math.random() * (max - min + 1) + min)
-        },
-        clickGetByKlass(klass){
-            axios.post(route('medical.healthcare.getByKlass',{healthcare:this.healthcare,klass:klass}))
-                .then(response=>{
-                    console.log(response.data);
-                    this.physicals=response.data
-                })
-                .catch(error=>{
-                    console.log(error);
-                })
+            }
 
-            console.log(klass);
-        }
-
+        },
     },
 }
 </script>
