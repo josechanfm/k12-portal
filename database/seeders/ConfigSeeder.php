@@ -424,7 +424,12 @@ class ConfigSeeder extends Seeder
             'value'=>'[
                 {"label":"身高","value":"height"},
                 {"label":"體重","value":"weight"},
-                {"label":"BMI","value":"bmi"}
+                {"label":"BMI","value":"bmi"},
+                {"label":"脊椎側彎","value":"spinal"},
+                {"label":"心率","value":"heart"},
+                {"label":"視力(左)","value":"eye_left"},
+                {"label":"視力(右)","value":"eye_right"},
+                {"label":"牙齿","value":"tooth"}
             ]'
         ]);
 
