@@ -168,27 +168,46 @@ export default {
         randomBetween(min, max){
             return Math.floor(Math.random() * (max - min + 1) + min)
         },
-        onClickKlass(){
-            console.log(this.valueChanged)
-            if(this.valueChanged==false){
+        onClickKlass(e){
+            return true;
+            if(this.valueChanged==false && this.selectedKlass!=null){
+                this.getBodychecks(this.selectedKlass)
                 return true;
             }
+            
+            
             Modal.confirm({
-                title: 'Do you want to delete these items?',
+                title: 'Are you sure wanna to change Klass',
                 icon: createVNode(ExclamationCircleOutlined),
-                content: 'When clicked the OK button, this dialog will be closed after 1 second',
+                content: 'The Value had been changed without saving. Change Klass will lose changed values.',
                 onOk() {
-                    this.selectedKlass=null;
+                    this.valueChanged=false
+                    this.selectedKlass=null
+                    //this.getBodychecks(this.selectedKlass);
                 },
                 // eslint-disable-next-line @typescript-eslint/no-empty-function
                 onCancel() {
+                    this.valueChanged=false
                     return false;
+
                 },
             });
 
         },
         onChangeKlass(e){
-            this.getBodychecks(e.target.value);
+            if(this.selectedKlass==null){
+                this.selectedKlass=e.target.value
+                this.getBodychecks(this.selectedKlass);
+                return true;
+            }
+            if(this.valueChanged==false){
+                this.selectedKlass=e.target.value
+                this.getBodychecks(this.selectedKlass);
+            }
+            this.selectedKlass=e.target.value
+            console.log('aaa');
+            return true;
+            //this.getBodychecks(e.target.value);
 
         },
         getBodychecks(klass){

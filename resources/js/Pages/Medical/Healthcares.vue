@@ -18,27 +18,33 @@
     
         <!-- Modal Start-->
         <a-modal :model="modal.data" v-model:visible="modal.isOpen" :title="modal.title" width="60%" okText="Save" @ok="onFormSubmit">
-            <a-form ref="modalForm" :model="modal.data" :rules="rules" layout="vertical" @finish="onFormSubmit" id="modalForm">
+            <a-form ref="modalForm" :model="modal.data" :rules="rules" :label-col="{ span: 4 }" @finish="onFormSubmit" id="modalForm">
                 <a-form-item label="Category" name="category">
                     <a-select v-model:value="modal.data.category" :options="categories" @change="onChangeCategory" :disabled="modal.mode=='EDIT'"/>
                 </a-form-item>
                 <a-form-item label="Title" name="title">
                     <a-input v-model:value="modal.data.title"/>
                 </a-form-item>
-                <a-form-item label="Start at" name="start_at">
-                    <a-date-picker v-model:value="modal.data.start_at" :format="dateFormat" :valueFormat="dateFormat"/>
-                </a-form-item>
-                <a-form-item label="Finish at" name="finish_at">
-                    <a-date-picker v-model:value="modal.data.finish_at" :format="dateFormat" :valueFormat="dateFormat"/>
-                </a-form-item>
+                <a-row>
+                    <a-col :span="12">
+                        <a-form-item label="Start at" name="start_at" :label-col="{ span: 8 }">
+                            <a-date-picker v-model:value="modal.data.start_at" :format="dateFormat" :valueFormat="dateFormat"/>
+                        </a-form-item>
+                    </a-col>
+                    <a-col :span="12">
+                        <a-form-item label="Finish at" name="finish_at">
+                            <a-date-picker v-model:value="modal.data.finish_at" :format="dateFormat" :valueFormat="dateFormat"/>
+                        </a-form-item>
+                    </a-col>
+                </a-row>
                 <a-form-item label="Responsible" name="responsible">
                     <a-input v-model:value="modal.data.responsible"/>
                 </a-form-item>
-                <a-form-item label="Bodycheck columns" name="bodycheck_columns">
-                    <a-select v-model:value="modal.data.bodycheck_columns" mode="multiple" :options="bodycheck_columns"/>
+                <a-form-item label="Bodycheck columns" name="bodycheck_columns" >
+                    <a-select v-model:value="modal.data.bodycheck_columns" mode="multiple" :options="bodycheck_columns"  :disabled="modal.mode=='EDIT'"/>
                 </a-form-item>
                 <a-form-item label="klass" name="klass_id">
-                    <a-select v-model:value="modal.data.klass_tags" mode="tags" :options="klasses" :fieldNames="{value:'tag'}"/>
+                    <a-select v-model:value="modal.data.klass_tags" mode="tags" :options="klasses" :fieldNames="{value:'tag'}"  :disabled="modal.mode=='EDIT'"/>
                 </a-form-item>
                 <a-form-item label="Active" name="is_active">
                     <a-switch v-model:checked="modal.data.is_active"/>
