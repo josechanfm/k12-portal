@@ -15,9 +15,9 @@
         <!-- <a-button @click="sampleData">Sample Data</a-button>
         Min: <input v-model="random.min"/>
         Max: <input v-model="random.max"/> -->
-        <a-button @click="clickSaveRecords" class="ant-btn ant-btn-primary float-right">Save</a-button>
+        <a-button @click="clickSaveRecords" class="ant-btn ant-btn-primary float-right">存保內容</a-button>
         <a-button @click="sampleData" class="ant-btn float-right">Sample Data</a-button>
-        <a-radio-group v-model:value="selectedKlass" @change="onChangeKlass" @click="onClickKlass" button-style="solid">
+        <a-radio-group v-model:value="selectedKlass" @click="onClickKlass" button-style="solid">
             <template v-for="klass in healthcare.klasses">
                 <a-radio-button :value="klass.id">{{ klass.tag }}</a-radio-button>
             </template>
@@ -70,6 +70,7 @@ export default {
             valueChanged:false,
             students:[],
             selectedKlass:null,
+            previousKlass:null,
             random:{
                 min:10,
                 max:30
@@ -123,7 +124,6 @@ export default {
                 this.tableCell.col = e.target.closest('td').cellIndex;
             })
         }
-
     },
     methods: {
         columnLabel(column){
@@ -145,8 +145,7 @@ export default {
             })
             this.$inertia.put(route("medical.bodychecks.update",0), bodychecks, {
                 onSuccess: (page) => {
-                    console.log(page.data)
-                    this.valueChange=true;
+                    this.valueChanged=false
                 },
                 onError: (error) => {
                     console.log(error);
@@ -161,59 +160,45 @@ export default {
                     b.value=this.randomBetween(parseInt(this.random.min),parseInt(this.random.max))
                 })
             })
-            // this.students.bodychecks.forEach(bodycheck => {
-            //     bodycheck.value=this.randomBetween(parseInt(this.random.min),parseInt(this.random.max))
-            // })
         },
         randomBetween(min, max){
             return Math.floor(Math.random() * (max - min + 1) + min)
         },
         onClickKlass(e){
-            return true;
-            if(this.valueChanged==false && this.selectedKlass!=null){
-                this.getBodychecks(this.selectedKlass)
+            if(e.target.value==undefined){
                 return true;
             }
-            
-            
-            Modal.confirm({
-                title: 'Are you sure wanna to change Klass',
-                icon: createVNode(ExclamationCircleOutlined),
-                content: 'The Value had been changed without saving. Change Klass will lose changed values.',
-                onOk() {
-                    this.valueChanged=false
-                    this.selectedKlass=null
-                    //this.getBodychecks(this.selectedKlass);
-                },
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                onCancel() {
-                    this.valueChanged=false
-                    return false;
-
-                },
-            });
-
-        },
-        onChangeKlass(e){
             if(this.selectedKlass==null){
-                this.selectedKlass=e.target.value
-                this.getBodychecks(this.selectedKlass);
+                this.getBodychecks(e.target.value);
                 return true;
             }
             if(this.valueChanged==false){
-                this.selectedKlass=e.target.value
-                this.getBodychecks(this.selectedKlass);
+                this.getBodychecks(e.target.value);
+                return true;
             }
+            this.previousKlass=this.selectedKlass;
             this.selectedKlass=e.target.value
-            console.log('aaa');
-            return true;
-            //this.getBodychecks(e.target.value);
-
+            
+            Modal.confirm({
+                title: '內容有變更但未保存，是否確定轉換班別？',
+                icon: createVNode(ExclamationCircleOutlined),
+                content: '體檢內容有所修改，但未進行保存，直接轉換班別，會導至所修改的內容永久流失。',
+                okText:'確定轉換',
+                cancelText:'放棄並反回',
+                onOk: () => {
+                    this.getBodychecks(this.selectedKlass);
+                    this.valueChanged=false
+                },
+                onCancel:()=>{
+                    this.selectedKlass=this.previousKlass
+                }
+            });
         },
+
         getBodychecks(klass){
             axios.post(route('medical.healthcare.getBodychecks',{healthcare:this.healthcare,klass:klass}))
                 .then(response=>{
-                    console.log(response.data);
+                    //console.log(response.data);
                     this.students=response.data
                 })
                 .catch(error=>{

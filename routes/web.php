@@ -40,7 +40,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('api/config/item',[App\Http\Controllers\Api\ConfigController::class,'getItem'])->name('api.config.getItem');
+    Route::get('api/config/item',[App\Http\Controllers\Api\ConfigController::class,'getItem'])->name('api.config.item');
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');

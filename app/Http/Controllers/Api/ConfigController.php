@@ -10,6 +10,5 @@ class ConfigController extends Controller
 {
     public function getItem(Request $request){
         return response()->json(Config::item($request->key));
-
     }
 }
