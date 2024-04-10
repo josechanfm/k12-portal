@@ -21,12 +21,12 @@ class DashboardController extends Controller
         // dd($physical);
     
     }
-    public function klass(Klass $klass){
-        $klass->healthcares;
-        return Inertia::render('Medical/Klass',[
-            'klass'=>$klass
-        ]);
+    // public function klass(Klass $klass){
+    //     $klass->healthcares;
+    //     return Inertia::render('Medical/Klass',[
+    //         'klass'=>$klass
+    //     ]);
 
-    }
+    // }
 
 }

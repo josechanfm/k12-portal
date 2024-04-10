@@ -3,8 +3,9 @@
         <a-typography-title :level="4">學年:{{ grade.year.title }}</a-typography-title>
         <a-typography-title :level="4">年級:{{ grade.tag }}</a-typography-title>
         <inertia-link v-for="g in grades" :href="route('admin.grade.klasses.index', g.id)"
-            class="px-3 py-2 mr-2 rounded text-white text-sm font-bold whitespace-no-wrap bg-blue-600 hover:bg-blue-800">{{
+            :class="grade.tag==g.tag?'ant-btn ant-btn-primary':'ant-btn'" >{{
                 g.tag }}</inertia-link>
+                
         <a-button @click="createRecord()" type="primary">新增班別</a-button>
         <a-table :dataSource="klasses" :columns="columns">
             <template #bodyCell="{ column, text, record, index }">

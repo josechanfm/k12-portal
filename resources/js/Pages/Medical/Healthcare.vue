@@ -1,5 +1,5 @@
 <template>
-    <AdminLayout title="Dashboard">
+    <AdminLayout title="體檢測量" :breadcrumb="breadcrumb">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 健康記錄
@@ -67,6 +67,10 @@ export default {
     props: ['healthcare','bodycheck_columns'],
     data() {
         return {
+            breadcrumb:[
+                {label:"健康狀況" ,url:route('medical')},
+                {label:"體檢測量" ,url:null},
+            ],
             valueChanged:false,
             students:[],
             selectedKlass:null,

@@ -141,7 +141,7 @@ class StudyController extends Controller
     {
         return Inertia::render('Master/StudySubject',[
             'subjects'=>Subject::all(),
-            'subjectTypes'=>Config::item('subject_types'),
+            //'subjectTypes'=>Config::item('subject_types'),
             'studyStreams'=>Config::item('study_streams'),
         ]);
     }

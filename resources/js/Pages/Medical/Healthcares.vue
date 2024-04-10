@@ -1,5 +1,5 @@
 <template>
-    <AdminLayout title="Healthcares">
+    <AdminLayout title="體檢保建" :breadcrumb="breadcrumb">
         <a-button @click="onCreateRecord" class="ant-btn ant-btn-primary">新增體檢</a-button>
         <a-table :dataSource="healthcares.data" :columns="columns">
             <template #bodyCell="{ column, text, record, index }">
@@ -72,6 +72,10 @@ export default {
     props: ['healthcares','grades','bodycheck_columns'],
     data() {
         return {
+            breadcrumb:[
+                {label:"健康狀況" ,url:route('medical')},
+                {label:"體檢保建" ,url:null},
+            ],
             physicals:[],
             klasses:[],
             random:{

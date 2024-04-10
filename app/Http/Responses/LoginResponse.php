@@ -22,6 +22,10 @@ class LoginResponse implements LoginResponseContract
         if(Auth()->user()->guardian){
             return redirect()->route('guardian.dashboard');
         }
+        if(Auth()->user()->hasRole('master')){
+            return redirect()->route('admin.dashboard');
+        }
+
         if(Auth()->user()->hasRole('admin')){
             return redirect()->route('admin.dashboard');
         }

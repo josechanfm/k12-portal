@@ -79,7 +79,7 @@
   const list = [{
     key: '0',
     roles:['master'],
-    title: '系統管理',
+    title: '系統維護管理',
     children: [{
       key: '0.1',
       title: '全校學科總表',
@@ -105,7 +105,16 @@
       key: '0.6',
       title: '角色及權限',
       url:'/master/roles',
+    },{
+      key: '0.7',
+      title: '用戶指南',
+      url:'/master/manuals',
+    },{
+      key: '0.8',
+      title: '問題日志',
+      url:'/master/issues',
     }],
+    
   },{
     key: '1',
     roles:['master','admin'],
@@ -126,7 +135,7 @@
   },{
     key: '2',
     roles:['master','admin','director'],
-    title: '班級管理',
+    title: '教務管理',
     children: [{
       key: '2.1',
       title: '年級班別',
@@ -168,20 +177,24 @@
     title: '保健醫療',
     children: [{
       key: '4.1',
-      title: '健康記錄',
+      title: '總覽統計',
       url:'/medical',
     },{
       key: '4.2',
       title: '就診記錄',
       url:'/medical/treatments',
+    },{
+      key: '4.3',
+      title: '體檢保建',
+      url:'/medical/healthcares',
     }],
   },{
     key: '5',
     roles:['master','admin','director'],
-    title: 'Navigation 4',
+    title: '社工輔導',
     children: [{
       key: '4.1',
-      title: 'Navigation 4',
+      title: '社工輔導',
       children: [{
         key: '4.1.1',
         title: 'Option 4.1.1',

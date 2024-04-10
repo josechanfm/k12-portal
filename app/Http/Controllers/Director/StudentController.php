@@ -21,7 +21,7 @@ class StudentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function finder(){
-        return Inertia::render('Director/Students',[
+        return Inertia::render('Director/StudentFinder',[
             'students'=>Student::all()
         ]);
     }
@@ -37,7 +37,14 @@ class StudentController extends Controller
                     "UPPER({$request->column}) LIKE '%".strtoupper($request->content)."%'"
                 )->with('klasses')->with('guardians')->get();
                 break;
-        }
+            case 'id_num':
+                $students=Student::whereRaw(
+                    "UPPER({$request->column}) LIKE '%".strtoupper($request->content)."%'"
+                )->with('klasses')->with('guardians')->get();
+                break;
+            default:
+                $students=[];
+            }
         return response()->json($students);
         
     }
@@ -92,7 +99,8 @@ class StudentController extends Controller
         $student->bank;
         $student->relatives;
         $student->guardians;
-        $student->archives=$student->archives();
+        //$student->archives=$student->archives();
+        $student->medias=$student->klassStudent->media->all();
         $student->avatars=$student->avatars();
         $student->siblings=$student->siblings();
 

@@ -1,11 +1,5 @@
 <template>
-    <AdminLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                班別學生列表
-            </h2>
-        </template>
-
+    <AdminLayout title="科目學生名單" :breadcrumb="breadcrumb">
         <a-typography-title :level="3">學科代號: {{ course.code }}</a-typography-title>
         <a-typography-title :level="3">學科名稱: {{ course.title_zh }}</a-typography-title>
         <a-table :dataSource="students" :columns="columns">
@@ -37,9 +31,16 @@ export default {
         StopOutlined,
         SyncCourseStudents
     },
-    props: ['list','klass','course','courses','klass','students'],
+    props: ['list','course','courses','students'],
     data() {
         return {
+            breadcrumb:[
+                {label:"行政管理" ,url:route('admin.dashboard')},
+                {label:"年級" ,url:route('admin.year.grades.index',this.course.klass.grade.year_id)},
+                {label:"班別" ,url:route('admin.grade.klasses.index',this.course.klass.grade.id)},
+                {label:"科目" ,url:route('admin.klass.courses.index',this.course.klass.id)},
+                {label:"學生名單" ,url:null},
+            ],
             selectedStudent:{},
             columns:[
             {

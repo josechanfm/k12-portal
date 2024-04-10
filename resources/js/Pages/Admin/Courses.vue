@@ -1,10 +1,5 @@
 <template>
-    <AdminLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                學年級別學科列表
-            </h2>
-        </template>
+    <AdminLayout title="Dashboard" :breadcrumb="breadcrumb">
             <a-typography-title :level="3">班級: {{ klass.tag }} - {{ klass.title_zh }}</a-typography-title>
             <a-typography-title :level="3">
                 班主任: <span v-for="teacher in klass.klass_heads">{{ teacher.name_zh }}, </span>
@@ -16,8 +11,8 @@
             <a-table :dataSource="courses" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
-                        <a-button @click="changeTeachers(record)">Teachers</a-button>
-                        <inertia-link :href="route('admin.select.students.index',{type:'course',id:record.id})" class="ant-btn">Students</inertia-link>
+                        <a-button @click="changeTeachers(record)">修改</a-button>
+                        <inertia-link :href="route('admin.select.students.index',{type:'course',id:record.id})" class="ant-btn">學生名單</inertia-link>
                         <br>
                         <template v-for="term in yearTerms">
                             <a-button 
@@ -31,7 +26,7 @@
                             @click="onClickSelectedTermLock(record.id,0)" 
                             :type="record.current_term==0?'secondary':''"
                             :disabled="klass.lock_courses"
-                            >Lock</a-button>
+                            >鎖定</a-button>
                     </template>
                     <template v-else-if="column.dataIndex=='subject_heads'">
                         <div v-if="toAssignTeachers">
@@ -92,15 +87,16 @@
                 </a-form-item>
                 <a-form-item label="專業方向" name="stream">
                     <a-radio-group v-bind:value="modal.data.stream" button-style="solid">
-                        <a-radio-button value="LIB">Liberal Studies</a-radio-button>
-                        <a-radio-button value="SCI">Science</a-radio-button>
-                        <a-radio-button value="ART">Liberal Arts</a-radio-button>
+                        <template v-for="item in streams">
+                            <a-radio-button :value="item.value">{{ item.label }}</a-radio-button>    
+                        </template>
                     </a-radio-group>
                 </a-form-item>
                 <a-form-item label="必修/選修" name="elective">
                     <a-radio-group v-bind:value="modal.data.elective" button-style="solid">
-                        <a-radio-button value="COP">Compulsary</a-radio-button>
-                        <a-radio-button value="ELE">Elective</a-radio-button>
+                        <template v-for="item in subjectTypes">
+                            <a-radio-button :value="item.value">{{ item.label }}</a-radio-button>    
+                        </template>
                     </a-radio-group>
                 </a-form-item>
                 <a-form-item label="有效" name="active">
@@ -137,6 +133,7 @@ import AdminLayout from '@/Layouts/AdminLayout.vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
 import {CheckSquareOutlined, ConsoleSqlOutlined, StopOutlined} from '@ant-design/icons-vue';
 import { EyeOutlined } from '@ant-design/icons-vue';
+import axios from 'axios';
 
 export default {
     components: {
@@ -149,6 +146,14 @@ export default {
     props: ['yearTerms','klass','courses','subjects','teachers'],
     data() {
         return {
+            breadcrumb:[
+                {label:"行政管理" ,url:route('admin.dashboard')},
+                {label:"年級" ,url:route('admin.year.grades.index',this.klass.grade.year_id)},
+                {label:"班別" ,url:route('admin.grade.klasses.index',this.klass.grade.id)},
+                {label:"科目" ,url:null},
+            ],
+            streams:[],
+            subjectTypes:[],
             testCheckbox:[],
             modal: {
                 mode:null,
@@ -240,6 +245,23 @@ export default {
         //         }
         //     })
         // })
+
+        axios.get(route('api.config.item',{key:'study_streams'}))
+            .then(res=>{
+                this.streams=res.data
+                
+            })
+            .catch(err=>{
+                console.log(err);
+            })
+
+            axios.get(route('api.config.item',{key:'subject_types'}))
+            .then(res=>{
+                this.subjectTypes=res.data
+            })
+            .catch(err=>{
+                console.log(err);
+            })
 
     },
     methods: {

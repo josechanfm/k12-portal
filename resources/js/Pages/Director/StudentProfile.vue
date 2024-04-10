@@ -1,5 +1,5 @@
 <template>
-    <AdminLayout title="學人個人檔案" :breadcrumb="breadcrumb">
+    <AdminLayout title="個人信息" :breadcrumb="breadcrumb">
         <div>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 <a-row type="flex">
@@ -8,20 +8,28 @@
                             :src="student.avatars[0].image.original_url" />
                     </a-col>
                     <a-col flex="auto">
-                        <a-typography-title :level="1">{{ student.name_zh }}</a-typography-title>
-                        <a-typography-title :level="3">{{ student.name_fn }}</a-typography-title>
-                        <a-typography-title :level="5">{{ student.gender }}</a-typography-title>
-                        <a-typography-title :level="5">{{ student.dob }}</a-typography-title>
+                        <a-descriptions
+                            bordered
+                            :column="{ xxl: 2, xl: 2, lg: 2, md: 2, sm: 2, xs: 1 }"
+                        >
+                            <a-descriptions-item label="中文姓名：">{{ student.name_zh }}</a-descriptions-item>
+                            <a-descriptions-item label="外文姓名：">{{ student.name_fn }}</a-descriptions-item>
+                            <a-descriptions-item label="性別：">{{ student.gender }}</a-descriptions-item>
+                            <a-descriptions-item label="出生日期(年齡)：">{{ student.dob }} ({{ calculateAge(student.dob) }})</a-descriptions-item>
+                        </a-descriptions>
                     </a-col>
                 </a-row>
             </h2>
         </div>
+        <div class="p-5">
+            修改模式: <a-switch v-model:checked="isEdit" @change="onChangeEditMode" checkedChildren="開" unCheckedChildren="關"/>
+        </div>
+        
         <div :class="isEdit ? 'formEditOn' : 'formEditOff'">
-            <a-switch v-model:checked="isEdit" @change="onChangeEditMode" />
             <a-form ref="formRef" name="advanced_search" class="ant-advanced-search-form" :model="student"
                 :rules="rules" @finish="onFinish" @finishFailed="onFinishFailed">
                 <a-collapse v-model:activeKey="activeKey">
-                    <a-collapse-panel key="avatar" header="頭象相片">
+                    <a-collapse-panel key="avatar" header="頭像照片">
                         <a-row>
                             <a-col :span="4" v-for="avatar in student.avatars">
                                 <a-image :width="200" :src="avatar.image.preview_url" />
@@ -30,7 +38,8 @@
                             </a-col>
                         </a-row>
                     </a-collapse-panel>
-                    <a-collapse-panel key="basic" header="學生基本資料">
+
+                    <a-collapse-panel key="basic" header="基本信息">
                         <a-row>
                             <a-col :span="6">
                                 <a-form-item label="姓名" name="name_zh" :label-col="labelCol" :wrapper-col="wrapperCol">
@@ -106,7 +115,7 @@
                         </a-row>
                     </a-collapse-panel>
 
-                    <a-collapse-panel key="id_card" header="證件資料">
+                    <a-collapse-panel key="id_card" header="證件信息">
                         <a-row>
                             <a-col :span="8">
                                 <a-form-item label="證件類別" name="id_type">
@@ -166,36 +175,7 @@
                         </a-row>
                     </a-collapse-panel>
 
-                    <a-collapse-panel key="address" header="地址資料">
-                        <a-descriptions bordered v-if="student.address">
-                            <a-descriptions-item label="住址街名" :span="2">
-                                <a-input v-model:value="student.address.road" />
-                            </a-descriptions-item>
-                            <a-descriptions-item label="門牌大廈">
-                                <a-input v-model:value="student.address.building" />
-                            </a-descriptions-item>
-                            <a-descriptions-item label="居住地區">
-                                <a-input v-model:value="student.address.zone" />
-                            </a-descriptions-item>
-
-                        </a-descriptions>
-                    </a-collapse-panel>
-
-                    <a-collapse-panel key="bank" header="銀行資料">
-                        <a-descriptions bordered>
-                            <a-descriptions-item label="銀行">
-                                <a-input v-model:value="student.bank.bank_name" />
-                            </a-descriptions-item>
-                            <a-descriptions-item label="戶口名稱">
-                                <a-input v-model:value="student.bank.account_name" />
-                            </a-descriptions-item>
-                            <a-descriptions-item label="銀行帳號">
-                                <a-input v-model:value="student.bank.account_number" />
-                            </a-descriptions-item>
-                        </a-descriptions>
-                    </a-collapse-panel>
-
-                    <a-collapse-panel key="detail" header="學生詳細資料">
+                    <a-collapse-panel key="detail" header="補充信息">
                         <a-descriptions bordered v-if="student.detail">
                             <a-descriptions-item label="聖名">
                                 <a-input v-model:value="student.detail.holy_name" />
@@ -227,7 +207,37 @@
                         </a-descriptions>
                     </a-collapse-panel>
 
-                    <a-collapse-panel key="parent" header="父母資料" >
+                    <a-collapse-panel key="address" header="住址信息">
+                        <a-descriptions bordered v-if="student.address">
+                            <a-descriptions-item label="住址街名" :span="2">
+                                <a-input v-model:value="student.address.road" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="門牌大廈">
+                                <a-input v-model:value="student.address.building" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="居住地區">
+                                <a-input v-model:value="student.address.zone" />
+                            </a-descriptions-item>
+
+                        </a-descriptions>
+                    </a-collapse-panel>
+
+                    <a-collapse-panel key="bank" header="銀行信息">
+                        <a-descriptions bordered>
+                            <a-descriptions-item label="銀行">
+                                <a-input v-model:value="student.bank.bank_name" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="戶口名稱">
+                                <a-input v-model:value="student.bank.account_name" />
+                            </a-descriptions-item>
+                            <a-descriptions-item label="銀行帳號">
+                                <a-input v-model:value="student.bank.account_number" />
+                            </a-descriptions-item>
+                        </a-descriptions>
+                    </a-collapse-panel>
+
+
+                    <a-collapse-panel key="parent" header="父母信息" >
                         <a-descriptions bordered  v-if="student.father">
                             <a-form-item label="父親姓名">
                                 <a-input v-model:value="student.father.name_zh" />
@@ -262,7 +272,7 @@
                         </a-descriptions>
                     </a-collapse-panel>
 
-                    <a-collapse-panel key="guardian" header="監護人資料">
+                    <a-collapse-panel key="guardian" header="監護人信息">
                         <a-descriptions bordered v-if="student.guardian">
                             <a-descriptions-item label="監護人姓名">
                                 <a-input v-model:value="student.guardian.name_zh" />
@@ -297,7 +307,7 @@
                         </a-descriptions>
                     </a-collapse-panel>
 
-                    <a-collapse-panel key="health" header="健康相關">
+                    <a-collapse-panel key="health" header="健康信息">
                         <a-descriptions bordered v-if="student.health">
                             <a-descriptions-item label="醫院">
                                 <a-input v-model:value="student.health.hospital" />
@@ -332,7 +342,7 @@
                         </a-descriptions>
                     </a-collapse-panel>
 
-                    <a-collapse-panel key="siblings" header="兄弟姊妹">
+                    <a-collapse-panel key="siblings" header="本校兄弟姊妹">
                         <a-table :dataSource="student.siblings" :columns="columnSiblings">
                             <template #bodyCell="{ column, text, record, index }">
                                 <template v-if="column.dataIndex == 'klasses'">
@@ -346,7 +356,7 @@
                             </template>
                         </a-table>
 
-                        <inertia-link :href="route('director.student.siblings',student.id)" class="ant-btn">Join Sibling</inertia-link>
+                        <inertia-link :href="route('director.student.siblings',student.id)" class="ant-btn">連結本校兄弟姊妹</inertia-link>
                     </a-collapse-panel>
 
                 </a-collapse>
@@ -357,10 +367,10 @@
 
             </a-form>
         </div>
-        <a-typography-title :level="3">Personal Files</a-typography-title>
+        <a-typography-title :level="3">個人文件檔案</a-typography-title>
         <ol>
-            <li v-for="file in student.archives">
-                {{ file.file_type }}: {{ file.file_name }}
+            <li v-for="file in student.medias">
+                {{file.collection_name }}: <a :href="file.original_url" target="_blank">{{ file.file_name }}</a>
             </li>
         </ol>
     </AdminLayout>
@@ -482,7 +492,15 @@ export default {
         },
         onFinishFailed(error) {
             console.log(error)
+        },
+        calculateAge(dob){
+          let currentDate = new Date();
+          let birthDate = new Date(dob);
+          let difference = currentDate - birthDate;
+          let age = Math.floor(difference/31557600000);
+          return age
         }
+
 
     },
 }

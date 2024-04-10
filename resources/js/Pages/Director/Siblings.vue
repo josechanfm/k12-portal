@@ -29,7 +29,7 @@
                 </a-form-item>
 
             </a-space>
-            <a-button @click="onSearch">Search</a-button>
+            <a-button @click="onSearch">搜尋</a-button>
         </a-form>
 
 
@@ -38,7 +38,7 @@
             <a-table :dataSource="foundStudents" :columns="columns">
                 <template #bodyCell="{ column, text, record, index }">
                     <template v-if="column.dataIndex == 'operation'">
-                        <a-button @click="clickLinkSibling(record)">Link Sibling</a-button>
+                        <a-button @click="clickLinkSibling(record)">進行連結</a-button>
                     </template>
                     <template v-else-if="column.dataIndex == 'guardians'">
                         <ol>

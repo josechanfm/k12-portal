@@ -21,7 +21,7 @@
         </div>
         <div class="bg-white sm:rounded-lg my-5 p-5">
             <div class="float-right">
-                Modify <a-switch v-model:checked="themeEditable" />
+                修開 <a-switch v-model:checked="themeEditable" />
                 <span class="pr-5">&nbsp;</span>
                 <button @click="themeCreate()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">新增主題</button>
             </div>
@@ -91,7 +91,7 @@
                 <a-form-item label="主題名稱" name="title">
                     <a-input v-model:value="modalTheme.data.title" />
                 </a-form-item>
-                <a-form-item label="主題名稱" name="description">
+                <a-form-item label="主題簡介" name="description">
                     <a-textarea v-model:value="modalTheme.data.description" />
                 </a-form-item>
 
@@ -146,19 +146,19 @@ export default {
             },
             topicColumns: [
                 {
-                    title: '分類名稱',
+                    title: '分類簡稱',
                     dataIndex: 'section_code_label',
                 }, {
-                    title: '分組標題',
+                    title: '分類全稱',
                     dataIndex: 'section',
                 }, {
-                    title: '分組全稱',
+                    title: '分組簡稱',
                     dataIndex: 'abbr',
                 }, {
                     title: '分組全稱',
                     dataIndex: 'title',
                 }, {
-                    title: 'Operation',
+                    title: '操作',
                     dataIndex: 'operation',
                 }
             ],

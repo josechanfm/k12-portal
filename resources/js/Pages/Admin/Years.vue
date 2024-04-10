@@ -154,7 +154,7 @@ export default {
         return {
             breadcrumb:[
                 {label:"行政管理" ,url:route('admin.dashboard')},
-                {label:"Years" ,url:null},
+                {label:"學年" ,url:null},
             ],
             kgrade:0,
             kklass:0,
@@ -168,35 +168,35 @@ export default {
             },
             columns:[
                 {
-                    title: 'Code',
+                    title: '學年代號',
                     dataIndex: 'code',
                     key: 'code',
                 },{
-                    title: 'Title',
+                    title: '學年全稱',
                     dataIndex: 'title',
                     key: 'title',
                 },{
-                    title: 'Start',
+                    title: '開學日',
                     dataIndex: 'start',
                     key: 'start',
                 },{
-                    title: 'End',
+                    title: '結業日',
                     dataIndex: 'end',
                     key: 'end',
                 },{
-                    title: 'Grade Group',
+                    title: '學年年級',
                     dataIndex: 'grade_group',
                     key: 'grade_group',
                 },{
-                    title: 'Current Term',
+                    title: '現學段',
                     dataIndex: 'current_term',
                     key: 'active',
                 },{
-                    title: 'Current Year',
+                    title: '當前學年',
                     dataIndex: 'active',
                     key: 'active',
                 },{
-                    title: 'Operation',
+                    title: '操作',
                     dataIndex: 'operation',
                     key: 'operation',
                 },

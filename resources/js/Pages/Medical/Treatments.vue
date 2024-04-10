@@ -1,10 +1,10 @@
 <template>
     <AdminLayout title="就診記錄" :breadcrumb="breadcrumb">
-        <inertia-link :href="route('medical.treatments.create')" class="ant-btn ant-btn-primary">Create</inertia-link>
+        <inertia-link :href="route('medical.treatments.create')" class="ant-btn ant-btn-primary">新增</inertia-link>
         <a-table :dataSource="treatments" :columns="columns">
             <template #bodyCell="{ column, text, record, index }">
                 <template v-if="column.dataIndex == 'operation'">
-                    <inertia-link :href="route('medical.treatments.edit',record.id)" class="ant-btn">edit</inertia-link>
+                    <inertia-link :href="route('medical.treatments.edit',record.id)" class="ant-btn">修改</inertia-link>
                 </template>
                 <template v-else>
                     {{ record[column.dataIndex] }}
@@ -36,19 +36,19 @@ export default {
             selectedGrade: 4,
             columns: [
                 {
-                    title: 'Student',
+                    title: '分類',
+                    dataIndex: 'category',
+                }, {
+                    title: '學生',
                     dataIndex: 'student_id',
                 }, {
-                    title: 'Category',
-                    dataIndex: 'category',
+                    title: '標題操作',
+                    dataIndex: 'title',
                 }, {
                     title: '日期',
                     dataIndex: 'date',
                 }, {
-                    title: 'Title',
-                    dataIndex: 'title',
-                }, {
-                    title: 'Operation',
+                    title: '操作',
                     dataIndex: 'operation',
                 }
             ],

@@ -11,6 +11,7 @@ class TopicTemplate extends Model
     protected $fillable=['theme_template_id','sequence','section_code','section','abbr','title','description'];
     protected $appends=['section_code_label'];
 
+
     public function getSectionCodeLabelAttribute(){
         $sections=array_column(Config::item('topic_sections'),'label','value');
         return $sections[$this->section_code]??null;
