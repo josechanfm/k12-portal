@@ -34,13 +34,16 @@
                 :validate-messages="validateMessages"
             >
                 <a-form-item label="Category" name="category_code">
-                    <a-input v-model:value="modal.data.category_code" />
+                    <a-select v-model:value="modal.data.category_code" :options="manualCategories"/>
                 </a-form-item>
                 <a-form-item label="Title" name="title">
                     <a-input v-model:value="modal.data.title" placeholder="textarea with clear icon" allow-clear />
                 </a-form-item>
                 <a-form-item label="Description" name="description">
-                    <a-textarea v-model:value="modal.data.description" placeholder="textarea with clear icon" allow-clear />
+                    <quill-editor
+                        v-model:value="modal.data.description"
+                        style="min-height:200px"
+                    />
                 </a-form-item>
             </a-form>
         <template #footer>
@@ -57,14 +60,16 @@
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { defineComponent, reactive } from 'vue';
+import { quillEditor } from 'vue3-quill';
 
 export default {
     components: {
-        AdminLayout,
+        AdminLayout,quillEditor
     },
     props: ['manuals'],
     data() {
         return {
+            manualCategories:[],
             modal: {
                 mode:null,
                 isOpen: false,
@@ -129,6 +134,15 @@ export default {
             }
 
         }
+    },
+    mounted(){
+        axios.get(route('api.config.item',{key:'manual_categories'}))
+            .then(res=>{
+                this.manualCategories=res.data
+            })
+            .catch(err=>{
+                console.log(err)
+            })
     },
     methods: {
         onClickCreate(record){

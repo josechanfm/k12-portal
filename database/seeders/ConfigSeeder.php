@@ -434,6 +434,20 @@ class ConfigSeeder extends Seeder
             ]'
         ]);
 
+        DB::table('configs')->insert([
+            'key'=>'manual_categories',
+            'value'=>'[
+                {"label":"系統維護管理","value":"master"},
+                {"label":"行政管理","value":"admin"},
+                {"label":"教務","value":"pedagogy"},
+                {"label":"老師","value":"teacher"},
+                {"label":"醫護","value":"medical"},
+                {"label":"社工","value":"socialwork"}
+            ]'
+        ]);
+
+        
+
     }
 }
 

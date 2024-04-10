@@ -11,6 +11,7 @@ use App\Models\Klass;
 use App\Models\Relative;
 use App\Models\Year;
 use App\Models\Grade;
+use Illuminate\Support\Str;
 use PDO;
 
 class StudentController extends Controller
@@ -209,6 +210,10 @@ class StudentController extends Controller
         // dd($student->sibling_uuid);
         // dd(Student::find($request->id));
         // dd($request->all());
+        if(empty($student->uuid)){
+            $student->sibling_uuid=Str::uuid();
+            $student->save();
+        }
         Student::where('id',$request->id)->update(['sibling_uuid'=>$student->sibling_uuid]);
         return redirect()->back();
     }

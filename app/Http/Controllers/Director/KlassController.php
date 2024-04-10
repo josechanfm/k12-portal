@@ -65,7 +65,7 @@ class KlassController extends Controller
             'currentTerm'=>Year::currentTerm(),
             'klass' => $klass,
             'additiveTemplates'=>AdditiveTemplate::all(),
-            'additiveStyle'=>Config::item('additive_style'),
+            'additiveStyle'=>Config::item('additive_styles'),
             'additiveGroups'=>Config::item('additive_groups')
         ]);
     }

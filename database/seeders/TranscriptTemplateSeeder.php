@@ -42,11 +42,12 @@ class TranscriptTemplateSeeder extends Seeder
             'total_score'=>'總分',
             'average_score'=>'平均分',
             'class_size'=>'全班人數',
-            'ranking'=>'考列名次',
+            'ranking'=>'考試名次',
             'late'=>'遲到次數',
             'absent'=>'缺席節數',
         ];
         $general=[
+            'ranking'=>'考試名次',
             'comment'=>'評語',
             'reward_punishment'=>'奬懲記錄',
             'leisure_name'=>'餘暇活動名稱',
