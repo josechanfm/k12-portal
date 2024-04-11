@@ -131,13 +131,17 @@ class KlassController extends Controller
         ])->validate();
         
         if($request->has('id')){
-            $klass->grade_id=$request->grade_id;
-            $klass->letter=$request->letter;
-            $klass->stream=$request->stream;
-            $klass->room=$request->room;
-            $klass->tag=Grade::find($request->grade_id)->tag.$request->letter;
-            $klass->klass_head_ids=$request->klass_head_ids;
-            $klass->save();
+            $input=$request->all();
+            $input['tag']=Grade::find($request->grade_id)->tag.$request->letter;
+            $klass->update($input);
+
+            // $klass->grade_id=$request->grade_id;
+            // $klass->letter=$request->letter;
+            // $klass->stream=$request->stream;
+            // $klass->room=$request->room;
+            // $klass->tag=Grade::find($request->grade_id)->tag.$request->letter;
+            // $klass->klass_head_ids=$request->klass_head_ids;
+            // $klass->save();
             return redirect()->back();
         }else{
             return redirect()->back();

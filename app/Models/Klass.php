@@ -13,7 +13,7 @@ class Klass extends Model
     use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
     use HasFactory;
-    protected $fillable=['grade_id','initial','tag','room'];
+    protected $fillable=['grade_id','letter','tag','stream','study_id','byname','room','klass_head_ids','current_term','lock_courses'];
     protected $casts=[
         'klass_head_ids'=>'json',
         'transcript_migrated'=>'boolean',

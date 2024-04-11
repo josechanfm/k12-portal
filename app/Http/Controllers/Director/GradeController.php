@@ -22,7 +22,6 @@ class GradeController extends Controller
     public function index(Request $request)
     {
         $year=Year::where('active',1)->orderBy('start','DESC')->first();
-
         if($request->gradeScope){
             switch($request->gradeScope){
                 case 'kindergarten':

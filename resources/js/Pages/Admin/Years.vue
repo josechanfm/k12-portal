@@ -265,7 +265,7 @@ export default {
         editRecord(record){
             this.modal.data={...record}
             this.modal.data.period=[dayjs(this.modal.data.start, this.dateFormat), dayjs(this.modal.data.end, this.dateFormat)]
-            this.modal.mode="EDIT";
+            this.modal.mode="EDIT"
             this.modal.isOpen=true
             this.modal.title="修改學年"
         },
@@ -274,6 +274,7 @@ export default {
                 this.$inertia.post((route('admin.years.store')), this.modal.data,{
                     onSuccess:(page)=>{
                         console.log(page);
+                        this.modal.isOpen=false
                     },
                     onError:(err)=>{
                         //console.log(err);

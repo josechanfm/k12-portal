@@ -35,7 +35,6 @@ class Staff extends Model
         //return $this->belongsToMany(Course::class)->with('students')->with('behaviours');
     }
 
-
     public static function teachers(){
         return Staff::where('is_teacher', true)->get();
     }

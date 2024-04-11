@@ -121,10 +121,20 @@
                     <a-select v-model:value="modal.data.letter" style="width: 100%" placeholder="請選擇..."
                         max-tag-count="responsive" :options="klassLetters"></a-select>
                 </a-form-item>
-                <a-form-item label="學生計劃" name="study_id">
-                    <a-select v-model:value="modal.data.study_id" style="with:100%" placeholder="請選擇..."
-                        max-tag-count="responsive" :options="studies"
-                        :field-names="{ label: 'title_zh', value: 'id' }"></a-select>
+                <a-form-item label="班別別稱" name="byname">
+                    <a-input v-model:value="modal.data.byname" />
+                </a-form-item>
+                <a-form-item label="專業方向" name="stream">
+                    <a-radio-group v-model:value="modal.data.stream" :options="studyStreams" option-type="button" button-style="solid"  :disabled="modal.mode=='EDIT'"/>
+                </a-form-item>
+                <a-form-item label="學習計劃" name="study_id">
+                    <a-select v-model:value="modal.data.study_id" :options="studies" :fieldNames="{value:'id',label:'title_zh'}"/>
+                    </a-form-item>
+                <a-form-item label="當前學段" name="current_term">
+                    <a-radio-group v-model:value="modal.data.current_term" :options="yearTerms" option-type="button" button-style="solid"/>
+                </a-form-item>
+                <a-form-item label="學科鎖定" name="lock_courses">
+                    <a-switch v-model:checked="modal.data.lock_courses" checkedChildren="鎖定成積" unCheckedChildren="解鎖成積"/>
                 </a-form-item>
                 <a-form-item label="教室編號" name="room">
                     <a-input v-model:value="modal.data.room" />
@@ -132,7 +142,7 @@
                 <a-form-item label="班主任" name="klass_head_ids">
                     <a-select v-model:value="modal.data.klass_head_ids" style="with:100%" placeholder="請選擇..."
                         max-tag-count="responsive" :options="teachers" mode="multiple"
-                        :field-names="{ label: 'name_zh', value: 'id' }"></a-select>
+                        :field-names="{ value: 'id', label: 'name_zh'  }"></a-select>
                 </a-form-item>
             </a-form>
             <template #footer>
@@ -161,6 +171,7 @@ export default {
                 {label:"年級" ,url:route('admin.year.grades.index',this.grade.year_id)},
                 {label:"班別" ,url:null},
             ],
+            yearTerms:[],
             selectedTerm: 1,
             modal: {
                 mode: null,
@@ -226,6 +237,15 @@ export default {
             }
 
         }
+    },
+    mounted(){
+        axios.get(route('api.config.item',{key:'year_terms'}))
+            .then(res=>{
+                this.yearTerms=res.data
+            })
+            .catch(err=>{
+                console.log(err)
+            })
     },
     methods: {
         closeModal() {

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\Models\Config;
 
 class Year extends Model
 {
@@ -57,6 +58,7 @@ class Year extends Model
 
         $gradeYear=1; 
         $letters=['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','W','X','Y','Z'];
+        $klassLetters=array_column(Config::item('klass_letters'),'label');
         for($i=1;$i<=$kgrade;$i++){ //$i is going to transfer to letter
             //$grade=new Grade;
             $g['year_id']=$this->id;
@@ -72,8 +74,10 @@ class Year extends Model
             $k=[];
             for($j=1;$j<=$kklass;$j++){
                 $k['grade_id']=$grade->id;
-                $k['letter']=$letters[$j-1];
-                $k['tag']=$grade->tag.$letters[$j-1];
+                $k['letter']=$klassLetters[$j-1];
+                $k['tag']=$grade->tag.$klassLetters[$j-1];
+                $k['stream']='ALL';
+                $k['byname']=$grade->tag.$klassLetters[$j-1];
                 $k['study_id']=Study::where('active',true)->where('grade_year',$grade->grade_year)->latest()->first()->id??1;
                 Klass::create($k);
             }
@@ -94,8 +98,10 @@ class Year extends Model
             $k=[];
             for($j=1;$j<=$pklass;$j++){
                 $k['grade_id']=$grade->id;
-                $k['letter']=$letters[$j-1];
-                $k['tag']=$grade->tag.$letters[$j-1];
+                $k['letter']=$klassLetters[$j-1];
+                $k['tag']=$grade->tag.$klassLetters[$j-1];
+                $k['stream']='ALL';
+                $k['byname']=$grade->tag.$klassLetters[$j-1];
                 $k['study_id']=Study::where('active',true)->where('grade_year',$grade->grade_year)->latest()->first()->id??1;
                 Klass::create($k);
             }
@@ -115,15 +121,13 @@ class Year extends Model
             $k=[];
             for($j=1;$j<=$sklass;$j++){
                 $k['grade_id']=$grade->id;
-                $k['letter']=$letters[$j-1];
-                $k['tag']=$grade->tag.$letters[$j-1];
+                $k['letter']=$klassLetters[$j-1];
+                $k['tag']=$grade->tag.$klassLetters[$j-1];
+                $k['stream']='ALL';
+                $k['byname']=$grade->tag.$klassLetters[$j-1];
                 $k['study_id']=Study::where('active',true)->where('grade_year',$grade->grade_year)->latest()->first()->id??1;
                 Klass::create($k);
             }
         }
-
-    }
-
-
-    
+    }  
 }

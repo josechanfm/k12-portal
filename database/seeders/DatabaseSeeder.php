@@ -18,30 +18,35 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
+            UserSeeder::class,
+            StaffSeeder::class,
+            TeacherSeeder::class,
+            StudentSeeder::class,
+
             ConfigSeeder::class,
-            YearSeeder::class,
+            StudySeeder::class,
+            SubjectSeeder::class,
             ThemeTemplateSeeder::class,
             TopicTemplateSeeder::class,
             TranscriptTemplateSeeder::class,
             AdditiveTemplateSeeder::class,
-            StudentSeeder::class,
-            SubjectSeeder::class,
-            StudySeeder::class,
-            UserSeeder::class,
-            StaffSeeder::class,
-            TeacherSeeder::class,
+
+            SupplierSeeder::class,
+            LocationSeeder::class,
+            YearSeeder::class,
+            // YearSeeder::class,
+            // KlassSeeder::class,
+            // ThemeSeeder::class,
+            // ScoreColumnSeeder::class,
+
             //SubjectTemplateSeeder::class,
-            KlassSeeder::class,
-            ThemeSeeder::class,
             //KlassStudentSeeder::class,
             //CourseSeeder::class,
-            LocationSeeder::class,
-            SupplierSeeder::class,
             //TranscriptSeeder::class,
-            ScoreColumnSeeder::class,
+            
             //ScoreSeeder::class,
-            ProcedureSeeder::class,
-            ExtracurricularSeeder::class,
+            //ProcedureSeeder::class,
+            //ExtracurricularSeeder::class,
         ]);
         // \App\Models\User::factory(10)->create();
 

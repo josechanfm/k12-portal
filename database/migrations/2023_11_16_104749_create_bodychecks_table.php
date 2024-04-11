@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('column_value');
             $table->string('value')->nullable();
             $table->timestamps();
-            $table->unique(['healthcare_id','klass_student_id','field_name']);
+            $table->unique(['healthcare_id','klass_student_id','column_value']);
 
         });
     }

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->char('letter',5)->nullable();
             $table->char('tag',5)->nullable();
             $table->char('stream',5)->nullable();
-            $table->string('study_id')->nullable();
+            $table->foreignId('study_id')->nullable();
             $table->string('byname')->nullable();
             $table->string('room')->nullable();
             $table->string('klass_head_ids')->nullable();

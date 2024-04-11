@@ -23,6 +23,7 @@ class StaffSeeder extends Seeder
                 'user_id'=>$i,
                 'name_zh'=>'Teacher '.$i,
                 'gender'=>substr($genders,rand(0,1),1),
+                'is_teacher'=>true
             ]);
         }
     }

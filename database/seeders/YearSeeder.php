@@ -16,6 +16,16 @@ class YearSeeder extends Seeder
      */
     public function run()
     {
+        $currentYear=date('Y');
+        DB::table('years')->insert([
+            'code'=>$currentYear,
+            'title'=>$currentYear.'-'.($currentYear+1),
+            'start'=>$currentYear.'-09-01',
+            'end'=>($currentYear+1).'-06-30',
+            'current_term'=>1,
+            'active'=>0
+        ]);
+        return true;
         //$yearId=DB::table('years')->orderBy('id','desc')->first()->id;
         for($y=2021;$y<2023;$y++){
             DB::table('years')->insert([
@@ -88,5 +98,6 @@ class YearSeeder extends Seeder
         };
 
         Year::where('id',1)->update(['active'=>'1']);
+
     }
 }
