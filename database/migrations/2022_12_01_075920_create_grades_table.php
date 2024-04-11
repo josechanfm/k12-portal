@@ -29,7 +29,10 @@ return new class extends Migration
             $table->boolean('transcript_locked')->default(false);
             $table->boolean('active')->default(true);
             $table->timestamps();
+            $table->unique(['year_id', 'grade_year']);
+
         });
+
     }
 
     /**

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use App\Models\Config;
 use App\Models\Year;
 use App\Models\Grade;
 use App\Models\Klass;
@@ -20,9 +21,12 @@ class KlassSeeder extends Seeder
     public function run()
     {
 
+        $currentYear=date('Y');
+        $year=Year::where('code',$currentYear)->first();
+        $grades=Grade::where('year_id',$year->id)->get();
 
-        $initial=['A','B','C','D','E'];
-        $grades=Grade::where('year_id',1)->get();
+        $initial=array_column(Config::item('klass_letters'),'label');
+
         foreach($grades as $grade){
             foreach($initial as $ini){
                 // DB::table('klasses')->insert([
@@ -39,7 +43,6 @@ class KlassSeeder extends Seeder
         }
 
         //enroll student in to Klass
-        $year=Year::currentYear();
         $studentId=1;
         $grades=Grade::where('year_id',$year->id)->get();
         foreach ($grades as $grade) {
@@ -57,7 +60,7 @@ class KlassSeeder extends Seeder
             }
         }
 
-
+        //enrol all klass student to all klass courses
         $courses=Course::all();
         foreach($courses as $c=>$course){
             $course->subject_head_ids=[rand(1,50)];

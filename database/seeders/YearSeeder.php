@@ -23,7 +23,7 @@ class YearSeeder extends Seeder
             'start'=>$currentYear.'-09-01',
             'end'=>($currentYear+1).'-06-30',
             'current_term'=>1,
-            'active'=>0
+            'active'=>1
         ]);
         return true;
         //$yearId=DB::table('years')->orderBy('id','desc')->first()->id;
