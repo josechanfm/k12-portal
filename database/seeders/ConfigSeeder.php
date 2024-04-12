@@ -130,7 +130,7 @@ class ConfigSeeder extends Seeder
         ]);
         DB::table('configs')->insert([
             'key'=>'subject_types',
-            'value'=>'[{"value":"ELE","label":"選修"},{"value":"COM","label":"必修"}]'
+            'value'=>'[{"value":"COM","label":"必修"},{"value":"ELE","label":"選修"}]'
         ]);
         //'value' =>'[{"value":"SUB","label":"學科"},{"value":"ATT","label":"生活習慣和態度"},{"value":"RPAL","label":"獎懲遲缺"},{"value":"LES","label":"餘暇活動"},{"value":"OVA","label":"總體評分"}]'
         DB::table('configs')->insert([
