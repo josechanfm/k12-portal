@@ -24,7 +24,6 @@ class DatabaseSeeder extends Seeder
 
             ConfigSeeder::class,
             StudySeeder::class,
-            SubjectSeeder::class,
             ThemeTemplateSeeder::class,
             TopicTemplateSeeder::class,
             TranscriptTemplateSeeder::class,

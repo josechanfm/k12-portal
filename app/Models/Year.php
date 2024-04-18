@@ -27,7 +27,7 @@ class Year extends Model
     public function klasses(){
         return $this->hasManyThrough(Klass::class, Grade::class);
     }
-    public function gradesklasses(){
+    public function gradesKlasses(){
         return $this->hasMany(Grade::class)->with('klasses');
     }
     public static function nextYear($yearId){

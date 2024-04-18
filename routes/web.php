@@ -106,6 +106,7 @@ Route::group([
     Route::resource('years',App\Http\Controllers\Admin\YearController::class)->names('admin.years');
     Route::resource('registrations',App\Http\Controllers\Admin\RegistrationController::class)->names('admin.registrations');
     //Route::get('year/{year}/grades',[App\Http\Controllers\Admin\YearController::class,'grades'])->name('admin.year.grades');
+    Route::resource('enrollments',App\Http\Controllers\Admin\EnrollmentController::class)->names('admin.enrollments');
 
     Route::resource('year/{year}/grades',App\Http\Controllers\Admin\GradeController::class)->names('admin.year.grades');
     Route::resource('grade/{grade}/klasses',App\Http\Controllers\Admin\KlassController::class)->names('admin.grade.klasses');

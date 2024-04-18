@@ -1,6 +1,6 @@
 <template>
     <AdminLayout title="主控台" :breadcrumb="breadcrumb">
-        <div>
+        <div v-if="defaultKlass">
             <inertia-link :href="route('director.klass.behaviours.index',defaultKlass.id)" class="ant-btn">操行</inertia-link>
             <inertia-link :href="route('director.klass.behaviour.adjust',defaultKlass.id)" class="ant-btn">操行調整</inertia-link>
             <inertia-link :href="route('director.klass.finalScores',defaultKlass.id)" class="ant-btn">期末成績</inertia-link>

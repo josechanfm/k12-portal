@@ -9,7 +9,10 @@
         <ul>
             <li v-for="grade in grades">{{ grade.tag }}</li>
         </ul>
+
         <p>You may change the additiveStyle from Config table "additive_styles"</p>
+
+        <inertia-link :href="route('admin.registrations.create')" class="ant-btn">Registration</inertia-link>
     </AdminLayout>
 
 </template>
