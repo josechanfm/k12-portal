@@ -5,16 +5,17 @@
                 Enrollment
             </h2>
         </template>
-        <a-form >
-            <a-form-item>
+        <a-form :model="enroll" :rules="rules" layout="vertical">
+            <a-form-item label="學年" name="year_id">
                 <a-select v-model:value="enroll.year_id" :options="years" :fieldNames="{value:'id',label:'code'}" @change="onChangeYear"/>
             </a-form-item>
-            <a-form-item>
+            <a-form-item label="級別" name="grade_id">
                 <a-select v-model:value="enroll.grade_id" :options="grades" :fieldNames="{value:'id',label:'tag'}" @change="onChangeGrade"/>
             </a-form-item>
-            <a-form-item>
+            <a-form-item label="班別" name="klass_id">
                 <a-select v-model:value="enroll.klass_id" :options="klasses" :fieldNames="{value:'id',label:'tag'}" @change="onChangeKlass"/>
             </a-form-item>
+
         </a-form>
     </AdminLayout>
 </template>
@@ -38,6 +39,11 @@ export default {
                 year_id:null,
                 grade_id:null,
                 klass_id:null,
+            },
+            rules:{
+                year_id:{required:true},
+                grade_id:{required:true},
+                klass_id:{required:true},
             }
         }
     },
