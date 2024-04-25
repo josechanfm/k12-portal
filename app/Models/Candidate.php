@@ -31,6 +31,7 @@ class Candidate extends Model
         'ssm_num',
         'previour_school',
         'previour_grade',
+        'start_grade',
         'start_klass',
         'phone',
         'phone_home',

@@ -19,7 +19,7 @@ class CandidateController extends Controller
     {
         //dd(Year::currentYear()->grades);
         return Inertia::render('Admin/Candidates',[
-            'grades'=>Year::currentYear()->grades,
+            'gradesKlasses'=>Year::currentYear()->gradesKlasses,
             'candidates'=>Candidate::paginate()
         ]);
     }
@@ -31,10 +31,9 @@ class CandidateController extends Controller
      */
     public function create()
     {
-        
         return Inertia::render('Admin/Candidate',[
-            'years'=>Year::with('gradesKlasses')->get(),
-            'candidates'=>(object)[]
+            'gradesKlasses'=>Year::currentYear()->gradesKlasses,
+            'candidate'=>Candidate::make()
         ]);        
     }
 
@@ -46,6 +45,7 @@ class CandidateController extends Controller
      */
     public function store(Request $request)
     {
+        //enroll_confirm column is not included in fillable
         Candidate::create($request->all());
         return redirect()->back();
     }
@@ -67,9 +67,13 @@ class CandidateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Candidate $candidate)
     {
-        //
+        
+        return Inertia::render('Admin/Candidate',[
+            'gradesKlasses'=>Year::currentYear()->gradesKlasses,
+            'candidate'=>$candidate
+        ]);
     }
 
     /**
@@ -79,10 +83,11 @@ class CandidateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Candidate $candidate)
+    public function update(Candidate $candidate, Request $request)
     {
+        //enroll_confirm column is not included in fillable
         $candidate->update($request->all());
-        return redirect()->back();
+        return to_route('admin.candidates.index');
     }
 
     /**
@@ -96,8 +101,15 @@ class CandidateController extends Controller
         //
     }
     public function enroll(Candidate $candidate, Request $request){
-        return Inertia::render('Admin/CandidateEnroll',[
-            
-        ]);
+        //enroll_confirm column is not included in fillable
+        if($request->enroll_confirm && $request->enroll_confirm==true){
+            $candidate->update($request->all());
+            $candidate->enrolled=true;
+            $candidate->save();
+            return to_route('admin.candidates.index');
+        }else{
+            return redirect()->back()->withErrors(['message'=>'Illegal enrollment process']);
+        }
+        
     }
 }
