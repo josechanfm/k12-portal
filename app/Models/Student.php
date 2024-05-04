@@ -188,4 +188,8 @@ class Student extends Model implements HasMedia
         return null;
         
     }
+
+    public function newStudents(){
+        return $this->klasses->count();
+    }
 }

@@ -17,7 +17,8 @@ class RegistrationController extends Controller
      */
     public function index()
     {
-        
+        //dd(Student::find(1)->klasses_count());
+        dd(Student::doesntHave('klasses')->get());
     }
 
     /**
