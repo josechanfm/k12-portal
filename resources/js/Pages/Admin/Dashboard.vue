@@ -14,6 +14,7 @@
         <p>所謂正式入學,指分派年級及班別, 可以新生註冊表選擇進入入學功能(分派年級及班別).</p>
         <inertia-link :href="route('admin.registrations.create')" class="ant-btn">Registration 註冊</inertia-link>
         <inertia-link :href="route('admin.enrollments.create')" class="ant-btn">Enrollement 入學</inertia-link>
+        <inertia-link :href="route('admin.candidates.index')" class="ant-btn">Candidate 報名</inertia-link>
     </AdminLayout>
 
 </template>
