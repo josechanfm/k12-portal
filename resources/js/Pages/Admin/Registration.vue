@@ -5,7 +5,7 @@
                 Student Registration
             </h2>
         </template>
-        <hr />
+        {{student}}
         Current Year:{{ years.find(y => y.current_term == 1).code }}
         <ul>
             <li v-for="year in years">{{ year.code }}</li>
@@ -362,10 +362,9 @@ export default {
     components: {
         AdminLayout
     },
-    props: ['years'],
+    props: ['years','student'],
     data() {
         return {
-            student: {},
             detail:{},
             address:{},
             parents: [

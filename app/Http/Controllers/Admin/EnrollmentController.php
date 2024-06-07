@@ -26,7 +26,6 @@ class EnrollmentController extends Controller
      */
     public function create()
     {
-        
         return Inertia::render('Admin/Enrollment',[
             'years'=>Year::with('gradesKlasses')->get(),
             'enrollment'=>(object)[]

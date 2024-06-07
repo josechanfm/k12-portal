@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Candidate;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Year;
@@ -26,11 +27,19 @@ class RegistrationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        if($request->candidate_id){
+            $candidate=Candidate::find($request->candidate_id);
+            $candidate['candidate_id']=$candidate['id'];
+            unset($candidate['id']);
+            $student=$candidate;
+        }else{
+            $student=(object)[];
+        }
         return Inertia::render('Admin/Registration',[
             'years'=>Year::all(),
-            'registration'=>(object)[]
+            'student'=>$student,
         ]);
     }
 
@@ -43,7 +52,6 @@ class RegistrationController extends Controller
     public function store(Request $request)
     {
         //dd($request->all());
-
         $std=Student::where('id_type',$request->student['id_type'])->where('id_num',$request->student['id_num'])->first();
         if($std){
             return redirect()->back()->withErrors([
@@ -52,6 +60,10 @@ class RegistrationController extends Controller
             ]);
         }
         $student=Student::create($request->student);
+        if($request->student['candidate_id']){
+            Candidate::where('id',$request->student['candidate_id'])->update(['student_id'=>$student->id]);
+        }
+
         $student->detail()->create($request->detail);
         $student->address()->create($request->address);
         $student->health()->create($request->health);

@@ -51,11 +51,11 @@ export default {
         this.selectedYear=this.years[0]
         this.enroll.year_id=this.selectedYear.id
         this.grades=this.selectedYear.grades_klasses;
-        this.selectedGrade=this.grades[0]
-        this.enroll.grade_id=this.selectedGrade.id
-        this.selectedKlass=this.selectedGrade.klasses[0]
-        this.enroll.klass_id=this.selectedKlass.id
-        this.klasses=this.selectedGrade.klasses
+        this.selectedGrade=this.grades?this.grades[0]:null
+        this.enroll.grade_id=this.selectedGrade?this.selectedGrade.id:null
+        this.selectedKlass=this.selectedGrade?this.selectedGrade.klasses[0]:null
+        this.enroll.klass_id=this.selectedKlass?this.selectedKlass.id:null
+        this.klasses=this.selectedGrade?this.selectedGrade.klasses:null
     },
     methods: {
         refresh(){
@@ -67,10 +67,10 @@ export default {
         },
         onChangeYear(){
             this.selectedYear=this.years.find(y=>y.id==this.enroll.year_id)
-            this.grades=this.selectedYear.grades_klasses
-            this.selectedGrade=this.grades[0]
-            this.klasses=this.selectedGrade.klasses
-            this.selectedKlass=this.klasses[0]
+            this.grades=this.selectedYear.grades_klasses??null
+            this.selectedGrade=this.grades?this.grades[0]:null
+            this.klasses=this.selectedGrade?this.selectedGrade.klasses:null
+            this.selectedKlass=this.klasses?this.klasses[0]:null
         },
         onChangeGrade(){
             //this.grades=this.year.grades.filter(g=>g.year_id==this.enroll.year_id)

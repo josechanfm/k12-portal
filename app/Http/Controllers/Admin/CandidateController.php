@@ -7,7 +7,8 @@ use App\Models\Candidate;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Year;
-
+use App\Models\Grade;
+use App\Models\Klass;
 class CandidateController extends Controller
 {
     /**
@@ -32,8 +33,9 @@ class CandidateController extends Controller
     public function create()
     {
         return Inertia::render('Admin/Candidate',[
+            'year'=>Year::currentYear(),
             'gradesKlasses'=>Year::currentYear()->gradesKlasses,
-            'candidate'=>Candidate::make()
+            'candidate'=>(Object)[]
         ]);        
     }
 
@@ -69,8 +71,8 @@ class CandidateController extends Controller
      */
     public function edit(Candidate $candidate)
     {
-        
         return Inertia::render('Admin/Candidate',[
+            'year'=>Year::currentYear(),
             'gradesKlasses'=>Year::currentYear()->gradesKlasses,
             'candidate'=>$candidate
         ]);
@@ -100,8 +102,17 @@ class CandidateController extends Controller
     {
         //
     }
-    public function enroll(Candidate $candidate, Request $request){
+    public function enroll(Request $request){
         //enroll_confirm column is not included in fillable
+        // dd($request->all());
+        
+        $candidate=Candidate::find($request->id);
+        $grade=Grade::find($candidate->start_grade);
+        $klass=Klass::find($candidate->start_klass);
+        if($grade->id != $klass->grade_id){
+            return redirect()->back()->withErrors(['message'=>'Grade and Class information not consistent!']);
+        }
+        dd($grade);
         if($request->enroll_confirm && $request->enroll_confirm==true){
             $candidate->update($request->all());
             $candidate->enrolled=true;

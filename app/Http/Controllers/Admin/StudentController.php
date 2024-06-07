@@ -16,7 +16,54 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index ($type=null, $id=null){
+    public function course(Course $course){
+        return Inertia::render('Admin/CourseStudents',[
+            'course'=>$course,
+            'courses'=>$course->klass->courses()->get(),
+            'students'=>$course->students()->with('courses')->get(),
+        ]);
+    }
+    public function klass(Klass $klass){
+        // $klass=Klass::find($id);
+        $klassStudents=$klass->students;
+        $courses=$klass->courses;
+        $coursesStudents=$klass->coursesStudents;
+        $dataTable=[];
+        $dataColumns=[];
+
+        //Create student course dataTable array table with initial value of false/0 and dataColumns header
+        foreach($courses as $course){
+            $dataColumns[]=[
+                'title'=>$course->title_zh,
+                'dataIndex'=>$course->id
+            ];
+            foreach($klassStudents as $student){
+                $dataTable[$student->id]['student_name']=$student->name_zh;
+                $dataTable[$student->id]['courses'][$course->id]=0;
+            }
+        }
+        //Assign value (True/1) to dataTable array 
+        foreach($coursesStudents as $course){
+            foreach($course->students as $student){
+                $dataTable[$student->id]['courses'][$course->id]=1;
+            }
+        }
+
+        return Inertia::render('Admin/KlassStudents',[
+            'dataTable'=>$dataTable,
+            'dataColumns'=>$dataColumns,
+            'klass'=>Klass::where('id',$klass->id)->with('courses')->first(),
+            'students'=>$klass->students()->with('courses')->get(),
+            'courses'=>$klass->courses
+        ]);
+    
+    }
+    public function index(Request $request){
+        return Inertia::render('Admin/Students',[
+            'students'=>Student::paginate()
+        ]);
+    }
+    public function index2 ($type=null, $id=null){
         if($type==null || $id==null){
             return 'error';
         }
@@ -176,13 +223,6 @@ class StudentController extends Controller
         //
     }
 
-    public function klass(Klass $klass){
-        return Inertia::render('Admin/KlassStudents',[
-            'klass'=>$klass,
-            'students'=>$klass->students
-        ]);
-        
-    }
     public function syncCourses(Request $request){
         $student=Student::find($request->student_id);
         $student->courses()->sync($request->courses);

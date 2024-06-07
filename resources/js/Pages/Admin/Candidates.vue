@@ -8,6 +8,7 @@
                         <ButtonLink @click="onClickEdit(record)" :style="'Edit'">修改</ButtonLink>
                         <ButtonLink @click="onClickDelete(record)" :style="'Delete'">刪除</ButtonLink>
                         <ButtonLink @click="onClickEnroll(record)" :style="'Default'">Enroll</ButtonLink>
+                        <inertia-link :href="route('admin.registrations.create',{candidate_id:record.id})">registration</inertia-link>
                     </template>
                     <template v-else-if="column.dataIndex=='start_grade'">
                         {{ gradesKlasses.find(g=>g.id==text).tag }}
@@ -33,6 +34,7 @@ import AdminLayout from '@/Layouts/AdminLayout.vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
 import {CheckSquareOutlined, ConsoleSqlOutlined, StopOutlined} from '@ant-design/icons-vue';
 import { extractIdentifiers } from '@vue/compiler-core';
+import { Inertia } from '@inertiajs/inertia';
 
 export default {
     components: {

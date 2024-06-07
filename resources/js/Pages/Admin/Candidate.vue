@@ -1,5 +1,8 @@
 <template>
     <AdminLayout title="入學報名">
+        <div class="py-2">
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-5">
+            <a-typography-title :level="5">學年:{{year.title}}</a-typography-title>
             <a-form
                 :model="candidate"
                 name="Candidate"
@@ -37,6 +40,8 @@
                     <a-button key="enroll" type="primary" danger @click="onClickEnroll"  style="margin-left: 10px">確認入讀班別</a-button>    
                 </a-form-item>
             </a-form>
+        </div>
+        </div>
     </AdminLayout>
 
 </template>
@@ -54,7 +59,7 @@ export default {
         CheckSquareOutlined,
         StopOutlined
     },
-    props: ['gradesKlasses','candidate'],
+    props: ['year','gradesKlasses','candidate'],
     data() {
         return {
             dateFormat:'YYYY-MM-DD',
@@ -97,7 +102,9 @@ export default {
         }
     },
     created(){
-       //this.klassOptions=this.gradesKlasses.find(g=>g.id==this.candidate.start_grade).klasses
+       if(this.candidate.start_grade){
+        this.klassOptions=this.gradesKlasses.find(g=>g.id==this.candidate.start_grade).klasses
+       }
     },
     methods: {
         onChangeGrade(){
@@ -118,6 +125,7 @@ export default {
                 });
             }else{
                 console.log('store');
+                console.log(this.candidate);
                 this.$inertia.post(route('admin.candidates.store'), this.candidate,{
                     onSuccess:(page)=>{
                         console.log(page)
@@ -130,7 +138,7 @@ export default {
         },
         onClickEnroll(){
             this.candidate.enroll_confirm=true;
-            this.$inertia.put(route('admin.candidate.enroll',this.candidate.id), this.candidate,{
+            this.$inertia.put(route('admin.candidate.enroll'), this.candidate,{
                 onSuccess:(page)=>{
                     console.log(page)
                     this.candidate.enroll_confirm=false
