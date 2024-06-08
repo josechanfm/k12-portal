@@ -5,6 +5,17 @@
                 Enrollment
             </h2>
         </template>
+        <p>{{ student.name_zh }}</p>
+        <p>{{ student.name_fn }}</p>
+        <p>{{ student.gender }}</p>
+        <p>{{ student.dob }}</p>
+        <p>{{ candidate.name_zh }}</p>
+        <p>{{ candidate.name_fn }}</p>
+        <p>{{ candidate.name_gender }}</p>
+        <p>{{ candidate.name_dob }}</p>
+        <p>{{ candidate.start_grade }}</p>
+        <p>{{ candidate.start_klass }}</p>
+        {{ candidate }}
         <a-form :model="enroll" :rules="rules" layout="vertical">
             <a-form-item label="學年" name="year_id">
                 <a-select v-model:value="enroll.year_id" :options="years" :fieldNames="{value:'id',label:'code'}" @change="onChangeYear"/>
@@ -27,13 +38,12 @@ export default {
     components: {
         AdminLayout
     },
-    props: ['years','enrollment'],
+    props: ['years','year','grades','enrollment','student','candidate'],
     data() {
         return {
             selectedYear:{},
             selectedGrade:{},
             selectedKlass:{},
-            grades:[],
             klasses:[],
             enroll:{
                 year_id:null,
@@ -48,14 +58,17 @@ export default {
         }
     },
     created(){
-        this.selectedYear=this.years[0]
-        this.enroll.year_id=this.selectedYear.id
-        this.grades=this.selectedYear.grades_klasses;
+        //this.selectedYear=this.years[0]
+        this.enroll.year_id=this.year.id
+        //this.grades=this.grades.klasses;
         this.selectedGrade=this.grades?this.grades[0]:null
         this.enroll.grade_id=this.selectedGrade?this.selectedGrade.id:null
         this.selectedKlass=this.selectedGrade?this.selectedGrade.klasses[0]:null
         this.enroll.klass_id=this.selectedKlass?this.selectedKlass.id:null
         this.klasses=this.selectedGrade?this.selectedGrade.klasses:null
+        if(this.candidate && this.candidate.start_grade){
+            
+        }
     },
     methods: {
         refresh(){
@@ -85,3 +98,4 @@ export default {
     }
 }
 </script>
+

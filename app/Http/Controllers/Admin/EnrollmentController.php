@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Year;
+use App\Models\Student;
+use App\Models\Candidate;
 
 class EnrollmentController extends Controller
 {
@@ -14,9 +16,12 @@ class EnrollmentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        return Inertia::render('Admin/Enrollments',[
+            'students'=>Student::doesntHave('klasses')->paginate($request->per_page)
+        ]);
+   
     }
 
     /**
@@ -24,11 +29,15 @@ class EnrollmentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         return Inertia::render('Admin/Enrollment',[
             'years'=>Year::with('gradesKlasses')->get(),
-            'enrollment'=>(object)[]
+            'year'=>Year::currentYear(),
+            'grades'=>Year::currentYear()->gradesKlasses,
+            'enrollment'=>(object)[],
+            'student'=>Student::find($request->student_id),
+            'candidate'=>Candidate::where('student_id',$request->student_id)->first()
         ]);        
     }
 

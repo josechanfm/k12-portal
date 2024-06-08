@@ -19,7 +19,7 @@ class RegistrationController extends Controller
     public function index()
     {
         //dd(Student::find(1)->klasses_count());
-        dd(Student::doesntHave('klasses')->get());
+        dd(Student::doesntHave('klasses')->get()[0]);
     }
 
     /**
@@ -63,7 +63,6 @@ class RegistrationController extends Controller
         if($request->student['candidate_id']){
             Candidate::where('id',$request->student['candidate_id'])->update(['student_id'=>$student->id]);
         }
-
         $student->detail()->create($request->detail);
         $student->address()->create($request->address);
         $student->health()->create($request->health);

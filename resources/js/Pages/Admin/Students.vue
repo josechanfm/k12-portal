@@ -22,7 +22,6 @@
                     <template v-else>
                         {{record[column.dataIndex]}}
                     </template>
-                        
                 </template>
             </a-table>
 
