@@ -11,6 +11,7 @@
             <a-table :dataSource="students.data" :columns="columns" :pagination="pagination" @change="onPaginationChange" ref="dataTable">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
+                        <a :href="route('director.students.show',record.id)" class="ant-btn" target="_blank">Profile</a>
                         <ButtonLink @click="onClickEdit(record)" :style="'Edit'">修改</ButtonLink>
                         <ButtonLink @click="onClickDelete(record)" :style="'Delete'">刪除</ButtonLink>
                     </template>

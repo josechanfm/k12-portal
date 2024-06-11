@@ -18,7 +18,8 @@ class CandidateController extends Controller
      */
     public function index()
     {
-        //dd(Year::currentYear()->grades);
+        // dd(Candidate::paginate());
+        // dd(Year::currentYear()->gradesKlasses);
         return Inertia::render('Admin/Candidates',[
             'gradesKlasses'=>Year::currentYear()->gradesKlasses,
             'candidates'=>Candidate::paginate()

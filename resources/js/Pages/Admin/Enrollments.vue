@@ -9,7 +9,7 @@
         <a-table :dataSource="students.data" :columns="columns" :pagination="pagination" @change="onPaginationChange">
             <template #bodyCell="{column, text, record, index}">
                 <template v-if="column.dataIndex=='operation'">
-                    <inertia-link :href="route('admin.enrollments.create',{student_id:record.id})">Enroll</inertia-link>
+                    <inertia-link :href="route('admin.enrollments.create',{student_id:record.id})" class="ant-btn">Enroll</inertia-link>
                 </template>
                 <template v-else>
                     {{record[column.dataIndex]}}
