@@ -239,6 +239,9 @@ export default {
 
         }
     },
+    created(){
+      
+    },
     mounted() {
         this.kgradeOptions=Array(this.param.kgrade+1).fill().map((_, i) => {return {value:i, label:i++}});
         this.kklassOptions=Array(this.param.kklass+1).fill().map((_, i) => {return {value:i, label:i++}});

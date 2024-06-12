@@ -12,6 +12,7 @@ use App\Http\Controllers\CourseController;
 // use App\Http\Controllers\Admin\GradeController;
 // use App\Http\Controllers\Admin\YearPlanController;
 use App\Http\Controllers\Admin\PromotionController;
+use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -33,6 +34,18 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 })->name('home');
+
+
+Route::get('/help', function (Request $request) {
+    $help=App\Models\Help::where('route',$request->route)->first();
+    if(empty($help)){
+        $help=App\Models\Help::where('route','default')->first();
+    }
+
+    return Inertia::render('Help', [
+        'help' => $help,
+    ]);
+})->name('help');
 
 
 Route::middleware([
@@ -134,6 +147,8 @@ Route::group([
 
     Route::post('lock/course/{courseId}/{termId}',[\App\Http\Controllers\Admin\LockController::class,'course'])->name('admin.lock.course');
     Route::post('lock/klass/{klassId}/{termId}',[\App\Http\Controllers\Admin\LockController::class,'klass'])->name('admin.lock.klass');
+
+    Route::resource('helps',App\Http\Controllers\Admin\HelpController::class)->names('admin.helps');
 });
 //Route::prefix('manage/')->middleware([ 'checkRole:master|admin|director|teacher'])->group(function(){
 //manage
