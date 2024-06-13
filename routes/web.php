@@ -40,8 +40,9 @@ Route::get('/help', function (Request $request) {
     $help=App\Models\Help::where('route',$request->route)->first();
     if(empty($help)){
         $help=App\Models\Help::where('route','default')->first();
+    }else if($help->reroute){
+        $help=App\Models\Help::where('route',$help->reroute)->first();
     }
-
     return Inertia::render('Help', [
         'help' => $help,
     ]);

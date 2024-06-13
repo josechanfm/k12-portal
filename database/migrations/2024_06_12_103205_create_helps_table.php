@@ -17,8 +17,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('parent_id')->default(0);
             $table->string('route');
+            $table->string('reroute')->nullable();
             $table->string('title');
-            $table->text('content');
+            $table->longText('content');
             $table->timestamps();
             $table->unique(['route']);
         });

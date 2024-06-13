@@ -1,12 +1,28 @@
 <template>
-    <AdminLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                課外活動
-            </h2>
-        </template>
-        <a-button @click="createRecord" type="primary">新增課外活動</a-button>
-        <a-table :dataSource="students.data" :columns="columns" :pagination="pagination" @change="onPaginationChange">
+    <AdminLayout title="分班">
+
+        選擇學年
+        <a-select style="width: 120px">
+            <a-select-option value="2025">2025</a-select-option>
+        </a-select>
+        選擇年級
+        <a-select style="width: 120px">
+            <a-select-option value="p1">P1</a-select-option>
+        </a-select>
+        選擇𤥦別
+        <a-select style="width: 120px">
+            <a-select-option value="p1A">P1A</a-select-option>
+        </a-select>
+        <a-button @click="onClickEnroll">Enroll Selected students</a-button>
+        
+        <a-table 
+            :row-selection="{ onChange: onChangeSelection, selectedRowKeys: selectedItems }" 
+            :rowKey="(record) => record.id"
+            :dataSource="students.data" 
+            :columns="columns" 
+            :pagination="pagination" 
+            @change="onPaginationChange"
+        >
             <template #bodyCell="{column, text, record, index}">
                 <template v-if="column.dataIndex=='operation'">
                     <inertia-link :href="route('admin.enrollments.create',{student_id:record.id})" class="ant-btn">Enroll</inertia-link>
@@ -75,7 +91,7 @@ export default {
                     dataIndex: 'operation',
                 }
             ],
-
+            selectedItems:[]
         }
     },
     methods: {
@@ -156,7 +172,12 @@ export default {
                     console.log(error);
                 }
             });
-
+        },
+        onChangeSelection(a, b) {
+            this.selectedItems = a;
+        },
+        onClickEnroll(){
+            console.log(this.selectedItems)
         }
     },
 }
