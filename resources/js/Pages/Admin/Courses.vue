@@ -2,7 +2,7 @@
     <AdminLayout title="Dashboard" :breadcrumb="breadcrumb">
             <a-typography-title :level="3">班級: {{ klass.tag }} - {{ klass.title_zh }}</a-typography-title>
             <a-typography-title :level="3">
-                班主任: <span v-for="teacher in klass.klass_heads">{{ teacher.name_zh }}, </span>
+                班主任: <span :key="teacher" v-for="teacher in klass.klass_heads">{{ teacher.name_zh }}, </span>
             </a-typography-title>
             <div>
                 <a-switch v-model:checked="toAssignTeachers" :checkedValue="1" :uncheckedValue="0"/>&nbsp;調整老師
@@ -14,7 +14,7 @@
                         <a-button @click="changeTeachers(record)">修改</a-button>
                         <inertia-link :href="route('admin.select.students.index',{type:'course',id:record.id})" class="ant-btn">學生名單</inertia-link>
                         <br>
-                        <template v-for="term in yearTerms">
+                        <template v-for="term in yearTerms" :key="term">
                             <a-button 
                                 @click="onClickSelectedTermLock(record.id, term.value)" 
                                 :type="record.current_term==term.value?'secondary':''"

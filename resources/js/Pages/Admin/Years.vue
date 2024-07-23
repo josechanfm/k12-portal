@@ -12,7 +12,7 @@
                         <a-button @click="lockTranscript(record)">鎖定成積表</a-button>
                     </template>
                     <template v-else-if="column.dataIndex=='grade_group'">
-                        <a-tag v-for="item in record[column.dataIndex]" 
+                        <a-tag v-for="item in record[column.dataIndex]" :key="item"
                             :color="item.initial=='P'?'blue':item.initial=='S'?'green':'cyan'">{{item.initial}}:{{item.count}}</a-tag>
                     </template>
                     <template v-else>

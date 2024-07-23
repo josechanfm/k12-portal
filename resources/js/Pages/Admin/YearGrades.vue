@@ -1,23 +1,33 @@
 <template>
     <AdminLayout title="學年年級" :breadcrumb="breadcrumb">
-        <a-typography-title :level="4">
-            學年代號: 
-            <a-select
-                ref="select"
-                v-model:value="year.id"
-                style="width: 120px"
-                @change="selectYear"
-                :options="years"
-                :field-names="{label:'code',value:'id'}"
-            >
-        </a-select>        
-        </a-typography-title>
-        <a-typography-title :level="4">學年全稱: {{ year.title }}</a-typography-title>
-        <a-typography-title :level="4">學年開始: {{ year.start }}</a-typography-title>
-        <a-typography-title :level="4">學年結束: {{ year.end }}</a-typography-title>
-        <button @click="createRecord()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">
-            新增學年級別
-        </button>
+    
+            <!--  -->
+            
+            <div class="flex flex-wrap font-bold text-sm gap-1">
+                <div class="flex bg-gray-300 rounded-lg p-1 px-2 items-center gap-1">
+                    <div class="text-gray-600 font-black rounded-l-lg bg-gray-100  p-1 ">學年代號</div>
+                    <div class=" "> 
+                        <a-select  ref="select"   v-model:value="year.id"  style="width: 120px"
+                            @change="selectYear"    :options="years"  :field-names="{label:'code',value:'id'}" >
+                        </a-select>       
+                    </div>
+                </div>
+                <div class="flex bg-gray-300 rounded-lg p-1 items-center gap-1">
+                    <div class="text-gray-600 font-black rounded-l-lg bg-gray-100  p-1 ">學年全稱</div>
+                    <div class=" ">{{ year.title }}</div>
+                </div>
+                <div class="flex bg-gray-300 rounded-lg p-1 items-center gap-1 ">
+                    <div class="text-gray-600 font-black rounded-l-lg bg-gray-100  p-1 ">日期</div>
+                    <div>{{ year.start }}</div>
+                <ArrowRightOutlined/>
+                    <div>{{ year.end }}</div>
+                </div>
+                <div class="flex-1"></div>
+                <button @click="createRecord()" class="text-sm bg-blue-500 hover:bg-blue-700 text-white font-black py-2 px-4 rounded ">
+                    新增學年級別
+                </button>
+            </div>
+            <!--  -->
         <a-table :dataSource="grades" :columns="columns" :pagination="{ pageSize: 20 }"
 >
             <template #bodyCell="{column, text, record, index}">
@@ -168,6 +178,7 @@ export default {
         }
     },
     mounted() {
+     
     },
     methods: {
         createRecord(){

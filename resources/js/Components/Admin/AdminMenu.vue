@@ -11,7 +11,7 @@
           <template v-if="!item.children">
             <a-menu-item :key="item.key">
               <template #icon>
-                <PieChartOutlined />
+                <TagOutlined />
               </template>
               {{ item.title }}
             </a-menu-item>
@@ -23,15 +23,19 @@
              
           </template>
         </template>
-        <a-menu-item>
-          <a @click='logout'>Logout</a>
+        <a-menu-item >
+          <template #icon>
+            <LoginOutlined/>
+              </template> 
+        <button class="w-full text-start" @click='logout'>登出</button>
         </a-menu-item>
       </a-menu>
+      
     </div>
   </template>
   <script>
   import { defineComponent, ref } from 'vue';
-  import { MenuFoldOutlined, MenuUnfoldOutlined, PieChartOutlined, MailOutlined } from '@ant-design/icons-vue'; // you can rewrite it to a single file component, if not, you should config vue alias to vue/dist/vue.esm-bundler.js
+  import { AppstoreOutlined,TagOutlined,MenuFoldOutlined, MenuUnfoldOutlined, PieChartOutlined,LoginOutlined, MailOutlined } from '@ant-design/icons-vue'; // you can rewrite it to a single file component, if not, you should config vue alias to vue/dist/vue.esm-bundler.js
   import { Link } from '@inertiajs/inertia-vue3';
   import { Inertia } from '@inertiajs/inertia';
 
@@ -51,13 +55,13 @@
     },
     template: `
       <a-sub-menu :key="menuInfo.key" >
-        <template #icon><MailOutlined /></template>
+        <template #icon><AppstoreOutlined /></template>
         <template #title>{{ menuInfo.title }}</template>
         <template v-for="item in menuInfo.children" :key="item.key">
           <template v-if="!item.children">
             <a-menu-item :key="item.key">
               <template #icon>
-                <PieChartOutlined />
+                 <TagOutlined />
               </template>
                 <Link :href="item.url">
                   {{ item.title }}
@@ -71,108 +75,116 @@
       </a-sub-menu>
     `,
     components: {
-      PieChartOutlined,
+      PieChartOutlined,LoginOutlined,LoginOutlined, TagOutlined,AppstoreOutlined,
       MailOutlined,
       Link
     },
   };
   const list = [{
-    key: '0',
+    key: 'master',
     roles:['master'],
     title: '系統維護管理',
     children: [{
-      key: '0.1',
+      key: 'subjects',
       title: '全校學科總表',
       url:'/master/subjects',
       route:'master.subjects'
     },{
-      key: '0.2',
+      key: 'studies',
       title: '學習計劃',
       url:'/master/studies',
     },{
-      key: '0.3',
+      key: 'theme_templates',
       title: '基力設置',
       url:'/master/theme_templates',
     },{
-      key: '0.4',
+      key: 'transcriptTemplate',
       title: '成積表欄位',
       url:'/master/transcriptTemplate',
     },{
-      key: '0.5',
+      key: 'configs',
       title: '系統參數',
       url:'/master/configs',
     },{
-      key: '0.6',
+      key: 'roles',
       title: '角色及權限',
       url:'/master/roles',
-    },{
-      key: '0.7',
+    },
+    {
+      key: 'users',
+      title: '用戶權限分配',
+      url:'/master/users',
+    },
+    
+    {
+      key: 'manuals',
       title: '用戶指南',
       url:'/master/manuals',
     },{
-      key: '0.8',
+      key: 'issues',
       title: '問題日志',
       url:'/master/issues',
     }],
     
   },{
-    key: '1',
+    key: 'admin',
     roles:['master','admin'],
     title: '行政管理',
     children: [{
-      key: '1.2',
+      key: 'years',
       title: '學年',
       url:'/admin/years',
     },{
-      key: '1.3',
+      key: 'year',
       title: '年級',
       url:'/admin/grades',
     },{
-      key: '1.4',
+      key: 'grade',
       title: '班別',
       url:'/admin/klasses',
     }],
   },{
-    key: '2',
+    key: 'director',
     roles:['master','admin','director'],
     title: '教務管理',
     children: [{
-      key: '2.1',
+      key: 'grades',
       title: '年級班別',
       url:'/director/grades',
+      urlParamKey:'gradeScope',
       children:[{
-        key: '2.1.1',
+        key: 'kindergarten',
         title: '幼稚園部',
         url:'/director/grades?gradeScope=kindergarten'
       },{
-        key: '2.1.2',
+        key: 'primary',
         title: '小學部',
         url:'/director/grades?gradeScope=primary'
       },{
-        key: '2.1.3',
+        key: 'secondary',
         title: '中學部',
         url:'/director/grades?gradeScope=secondary'
       }]
     },{
-      key: '2.2',
+      key: 'teachers',
       title: '教師',
       url:'/director/teachers',
     },{
-      key: '2.3',
+      key: 'promotes',
       title: '升留班預處理',
       url:'/director/promotes',
     }],
   },{
-    key: '3',
+    key: 'teacher',
     roles:['teacher'],
     title: '教師',
     children: [{
-      key: '3.1',
+      key: 'teacher',
       title: '任教',
       url:'/teacher',
     }],
   },{
-    key: '4',
+    key: 'medical',
     roles:['master','admin','director'],
     title: '保健醫療',
     children: [{
@@ -206,9 +218,9 @@
 
   export default defineComponent({
     components: {
-      'sub-menu': SubMenu,
-      MenuFoldOutlined,
-      MenuUnfoldOutlined,
+      'sub-menu': SubMenu,AppstoreOutlined,
+      MenuFoldOutlined,TagOutlined, 
+      MenuUnfoldOutlined,LoginOutlined,
       PieChartOutlined,
     },
   
@@ -223,11 +235,40 @@
         list,
         collapsed,
         toggleCollapsed,
-        selectedKeys: ref(['']),
-        openKeys: ref(['']),
+        selectedKeys: ref([]),
+        openKeys: ref([]),
         logout
       };
     },
-  
+    mounted(){
+      window.app=this
+      const regex = /\/([^/?]+)/g;
+      const matches = this.$page.url.match(regex);
+      const result = matches.map(match => match.replace('/', ''));
+      this.selectedKeys.push(result[1]??'')
+      this.openKeys.push(result[0]??'')
+      if(result.length===1){ // URL只有1個字詞時 
+        let findParents=this.list.filter(menu=>menu.children.filter(children=>children.key==result[0]).length>0 )
+         this.selectedKeys=[(result[0]??'')]
+         this.openKeys=[ findParents[0]?.key??''  ]
+      }
+       //URL有URL params作為menu區分且合共三層時情況 
+      let findMenuObj=this.list.find(x=>x.key==(result[0]??''))
+      if(findMenuObj){
+        let SubMenu= findMenuObj.children.find(x=>x.key==(result[1]??''))
+        if((SubMenu?.urlParamKey??undefined)!==undefined){
+          let searchParams = new URLSearchParams(window.location.search);
+          this.selectedKeys=[ searchParams.get(SubMenu.urlParamKey)]
+          this.openKeys=result
+          console.log(searchParams)
+
+        }
+      }
+    },
+    methods:{
+      logout(){
+        Inertia.post(route('logout'))
+      }
+    }
   });
   </script>

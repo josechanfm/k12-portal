@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 
 class UserController extends Controller
@@ -23,7 +24,6 @@ class UserController extends Controller
         $users=User::with('roles')->with('permissions')->get();
         $roles=Role::all();
         $permissions=Permission::all();
-
         return Inertia::render('Master/Users',[
             'users' => $users,
             'roles'=>$roles,
@@ -81,9 +81,18 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
+    public function update(Request $request, User $id)
+    {  
+        $userData=$request->validate(
+            ['id'=>'required',
+            'newRoles'=>'required|Array',
+            'name'=>'required',
+            'newPassword'=>'sometimes|min:6',
+            ]
+        );
+       $user=User::find($userData['id']);
+       $user->update(['name'=>$userData['name']]);
+       $user->syncRoles($userData['newRoles']);
     }
 
     /**
@@ -96,4 +105,5 @@ class UserController extends Controller
     {
         //
     }
+   
 }

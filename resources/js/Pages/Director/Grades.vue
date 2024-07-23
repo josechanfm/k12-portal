@@ -1,10 +1,22 @@
 <template>
     <AdminLayout title="年級班別" :breadcrumb="breadcrumb">
-        <a-typography-title :level="4">學年代號: {{ year.code }}</a-typography-title>
-        <a-typography-title :level="4">學年全稱: {{ year.title }}</a-typography-title>
-        <a-typography-title :level="4">學年開始: {{ year.start }}</a-typography-title>
-        <a-typography-title :level="4">學年結束: {{ year.end }}</a-typography-title>
 
+        <div class="flex flex-wrap font-bold text-sm gap-1">
+            <div class="flex bg-gray-300 rounded-lg p-1 px-2 items-center gap-1">
+                <div class="text-gray-600 font-black rounded-l-lg bg-gray-100  p-1 ">學年代號</div>
+                <div class=" ">{{ year.code }}</div>
+            </div>
+            <div class="flex bg-gray-300 rounded-lg p-1 items-center gap-1">
+                <div class="text-gray-600 font-black rounded-l-lg bg-gray-100  p-1 ">學年全稱</div>
+                <div class=" ">{{ year.title }}</div>
+            </div>
+            <div class="flex bg-gray-300 rounded-lg p-1 items-center gap-1 ">
+                <div class="text-gray-600 font-black rounded-l-lg bg-gray-100  p-1 ">日期</div>
+                <div>{{ year.start }}</div>
+               <ArrowRightOutlined/>
+                <div>{{ year.end }}</div>
+            </div>
+        </div>
 
         <div class="ant-table">
             <div class="ant-table-container">
@@ -50,13 +62,13 @@
 
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
-import { TeamOutlined } from '@ant-design/icons-vue';
+import { TeamOutlined ,ArrowRightOutlined } from '@ant-design/icons-vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
 
 
 export default {
     components: {
-        AdminLayout, TeamOutlined, ButtonLink
+        AdminLayout, TeamOutlined, ButtonLink,ArrowRightOutlined
     },
     props: ['year', 'grades'],
     data() {
