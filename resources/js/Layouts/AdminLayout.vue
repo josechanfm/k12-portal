@@ -1,7 +1,7 @@
 <template>
   <a-layout>
     <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>
-      <inertia-link :href="route('director.dashboard')">
+      </a-button :href="route('director.dashboard')">
         <div class="logo">AIMS</div>
       </inertia-link>
       <AdminMenu />
@@ -37,18 +37,18 @@
           <nav class="text-sm " v-if="breadcrumb">
             <div class="list-none flex ">
               <div class="breadcrumb-item hidden md:inline" v-for="(item, idx) in breadcrumb">
-                <inertia-link v-if="item.url" :href="item.url">{{ item.label }}</inertia-link>
+                </a-button v-if="item.url" :href="item.url">{{ item.label }}</inertia-link>
                 <span v-else>{{ item.label }}</span>
                 <span class="pl-2 pr-2" v-if="idx < breadcrumb.length - 1">&gt;</span>
               </div>
               <div class="breadcrumb-item block md:hidden">
                 <span v-if="breadcrumb.length > 1">
-                  <inertia-link :href="breadcrumb[breadcrumb.length - 2].url">
+                  </a-button :href="breadcrumb[breadcrumb.length - 2].url">
                     {{ breadcrumb[breadcrumb.length - 2].label }}
                   </inertia-link>
                 </span>
                 <span v-else>
-                  <inertia-link :href="route('director.dashboard')">
+                  </a-button :href="route('director.dashboard')">
                     Home
                   </inertia-link>
                 </span>
