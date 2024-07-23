@@ -6,8 +6,8 @@
         
         <template v-if="klass.grade_year<=3">
             <inertia-link :href="route('director.klass.students.index', klass.id)" class="ant-btn">學生名單</inertia-link>
-            <inertia-link :href="route('director.klass.habits', klass.id)" class="ant-btn">生活習摜</inertia-link>
-            <inertia-link :href="route('director.klass.abilities', klass.id)" class="ant-btn">學習主題</inertia-link>
+            <inertia-link :href="route('director.pre.klass.habits', klass.id)" class="ant-btn">生活習摜</inertia-link>
+            <inertia-link :href="route('director.pre.klass.abilities', klass.id)" class="ant-btn">學習主題</inertia-link>
             <inertia-link :href="route('director.pre.klass.finalScores', klass.id)" class="ant-btn">期末成績</inertia-link>
         </template>
         <template v-else>

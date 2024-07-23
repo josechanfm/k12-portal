@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('klass_student_id');
             $table->string('reference_code');
             $table->integer('value');
-            $table->date('assign_at')->default(DB::raw('CURRENT_TIMESTAMP'));;
+            $table->timestamp('assign_at')->useCurrent();
             $table->boolean('confirmed')->default(false);
             $table->date('submit_at')->nullable();
             $table->date('confirmed_at')->nullable();

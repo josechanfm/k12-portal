@@ -12,14 +12,13 @@
         <a-table :dataSource="klasses" :columns="columns">
             <template #bodyCell="{ column, text, record, index }">
                 <template v-if="column.dataIndex == 'operation'">
-                    <div v-if="record.grade.grade_year <= 3">
+                    <span v-if="record.grade.grade_year <= 3">
                         <inertia-link  :href="route('admin.klass.themes.index', record.id)" class="ant-btn">主題</inertia-link>
-                        <inertia-link :href="route('director.pre.klasses.show',record.id)" class="ant-btn">班別管理</inertia-link>
-                    </div>
-                    <div v-else>
+                    </span>
+                    <span v-else>
                         <inertia-link  :href="route('admin.klass.courses.index', record.id)" class="ant-btn">科目</inertia-link>
-                        <inertia-link :href="route('director.klasses.show',record.id)" class="ant-btn">班別管理</inertia-link>
-                    </div>
+                    </span>
+                    <inertia-link :href="route('director.klasses.show',record.id)" class="ant-btn">班別管理</inertia-link>
                     <inertia-link :href="route('admin.select.students.index', {type:'klass',id:record.id})" class="ant-btn">學生</inertia-link>
                     <a-button @click="editRecord(record)">修改</a-button>
                     <a-popconfirm

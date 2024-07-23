@@ -17,16 +17,15 @@ class DummySeeder extends Seeder
     public function run()
     {
         $currentYear=date('Y');
-        Year::query()->update(['active'=>false]);
+        Year::query()->update(['current_year'=>false]);
         $year=Year::where('code',$currentYear)->first();
-
         if(empty($year)){
             $year=Year::create([
                 'code'=>$currentYear,
                 'title'=>$currentYear.'-'.($currentYear+1),
                 'start'=>$currentYear.'-09-01',
                 'end'=>($currentYear+1).'-06-30',
-                'current_year'=>true,
+                'current_year'=>1,
                 'current_term'=>1,
                 'active'=>1
             ]);
