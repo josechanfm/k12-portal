@@ -5,12 +5,11 @@
                 年級學習計劃
             </h2>
         </template>
-            <button @click="onClickCreate()"
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">新增年級</button>
+            <a-button @click="onClickCreate()" type="primary" >新增年級</a-button>
             <a-table :dataSource="studies" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
-                        <inertia-link :href="route('master.studySubjects.edit',record.id)" class="ant-btn">選擇學科</inertia-link>
+                        <a-button as="link" :href="route('master.studySubjects.edit',record.id)" class="ant-btn">選擇學科</a-button>
                         <a-button @click="onClickEdit(record)">修改</a-button>
                         <a-button @click="onClickDelete(record)">刪除</a-button>
                     </template>
@@ -29,7 +28,7 @@
             </a-table>
 
         <!-- Modal Start-->
-        <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="60%" >
+        <a-modal v-model:open="modal.isOpen" :title="modal.title" width="60%" >
             <a-form
                 name="Study"
                 ref="modalRef"

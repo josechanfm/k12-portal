@@ -27,7 +27,7 @@
           <template #icon>
             <LoginOutlined/>
               </template> 
-        <button class="w-full text-start" @click='logout'>登出</button>
+        <a class="w-full text-start" @click='logout'>登出</a>
         </a-menu-item>
       </a-menu>
       

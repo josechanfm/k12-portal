@@ -3,7 +3,7 @@
         <div class="py-5">
             <KlassSelector routePath="medical.klass" :param="[]" :currentKlass="klass" />
             <p></p>
-            <inertia-link :href="route('medical.klass.medicnotes.index',klass)" class="ant-btn">健康記錄</inertia-link>    
+            <a-button as="link" :href="route('medical.klass.medicnotes.index',klass)" class="ant-btn">健康記錄</a-button>    
         </div>
         
         {{klass.tag}}
@@ -13,7 +13,7 @@
             <template #bodyCell="{ column, text, record, index }">
                 <template v-if="column.dataIndex == 'operation'">
                     <a-button @click="editRecord(record)">修改</a-button>
-                    <inertia-link :href="route('medical.healthcares.show',record.id)">Link</inertia-link>
+                    <a-button as="link" :href="route('medical.healthcares.show',record.id)">Link</a-button>
                 </template>
                 <template v-else>
                     {{ record[column.dataIndex] }}
@@ -22,7 +22,7 @@
         </a-table>
 
         <!-- Modal Start-->
-        <a-modal :model="modal.data" v-model:visible="modal.isOpen" :title="modal.title" width="60%" okText="Save" @ok="onFormSubmit">
+        <a-modal :model="modal.data" v-model:open="modal.isOpen" :title="modal.title" width="60%" okText="Save" @ok="onFormSubmit">
             <a-form ref="modalForm" :model="modal.data" :rules="rules" layout="vertical" @finish="onFormSubmit" id="modalForm">
                 <a-form-item label="Category" name="category">
                     <a-select v-model:value="modal.data.category" :options="categories" @change="onChangeCategory" :disabled="modal.mode=='EDIT'"/>

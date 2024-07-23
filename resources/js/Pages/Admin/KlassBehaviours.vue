@@ -40,7 +40,7 @@
 
         <!-- Modal Start-->
         <!--
-        <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="60%" @update="updateRecord()" @onCancel="closeModal()">
+        <a-modal v-model:open="modal.isOpen" :title="modal.title" width="60%" @update="updateRecord()" @onCancel="closeModal()">
             <ol>
                 <li v-for="course in klass.courses">
                     <a-checkbox v-model:checked="course.selected">

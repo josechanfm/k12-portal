@@ -5,35 +5,35 @@
         <p>Current Term: {{currentTerm.label}}</p>
         
         <template v-if="klass.grade_year<=3">
-            <inertia-link :href="route('director.klass.students.index', klass.id)" class="ant-btn">學生名單</inertia-link>
-            <inertia-link :href="route('director.pre.klass.habits', klass.id)" class="ant-btn">生活習摜</inertia-link>
-            <inertia-link :href="route('director.pre.klass.abilities', klass.id)" class="ant-btn">學習主題</inertia-link>
-            <inertia-link :href="route('director.pre.klass.finalScores', klass.id)" class="ant-btn">期末成績</inertia-link>
+            <a-button as="link" :href="route('director.klass.students.index', klass.id)" class="ant-btn">學生名單</a-button>
+            <a-button as="link" :href="route('director.pre.klass.habits', klass.id)" class="ant-btn">生活習摜</a-button>
+            <a-button as="link" :href="route('director.pre.klass.abilities', klass.id)" class="ant-btn">學習主題</a-button>
+            <a-button as="link" :href="route('director.pre.klass.finalScores', klass.id)" class="ant-btn">期末成績</a-button>
         </template>
         <template v-else>
-            <inertia-link :href="route('director.klass.students.index', klass.id)" class="ant-btn">學生名單</inertia-link>
-            <inertia-link :href="route('director.klass.avatars',klass.id)" class="ant-btn ant-btn-default">學生照片</inertia-link>
-            <inertia-link :href="route('director.klass.finalScores', klass.id)" class="ant-btn">期末成績</inertia-link>
-            <inertia-link :href="route('director.klass.transcripts', {'klass':klass.id,'type':'summary'})" class="ant-btn">成積總表</inertia-link>
-            <inertia-link :href="route('director.klass.transcripts', klass.id)" class="ant-btn">成積大表</inertia-link>
+            <a-button as="link" :href="route('director.klass.students.index', klass.id)" class="ant-btn">學生名單</a-button>
+            <a-button as="link" :href="route('director.klass.avatars',klass.id)" class="ant-btn ant-btn-default">學生照片</a-button>
+            <a-button as="link" :href="route('director.klass.finalScores', klass.id)" class="ant-btn">期末成績</a-button>
+            <a-button as="link" :href="route('director.klass.transcripts', {'klass':klass.id,'type':'summary'})" class="ant-btn">成積總表</a-button>
+            <a-button as="link" :href="route('director.klass.transcripts', klass.id)" class="ant-btn">成積大表</a-button>
         </template>
         <a-divider type="vertical" />
-            <inertia-link :href="route('director.klass.behaviours.index', klass.id)" class="ant-btn">操行</inertia-link>
-            <inertia-link :href="route('director.klass.behaviour.adjust', klass.id)" class="ant-btn">操行調整</inertia-link>
+            <a-button as="link" :href="route('director.klass.behaviours.index', klass.id)" class="ant-btn">操行</a-button>
+            <a-button as="link" :href="route('director.klass.behaviour.adjust', klass.id)" class="ant-btn">操行調整</a-button>
         <a-divider type="vertical" />
         <template v-if="additiveStyle=='default'">
             <template v-for="group in additiveGroups">
-                <inertia-link :href="route('director.klass.additive',[klass.id,group.category.toLowerCase()])" class="ant-btn">{{group.label}}</inertia-link>
+                <a-button as="link" :href="route('director.klass.additive',[klass.id,group.category.toLowerCase()])" class="ant-btn">{{group.label}}</a-button>
             </template>
         </template>
         <template v-else-if="additiveStyle=='direct'">
-            <inertia-link :href="route('director.klass.additive.direct', klass.id)" class="ant-btn">紀律行為</inertia-link>
+            <a-button as="link" :href="route('director.klass.additive.direct', klass.id)" class="ant-btn">紀律行為</a-button>
         </template>
         <template v-else-if="additiveStyle=='page'">
-            <inertia-link :href="route('director.klass.additive.page', klass.id)" class="ant-btn">紀律行為</inertia-link>
+            <a-button as="link" :href="route('director.klass.additive.page', klass.id)" class="ant-btn">紀律行為</a-button>
         </template>
         <a-divider type="vertical" />
-        <inertia-link :href="route('director.klass.promotes.index',klass.id)" class="ant-btn">升留班預處理</inertia-link>
+        <a-button as="link" :href="route('director.klass.promotes.index',klass.id)" class="ant-btn">升留班預處理</a-button>
 
         <p>&nbsp;</p>
 
@@ -74,10 +74,10 @@
                                     </ol>
                                 </td>
                                 <th class="text-left">
-                                    <inertia-link :href="route('director.course.scores.index', course.id)"
-                                        class="ant-btn">學分</inertia-link>
-                                    <inertia-link :href="route('director.course.makeups', course.id)"
-                                        class="ant-btn">補考</inertia-link>
+                                    <a-button as="link" :href="route('director.course.scores.index', course.id)"
+                                        class="ant-btn">學分</a-button>
+                                    <a-button as="link" :href="route('director.course.makeups', course.id)"
+                                        class="ant-btn">補考</a-button>
                                 </th>
                             </tr>
                         </tbody>

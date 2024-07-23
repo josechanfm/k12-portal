@@ -38,7 +38,7 @@
         </ul>
 
         <!-- Modal Start-->
-        <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="60%">
+        <a-modal v-model:open="modal.isOpen" :title="modal.title" width="60%">
             <a-form
             :labelCol=" { span: 4 }"
                 :model="modal.data"

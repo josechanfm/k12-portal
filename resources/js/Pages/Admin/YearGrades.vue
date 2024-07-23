@@ -32,7 +32,7 @@
 >
             <template #bodyCell="{column, text, record, index}">
                 <template v-if="column.dataIndex=='operation'">
-                    <inertia-link :href="route('admin.grade.klasses.index',record.id)" class="ant-btn">班別</inertia-link>
+                    <a-button as="link" :href="route('admin.grade.klasses.index',record.id)" class="ant-btn">班別</a-button>
                     <a-button @click="editRecord(record)">修改</a-button>
                     <a-button @click="deleteRecord(record)">刪除</a-button>
                     <a-popconfirm
@@ -54,7 +54,7 @@
         </a-table>
 
             <!-- Modal Start-->
-            <a-modal v-model:visible="modal.isOpen"  :title="modal.title" width="60%" >
+            <a-modal v-model:open="modal.isOpen"  :title="modal.title" width="60%" >
                 <a-form
                     ref="modalRef"
                     :model="modal.data"

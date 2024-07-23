@@ -25,7 +25,7 @@
             <a-table :dataSource="students" :columns="columns">
                 <template #bodyCell="{ column, text, record, index }">
                     <template v-if="column.dataIndex == 'operation'">
-                        <inertia-link :href="route('director.students.show',record.id)" class="ant-btn">學生檔案</inertia-link>
+                        <a-button as="link" :href="route('director.students.show',record.id)" class="ant-btn">學生檔案</a-button>
                     </template>
                     <template v-if="column.dataIndex=='name_zh'">
                         <a :href="route('director.students.show',record.id)" target="_blank">{{record.name_zh}}</a>

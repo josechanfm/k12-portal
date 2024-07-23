@@ -10,7 +10,7 @@
                     <span v-for="staff in course.staffs">{{ staff.name_zh }}</span>
                 </div>
                 <a-divider/>
-                <inertia-link :href="route('director.klasses.show', course.klass_id)" class="ant-btn mr-4">Back</inertia-link>
+                <a-button as="link" :href="route('director.klasses.show', course.klass_id)" class="ant-btn mr-4">Back</a-button>
                 <a-button v-for="term in yearTerms" @click="selectedTerm = term.value" class="mr-4"
                     :type="selectedTerm == term.value ? 'primary' : ''">{{ term.label }}</a-button>
                 <a-button type="secondary" @click="onClickAddScoreColumn" :disabled="disabledByTerm()">新增學分欄</a-button>
@@ -119,7 +119,7 @@
             </div>
         </div>
 
-        <a-modal v-model:visible="modal.isOpen" :title="modal.title" @ok="handleScoreColumnChange">
+        <a-modal v-model:open="modal.isOpen" :title="modal.title" @ok="handleScoreColumnChange">
             <a-form :model="modal.data" name="course_score" ref="modalScoreColumn" @finish="onModalFinish" :label-col="{span:6}">
                 <a-form-item label="學段" :name="['term_id']" >
                     <a-select v-model:value="modal.data.term_id" :options="yearTerms" :disabled="true"/>

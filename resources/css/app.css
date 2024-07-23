@@ -1,9 +1,11 @@
-@tailwind base;
+/*@tailwind base;*/
 @tailwind components;
 @tailwind utilities;
 
+/*
 .ant-btn-secondary{
     background: #10b981 !important;
     border-color: #10b981 !important;
     color: white!important;
 }
+*/

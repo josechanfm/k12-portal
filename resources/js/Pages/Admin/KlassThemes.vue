@@ -55,7 +55,7 @@
             </a-table>
         </template>
         <!-- modalTheme Start-->
-        <a-modal v-model:visible="modalTheme.isOpen" :title="modalTheme.title">
+        <a-modal v-model:open="modalTheme.isOpen" :title="modalTheme.title">
             <a-form :model="modalTheme.data" name="Theme" ref="modalThemeRef" :rules="themeRules"
                 :validate-messages="validateMessages" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
                 <a-form-item label="學段" name="section_code">
@@ -74,7 +74,7 @@
             </template>
         </a-modal>
         <!-- modalTopic Start-->
-        <a-modal v-model:visible="modalTopic.isOpen" :title="modalTopic.title">
+        <a-modal v-model:open="modalTopic.isOpen" :title="modalTopic.title">
             <a-form :model="modalTopic.data" name="Topic" ref="modalTopicRef" :rules="topicRules"
                 :validate-messages="validateMessages" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
                 <a-form-item label="分類" name="section_code">

@@ -29,7 +29,7 @@
         </a-table>
 
         <!-- Modal Start-->
-        <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="60%" @update="updateRecord()"
+        <a-modal v-model:open="modal.isOpen" :title="modal.title" width="60%" @update="updateRecord()"
             @onCancel="closeModal()">
             <a-form 
                 name="Config" 

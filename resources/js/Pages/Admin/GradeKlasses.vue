@@ -3,9 +3,9 @@
         <a-typography-title :level="4">學年:{{ grade.year.title }}</a-typography-title>
         <a-typography-title :level="4">年級:{{ grade.tag }}</a-typography-title>
         <div>
-            <inertia-link v-for="g in grades" :href="route('admin.grade.klasses.index', g.id)" :class="grade.tag==g.tag?'ant-btn ant-btn-primary':'ant-btn'" >
+            <a-button as="link" v-for="g in grades" :href="route('admin.grade.klasses.index', g.id)" :class="grade.tag==g.tag?'ant-btn ant-btn-primary':'ant-btn'" >
                 {{g.tag }}
-            </inertia-link>
+            </a-button>
         </div>   
         <a-button @click="createRecord()" type="primary">新增班別</a-button>
         
@@ -13,13 +13,13 @@
             <template #bodyCell="{ column, text, record, index }">
                 <template v-if="column.dataIndex == 'operation'">
                     <span v-if="record.grade.grade_year <= 3">
-                        <inertia-link  :href="route('admin.klass.themes.index', record.id)" class="ant-btn">主題</inertia-link>
+                        <a-button as="link"  :href="route('admin.klass.themes.index', record.id)" class="ant-btn">主題</a-button>
                     </span>
                     <span v-else>
-                        <inertia-link  :href="route('admin.klass.courses.index', record.id)" class="ant-btn">科目</inertia-link>
+                        <a-button as="link"  :href="route('admin.klass.courses.index', record.id)" class="ant-btn">科目</a-button>
                     </span>
-                    <inertia-link :href="route('director.klasses.show',record.id)" class="ant-btn">班別管理</inertia-link>
-                    <inertia-link :href="route('admin.select.students.index', {type:'klass',id:record.id})" class="ant-btn">學生</inertia-link>
+                    <a-button as="link" :href="route('director.klasses.show',record.id)" class="ant-btn">班別管理</a-button>
+                    <a-button as="link" :href="route('admin.select.students.index', {type:'klass',id:record.id})" class="ant-btn">學生</a-button>
                     <a-button @click="editRecord(record)">修改</a-button>
                     <a-popconfirm
                         :title="(record.course_locked?'是否確定解鎖':'是否確定鎖定')+record.tag+'的成積表?'"
@@ -115,7 +115,7 @@
         </a-table>
 
         <!-- Modal Start-->
-        <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="60%">
+        <a-modal v-model:open="modal.isOpen" :title="modal.title" width="60%">
             <a-form ref="modalRef" :model="modal.data" name="klasses" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }"
                 autocomplete="off" :rules="rules" :validate-messages="validateMessages">
                 <a-form-item label="年級代號" name="grade">

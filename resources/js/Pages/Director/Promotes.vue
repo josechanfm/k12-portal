@@ -71,7 +71,7 @@
                         </a-radio-group>
                     </td>
                     <td>
-                        <inertia-link :href="route('director.students.show',student.pivot.klass_student_id)" class="ant-btn ant-btn-primary">學生檔案</inertia-link>
+                        <a-button as="link" :href="route('director.students.show',student.pivot.klass_student_id)" class="ant-btn ant-btn-primary">學生檔案</a-button>
                     </td>
                 </tr>
             </tbody>

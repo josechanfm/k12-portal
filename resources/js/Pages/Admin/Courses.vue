@@ -12,7 +12,7 @@
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
                         <a-button @click="changeTeachers(record)">修改</a-button>
-                        <inertia-link :href="route('admin.select.students.index',{type:'course',id:record.id})" class="ant-btn">學生名單</inertia-link>
+                        <a-button as="link" :href="route('admin.select.students.index',{type:'course',id:record.id})" class="ant-btn">學生名單</a-button>
                         <br>
                         <template v-for="term in yearTerms" :key="term">
                             <a-button 
@@ -68,7 +68,7 @@
             </a-table>
 
         <!-- Modal Start-->
-        <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="60%" @update="updateRecord()" @onCancel="closeModal()">
+        <a-modal v-model:open="modal.isOpen" :title="modal.title" width="60%" @update="updateRecord()" @onCancel="closeModal()">
             <a-form
                 :model="modal.data"
                 name="modalCourse"

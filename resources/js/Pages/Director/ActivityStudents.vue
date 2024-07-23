@@ -20,7 +20,7 @@
             <label class="pr-1 pl-5">滙入模式</label>
             <a-switch v-model:checked="importMode">By List</a-switch>
             <a-button class="ml-5" @click="saveSelected">Save Selected</a-button>
-            <inertia-link :href="route('director.activities.index')" class="ant-btn">Back</inertia-link>
+            <a-button as="link" :href="route('director.activities.index')" class="ant-btn">Back</a-button>
             <a-divider></a-divider>
             <a-row class="bg-white">
                 <a-col :span="10">

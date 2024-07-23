@@ -38,18 +38,18 @@ class StudySeeder extends Seeder
         }
 
         $data=[
-            ['grade_level'=>'4','title_zh'=>'小學一年級','stream'=>'ALL','version'=>1,'active'=>true],
-            ['grade_level'=>'5','title_zh'=>'小學二年級','stream'=>'ALL','version'=>1,'active'=>true],
-            ['grade_level'=>'6','title_zh'=>'小學三年級','stream'=>'ALL','version'=>1,'active'=>true],
-            ['grade_level'=>'7','title_zh'=>'小學四年級','stream'=>'ALL','version'=>1,'active'=>true],
-            ['grade_level'=>'8','title_zh'=>'小學五年級','stream'=>'ALL','version'=>1,'active'=>true],
-            ['grade_level'=>'9','title_zh'=>'小學六年級','stream'=>'ALL','version'=>1,'active'=>true],
-            ['grade_level'=>'10','title_zh'=>'初中一年級','stream'=>'ALL','version'=>1,'active'=>true],
-            ['grade_level'=>'11','title_zh'=>'初中二年級','stream'=>'ALL','version'=>1,'active'=>true],
-            ['grade_level'=>'12','title_zh'=>'初中三年級','stream'=>'ALL','version'=>1,'active'=>true],
-            ['grade_level'=>'13','title_zh'=>'高中一年級','stream'=>'ALL','version'=>1,'active'=>true],
-            ['grade_level'=>'14','title_zh'=>'高中二年級','stream'=>'ALL','version'=>1,'active'=>true],
-            ['grade_level'=>'15','title_zh'=>'高中三年級','stream'=>'ALL','version'=>1,'active'=>true],
+            ['grade_year'=>'4','title_zh'=>'小學一年級','stream'=>'ALL','version'=>1,'active'=>true],
+            ['grade_year'=>'5','title_zh'=>'小學二年級','stream'=>'ALL','version'=>1,'active'=>true],
+            ['grade_year'=>'6','title_zh'=>'小學三年級','stream'=>'ALL','version'=>1,'active'=>true],
+            ['grade_year'=>'7','title_zh'=>'小學四年級','stream'=>'ALL','version'=>1,'active'=>true],
+            ['grade_year'=>'8','title_zh'=>'小學五年級','stream'=>'ALL','version'=>1,'active'=>true],
+            ['grade_year'=>'9','title_zh'=>'小學六年級','stream'=>'ALL','version'=>1,'active'=>true],
+            ['grade_year'=>'10','title_zh'=>'初中一年級','stream'=>'ALL','version'=>1,'active'=>true],
+            ['grade_year'=>'11','title_zh'=>'初中二年級','stream'=>'ALL','version'=>1,'active'=>true],
+            ['grade_year'=>'12','title_zh'=>'初中三年級','stream'=>'ALL','version'=>1,'active'=>true],
+            ['grade_year'=>'13','title_zh'=>'高中一年級','stream'=>'ALL','version'=>1,'active'=>true],
+            ['grade_year'=>'14','title_zh'=>'高中二年級','stream'=>'ALL','version'=>1,'active'=>true],
+            ['grade_year'=>'15','title_zh'=>'高中三年級','stream'=>'ALL','version'=>1,'active'=>true],
         ];
 
         foreach($data as $d){

@@ -15,7 +15,7 @@
         </a-table>
 
         <!-- Modal Start-->
-        <a-modal :model="modal.data" v-model:visible="modal.isOpen" :title="modal.title" width="60%" okText="Save" @ok="onFormSubmit">
+        <a-modal :model="modal.data" v-model:open="modal.isOpen" :title="modal.title" width="60%" okText="Save" @ok="onFormSubmit">
             <a-form ref="modalForm" :model="modal.data" :rules="rules" layout="vertical" @finish="onFormSubmit" id="modalForm">
                 <a-row :gutter="10">
                     <a-col :span="12">

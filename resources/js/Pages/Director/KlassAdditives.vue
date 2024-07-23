@@ -34,7 +34,7 @@
             </div>
         </div>
 
-        <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="800px" cancel-text="返回" :ok-button-props="{style:{ display:'none' }}">
+        <a-modal v-model:open="modal.isOpen" :title="modal.title" width="800px" cancel-text="返回" :ok-button-props="{style:{ display:'none' }}">
             <p>學段狀態:  {{currentTerm.label}}</p>
             <a-form :model="modal.data.newItem" layout="vertical" @finish="onFinish"  v-if="!klass.course_locked && klass.current_term==selectedTermId">
                 <a-form-item name="selected" :rules="[{required:true}]">

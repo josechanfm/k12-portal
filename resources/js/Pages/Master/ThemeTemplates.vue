@@ -8,8 +8,8 @@
                 </a-col>
                 <a-col :sm="24" :lg="12">
                     <template v-for="grade in year.k_grades">
-                        <inertia-link class="ant-btn" :href="route('master.grade.themeTemplates.index', grade.id)">{{
-                    grade.tag }}</inertia-link>
+                        <a-button as="link" class="ant-btn" :href="route('master.grade.themeTemplates.index', grade.id)">{{
+                    grade.tag }}</a-button>
                     </template>
                 </a-col>
             </a-row>
@@ -78,7 +78,7 @@
         </div>
 
         <!-- modalTheme Start-->
-        <a-modal v-model:visible="modalTheme.isOpen" :title="modalTheme.title" @ok="themeOnOk">
+        <a-modal v-model:open="modalTheme.isOpen" :title="modalTheme.title" @ok="themeOnOk">
             <a-form :model="modalTheme.data" name="Theme" ref="modalThemeRef" :rules="themeRules"
                 :validate-messages="validateMessages" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
                 <a-form-item label="學段" name="term_id">
@@ -94,7 +94,7 @@
             </a-form>
         </a-modal>
         <!-- modalTopic Start-->
-        <a-modal v-model:visible="modalTopic.isOpen" :title="modalTopic.title" @ok="topicOnOK">
+        <a-modal v-model:open="modalTopic.isOpen" :title="modalTopic.title" @ok="topicOnOK">
             <a-form :model="modalTopic.data" name="Topic" ref="modalTopicRef" :rules="topicRules"
                 :validate-messages="validateMessages" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
                 <a-form-item label="分類" name="section_code">

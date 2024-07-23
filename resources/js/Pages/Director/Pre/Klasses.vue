@@ -4,23 +4,23 @@
         <p>Students: {{ klass.student_count }}</p>
         <p>Current Term: {{currentTerm.label}}</p>
         
-        <inertia-link :href="route('director.pre.klass.habits', klass.id)" class="ant-btn">生活習摜</inertia-link>
-        <inertia-link :href="route('director.pre.klass.abilities', klass.id)" class="ant-btn">學習主題</inertia-link>
+        <a-button as="link" :href="route('director.pre.klass.habits', klass.id)" class="ant-btn">生活習摜</a-button>
+        <a-button as="link" :href="route('director.pre.klass.abilities', klass.id)" class="ant-btn">學習主題</a-button>
         
         <a-divider type="vertical" />
-        <inertia-link :href="route('director.pre.klass.behaviours.index', klass.id)" class="ant-btn">操行</inertia-link>
+        <a-button as="link" :href="route('director.pre.klass.behaviours.index', klass.id)" class="ant-btn">操行</a-button>
 
         <a-divider type="vertical" />
         <template v-if="additiveStyles=='default'">
             <template v-for="group in additiveGroups">
-                <inertia-link :href="route('director.pre.klass.additive',[klass.id,group.category.toLowerCase()])" class="ant-btn">{{group.label}}</inertia-link>
+                <a-button as="link" :href="route('director.pre.klass.additive',[klass.id,group.category.toLowerCase()])" class="ant-btn">{{group.label}}</a-button>
             </template>
         </template>
         <template v-else-if="additiveStyles=='page'">
-            <inertia-link :href="route('director.pre.klass.additive.page', klass.id)" class="ant-btn">單頁模式</inertia-link>
+            <a-button as="link" :href="route('director.pre.klass.additive.page', klass.id)" class="ant-btn">單頁模式</a-button>
         </template>
         <template v-else-if="additiveStyles=='direct'">
-            <inertia-link :href="route('director.pre.klass.additive.direct', klass.id)" class="ant-btn">直接輸入</inertia-link>
+            <a-button as="link" :href="route('director.pre.klass.additive.direct', klass.id)" class="ant-btn">直接輸入</a-button>
         </template>
 
 
@@ -45,7 +45,7 @@
                                 <td>{{student.display_name}}</td>
                                 <td>{{student.gender}}</td>
                                 <td>{{student.dob}}</td>
-                                <td><inertia-link :href="route('director.students.show',student.id)">學生檔案</inertia-link></td>
+                                <td><a-button as="link" :href="route('director.students.show',student.id)">學生檔案</a-button></td>
                             </tr>
                         </tbody>
                     </table>

@@ -6,7 +6,7 @@
             <a-table :dataSource="years" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
-                        <inertia-link :href="route('admin.year.grades.index',record.id)" class="ant-btn">年級</inertia-link>
+                        <a-button as="link" :href="route('admin.year.grades.index',record.id)" class="ant-btn">年級</a-button>
                         <a-button @click="editRecord(record)">修改</a-button>
                         <a-button @click="deleteRecord(record)">刪除</a-button>
                         <a-button @click="lockTranscript(record)">鎖定成積表</a-button>
@@ -22,7 +22,7 @@
             </a-table>
 
         <!-- Modal Start-->
-        <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="60%" @update="updateRecord(modalForm)" @onCancel="closeModal()">
+        <a-modal v-model:open="modal.isOpen" :title="modal.title" width="60%" @update="updateRecord(modalForm)" @onCancel="closeModal()">
             <a-form
             ref="modalRef"
             :model="modal.data"

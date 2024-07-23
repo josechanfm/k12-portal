@@ -49,7 +49,7 @@
         </div>
 
         <!-- Modal Start-->
-        <a-modal v-model:visible="modal.isOpen" 
+        <a-modal v-model:open="modal.isOpen" 
             :title="modal.title" width="60%" 
         >
         

@@ -1,6 +1,6 @@
 <template>
     <AdminLayout title="學生名單" :breadcrumb="breadcrumb">
-        <inertia-link :href="route('director.avatars.index')" class="ant-btn ant-btn-default float-right">學生上載</inertia-link>
+        <a-button as="link" :href="route('director.avatars.index')" class="ant-btn ant-btn-default float-right">學生上載</a-button>
         <a-typography-title :level="3">班別: {{ klass.tag }}</a-typography-title>
         <a-row>
             <a-col :span="4" v-for="student in students">

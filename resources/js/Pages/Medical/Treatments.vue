@@ -1,10 +1,10 @@
 <template>
     <AdminLayout title="就診記錄" :breadcrumb="breadcrumb">
-        <inertia-link :href="route('medical.treatments.create')" class="ant-btn ant-btn-primary">新增</inertia-link>
+        <a-button as="link" :href="route('medical.treatments.create')" class="ant-btn ant-btn-primary">新增</a-button>
         <a-table :dataSource="treatments" :columns="columns">
             <template #bodyCell="{ column, text, record, index }">
                 <template v-if="column.dataIndex == 'operation'">
-                    <inertia-link :href="route('medical.treatments.edit',record.id)" class="ant-btn">修改</inertia-link>
+                    <a-button as="link" :href="route('medical.treatments.edit',record.id)" class="ant-btn">修改</a-button>
                 </template>
                 <template v-else>
                     {{ record[column.dataIndex] }}

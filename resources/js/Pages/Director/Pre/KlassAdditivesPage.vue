@@ -48,7 +48,7 @@
                 </div>
             </div>
         </div>
-        <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="100%" >
+        <a-modal v-model:open="modal.isOpen" :title="modal.title" width="100%" >
             <p>班別:{{klass.tag}}</p>
             <p>學生名稱:{{modal.data.name_zh}}</p>
             <div class="ant-table">

@@ -356,7 +356,7 @@
                             </template>
                         </a-table>
 
-                        <inertia-link :href="route('director.student.siblings',student.id)" class="ant-btn">連結本校兄弟姊妹</inertia-link>
+                        <a-button as="link" :href="route('director.student.siblings',student.id)" class="ant-btn">連結本校兄弟姊妹</a-button>
                     </a-collapse-panel>
 
                 </a-collapse>

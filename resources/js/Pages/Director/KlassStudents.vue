@@ -5,12 +5,12 @@
             <KlassSelector routePath="director.klass.students.index" :currentKlass="klass"/>
         </div>
 
-        <inertia-link :href="route('director.klass.avatars',klass.id)" class="ant-btn ant-btn-default float-right">學生照片</inertia-link>
+        <a-button as="link" :href="route('director.klass.avatars',klass.id)" class="ant-btn ant-btn-default float-right">學生照片</a-button>
         <a-typography-title :level="3">班別: {{ klass.tag }}</a-typography-title>
         <a-table :dataSource="students" :columns="columns">
             <template #bodyCell="{column, text, record, index}">
                 <template v-if="column.dataIndex == 'action'">
-                    <inertia-link :href="route('director.klass.student.transcript',record.pivot.klass_student_id)" class="ant-btn">Gen成績表</inertia-link>
+                    <a-button as="link" :href="route('director.klass.student.transcript',record.pivot.klass_student_id)" class="ant-btn">Gen成績表</a-button>
                     <a :href="route('director.students.show',record.pivot.klass_student_id)" class="ant-btn" target="_blank">學生檔案</a>
                 </template>
                 <template v-else-if="column.dataIndex=='avatar'">

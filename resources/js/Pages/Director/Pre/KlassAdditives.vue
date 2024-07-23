@@ -31,7 +31,7 @@
             </div>
         </div>
 
-        <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="800px" cancel-text="返回" :ok-button-props="{style:{ display:'none' }}">
+        <a-modal v-model:open="modal.isOpen" :title="modal.title" width="800px" cancel-text="返回" :ok-button-props="{style:{ display:'none' }}">
             <p>Current Term: {{currentTerm.label}}</p>
             <a-form :model="modal.data.newItem" layout="vertical" @finish="onFinish">
                 <a-form-item name="term_id">

@@ -27,7 +27,7 @@
             </a-table>
 
         <!-- Modal Start-->
-        <a-modal v-model:visible="modal.isOpen" :title="modal.title" >
+        <a-modal v-model:open="modal.isOpen" :title="modal.title" >
             <a-form
                 :model="modal.data"
                 name="Staff"

@@ -23,7 +23,7 @@
         >
             <template #bodyCell="{column, text, record, index}">
                 <template v-if="column.dataIndex=='operation'">
-                    <inertia-link :href="route('admin.enrollments.create',{student_id:record.id})" class="ant-btn">分班</inertia-link>
+                    <a-button as="link" :href="route('admin.enrollments.create',{student_id:record.id})" class="ant-btn">分班</a-button>
                 </template>
                 <template v-else>
                     {{record[column.dataIndex]}}
@@ -32,7 +32,7 @@
         </a-table>
 
         <!-- Modal Start-->
-        <a-modal :model="modal.data" v-model:visible="modal.isOpen" :title="modal.title" width="60%" okText="Save" @ok="onFinish">
+        <a-modal :model="modal.data" v-model:open="modal.isOpen" :title="modal.title" width="60%" okText="Save" @ok="onFinish">
             <a-form ref="modalForm" :model="modal.data" layout="vertical" @finish="onFinish" id="modalForm">
                 <a-form-item label="活動主題" name="title_zh" :rules="[{required:true}]" >
                     <a-input v-model:value="modal.data.title_zh" />

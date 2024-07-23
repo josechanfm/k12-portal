@@ -5,7 +5,7 @@
             <template #bodyCell="{ column, text, record, index }">
                 <template v-if="column.dataIndex == 'operation'">
                     <a-button @click="onEditRecord(record)">修改</a-button>
-                    <inertia-link :href="route('medical.healthcares.show',record.id)" class="ant-btn">體檢內容</inertia-link>
+                    <a-button as="link" :href="route('medical.healthcares.show',record.id)" class="ant-btn">體檢內容</a-button>
                 </template>
                 <template v-else-if="column.dataIndex == 'is_active'">
                     {{ record.is_active?'有效':'無效' }}
@@ -17,7 +17,7 @@
         </a-table>
     
         <!-- Modal Start-->
-        <a-modal :model="modal.data" v-model:visible="modal.isOpen" :title="modal.title" width="60%" okText="Save" @ok="onFormSubmit">
+        <a-modal :model="modal.data" v-model:open="modal.isOpen" :title="modal.title" width="60%" okText="Save" @ok="onFormSubmit">
             <a-form ref="modalForm" :model="modal.data" :rules="rules" :label-col="{ span: 4 }" @finish="onFormSubmit" id="modalForm">
                 <a-form-item label="分類" name="category">
                     <a-select v-model:value="modal.data.category" :options="categories" @change="onChangeCategory" :disabled="modal.mode=='EDIT'"/>

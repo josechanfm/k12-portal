@@ -19,7 +19,7 @@
         </a-table>
 
         <!-- Modal Start-->
-        <a-modal :model="modal.data" v-model:visible="modal.isOpen" :title="modal.title" width="60%" okText="Save" @ok="onFinish">
+        <a-modal :model="modal.data" v-model:open="modal.isOpen" :title="modal.title" width="60%" okText="Save" @ok="onFinish">
             <a-form ref="modalForm" :model="modal.data" layout="vertical" @finish="onFinish" id="modalForm">
                 <a-form-item label="Route" name="route" :rules="[{required:true}]" >
                     <a-input v-model:value="modal.data.route"/>

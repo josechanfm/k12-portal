@@ -64,7 +64,7 @@ class ConfigSeeder extends Seeder
                 {"value": 6, "label": "P3", "initial": "P"},
                 {"value": 7, "label": "P4", "initial": "P"},
                 {"value": 8, "label": "P5", "initial": "P"},
-                {“value": 9, "label": "P6", "initial": "P"},
+                {"value": 9, "label": "P6", "initial": "P"},
                 {"value": 10, "label": "F1", "initial": "F"},
                 {"value": 11, "label": "F2", "initial": "F"},
                 {"value": 12, "label": "F3", "initial": "F"},

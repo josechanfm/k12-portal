@@ -6,7 +6,7 @@
             </h2>
         </template>
         <a-button @click="saveScores">Save</a-button>
-        <inertia-link :href="route('director.activities.index')" class="ant-btn">Back</inertia-link>
+        <a-button as="link" :href="route('director.activities.index')" class="ant-btn">Back</a-button>
         <div class="ant-table">
             <div class="ant-table-container">
                 <div class="ant-table-content">

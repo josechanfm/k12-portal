@@ -54,7 +54,7 @@
                 </div>
             </div>
         </div>
-        <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="100%" cancel-text="返回" :ok-button-props="{style:{ display:'none' }}">
+        <a-modal v-model:open="modal.isOpen" :title="modal.title" width="100%" cancel-text="返回" :ok-button-props="{style:{ display:'none' }}">
             <p>班別:{{klass.tag}}</p>
             <p>學生名稱:{{modal.data.name_zh}}</p>
             <p>學段狀態:  {{currentTerm.label}}</p>
