@@ -5,7 +5,6 @@
                 Student Registration
             </h2>
         </template>
-        {{student}}
         Current Year:{{ years.find(y => y.current_term == 1).code }}
         <ul>
             <li v-for="year in years">{{ year.code }}</li>
@@ -167,7 +166,7 @@
                     <a-row>
                         <a-col :span="16">
                             <a-form-item label="街道名稱" :label-col="{ span: 4 }">
-                                <a-input v-model:value="address.road" />
+                                <a-input v-model:value="address.street_name" />
                             </a-form-item>
                             <a-form-item label="門牌，大廈，樓座" :label-col="{ span: 4 }">
                                 <a-input v-model:value="address.building" />
@@ -223,7 +222,7 @@
                             </a-form-item>
 
                             <a-form-item label="街道名稱">
-                                <a-input v-model:value="guardian.road" />
+                                <a-input v-model:value="guardian.street_name" />
                             </a-form-item>
                         </a-col>
                         <a-col :span="10">
@@ -357,6 +356,7 @@
 
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
+import { message } from 'ant-design-vue';
 
 export default {
     components: {
@@ -461,7 +461,7 @@ export default {
             this.student.ssm='1234567890'
             this.student.emergency_mobile='61234567'
             this.student.remark='Studnet remark'
-            this.address.road='Rua de ....'
+            this.address.street_name='Rua de ....'
             this.address.building='Edif. ABC, block 2, 9H'
             this.address.zone='MO'
             this.address.phone='28123456'
@@ -475,7 +475,7 @@ export default {
             this.guardian.age='50'
             this.guardian.mobile='62345678'
             this.guardian.zone='ML'
-            this.guardian.road='Rua Dois ....'
+            this.guardian.street_name='Rua Dois ....'
             this.guardian.building='Edif. AAA ..'
             this.parents[0].relation='MOHTER'
             this.parents[0].kinship='Mother'
@@ -484,7 +484,7 @@ export default {
             this.parents[0].organization='Org Mother'
             this.parents[0].age='49'
             this.parents[0].mobile='63456789'
-            // this.parents[0].road='Rua Tres ...'
+            // this.parents[0].street_name='Rua Tres ...'
             // this.parents[0].bulding='Edif. BBB ...'
             this.parents[1].relation='FATHER'
             this.parents[1].kinship='Father'
@@ -493,7 +493,7 @@ export default {
             this.parents[1].organization='Org Father'
             this.parents[1].age='51'
             this.parents[1].mobile='64456789'
-            // this.parents[1].road='Rua Quatro ...'
+            // this.parents[1].street_name='Rua Quatro ...'
             // this.parents[1].bulding='Edif. ccc ...'
             this.relatives[0].relation='relatives'
             this.relatives[0].kinship='Uncle'
@@ -538,6 +538,7 @@ export default {
                 },
                 onError:(error)=>{
                     console.log(error);
+                    message.error(error.message);
                 }
             });
 

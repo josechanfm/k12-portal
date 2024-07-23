@@ -2,28 +2,34 @@
     <AdminLayout title="學年階段之班別" :breadcrumb="breadcrumb">
         <a-typography-title :level="4">學年:{{ grade.year.title }}</a-typography-title>
         <a-typography-title :level="4">年級:{{ grade.tag }}</a-typography-title>
-        <inertia-link v-for="g in grades" :href="route('admin.grade.klasses.index', g.id)"
-            :class="grade.tag==g.tag?'ant-btn ant-btn-primary':'ant-btn'" >{{
-                g.tag }}</inertia-link>
-                
+        <div>
+            <inertia-link v-for="g in grades" :href="route('admin.grade.klasses.index', g.id)" :class="grade.tag==g.tag?'ant-btn ant-btn-primary':'ant-btn'" >
+                {{g.tag }}
+            </inertia-link>
+        </div>   
         <a-button @click="createRecord()" type="primary">新增班別</a-button>
+        
         <a-table :dataSource="klasses" :columns="columns">
             <template #bodyCell="{ column, text, record, index }">
                 <template v-if="column.dataIndex == 'operation'">
-                    <inertia-link v-if="record.grade.grade_year <= 3" :href="route('admin.klass.themes.index', record.id)"
-                        class="ant-btn">主題</inertia-link>
-                    <inertia-link v-else :href="route('admin.klass.courses.index', record.id)" class="ant-btn">科目</inertia-link>
+                    <div v-if="record.grade.grade_year <= 3">
+                        <inertia-link  :href="route('admin.klass.themes.index', record.id)" class="ant-btn">主題</inertia-link>
+                        <inertia-link :href="route('director.pre.klasses.show',record.id)" class="ant-btn">班別管理</inertia-link>
+                    </div>
+                    <div v-else>
+                        <inertia-link  :href="route('admin.klass.courses.index', record.id)" class="ant-btn">科目</inertia-link>
+                        <inertia-link :href="route('director.klasses.show',record.id)" class="ant-btn">班別管理</inertia-link>
+                    </div>
                     <inertia-link :href="route('admin.select.students.index', {type:'klass',id:record.id})" class="ant-btn">學生</inertia-link>
                     <a-button @click="editRecord(record)">修改</a-button>
-                    <inertia-link :href="route('director.klasses.show',record.id)" class="ant-btn">班別管理</inertia-link>
                     <a-popconfirm
-                        :title="(record.lock_courses?'是否確定解鎖':'是否確定鎖定')+record.tag+'的成積表?'"
+                        :title="(record.course_locked?'是否確定解鎖':'是否確定鎖定')+record.tag+'的成積表?'"
                         ok-text="Yes"
                         cancel-text="No"
                         @confirm="onClickSelectedTermLock(record.id,0)"
                     >
                         <a-button>
-                            <span v-if="record.lock_courses">解鎖成積</span>
+                            <span v-if="record.course_locked">解鎖成積</span>
                             <span v-else>鎖定成積</span>
                         </a-button>
                     </a-popconfirm>
@@ -33,10 +39,9 @@
                         <a-button 
                             @click="onClickSelectedTermLock(record.id,term.value)" 
                             :type="record.current_term==term.value?'secondary':''"
-                            :disabled="record.lock_courses"
+                            :disabled="record.course_locked"
                         >{{term.label}}</a-button>
                     </template>
-                    {{record.lock_course}}
                 </template>
                 <template v-else-if="column.dataIndex == 'head_teacher'">
                     <!-- {{ record.klass_heads }} -->
@@ -125,16 +130,16 @@
                     <a-input v-model:value="modal.data.byname" />
                 </a-form-item>
                 <a-form-item label="專業方向" name="stream">
-                    <a-radio-group v-model:value="modal.data.stream" :options="studyStreams" option-type="button" button-style="solid"  :disabled="modal.mode=='EDIT'"/>
+                    <a-radio-group v-model:value="modal.data.stream" :options="studyStreams" option-type="button" button-style="solid" :disabled="modal.mode=='EDIT'"/>
                 </a-form-item>
                 <a-form-item label="學習計劃" name="study_id">
-                    <a-select v-model:value="modal.data.study_id" :options="studies" :fieldNames="{value:'id',label:'title_zh'}"/>
+                    <a-select v-model:value="modal.data.study_id" :options="studies" :fieldNames="{value:'id',label:'title_zh'}" :disabled="modal.mode=='EDIT'"/>
                     </a-form-item>
                 <a-form-item label="當前學段" name="current_term">
                     <a-radio-group v-model:value="modal.data.current_term" :options="yearTerms" option-type="button" button-style="solid"/>
                 </a-form-item>
-                <a-form-item label="學科鎖定" name="lock_courses">
-                    <a-switch v-model:checked="modal.data.lock_courses" checkedChildren="鎖定成積" unCheckedChildren="解鎖成積"/>
+                <a-form-item label="學科鎖定" name="course_locked">
+                    <a-switch v-model:checked="modal.data.course_locked" checkedChildren="鎖定成積" unCheckedChildren="解鎖成積"/>
                 </a-form-item>
                 <a-form-item label="教室編號" name="room">
                     <a-input v-model:value="modal.data.room" />
@@ -146,6 +151,7 @@
                 </a-form-item>
             </a-form>
             <template #footer>
+                <a-button key="back" @click="modalCancel">Close</a-button>
                 <a-button v-if="modal.mode == 'EDIT'" key="Update" type="primary" @click="updateRecord()">Update</a-button>
                 <a-button v-if="modal.mode == 'CREATE'" key="Store" type="primary" @click="storeRecord()">Add</a-button>
             </template>
@@ -171,7 +177,6 @@ export default {
                 {label:"年級" ,url:route('admin.year.grades.index',this.grade.year_id)},
                 {label:"班別" ,url:null},
             ],
-            yearTerms:[],
             selectedTerm: 1,
             modal: {
                 mode: null,
@@ -239,13 +244,13 @@ export default {
         }
     },
     mounted(){
-        axios.get(route('api.config.item',{key:'year_terms'}))
-            .then(res=>{
-                this.yearTerms=res.data
-            })
-            .catch(err=>{
-                console.log(err)
-            })
+        // axios.get(route('api.config.item',{key:'year_terms'}))
+        //     .then(res=>{
+        //         this.yearTerms=res.data
+        //     })
+        //     .catch(err=>{
+        //         console.log(err)
+        //     })
     },
     methods: {
         closeModal() {
@@ -303,6 +308,10 @@ export default {
                     }
                 })
             })
+        },
+        modalCancel(){
+            this.modal.data={}
+            this.modal.isOpen=false
         },
         onClickSelectedTermLock(klassId, termId) {
             this.$inertia.post(route('admin.lock.klass',{klassId:klassId,termId:termId}),{},{

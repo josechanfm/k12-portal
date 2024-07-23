@@ -33,6 +33,10 @@ class ConfigSeeder extends Seeder
         //     ]',
         // ]);
         DB::table('configs')->insert([
+            'key'=>'suid_prefix',
+            'value' =>'"S"'
+        ]);
+        DB::table('configs')->insert([
             'key'=>'year_terms',
             'value' =>'[{"value":1,"label":"第一段"},{"value":2,"label":"第二段"},{"value":3,"label":"第三段"}]'
         ]);
@@ -46,29 +50,32 @@ class ConfigSeeder extends Seeder
                 {"value":"Q","label":"Q"},{"value":"R","label":"R"},{"value":"S","label":"S"},{"value":"T","label":"T"}
             ]'
         ]);
-        // DB::table('configs')->insert([
-        //     'key'=>'grade_letters',
-        //     'value'=>'[{"value":"A","label":"A"},{"value":"B","label":"B"},{"value":"C","label":"C"},{"value":"D","label":"D"},{"value":"E","label":"E"},{"value":"F","label":"F"}]'
-        // ]);
+
+        //the values are same as gradeYear, j
+
         DB::table('configs')->insert([
-            'key'=>'grade_letters',
+            'key'=>'grade_years',
             'value' =>'[
-                {"value": 1, "label": "K1", "initial": "K", "level": 1},
-                {"value": 2, "label": "K2", "initial": "K", "level": 2},
-                {"value": 3, "label": "K3", "initial": "K", "level": 3},
-                {"value": 4, "label": "P1", "initial": "P", "level": 1},
-                {"value": 5, "label": "P2", "initial": "P", "level": 2},
-                {"value": 6, "label": "P3", "initial": "P", "level": 3},
-                {"value": 7, "label": "P4", "initial": "P", "level": 4},
-                {"value": 8, "label": "P5", "initial": "P", "level": 5},
-                {“value": 9, "label": "P6", "initial": "P", "level": 6},
-                {“value": 10, "label": "F1", "initial": "F", "level": 1},
-                {“value": 11, "label": "F2", "initial": "F", "level": 2},
-                {“value": 12, "label": "F3", "initial": "F", "level": 3},
-                {“value": 13, "label": "F4", "initial": "F", "level": 4},
-                {“value": 14, "label": "F5", "initial": "F", "level": 5},
-                {“value": 15, "label": "F6", "initial": "F", "level": 6}
-            ]'
+                {"value": 1, "label": "K1", "initial": "K"},
+                {"value": 2, "label": "K2", "initial": "K"},
+                {"value": 3, "label": "K3", "initial": "K"},
+                {"value": 4, "label": "P1", "initial": "P"},
+                {"value": 5, "label": "P2", "initial": "P"},
+                {"value": 6, "label": "P3", "initial": "P"},
+                {"value": 7, "label": "P4", "initial": "P"},
+                {"value": 8, "label": "P5", "initial": "P"},
+                {“value": 9, "label": "P6", "initial": "P"},
+                {"value": 10, "label": "F1", "initial": "F"},
+                {"value": 11, "label": "F2", "initial": "F"},
+                {"value": 12, "label": "F3", "initial": "F"},
+                {"value": 13, "label": "F4", "initial": "F"},
+                {"value": 14, "label": "F5", "initial": "F"},
+                {"value": 15, "label": "F6", "initial": "F"}
+            ]',
+            'remark'=>'value 用時用於gradeYear, 主要用於Year_model autoGenerate function上。
+                        K1-K3: 1-3
+                        P1-P6: 4-9
+                        F1-F6: 10-15'
         ]);
         DB::table('configs')->insert([
             'key' => 'score_template',
@@ -382,7 +389,7 @@ class ConfigSeeder extends Seeder
         ]);
 
         DB::table('configs')->insert([
-            'key'=>'manual_categories',
+            'key'=>'issue_categories',
             'value'=>'[
                 {"label":"系統維護管理","value":"master"},
                 {"label":"行政管理","value":"admin"},

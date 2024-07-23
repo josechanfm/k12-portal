@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('addressable_id');
             $table->string('addressable_type');
             $table->string('zone')->nullable();
-            $table->string('stree_name')->nullable();
+            $table->string('street_name')->nullable();
             $table->string('building')->nullable();
             $table->string('postal_code')->nullable();
             $table->string('postal_address')->nullable();

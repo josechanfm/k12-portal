@@ -22,8 +22,9 @@ return new class extends Migration
             $table->text('transcript')->nullable();
             $table->date('start')->nullable();
             $table->date('end')->nullable();
+            $table->boolean('current_year')->default(false);
+            $table->tinyinteger('current_term')->default(2);
             $table->boolean('active')->default(true);
-            $table->integer('current_term');
             $table->timestamps();
             $table->unique('code');
         });

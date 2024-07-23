@@ -52,15 +52,16 @@ class StudyController extends Controller
             'title_zh' => ['required'],
         ])->validate();
 
-        $study=new Study;
-        $study->version=$request->version;
-        $study->title_zh=$request->title_zh;
-        $study->title_en=$request->title_en;
-        $study->stream=$request->stream;
-        $study->description=$request->description;
-        $study->grade_year=$request->grade_year;
-        $study->active=$request->active;
-        $study->save();
+        Study::create($request->all());
+        // $study=new Study;
+        // $study->version=$request->version;
+        // $study->title_zh=$request->title_zh;
+        // $study->title_en=$request->title_en;
+        // $study->stream=$request->stream;
+        // $study->description=$request->description;
+        // $study->grade_year=$request->grade_year;
+        // $study->active=$request->active;
+        // $study->save();
         return redirect()->back();
     }
 
@@ -99,15 +100,16 @@ class StudyController extends Controller
             'version' => ['required'],
             'title_zh' => ['required'],
         ])->validate();
-
-        $study->version=$request->version;
-        $study->title_zh=$request->title_zh;
-        $study->title_en=$request->title_en;
-        $study->stream=$request->stream;
-        $study->description=$request->description;
-        $study->grade_year=$request->grade_year;
-        $study->active=$request->active;
+        $study->update($request->all());
         $study->save();
+        // $study->version=$request->version;
+        // $study->title_zh=$request->title_zh;
+        // $study->title_en=$request->title_en;
+        // $study->stream=$request->stream;
+        // $study->description=$request->description;
+        // $study->grade_year=$request->grade_year;
+        // $study->active=$request->active;
+        // $study->save();
         return redirect()->back();
 
     }

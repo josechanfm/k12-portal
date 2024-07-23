@@ -25,7 +25,6 @@ class RoleController extends Controller
         $user=User::find(1);
         $user->assignRole($role);
 
-
         $roles=Role::all();
         return Inertia::render('Master/Roles',[
             'roles'=>$roles

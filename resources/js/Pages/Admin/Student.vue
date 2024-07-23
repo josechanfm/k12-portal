@@ -5,11 +5,7 @@
                 學年級別學科列表
             </h2>
         </template>
-            <a-table :dataSource="students.data" :columns="columns" :pagination="pagination" @change="onPaginationChange" ref="dataTable">
-                <template #bodyCell="{column, text, record, index}">
-                        {{record[column.dataIndex]}}
-                </template>
-            </a-table>
+        {{ student }}
     </AdminLayout>
 
 </template>
@@ -27,7 +23,7 @@ export default {
         CheckSquareOutlined,
         StopOutlined
     },
-    props: ['students'],
+    props: ['student'],
     data() {
         return {
             modal: {

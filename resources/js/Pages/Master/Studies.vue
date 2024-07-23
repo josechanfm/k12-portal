@@ -19,6 +19,9 @@
                             <li v-for="klass in record['klasses']">Class: {{klass.acronym}}</li>
                         </ul>
                     </template>
+                    <template v-else-if="column.dataIndex=='grade_year'">
+                        {{ getLabel(gradeYears, text) }}
+                    </template>
                     <template v-else>
                         {{record[column.dataIndex]}}
                     </template>
@@ -28,9 +31,11 @@
         <!-- Modal Start-->
         <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="60%" >
             <a-form
-                :model="modal.data"
                 name="Study"
                 ref="modalRef"
+                :model="modal.data"
+                :label-col="{ span: 6 }"
+                :wrapper-col="{ span: 18 }"
                 :rules="rules"
                 :validate-messages="validateMessages"
             >
@@ -242,7 +247,12 @@ export default {
         },
         onFinishFailed(errorInfo){
             console.log('errorInfo: '+errorInfo);
+        },
+        getLabel(arr, value){
+            const item=arr.find(a=>a.value==value)
+            return item?item.label: 'Null value for: '+value
         }
+
     },
 }
 </script>

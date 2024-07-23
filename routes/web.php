@@ -36,17 +36,15 @@ Route::get('/', function () {
 })->name('home');
 
 
-Route::get('/help', function (Request $request) {
-    $help=App\Models\Help::where('route',$request->route)->first();
-    if(empty($help)){
-        $help=App\Models\Help::where('route','default')->first();
-    }else if($help->reroute){
-        $help=App\Models\Help::where('route',$help->reroute)->first();
+Route::get('/manual', function (Request $request) {
+    $manual=App\Models\Manual::where('route',$request->route)->first();
+    if(empty($manual)){
+        $manual=App\Models\Manual::where('route','default')->first();
     }
-    return Inertia::render('Help', [
-        'help' => $help,
+    return Inertia::render('Manual', [
+        'manual' => $manual,
     ]);
-})->name('help');
+})->name('manual');
 
 
 Route::middleware([
@@ -89,7 +87,6 @@ Route::group([
         'role:master|admin'
     ]
 ],function () {
-        Route::resource('/manuals',App\Http\Controllers\Master\ManualController::class)->names('master.manuals');
         Route::resource('/studies',App\Http\Controllers\Master\StudyController::class)->names('master.studies');
         Route::resource('/study_subjects',App\Http\Controllers\Master\StudySubjectController::class)->names('master.studySubjects');
         Route::resource('/subjects',App\Http\Controllers\Master\SubjectController::class)->names('master.subjects');
@@ -102,7 +99,8 @@ Route::group([
         Route::resource('/grade/{gradeYear}/theme_templates',App\Http\Controllers\Master\ThemeTemplateController::class)->names('master.grade.themeTemplates');
         Route::resource('/grade/{gradeYear}/topic_templates',App\Http\Controllers\Master\TopicTemplateController::class)->names('master.grade.topicTemplates');
         Route::get('/theme_templates',[App\Http\Controllers\Master\ThemeTemplateController::class,'list'])->name('master.themeTemplates');
-
+        Route::resource('manuals',App\Http\Controllers\Master\ManualController::class)->names('master.manuals');
+        Route::resource('issues',App\Http\Controllers\Master\IssueController::class)->names('master.issues');
     });
 
 //admin
@@ -139,7 +137,7 @@ Route::group([
 
     Route::resource('/courses',App\Http\Controllers\Admin\CourseController::class)->names('admin.courses');
     Route::resource('/students',App\Http\Controllers\Admin\StudentController::class)->names('admin.students');
-    Route::get('/transcript/lock',[App\Http\Controllers\Admin\TranscriptController::class,'lockTranscripts'])->name('admin.transcript.lock');
+    Route::get('/transcript/lock',[App\Http\Controllers\Admin\TranscriptController::class,'lockTranscripts'])->name('admin.lockTranscripts');
     Route::resource('extracurriculars',App\Http\Controllers\Admin\ExtracurricularController::class)->names('admin.extracurriculars');
     Route::resource('activities',App\Http\Controllers\Admin\ActivityController::class)->names('admin.activities');
     Route::resource('certificates',App\Http\Controllers\Admin\CertificateController::class)->names('admin.certificates');
@@ -149,7 +147,6 @@ Route::group([
     Route::post('lock/course/{courseId}/{termId}',[\App\Http\Controllers\Admin\LockController::class,'course'])->name('admin.lock.course');
     Route::post('lock/klass/{klassId}/{termId}',[\App\Http\Controllers\Admin\LockController::class,'klass'])->name('admin.lock.klass');
 
-    Route::resource('helps',App\Http\Controllers\Admin\HelpController::class)->names('admin.helps');
 });
 //Route::prefix('manage/')->middleware([ 'checkRole:master|admin|director|teacher'])->group(function(){
 //manage

@@ -90,7 +90,7 @@
                     </div>
                 </div>
             </div>
-            <a-form :model="modal.data" layout="vertical" @finish="onFinish" v-if="!klass.lock_courses && selectedTermId==klass.current_term">
+            <a-form :model="modal.data" layout="vertical" @finish="onFinish" v-if="!klass.course_locked && selectedTermId==klass.current_term">
                 <a-form-item label="term_id" name="term_id" hidden>
                     <a-input v-model:value="modal.data.term_id" />
                 </a-form-item>

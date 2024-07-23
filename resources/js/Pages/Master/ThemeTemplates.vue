@@ -19,54 +19,50 @@
                 </a-col>
             </a-row>
         </div>
+        <!-- topic section-->
         <div class="bg-white sm:rounded-lg my-5 p-5">
             <div class="float-right">
                 修開 <a-switch v-model:checked="themeEditable" />
                 <span class="pr-5">&nbsp;</span>
-                <button @click="themeCreate()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">新增主題</button>
+                <button @click="themeCreate()"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">新增主題</button>
             </div>
-
-            <div  v-if="!themeEditable">
-                <a-select v-model:value="selectedThemeId" :options="themeTemplates" :fieldNames="{ value: 'id', label: 'title' }"
-                    @change="onChangeSelectedTheme" />
+            <div v-if="!themeEditable">
+                <span class="text-lg">基力學習主題：</span>
+                <a-select v-model:value="selectedThemeId" :options="themeTemplates"
+                    :fieldNames="{ value: 'id', label: 'title' }" @change="onChangeSelectedTheme" />
             </div>
             <div v-else class="pb-5">{{ selectedTheme.title }}</div>
+            <div v-if="themeEditable">
+                <a-table :dataSource="themeTemplates" :columns="themeColumns">
+                    <template #bodyCell="{ column, text, record, index }">
+                        <template v-if="column.dataIndex == 'operation'">
+                            <a-button @click="themeEdit(theme)" :style="'Edit'">修改</a-button>
+                            <a-button @click="themeDelete(theme)" :style="'Delete'">刪除</a-button>
+                        </template>
+                        <template v-else-if="column.dataIndex == 'term_id'">
+                            {{ record.term_id }} / {{ record.id }}
+                        </template>
+                        <template v-else>
+                            <a @click="selectedTheme = record">
+                                {{ record.title }}
+                            </a>
 
-            <div class="ant-table" v-if="themeEditable">
-            <div class="ant-table-container">
-                <div class="ant-table-content">
-                    <table style="table-layout: auto;">
-                        <thead class="ant-table-thead">
-                            <tr>
-                                <th class="ant-table-cell">學段</th>
-                                <th class="ant-table-cell">主題</th>
-                                <th>操作</th>
-                            </tr>
-                        </thead>
-                        <tbody class="ant-table-tbody">
-                            <tr v-for="theme in themeTemplates">
-                                <td>{{ theme.term_id }}/{{ theme.id }}</td>
-                                <td>
-                                    <a @click="selectedTheme = theme">
-                                        {{ theme.title }}
-                                    </a>
-                                </td>
-                                <td>
-                                    <a-button @click="themeEdit(theme)" :style="'Edit'">修改</a-button>
-                                    <a-button @click="themeDelete(theme)" :style="'Delete'">刪除</a-button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                        </template>
+                    </template>
+                </a-table>
             </div>
         </div>
-        
-        </div>
+
+        <!--Topics section-->
         <div>
+            
             <div class="text-right">
                 <button @click="topicCreate()"
                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">新增內容</button>
+            </div>
+            <div class="text-lg">
+                基力項目：
             </div>
             <a-table :dataSource="selectedTheme.topic_templates" :columns="topicColumns">
                 <template #bodyCell="{ column, text, record, index }">
@@ -102,7 +98,7 @@
             <a-form :model="modalTopic.data" name="Topic" ref="modalTopicRef" :rules="topicRules"
                 :validate-messages="validateMessages" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
                 <a-form-item label="分類" name="section_code">
-                    <a-select v-model:value="modalTopic.data.section_code" :options="topicSections" />
+                    <a-select v-model:value="modalTopic.data.section_code" :options="topicAbilities" />
                 </a-form-item>
                 <a-form-item label="分組標題" name="abbr">
                     <a-input v-model:value="modalTopic.data.abbr" />
@@ -126,7 +122,7 @@ export default {
     components: {
         AdminLayout, Modal, createVNode, ExclamationCircleOutlined
     },
-    props: ['yearTerms', 'year', 'grade', 'themeTemplates', 'topicSections'],
+    props: ['yearTerms', 'year', 'grade', 'themeTemplates', 'topicAbilities'],
     data() {
         return {
             themeEditable: false,
@@ -144,13 +140,25 @@ export default {
                 title: 'Topic',
                 data: {}
             },
+            themeColumns: [
+                {
+                    title: '學段',
+                    dataIndex: 'term_id',
+                }, {
+                    title: '主題',
+                    dataIndex: 'title',
+                }, {
+                    title: '操作',
+                    dataIndex: 'operation',
+                }
+            ],
             topicColumns: [
                 {
-                    title: '分類簡稱',
-                    dataIndex: 'section_code_label',
+                    title: '分類代號',
+                    dataIndex: 'ability_code',
                 }, {
                     title: '分類全稱',
-                    dataIndex: 'section',
+                    dataIndex: 'ability',
                 }, {
                     title: '分組簡稱',
                     dataIndex: 'abbr',

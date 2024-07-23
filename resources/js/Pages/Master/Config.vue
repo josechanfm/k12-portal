@@ -31,13 +31,17 @@
         <!-- Modal Start-->
         <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="60%" @update="updateRecord()"
             @onCancel="closeModal()">
-            <a-form :model="modal.data" name="Config" ref="modalRef" :rules="rules"
-                :validate-messages="validateMessages">
+            <a-form 
+                name="Config" 
+                ref="modalRef" 
+                :model="modal.data" 
+                :rules="rules"
+                :validate-messages="validateMessages"
+                :label-col="{ span: 4 }"
+                :wrapper-col="{ span: 20 }"
+            >
                 <a-form-item label="Key" name="key">
                     <a-input v-model:value="modal.data.key" />
-                </a-form-item>
-                <a-form-item label="Label" name="label">
-                    <a-input v-model:value="modal.data.label" placeholder="textarea with clear icon" allow-clear />
                 </a-form-item>
                 <a-form-item label="Value" name="value">
                     <a-textarea v-model:value="modal.data.value" placeholder="textarea with clear icon" allow-clear />
@@ -76,14 +80,10 @@ export default {
                 title: 'Configs',
                 data: {}
             },
-            dataSource: [],
             columns: [
                 {
                     title: 'Key',
                     dataIndex: 'key',
-                }, {
-                    title: 'Lable',
-                    dataIndex: 'label',
                 }, {
                     title: 'Operation',
                     dataIndex: 'operation',

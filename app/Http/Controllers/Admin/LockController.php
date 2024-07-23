@@ -15,7 +15,7 @@ class LockController extends Controller
     public function course($courseId, $termId){
         $course=Course::find($courseId);
         $klass=$course->klass;
-        if($klass->lock_courses==1){
+        if($klass->course_locked){
             return redirect()->back()->withErrors(['message'=>'未具權限,整個班別的科目已被鎖定.']);
         }
 
@@ -40,12 +40,12 @@ class LockController extends Controller
             $klass->save();
         }else{//班別上鎖,科目不可以修改學段
             
-            if($klass->lock_courses){
+            if($klass->course_locked){
                 Course::whereBelongsTo($klass)->update(['current_term'=>$klass->current_term]);
             }else{
                 Course::whereBelongsTo($klass)->update(['current_term'=>0]);
             }
-            $klass->lock_courses=!$klass->lock_courses;
+            $klass->lock_courses=!$klass->course_locked;
             $klass->save();
         }
         return redirect()->back();

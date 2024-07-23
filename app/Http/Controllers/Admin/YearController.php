@@ -92,6 +92,9 @@ class YearController extends Controller
             'current_term'=> ['required'],
         ])->validate();
         if($request->has('id')){
+            if($request->current_year){
+                Year::query()->update(['current_year'=>false]);
+            }
             $year=Year::find($request->id);
             // $year->herit = $request->herit') ?? 0;
             $year->code = $request->code;
@@ -99,8 +102,9 @@ class YearController extends Controller
             $year->start = date('Y-m-d', strtotime($request->period[0]));
             $year->end = date('Y-m-d', strtotime($request->period[1]));
             $year->description= $request->description ?? "";
+            $year->current_year=$request->current_year;
             $year->current_term=$request->current_term;
-            $year->active=1;
+            $year->active=$request->active;
             $year->save();
     
         }

@@ -18,14 +18,14 @@
                             <a-button 
                                 @click="onClickSelectedTermLock(record.id, term.value)" 
                                 :type="record.current_term==term.value?'secondary':''"
-                                :disabled="klass.lock_courses"
+                                :disabled="klass.course_locked"
                             >{{term.label}}
                             </a-button>
                         </template>
                         <a-button 
                             @click="onClickSelectedTermLock(record.id,0)" 
                             :type="record.current_term==0?'secondary':''"
-                            :disabled="klass.lock_courses"
+                            :disabled="klass.course_locked"
                             >鎖定</a-button>
                     </template>
                     <template v-else-if="column.dataIndex=='subject_heads'">

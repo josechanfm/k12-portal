@@ -19,11 +19,6 @@ use Illuminate\Support\Facades\Validator;
 class KlassController extends Controller
 {
     public function list(){
-        // if($request->gid){
-        //     $grade=Grade::with('year')->find($request->gid);
-        // }else{
-        // $grade=Grade::with('year')->whereBelongsTo(Year::currentYear())->first();
-        // }
         $grade=Grade::with('year')->whereBelongsTo(Year::currentYear())->first();
         return redirect()->route('admin.grade.klasses.index',$grade);
 

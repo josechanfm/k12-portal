@@ -12,11 +12,12 @@ class Year extends Model
     use HasFactory;
     use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
-    protected $fillable=['code','title','description','meta','start','end','current_term','active'];
+    protected $fillable=['code','title','description','meta','start','end','current_year','current_term','active'];
+    protected $casts=['current_year'=>'boolean','active'=>'boolean'];
     protected $appends=['grade_group'];
     
     public static function currentYear(){
-        return Year::where('active',1)->orderBy('start','DESC')->first();
+        return Year::where('current_year',true)->orderBy('start','DESC')->first();
     }
     public static function currentTerm(){
         $yearTerms=array_column(Config::item('year_terms'),null,'value');
@@ -49,6 +50,7 @@ class Year extends Model
     }
     public function autoGenerate($data){
         $gradeLetters=array_column(Config::item('grade_letters'),null,'value');
+        
         $kklass=$data['kklass'];
         $kgrade=$data['kgrade'];
         $pklass=$data['pklass'];

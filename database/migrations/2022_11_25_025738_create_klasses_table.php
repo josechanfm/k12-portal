@@ -24,7 +24,8 @@ return new class extends Migration
             $table->string('room')->nullable();
             $table->string('klass_head_ids')->nullable();
             $table->tinyInteger('current_term')->default(1);
-            $table->tinyInteger('lock_courses')->default(0);
+            $table->boolean('course_locked')->default(false);
+            $table->boolean('transcript_locked')->default(false);
             $table->timestamps();
         });
     }

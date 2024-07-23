@@ -25,72 +25,19 @@ class ThemeTemplateController extends Controller
      */
     public function index($gradeId)
     {
-        
         $grade=Grade::find($gradeId);
         $year=Year::with('kGrades')->find($grade->year_id);
 
         $themeTemplates=ThemeTemplate::where('grade_year',$grade->grade_year)->with('TopicTemplates')->get();
+        //dd($themeTemplates);
+        //dd(Config::item('topic_abilities'));
         return Inertia::render('Master/ThemeTemplates',[
             'year'=>$year,
             'grade'=>$grade,
             'yearTerms'=>Config::item('year_terms'),
             'themeTemplates'=>$themeTemplates,
-            'topicSections'=>Config::item('topic_sections'),
-        ]);
-        dd($themeTemplates);
-        if($themeTemplates->count()<=0){
-            echo 'add themetemplate';
-        }else{
-            foreach($themeTemplates as $themeTemplate){
-                if($themeTemplate->topicTemplates->count()<=0){
-                    echo 'add topic to theme'.$themeTemplate->id;
-                    foreach($tempTopics as $i=>$topic){
-                        $topic->theme_template_id=$themeTemplate->id;
-                        
-                        TopicTemplate::create((array)$topic);
-                    }
-                }else{
-                    echo json_encode($themesTopics);
-                }
-            }
-        }
-        dd('---');
-
-        $grades=Year::currentYear()->grades->where('grade_year','<=',3);
-        $topics=TopicTemplate::where('theme_template_id',1)->get()->toArray();
-
-        foreach($grades as $grade){
-            if($grade->themeTemplates->count()<=0){
-                return Inertia::render('Error',[
-                    'message'=>"You are themeTemplates."
-                ]);
-            }else{
-                foreach($grade->themeTemplates as $themeTemplate){
-                    if($themeTemplate->topicTemplates->count()>0){
-                        foreach($topics as $i=>$topic){
-                            $topics[$i]['theme_template_id']=$themeTemplate->id;
-                        }
-                        // TopicTemplate::upsert(
-                        //     $topics,
-                        //     ['theme_template_id','section_code'],
-                        //     ['sequence','abbr','title']
-                        // );
-                    }
-                }
-            }
-        }
-        
-        $year=$grade->year;
-        return Inertia::render('Master/GradeThemeTemplates',[
-            'yearTerms'=>Config::item('year_terms'),
             'topicAbilities'=>Config::item('topic_abilities'),
-            'year'=>$year,
-            'grades'=>$year->grades->where('grade_year','<=',3),
-            'grade'=>$grade,
-            'themeTemplates'=>$grade->themeTemplates,
-            'topicTemplates'=>Topic::all(),
         ]);
-
     }
 
     /**

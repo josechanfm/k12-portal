@@ -35,9 +35,11 @@
             /> -->
             <a-form
                 v-if="modal.mode=='EDIT'"
-                :model="modal.data"
                 name="Subject"
                 ref="modalRef"
+                :model="modal.data"
+                :label-col="{ span: 6 }"
+                :wrapper-col="{ span: 18 }"
                 :rules="rules"
                 :validate-messages="validateMessages"
             >

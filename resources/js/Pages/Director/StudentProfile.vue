@@ -4,7 +4,7 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 <a-row type="flex">
                     <a-col flex="230px">
-                        <a-image :width="200" v-if="student.avatars[0].image"
+                        <a-image :width="200" v-if="student.avatars && student.avatars[0]"
                             :src="student.avatars[0].image.original_url" />
                     </a-col>
                     <a-col flex="auto">

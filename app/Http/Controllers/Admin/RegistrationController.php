@@ -60,7 +60,7 @@ class RegistrationController extends Controller
             ]);
         }
         $student=Student::create($request->student);
-        if($request->student['candidate_id']){
+        if(isset($request->student['candidate_id'])){
             Candidate::where('id',$request->student['candidate_id'])->update(['student_id'=>$student->id]);
         }
         $student->detail()->create($request->detail);
@@ -73,14 +73,17 @@ class RegistrationController extends Controller
         $student->address()->create($request->guardian);;
 
         foreach($request->relatives as $relative){
-            $student->relatives()->create($relative);
+            if($relative['relation']!=null){
+                $student->relatives()->create($relative);
+            }
         }
-        $student->detail;
-        $student->address;
-        $student->health;
-        $student->relatives;
-        dd($student);
-        dd($request->all());
+        return redirect()->route('director.students.show',$student);
+        // $student->detail;
+        // $student->address;
+        // $student->health;
+        // $student->relatives;
+        // dd($student);
+        // dd($request->all());
     }
 
     /**
@@ -89,9 +92,9 @@ class RegistrationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Student $student)
     {
-        
+        dd($student);
     }
 
     /**

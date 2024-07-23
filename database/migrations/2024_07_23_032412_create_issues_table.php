@@ -13,15 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('helps', function (Blueprint $table) {
+        Schema::create('issues', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('parent_id')->default(0);
-            $table->string('route');
-            $table->string('reroute')->nullable();
+            $table->string('category');
             $table->string('title');
-            $table->longText('content');
+            $table->text('content');
+            $table->string('reporter');
+            $table->text('solution')->nullable();
+            $table->string('respondent')->nullable();
+            $table->foreignId('user_id')->nullable();
+            $table->string('status')->nullable();
             $table->timestamps();
-            $table->unique(['route']);
         });
     }
 
@@ -32,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('helps');
+        Schema::dropIfExists('issues');
     }
 };

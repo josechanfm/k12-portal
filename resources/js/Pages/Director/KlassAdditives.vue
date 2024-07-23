@@ -36,7 +36,7 @@
 
         <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="800px" cancel-text="返回" :ok-button-props="{style:{ display:'none' }}">
             <p>學段狀態:  {{currentTerm.label}}</p>
-            <a-form :model="modal.data.newItem" layout="vertical" @finish="onFinish"  v-if="!klass.lock_courses && klass.current_term==selectedTermId">
+            <a-form :model="modal.data.newItem" layout="vertical" @finish="onFinish"  v-if="!klass.course_locked && klass.current_term==selectedTermId">
                 <a-form-item name="selected" :rules="[{required:true}]">
                     <a-radio-group v-model:value="modal.data.newItem.selected" option-type="button" @change="onChangeNewItemSelectioned">
                         <a-radio-button v-for="column in additives.templates" :value="column.reference_code">{{ column.title_zh }}</a-radio-button>

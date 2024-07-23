@@ -57,21 +57,14 @@ class KlassController extends Controller
      */
     public function show(Klass $klass)
     {
-        //dd($klass->grade);
         $klass->grade;
         $klass->courses;
-        //$courses = Klass::find($klass->id)->courses;
         $klass->students;
-        // dd($courses);
-        //dd($klass);
-        return Inertia::render('Director/Pre/Klasses', [
-            //'grade' => $grade,
+        return Inertia::render('Director/Pre/Klass', [
             'currentTerm'=>Year::currentTerm(),
             'klass' => $klass,
-            //'courses' => $courses,
-            //'students'=>$students,
             'additiveTemplates'=>AdditiveTemplate::all(),
-            'additiveStyle'=>Config::item('additive_style'),
+            'additiveStyle'=>Config::item('additive_styles'),
             'additiveGroups'=>Config::item('additive_groups')
         ]);
     }

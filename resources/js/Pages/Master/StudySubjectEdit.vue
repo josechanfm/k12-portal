@@ -5,6 +5,10 @@
                 年級學習計劃之學科
             </h2>
         </template>
+        <div>Title: {{ study.title_zh }}</div>
+        <div>Stream: {{ study.stream }}</div>
+        <div>Version: {{ study.version }}</div>
+        <div>Description: {{ study.description }}</div>
             <button @click="saveSelected"
                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">保存更新</button>
             <a-table :dataSource="subjects" :columns="columns">
@@ -52,17 +56,14 @@ export default {
                     title: '選科',
                     dataIndex: 'selected',
                 },{
-                    title: '科組長',
-                    dataIndex: 'subject_heads',
-                },{
                     title: '學科名稱',
                     dataIndex: 'title_zh',
                 },{
                     title: '專業方向',
                     dataIndex: 'stream',
                 },{
-                    title: '年級',
-                    dataIndex: 'grade',
+                    title: '科組長',
+                    dataIndex: 'subject_heads',
                 }
             ],
             rules:{

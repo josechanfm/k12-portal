@@ -32,10 +32,11 @@
             autocomplete="off"
             :rules="rules"
             :validate-messages="validateMessages"
-            @validate="handleValidate"
             @finish="onFinish"
             @onFinishFailed="onFinishFailed"
         >
+        <!-- @validate="handleValidate" -->
+
             <a-form-item label="學年編號" name="code">
                 <a-input v-model:value="modal.data.code" style="width: 100px"/>
             </a-form-item>
@@ -43,7 +44,7 @@
                 <a-input v-model:value="modal.data.title" />
             </a-form-item>
             <a-form-item label="時期" name="period">
-                <a-range-picker v-model:value="modal.data.period" />
+                <a-range-picker v-model:value="modal.data.period" :valueFormat="dateFormat" :format="dateFormat"/>
             </a-form-item>
             <a-form-item label="開始學段" name="current_term">
                 <a-radio-group v-model:value="modal.data.current_term">
@@ -51,6 +52,12 @@
                         <a-radio-button :value="term.value">{{term.label}}</a-radio-button>
                     </template>
                 </a-radio-group>
+            </a-form-item>
+            <a-form-item label="Current Year" name="current_year">
+                <a-switch v-model:checked="modal.data.current_year" />
+            </a-form-item>
+            <a-form-item label="Active" name="active">
+                <a-switch v-model:checked="modal.data.active" />
             </a-form-item>
             <div v-if="modal.mode=='CREATE'">
                 <a-form-item label="簡介" name="description">
@@ -124,11 +131,9 @@
                     </a-col>
                 </a-row>
             </div>
-        
-
-
         </a-form>
         <template #footer>
+            <a-button key="back" @click="modalCancel">Close</a-button>
             <a-button v-if="modal.mode=='EDIT'" key="Update" type="primary"  @click="updateRecord(modalForm)">Update</a-button>
             <a-button v-if="modal.mode=='CREATE'"  key="Store" type="primary"  @click="storeRecord(modalForm)">Add</a-button>
         </template>
@@ -267,7 +272,11 @@ export default {
         },
         editRecord(record){
             this.modal.data={...record}
-            this.modal.data.period=[dayjs(this.modal.data.start, this.dateFormat), dayjs(this.modal.data.end, this.dateFormat)]
+            if(this.modal.data.start){
+                this.modal.data.period=[dayjs(this.modal.data.start, this.dateFormat), dayjs(this.modal.data.end, this.dateFormat)]
+            }else{
+                this.modal.data.period=[]
+            }
             this.modal.mode="EDIT"
             this.modal.isOpen=true
             this.modal.title="修改學年"
@@ -297,7 +306,8 @@ export default {
             this.$refs.modalRef.validateFields().then(()=>{
                 this.$inertia.put('/admin/years/' + this.modal.data.id, this.modal.data,{
                     onSuccess:(page)=>{
-                        this.modalVisible=false;
+                        this.modal.isOpen=false;
+
                         //this.ChangeModalMode('Close');
                     },
                     onError:(error)=>{
@@ -332,8 +342,12 @@ export default {
                 }
             })
         },
-        handleValidate(field){
-            console.log("handleValidate: "+field);
+        // handleValidate(field){
+        //     console.log("handleValidate: "+field);
+        // },
+        modalCancel(){
+            this.modal.data={}
+            this.modal.isOpen=false
         },
         onFinish(value){
             console.log("onFinish"+value);

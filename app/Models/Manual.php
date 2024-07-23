@@ -8,5 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Manual extends Model
 {
     use HasFactory;
-    protected $fillable=['category_code','title','description'];
+    protected $fillable=['parent_id','route','title','content'];
+    
 }

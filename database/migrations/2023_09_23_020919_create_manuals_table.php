@@ -15,10 +15,12 @@ return new class extends Migration
     {
         Schema::create('manuals', function (Blueprint $table) {
             $table->id();
-            $table->string('category_code');
+            $table->foreignId('parent_id')->default(0);
+            $table->string('route');
             $table->string('title');
-            $table->longText('description');
+            $table->longText('content');
             $table->timestamps();
+            $table->unique(['route']);
         });
     }
 

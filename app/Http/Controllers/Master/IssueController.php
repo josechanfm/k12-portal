@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Help;
+use App\Models\Issue;
 
-class HelpController extends Controller
+class IssueController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +16,8 @@ class HelpController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Admin/Helps',[
-            'helps'=>Help::all()
+        return Inertia::render('Master/Issues',[
+            'issues'=>Issue::paginate()
         ]);
     }
 
@@ -39,7 +39,7 @@ class HelpController extends Controller
      */
     public function store(Request $request)
     {
-        Help::create($request->all());
+        //
     }
 
     /**
@@ -71,10 +71,9 @@ class HelpController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Help $help)
+    public function update(Request $request, $id)
     {
-        $help->update($request->all());
-        return redirect()->back();
+        //
     }
 
     /**

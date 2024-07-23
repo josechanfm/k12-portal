@@ -51,8 +51,8 @@
                     name="grade"
                     :rules="rules"
                     :validate-messages="validateMessages"
-                    :label-col="{ span: 8 }"
-                    :wrapper-col="{ span: 16 }"
+                    :label-col="{ span: 4 }"
+                    :wrapper-col="{ span: 20 }"
                 >
                     <a-form-item label="學習年" name="grade_year" v-if="modal.mode=='CREATE'">
                         <a-select
@@ -90,6 +90,7 @@
                     </a-form-item>
                 </a-form>
                 <template #footer>
+                    <a-button key="back" @click="modalCancel">Close</a-button>
                     <a-button v-if="modal.mode=='EDIT'" key="Update" type="primary"  @click="updateRecord()">Update</a-button>
                     <a-button v-if="modal.mode=='CREATE'"  key="Store" type="primary" @click="storeRecord()">Add</a-button>
                 </template>
@@ -239,8 +240,14 @@ export default {
             })
 
         },
+        modalCancel(){
+            this.modal.data={}
+            this.modal.isOpen=false
+        },
         selectYear(item){
-            this.$inertia.get(route('admin.year.grades',item));
+            console.log(item)
+            this.$inertia.get(route('admin.year.grades.index',{year:item}));
+            //this.$inertia.get(route('admin.year.grades',item));
         },
         onChangeGradeSelected(){
             var tmp=this.gradeLevels.find(grade=>grade.value==this.modal.data.grade_year);

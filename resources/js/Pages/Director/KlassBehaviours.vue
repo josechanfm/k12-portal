@@ -14,7 +14,7 @@
                 <p>學段狀態:{{ showCurrentTerm() }}</p>
                 <p>{{klass.tag}}</p>
             </div>
-            <BehaviourTable :yearTerms="yearTerms" :currentTermId="this.klass.lock_courses?0:this.klass.current_term" :behaviours="behaviours"/>
+            <BehaviourTable :yearTerms="yearTerms" :currentTermId="this.klass.course_locked?0:this.klass.current_term" :behaviours="behaviours"/>
         </div>
     </AdminLayout>
 </template>
@@ -71,7 +71,7 @@ export default {
             }
         },
         showCurrentTerm(){
-            if(this.klass.lock_courses || this.klass.current_term==0){
+            if(this.klass.course_locked || this.klass.current_term==0){
                 return '已上鎖';
             }else{
                 return this.yearTerms.find(t=>t.value==this.klass.current_term).label;

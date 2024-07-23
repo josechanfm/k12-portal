@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Study extends Model
 {
     use HasFactory;
+    protected $fillable=['grade_year','version','sequence','title_zh','title_en','stream','active','description'];
 
     public function subjects(){
         return $this->belongsToMany(Subject::class)->withPivot('subject_head_ids');

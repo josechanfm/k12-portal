@@ -26,11 +26,12 @@ class DummySeeder extends Seeder
                 'title'=>$currentYear.'-'.($currentYear+1),
                 'start'=>$currentYear.'-09-01',
                 'end'=>($currentYear+1).'-06-30',
+                'current_year'=>true,
                 'current_term'=>1,
                 'active'=>1
             ]);
         };
-        $year->update(['active'=>true]);
+        
         
 
         $this->call([

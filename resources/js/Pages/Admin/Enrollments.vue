@@ -1,6 +1,5 @@
 <template>
     <AdminLayout title="分班">
-
         選擇學年
         <a-select style="width: 120px">
             <a-select-option value="2025">2025</a-select-option>
@@ -13,8 +12,7 @@
         <a-select style="width: 120px">
             <a-select-option value="p1A">P1A</a-select-option>
         </a-select>
-        <a-button @click="onClickEnroll">Enroll Selected students</a-button>
-        
+        <a-button @click="onClickEnroll">批次分班</a-button>
         <a-table 
             :row-selection="{ onChange: onChangeSelection, selectedRowKeys: selectedItems }" 
             :rowKey="(record) => record.id"
@@ -25,7 +23,7 @@
         >
             <template #bodyCell="{column, text, record, index}">
                 <template v-if="column.dataIndex=='operation'">
-                    <inertia-link :href="route('admin.enrollments.create',{student_id:record.id})" class="ant-btn">Enroll</inertia-link>
+                    <inertia-link :href="route('admin.enrollments.create',{student_id:record.id})" class="ant-btn">分班</inertia-link>
                 </template>
                 <template v-else>
                     {{record[column.dataIndex]}}

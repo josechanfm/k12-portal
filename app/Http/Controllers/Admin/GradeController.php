@@ -17,14 +17,7 @@ use App\Models\Additive;
 class GradeController extends Controller
 {
     public function list(){
-        // $yearId=$request->input('yearId');
-        // if($yearId){
-        //     $year=Year::find($yearId);
-        // }else{
-        //     $year=Year::where('active',1)->orderBy('start','DESC')->first();
-        // }
-        $year=Year::where('active',1)->orderBy('start','DESC')->first();
-        return redirect()->route('admin.year.grades.index',$year);
+        return redirect()->route('admin.year.grades.index',Year::currentYear());
     }
     /**
      * Display a listing of the resource.

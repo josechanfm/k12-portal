@@ -13,7 +13,7 @@ class TopicTemplate extends Model
 
 
     public function getSectionCodeLabelAttribute(){
-        $sections=array_column(Config::item('topic_sections'),'label','value');
+        $sections=array_column(Config::item('topic_abilities'),'label','value');
         return $sections[$this->section_code]??null;
     }
     public function themeTemplate(){

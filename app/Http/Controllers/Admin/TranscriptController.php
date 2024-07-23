@@ -35,11 +35,12 @@ class TranscriptController extends Controller
                 //dd($request->all());
                 Klass::where('grade_id',$request->id)->update(['transcript_locked'=>true]);
                 break;
-            // case 'year':
-            //     $year=Year::currentYear();
-            //     if($year->id != $request->id) break;
-            //     Klass::whereIn('grade_id',$year->grades->pluck('id'))->update(['transcript_migrated'=>true]);
-            //     break;
+            case 'year':
+                $year=Year::currentYear();
+                if($year->id != $request->id) break;
+                Grade::whereBelongsTo($year)->update(['transcript_locked'=>true]);
+                Klass::whereIn('grade_id',$year->grades->pluck('id'))->update(['transcript_locked'=>true]);
+                break;
             }
         return redirect()->back();
     }

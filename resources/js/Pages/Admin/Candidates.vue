@@ -8,9 +8,9 @@
                         <ButtonLink @click="onClickEdit(record)" :style="'Edit'">修改</ButtonLink>
                         <ButtonLink @click="onClickDelete(record)" :style="'Delete'">刪除</ButtonLink>
                         <ButtonLink @click="onClickEnroll(record)" :style="'Default'">Enroll</ButtonLink>
-                        <inertia-link :href="route('admin.registrations.create',{candidate_id:record.id})">registration</inertia-link>
+                        <a-button :href="route('admin.registrations.create',{candidate_id:record.id})">Registration</a-button>
                     </template>
-                    <template v-else-if="column.dataIndex=='grade_id'">
+                    <template v-else-if="column.dataIndex=='start_grade'">
                         {{ gradesKlasses.find(g=>g.id==text).tag }}
                     </template>
                     <template v-else-if="column.dataIndex=='username'">
@@ -63,7 +63,7 @@ export default {
                     dataIndex: 'gender',
                 },{
                     title: '入讀年級',
-                    dataIndex: 'grade_id',
+                    dataIndex: 'start_grade',
                 },{
                     title: '操作',
                     dataIndex: 'operation',

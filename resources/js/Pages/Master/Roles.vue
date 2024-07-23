@@ -5,23 +5,9 @@
                 Roles
             </h2>
         </template>
-        <button @click="createRecord()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">
-            Create Role
-        </button>
         <a-table :dataSource="roles" :columns="columns">
-            <template #bodyCell="{column, text, record, index}">
-                <template v-if="column.dataIndex=='operation'">
-                    <a-button @click="editRecord(record)">Edit</a-button>
-                    <a-button @click="deleteRecord(record.id)">Delete</a-button>
-                </template>
-                <template v-else>
-                    {{record[column.dataIndex]}}
-                </template>
-            </template>
         </a-table>
-
-        </AdminLayout>
-
+    </AdminLayout>
 </template>
 
 <script>
@@ -34,16 +20,19 @@ export default {
     props: ['roles'],
     data() {
         return {
+            modal: {
+                mode: null,
+                isOpen: false,
+                title: 'Configs',
+                data: {}
+            },
             columns:[
                 {
                     title: 'Name',
                     dataIndex: 'name',
                 },{
-                    title: 'Gard',
-                    dataIndex: 'gard',
-                },{
-                    title: 'Operation',
-                    dataIndex: 'operation',
+                    title: 'Guard',
+                    dataIndex: 'guard_name',
                 }
             ]
         }
@@ -51,16 +40,6 @@ export default {
     mounted() {
     },
     methods: {
-        editRecord(record){
-            console.log('edit record ');
-            console.log(record);
-        },
-        createRecord(){
-            console.log('create record');
-        },
-        deleteRecord(recordid){
-            console.log('delte record '+recordId);
-        }
     },
 }
 </script>

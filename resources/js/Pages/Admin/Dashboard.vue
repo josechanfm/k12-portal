@@ -18,7 +18,7 @@
         </p>
         
         <inertia-link :href="route('admin.registrations.create')" class="ant-btn">Registration 註冊</inertia-link>
-        <inertia-link :href="route('admin.enrollments.index')" class="ant-btn">Enrollement 入學/分班</inertia-link>
+        <inertia-link :href="route('admin.enrollments.index')" class="ant-btn">Enrollement 新生分班</inertia-link>
         
     </AdminLayout>
 

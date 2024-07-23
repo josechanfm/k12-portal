@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Year;
 use App\Models\Grade;
+use App\Models\Config;
 
 class DashboardController extends Controller
 {

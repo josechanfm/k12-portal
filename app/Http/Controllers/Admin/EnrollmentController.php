@@ -18,6 +18,7 @@ class EnrollmentController extends Controller
      */
     public function index(Request $request)
     {
+        $students=Student::doesntHave('klasses')->get();
         return Inertia::render('Admin/Enrollments',[
             'students'=>Student::doesntHave('klasses')->paginate($request->per_page)
         ]);

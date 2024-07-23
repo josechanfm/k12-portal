@@ -2,12 +2,12 @@
     <AdminLayout title="Dashboard">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                總科目列表
+                Issues
             </h2>
         </template>
         <button @click="onClickCreate()"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Create Manual Item</button>
-            <a-table :dataSource="manuals" :columns="columns">
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Create Issue</button>
+            <a-table :dataSource="issues.data" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
                         <a-button @click="onClickEdit(record)">Edit</a-button>
@@ -27,16 +27,16 @@
         <!-- Modal Start-->
         <a-modal v-model:visible="modal.isOpen" :title="modal.title" width="60%" @update="updateRecord()" @onCancel="closeModal()">
             <a-form
+                :model="modal.data"
                 name="Config"
                 ref="modalRef"
-                :model="modal.data"
                 :label-col="{ span: 4 }"
                 :wrapper-col="{ span: 20 }"
                 :rules="rules"
                 :validate-messages="validateMessages"
             >
-                <a-form-item label="Route" name="category_code">
-                    <a-input v-model:value="modal.data.route"/>
+                <a-form-item label="Category" name="category">
+                    <a-select v-model:value="modal.data.category" :options="issueCategories"/>
                 </a-form-item>
                 <a-form-item label="Title" name="title">
                     <a-input v-model:value="modal.data.title" placeholder="textarea with clear icon" allow-clear />
@@ -47,6 +47,19 @@
                         style="min-height:200px"
                     />
                 </a-form-item>
+                <a-form-item label="Reporter" name="reporter">
+                    <a-input v-model:value="modal.data.reporter" placeholder="textarea with clear icon" allow-clear />
+                </a-form-item>
+                <a-form-item label="Solution" name="solution">
+                    <quill-editor
+                        v-model:value="modal.data.solution"
+                        style="min-height:200px"
+                    />
+                </a-form-item>
+                <a-form-item label="Status" name="status">
+                    <a-radio-group v-model:value="modal.data.status" :options="issueStatus" button-style="solid" optionType="button"/>
+                </a-form-item>
+
             </a-form>
         <template #footer>
             <a-button key="back" @click="modalCancel">Return</a-button>
@@ -68,24 +81,26 @@ export default {
     components: {
         AdminLayout,quillEditor
     },
-    props: ['manuals'],
+    props: ['issues'],
     data() {
         return {
-            manualCategories:[],
+            issueCategories:[],
             modal: {
                 mode:null,
                 isOpen: false,
-                title:'Mamuals',
+                title:'Issue',
                 data:{}
             },
-            dataSource:[],
             columns:[
                 {
-                    title: 'Route',
-                    dataIndex: 'route',
+                    title: 'Category',
+                    dataIndex: 'category',
                 },{
                     title: 'Title',
                     dataIndex: 'title',
+                },{
+                    title: 'Reporter',
+                    dataIndex: 'reporter',
                 },{
                     title: 'Operation',
                     dataIndex: 'operation',
@@ -133,14 +148,20 @@ export default {
                 wrapperCol: {
                     span: 20,
                 },
-            }
-
+            },
+            issueStatus:[
+                {value:'INITIATE',label:'Initiate'},
+                {value:'PROGRESS',label:'Progress'},
+                {value:'PENDING',label:'Pending'},
+                {value:'RESOLVED',label:'Resolved'},
+                {value:'CLOSED',label:'Closed'}
+            ]
         }
     },
     mounted(){
         axios.get(route('api.config.item',{key:'issue_categories'}))
             .then(res=>{
-                this.manualCategories=res.data
+                this.issueCategories=res.data
             })
             .catch(err=>{
                 console.log(err)
