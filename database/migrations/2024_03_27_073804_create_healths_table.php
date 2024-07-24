@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('healths', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('student_id')->on('students')->onDelete('restrict')->onUpdate('cascade');
+            $table->foreignId('student_id')->constrained('students')->onDelete('restrict')->onUpdate('cascade');
             $table->string('hospital')->nullable(); 
             $table->string('status')->nullable(); 
             $table->string('chronic')->nullable(); 

@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('guardians', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->on('users')->onDelete('restrict')->onUpdate('cascade')->nullable();
+            $table->foreignId('user_id')->constrained('users')->onDelete('restrict')->onUpdate('cascade')->nullable();
             $table->string('name_zh')->nullable();
             $table->string('name_fn')->nullable();
             $table->char('gender',1)->nullable();

@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('relatives', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('student_id')->on('students')->onDelete('restrict')->onUpdate('cascade');
+            $table->foreignId('student_id')->constrained('students')->onDelete('restrict')->onUpdate('cascade');
             $table->string('relation');
             $table->string('kinship');
             $table->string('name_zh')->nullable();

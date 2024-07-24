@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('klasses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('grade_id')->on('grades')->onDelete('restrict')->onUpdate('cascade');
+            $table->foreignId('grade_id')->constrained('grades')->onDelete('restrict')->onUpdate('cascade');
             $table->char('letter',5)->nullable();
             $table->char('tag',5)->nullable();
             $table->char('stream',5)->nullable();

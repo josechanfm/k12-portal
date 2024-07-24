@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('grades', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('year_id')->on('years')->onDelete('restrict')->onUpdate('cascade');
+            $table->foreignId('year_id')->constrained('years')->onDelete('restrict')->onUpdate('cascade');
             $table->integer('grade_year');
             $table->char('initial',2);
             $table->integer('level');            

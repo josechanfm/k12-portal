@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('transcripts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('transcript_template_id');
-            $table->foreignId('klass_student_id')->on('klass_student')->onDelete('restrict')->onUpdate('cascade');
+            $table->foreignId('klass_student_id')->constrained('klass_student')->onDelete('restrict')->onUpdate('cascade');
             $table->integer('term_id');
             $table->string('column');
             $table->string('category');
