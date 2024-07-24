@@ -52,7 +52,7 @@
 
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
-import { router } from '@inertiajs/inertia-vue3'
+import { router } from '@inertiajs/vue3'
 import dayjs from 'dayjs';
 
 export default {

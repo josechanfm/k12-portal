@@ -98,7 +98,7 @@
 import { message } from 'ant-design-vue';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { UserSwitchOutlined } from '@ant-design/icons-vue';
-import { Inertia } from '@inertiajs/inertia';
+import { router } from '@inertiajs/vue3';
 
 export default {
     components: {
@@ -176,7 +176,7 @@ export default {
             }
             let data=JSON.parse(JSON.stringify(record))
             data._method='PUT'
-            Inertia.post(route('master.users.update',record.id),data,{
+            router.post(route('master.users.update',record.id),data,{
                 onSuccess:()=>{
                     this.modal.isOpen=false;
                     this.modal.mode='CLOSE';

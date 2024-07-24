@@ -75,7 +75,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import { Inertia } from '@inertiajs/inertia';
+import { router } from '@inertiajs/vue3';
 import { QuestionCircleOutlined ,TagOutlined} from '@ant-design/icons-vue';
 import {
   MenuUnfoldOutlined,
@@ -94,7 +94,7 @@ const selectedKeys = ref(['1']);
 const collapsed = ref(false);
 
 const switchToTeam = (team) => {
-  Inertia.put(route('current-team.update'), {
+  router.put(route('current-team.update'), {
     team_id: team.id,
   }, {
     preserveState: false,

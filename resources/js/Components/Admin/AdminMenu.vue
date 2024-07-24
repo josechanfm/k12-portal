@@ -30,12 +30,12 @@
 <script>
 import { defineComponent, ref } from 'vue';
 import { AppstoreOutlined, TagOutlined, MenuFoldOutlined, MenuUnfoldOutlined, PieChartOutlined, LoginOutlined, MailOutlined } from '@ant-design/icons-vue'; // you can rewrite it to a single file component, if not, you should config vue alias to vue/dist/vue.esm-bundler.js
-import { Link } from '@inertiajs/inertia-vue3';
-import { Inertia } from '@inertiajs/inertia';
+import { Link } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
 
 const logout = () => {
   if (confirm('Sure to logout?')) {
-    Inertia.post(route('logout'));
+    router.post(route('logout'));
   }
 };
 
@@ -261,7 +261,7 @@ export default defineComponent({
   },
   methods: {
     logout() {
-      Inertia.post(route('logout'))
+      router.post(route('logout'))
     }
   }
 });

@@ -60,7 +60,7 @@ class UserSeeder extends Seeder
             'email' => 'director@example.com',
             'password' => Hash::make('password'),
         ]);
-        $user->assignRole('teacher');
+        $user->assignRole('director');
         $user->ownedTeams()->save(Team::forceCreate([
             'user_id' => $user->id, 
             'name' => explode(' ', $user->name, 2)[0]."'s Team",

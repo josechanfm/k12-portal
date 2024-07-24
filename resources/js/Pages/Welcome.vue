@@ -2,8 +2,8 @@
 import {
     Head,
     Link
-} from '@inertiajs/inertia-vue3';
-import { Inertia } from '@inertiajs/inertia';
+} from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
 
 
 defineProps({
@@ -13,11 +13,11 @@ defineProps({
     phpVersion: String,
 });
 const logout = () => {
-    Inertia.post(route('logout'))
+    router.post(route('logout'))
 }
 
 const goToRoute = (route) => {
-    Inertia.visit(route)
+    router.visit(route)
 }
 </script>
 

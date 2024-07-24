@@ -32,8 +32,9 @@ class LoginResponse implements LoginResponseContract
         if(Auth()->user()->hasRole('director')){
             return redirect()->route('director.dashboard');
         }
-        
+        /*
         $member=Auth()->user()->member;
+        dd($member);
         if($member){
             if($member->organizations->count()>0){
                 session(['organization'=>$member->organizations[0]]);
@@ -47,9 +48,11 @@ class LoginResponse implements LoginResponseContract
             session(['organization'=>Auth()->user()->organizations[0]]);
             return redirect()->route('manage');
         }
-
+        */
+        /*
         return $request->wantsJson()
             ? response()->json(['two_factor' => false])
             : redirect()->intended(config('fortify.home'));
+        */
     }
 }
