@@ -181,6 +181,7 @@ class Klass extends Model
                 }
                 
                 if(isset($data['director'][$ksid][$term->value])){
+                    //dd($data['director'][$ksid][$term->value]->score);
                     $data['sumDirector'][$ksid][$term->value]=$data['director'][$ksid][$term->value]['score']*$this->grade->behaviour_scheme['DIRECTOR'];
                     $data['sumTerms'][$ksid][$term->value]+=$data['director'][$ksid][$term->value]['score']*$this->grade->behaviour_scheme['DIRECTOR'];
                 }

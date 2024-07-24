@@ -103,7 +103,7 @@ class KlassController extends Controller
     {
         //
     }
-
+/*    
     public function finalScoresK(Klass $klass){
         $year=Year::find(Year::currentYear()->id);
         $year->klasses;
@@ -132,7 +132,7 @@ class KlassController extends Controller
             'finalScores' => $klass->finalScores()
         ]);
     }
-
+*/
 
     //}
 }

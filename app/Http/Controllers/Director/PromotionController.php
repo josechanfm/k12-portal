@@ -55,7 +55,11 @@ class PromotionController extends Controller
         $grade=$klass->grade;
         //dd($grade);
         $year=Year::find($grade->year_id);
-        $nextYear=Year::nextYear($year->id);;
+        $nextYear=Year::nextYear($year->id);
+        //dd($grade, $year, $nextYear);
+        if(empty($nextYear)){
+            dd('no Next year, please create next year before this operation!');
+        }
         $nextGrade=Grade::where('year_id',$nextYear->id)->where('grade_year',($grade->grade_year+1))->first();
         //dd($nextGrade);
         

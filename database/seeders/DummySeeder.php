@@ -17,7 +17,7 @@ class DummySeeder extends Seeder
     public function run()
     {
         $currentYear=date('Y');
-        Year::query()->update(['current_year'=>false]);
+        //Year::query()->update(['current_year'=>false]);
         $year=Year::where('code',$currentYear)->first();
         if(empty($year)){
             $year=Year::create([
@@ -30,8 +30,6 @@ class DummySeeder extends Seeder
                 'active'=>1
             ]);
         };
-        
-        
 
         $this->call([
             StudentSeeder::class,

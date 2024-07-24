@@ -13,7 +13,7 @@
                                 <tr>
                                     <th>學生姓名</th>
                                     <th v-for="column in finalScores.score_columns">
-                                        {{transcriptTemplates['SUBJECT'][column.course_code][9]['FINAL'].title_zh}}
+                                        {{ column.course_code }}{{ column.course_title }}
                                     </th>
                                     <th>不合格單位數</th>
                                 </tr>

@@ -28,6 +28,9 @@ export default defineConfig(({ mode }) => {
                 },
             }),
         ],
-        __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: 'true'
+        define: {
+            __VUE_PROD_HYDRATION_MISMATCH_DETAILS__ : false
+        }
+
     }
 });

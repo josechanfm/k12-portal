@@ -38,20 +38,20 @@
           <nav class="text-sm " v-if="breadcrumb">
             <div class="list-none flex ">
               <div class="breadcrumb-item hidden md:inline" v-for="(item, idx) in breadcrumb">
-                <a-button v-if="item.url" :href="item.url">{{ item.label }}</a-button>
+                <a v-if="item.url" :href="item.url">{{ item.label }}</a>
                 <span v-else>{{ item.label }}</span>
                 <span class="pl-2 pr-2" v-if="idx < breadcrumb.length - 1">&gt;</span>
               </div>
               <div class="breadcrumb-item block md:hidden">
                 <span v-if="breadcrumb.length > 1">
-                  <a-button :href="breadcrumb[breadcrumb.length - 2].url">
+                  <a :href="breadcrumb[breadcrumb.length - 2].url">
                     {{ breadcrumb[breadcrumb.length - 2].label }}
-                  </a-button>
+                  </a>
                 </span>
                 <span v-else>
-                  <a-button :href="route('director.dashboard')">
+                  <a :href="route('director.dashboard')">
                     Home
-                  </a-button>
+                  </a>
                 </span>
               </div>
               <div>
@@ -59,13 +59,10 @@
                 <a href="javascript:history.back();" class="inline">返回</a>
               </div>
               <div>
-                
                   <a :href="route('manual',{route:route().current()})" target="_blank">
                     <div class="flex items-center pl-1 pt-0.5"><QuestionCircleOutlined /></div></a>
-                
               </div>
             </div>
-
           </nav>
         </header>
         <main>

@@ -145,6 +145,7 @@ class ScoreController extends Controller
         $year=Year::find(Year::currentYear()->id);
         $year->klasses;
         $year->grades;
+        //dd($klass, $year, $klass->grade->transcriptTemplates(), $klass->finalScores());
         return Inertia::render('Director/KlassFinalScores', [
             'year'=>$year,
             'klass' => $klass,

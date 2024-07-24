@@ -5,9 +5,7 @@
                 學年級別學科列表
             </h2>
         </template>
-        <button @click="onClickCreate()"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">新增職員</button>
-
+        <a-button @click="onClickCreate()">新增職員</a-button>
             <a-table :dataSource="students.data" :columns="columns" :pagination="pagination" @change="onPaginationChange" ref="dataTable">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">

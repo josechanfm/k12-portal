@@ -23,9 +23,9 @@
                     <div>{{ year.end }}</div>
                 </div>
                 <div class="flex-1"></div>
-                <button @click="createRecord()" class="text-sm bg-blue-500 hover:bg-blue-700 text-white font-black py-2 px-4 rounded ">
+                <a-button @click="createRecord()" type="primary">
                     新增學年級別
-                </button>
+                </a-button>
             </div>
             <!--  -->
         <a-table :dataSource="grades" :columns="columns" :pagination="{ pageSize: 20 }"
@@ -114,7 +114,7 @@
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
-import {CheckSquareOutlined, StopOutlined} from '@ant-design/icons-vue';
+import {ArrowRightOutlined, CheckSquareOutlined, StopOutlined} from '@ant-design/icons-vue';
 import { Modal } from 'ant-design-vue';
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import { ref, createVNode } from 'vue';
@@ -124,8 +124,7 @@ export default {
     components: {
         AdminLayout,
         ButtonLink,
-        CheckSquareOutlined,
-        StopOutlined,
+        ArrowRightOutlined, CheckSquareOutlined, StopOutlined,
         Modal, ExclamationCircleOutlined, createVNode
     },
     props: ['years','year','grades','gradeLevels'],

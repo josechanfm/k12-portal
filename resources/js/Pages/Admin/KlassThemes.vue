@@ -6,8 +6,9 @@
             </h2>
         </template>
         <a-typography-title :level="3">年級: {{ klass.tag }}</a-typography-title>
-        <button @click="themeCreate()"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">新增主題</button>
+        <a-button @click="themeCreate()"
+            type="primary">新增主題
+        </a-button>
 
         <div class="ant-table">
             <div class="ant-table-container">
@@ -36,8 +37,7 @@
         </div>
 
         <template v-if="themes.length > 0">
-            <button @click="topicCreate()"
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">新增內容</button>
+            <a-button @click="topicCreate()" type="primary">新增內容</a-button>
             <a-divider type="vertical"></a-divider>
             <a-select v-model:value="selectedThemeId" :options="themes" :fieldNames="{ value: 'id', label: 'title' }"
                 style="width:150px" />

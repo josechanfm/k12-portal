@@ -1,8 +1,6 @@
 <template>
     <AdminLayout title="學年" :breadcrumb="breadcrumb">
-        <button @click="createRecord()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">
-            創建新學年
-        </button>
+        <a-button @click="createRecord()" type="primary">創建新學年</a-button>
             <a-table :dataSource="years" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">

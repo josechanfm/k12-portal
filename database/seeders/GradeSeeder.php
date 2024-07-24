@@ -33,7 +33,7 @@ class GradeSeeder extends Seeder
                     'tag'=>'K'.$i,
                     'version'=>1,
                     'transcript_template_id'=>2,
-                    'behaviour_scheme'=>'{"SUBJECT":0.3,"KLASS_HEAD":0.2,"DIRECTOR":0.5,"ADJUST":1}',
+                    'behaviour_scheme'=>["SUBJECT"=>0.3,"KLASS_HEAD"=>0.2,"DIRECTOR"=>0.5,"ADJUST"=>1],
                     'active'=>1
             ]);
             foreach($initial as $ini){
@@ -71,7 +71,7 @@ class GradeSeeder extends Seeder
                     'tag'=>'P'.$i-3,
                     'version'=>1,
                     'transcript_template_id'=>1,
-                    'behaviour_scheme'=>'{"SUBJECT":0.3,"KLASS_HEAD":0.2,"DIRECTOR":0.5,"ADJUST":1}',
+                    'behaviour_scheme'=>["SUBJECT"=>0.3,"KLASS_HEAD"=>0.2,"DIRECTOR"=>0.5,"ADJUST"=>1],
                     'active'=>1
             ]);
             foreach($initial as $ini){
@@ -108,7 +108,7 @@ class GradeSeeder extends Seeder
                     'tag'=>'SC'.$i-9,
                     'version'=>1,
                     'transcript_template_id'=>1,
-                    'behaviour_scheme'=>'{"SUBJECT":0.3,"KLASS_HEAD":0.2,"DIRECTOR":0.5,"ADJUST":1}',
+                    'behaviour_scheme'=>["SUBJECT"=>0.3,"KLASS_HEAD"=>0.2,"DIRECTOR"=>0.5,"ADJUST"=>1],
                     'active'=>1
             ]);
             foreach($initial as $ini){
@@ -144,7 +144,7 @@ class GradeSeeder extends Seeder
                     'tag'=>'SG'.$i-12,
                     'version'=>1,
                     'transcript_template_id'=>1,
-                    'behaviour_scheme'=>'{"SUBJECT":0.3,"KLASS_HEAD":0.2,"DIRECTOR":0.5,"ADJUST":1}',
+                    'behaviour_scheme'=>["SUBJECT"=>0.3,"KLASS_HEAD"=>0.2,"DIRECTOR"=>0.5,"ADJUST"=>1],
                     'active'=>1
             ]);
             foreach($initial as $ini){

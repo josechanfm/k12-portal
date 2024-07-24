@@ -7,8 +7,7 @@
         </template>
         <a-typography-title :level="3">年級: {{ klass.tag }}</a-typography-title>
         <a-typography-title :level="3">年級全稱: {{ klass.title_zh }}</a-typography-title>
-        <button @click="onClickSave()"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Save</button>
+        <a-button @click="onClickSave()" type="primary">Save</a-button>
             <a-table :dataSource="subjects" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='selection'">
