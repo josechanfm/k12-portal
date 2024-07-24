@@ -186,7 +186,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .dataTable,
 .dataTable td,
 .dataTable th {
@@ -203,6 +203,7 @@ export default {
 }
 
 /*定义要拖拽元素的样式*/
+/*
 table.itxst {
     color: #333333;
     border: #ddd solid 1px;
@@ -228,4 +229,5 @@ table.itxst tr {
 table.itxst td.move:hover {
     cursor: move;
 }
+*/
 </style>

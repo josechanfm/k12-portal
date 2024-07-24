@@ -9,7 +9,7 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 import  RolePermission  from './Directives/RolePermission.js';
 import Antd from 'ant-design-vue';
 //import 'ant-design-vue/dist/antd.css';
-//import 'ant-design-vue/dist/reset.css';
+import 'ant-design-vue/dist/reset.css';
 import '/resources/css/app.css';
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';

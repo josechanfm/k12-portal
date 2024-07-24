@@ -6,7 +6,7 @@
     <a-radio-group v-model:value="selectedKlassId" button-style="solid">
         <template v-for="klass in currentYear.klasses">
             <a-radio-button v-if="klass.grade_id==selectedGradeId" :value="klass.id">
-                </a-button :href="route(routePath, [klass.id,routeParam])">{{klass.tag}}</inertia-link>
+                <a-button :href="route(routePath, [klass.id,routeParam])">{{klass.tag}}</a-button>
             </a-radio-button>
         </template>
     </a-radio-group>
