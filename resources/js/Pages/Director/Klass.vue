@@ -73,7 +73,7 @@
                             </td>
                             <td class="px-6 py-4">{{ course.current_term }}</td>
                             <th scope="col" class="px-6 py-3">
-                                <a-button as="link" :href="route('director.course.scores.index', course.id)"
+                                <a-button as="link" :href="route('teacher.course.scores.index', course.id)"
                                     class="ant-btn">學分</a-button>
                                 <a-button as="link" :href="route('director.course.makeups', course.id)"
                                     class="ant-btn">補考</a-button>

@@ -177,7 +177,8 @@ Route::group([
         Route::patch('student/{student}/join_sibling',[App\Http\Controllers\Director\StudentController::class,'joinSibling'])->name('director.student.joinSibling');
 
         Route::get('student/{student}/avatars',[App\Http\Controllers\Director\AvatarController::class,'student'])->name('director.student.avatars');
-        //Route::resource('klass/{klass}/students',App\Http\Controllers\Director\StudentController::class)->names('director.klass.students');
+        Route::resource('klass/{klass}/students',App\Http\Controllers\Director\StudentController::class)->names('director.klass.students');
+
         Route::get('klass/{klass}/avatars',[App\Http\Controllers\Director\AvatarController::class,'klass'])->name('director.klass.avatars');
         Route::get('students/get_by_klass_id/{klass}',[App\Http\Controllers\Director\StudentController::class,'getByKlassId'])->name('director.students.getByKlassId');
         Route::post('students/get_by_names',[App\Http\Controllers\Director\StudentController::class,'getByNames'])->name('director.students.getByNames');
@@ -197,7 +198,8 @@ Route::group([
         Route::resource('/teachers',App\Http\Controllers\Director\TeacherController::class)->names('director.teachers');
         Route::get('teaching/{teacherId}',[App\Http\Controllers\Director\TeacherController::class,'teaching'])->name('director.teaching');   
 
-        //Route::resource('course/{course}/scores',App\Http\Controllers\Director\ScoreController::class)->names('director.course.scores');
+        Route::resource('course/{course}/scores',App\Http\Controllers\Director\ScoreController::class)->names('director.course.scores');
+        
         Route::post('course/{course}/score_column/reorder',[App\Http\Controllers\Director\ScoreColumnController::class,'reorder'])->name('director.course.scoreColumn.reorder');
         Route::resource('course/{course}/score_columns',App\Http\Controllers\Director\ScoreColumnController::class)->names('director.course.scoreColumns');
         Route::post('/course/{course}/scores/batch_update',[App\Http\Controllers\Director\ScoreController::class,'batchUpdate'])->name('director.course.scores.batchUpdate');
@@ -225,10 +227,10 @@ Route::group([
         Route::resource('certificates',App\Http\Controllers\Director\CertificateController::class)->names('director.certificates');
         Route::get('certificate/get_by_conditions',[App\Http\Controllers\Director\CertificateController::class,'getByConditions'])->name('director.certificate.getByConditions');
 
-        Route::get('promotes',[App\Http\Controllers\Director\PromotionController::class,'list'])->name('director.promotes');
-        Route::resource('klass/{klass}/promotes/',App\Http\Controllers\Director\PromotionController::class)->names('director.klass.promotes');
+        // Route::get('promotes',[App\Http\Controllers\Director\PromotionController::class,'list'])->name('director.promotes');
+        // Route::resource('klass/{klass}/promotes/',App\Http\Controllers\Director\PromotionController::class)->names('director.klass.promotes');
         
-        Route::resource('avatars/',App\Http\Controllers\Director\AvatarController::class)->names('director.avatars');
+        //Route::resource('avatars/',App\Http\Controllers\Director\AvatarController::class)->names('director.avatars');
         Route::post('avatar/upload',[App\Http\Controllers\Director\AvatarController::class,'upload'])->name('director.avatar.upload');
 
         Route::group(['prefix'=>'pre',],function () {
@@ -284,14 +286,14 @@ Route::group([
         'role:master|admin|director|teacher'
     ]
 ],function () {        
-        Route::resource('/',App\Http\Controllers\Teacher\DashboardController::class);
+        //Route::resource('/',App\Http\Controllers\Teacher\DashboardController::class)->names('teachers');
         Route::resource('/course/{course}/behaviours',App\Http\Controllers\Teacher\BehaviourController::class)->names('teacher.course.behaviours');
         Route::get('/klass/{klass}/behaviours',[App\Http\Controllers\Teacher\BehaviourController::class,'klass'])->name('teacher.klass.behaviours');
 
-        Route::resource('course/{course}/scores',App\Http\Controllers\Teacher\ScoreController::class)->names('teacher.course.scores');
+        Route::resource('/course/{course}/scores',App\Http\Controllers\Teacher\ScoreController::class)->names('teacher.course.scores');
 
         //Route::resource('/course',App\Http\Controllers\Teachejaon()r\CourseController::class)->names('teacher.course');
-});
+})->name('teacher');
 
 
 
