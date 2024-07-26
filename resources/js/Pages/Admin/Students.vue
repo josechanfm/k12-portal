@@ -5,13 +5,15 @@
                 學年級別學科列表
             </h2>
         </template>
-        <a-button @click="onClickCreate()">新增職員</a-button>
+        <div>List all students</div>
+        <div>Might need to add search and filter features</div>
+        <a-button @click="onClickCreate()">新增學生</a-button>
             <a-table :dataSource="students.data" :columns="columns" :pagination="pagination" @change="onPaginationChange" ref="dataTable">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
-                        <a :href="route('director.students.show',record.id)" class="ant-btn" target="_blank">Profile</a>
-                        <ButtonLink @click="onClickEdit(record)" :style="'Edit'">修改</ButtonLink>
-                        <ButtonLink @click="onClickDelete(record)" :style="'Delete'">刪除</ButtonLink>
+                        <a-button :href="route('director.students.show',record.id)" class="ant-btn" target="_blank">學生檔案</a-button>
+                        <a-button @click="onClickEdit(record)" :style="'Edit'">修改</a-button>
+                        <a-button @click="onClickDelete(record)" :style="'Delete'">刪除</a-button>
                     </template>
                     <template v-if="column.dataIndex=='username'">
                         <span v-if="record.user">

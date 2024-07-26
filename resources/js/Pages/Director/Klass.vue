@@ -3,22 +3,22 @@
         <p>Klass: {{ klass.tag }}</p>
         <p>Students: {{ klass.student_count }}</p>
         <p>Current Term: {{currentTerm.label}}</p>
-        
+        <a-button as="link" :href="route('director.selected.students', {model:'klass',id:klass})" class="ant-btn">學生名單</a-button>
+        <a-button as="link" :href="route('director.klass.avatars',klass.id)" class="ant-btn ant-btn-default">學生照片</a-button>
         <template v-if="klass.grade_year<=3">
-            <a-button as="link" :href="route('director.klass.students.index', klass.id)" class="ant-btn">學生名單</a-button>
+            <!-- <a-button as="link" :href="route('director.klass.students.index', klass.id)" class="ant-btn">學生名單</a-button> -->
             <a-button as="link" :href="route('director.pre.klass.habits', klass.id)" class="ant-btn">生活習摜</a-button>
             <a-button as="link" :href="route('director.pre.klass.abilities', klass.id)" class="ant-btn">學習主題</a-button>
             <a-button as="link" :href="route('director.pre.klass.finalScores', klass.id)" class="ant-btn">期末成績</a-button>
         </template>
         <template v-else>
-            <a-button as="link" :href="route('director.klass.students.index', klass.id)" class="ant-btn">學生名單</a-button>
-            <a-button as="link" :href="route('director.klass.avatars',klass.id)" class="ant-btn ant-btn-default">學生照片</a-button>
+            <!-- <a-button as="link" :href="route('director.klass.students.index', klass.id)" class="ant-btn">學生名單</a-button> -->
             <a-button as="link" :href="route('director.klass.finalScores', klass.id)" class="ant-btn">期末成績</a-button>
-            <a-button as="link" :href="route('director.klass.transcripts', {'klass':klass.id,'type':'summary'})" class="ant-btn">成積總表</a-button>
-            <a-button as="link" :href="route('director.klass.transcripts', klass.id)" class="ant-btn">成積大表</a-button>
+            <a-button as="link" :href="route('director.klass.transcripts', {'klass':klass.id,'type':'summary'})" class="ant-btn">成績總表</a-button>
+            <a-button as="link" :href="route('director.klass.transcripts', klass.id)" class="ant-btn">成績大表</a-button>
         </template>
         <a-divider type="vertical" />
-            <a-button as="link" :href="route('director.klass.behaviours.index', klass.id)" class="ant-btn">操行</a-button>
+            <a-button as="link" :href="route('director.klass.behaviours.index', klass.id)" class="ant-btn">操行分數</a-button>
             <a-button as="link" :href="route('director.klass.behaviour.adjust', klass.id)" class="ant-btn">操行調整</a-button>
         <a-divider type="vertical" />
         <template v-if="additiveStyle=='default'">
@@ -37,53 +37,51 @@
 
         <p>&nbsp;</p>
 
-        <div class="ant-table">
-            <div class="ant-table-container">
-                <div class="ant-table-content">
-                    <table style="table-layout: auto;">
-                        <thead class="ant-table-thead">
-                            <tr>
-                                <th class="text-left">Abbr</th>
-                                <th class="text-left">Title Zh</th>
-                                <th class="text-left">Stream</th>
-                                <th class="text-left">Elective</th>
-                                <th class="text-left">Active</th>
-                                <th class="text-left">Units</th>
-                                <th class="text-left">Score</th>
-                                <th class="text-left">Subject Head</th>
-                                <th class="text-left">Teacher</th>
-                            </tr>
-                        </thead>
-                        <tbody class="ant-table-tbody">
-                            <tr v-for="(course, courseKey) in klass.courses" :course_id="course.id">
-                                <td class="text-left">{{ course.code }}</td>
-                                <td class="text-left">{{ course.title_zh }}</td>
-                                <td class="text-left">{{ course.stream }}</td>
-                                <td class="text-left">{{ course.elective }}</td>
-                                <td class="text-left">{{ course.active }}</td>
-                                <td class="text-left">{{ course.unit }}</td>
-                                <td class="text-left">
-                                    <ol>
-                                        <li v-for="staff in course.subject_heads">{{ staff.name_zh }}</li>
-                                    </ol>
-                                </td>
+        <div class="relative overflow-x-auto">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">科目代號</th>
+                        <th scope="col" class="px-6 py-3">科目名稱</th>
+                        <th scope="col" class="px-6 py-3">專業方向</th>
+                        <th scope="col" class="px-6 py-3">選修／必修</th>
+                        <th scope="col" class="px-6 py-3">科目單位</th>
+                        <th scope="col" class="px-6 py-3">班主任</th>
+                        <th scope="col" class="px-6 py-3">任教老師</th>
+                        <th scope="col" class="px-6 py-3">現學段</th>
+                        <th scope="col" class="px-6 py-3">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template v-for="(course, courseKey) in klass.courses" :course_id="course.id">
+                        <tr class="bg-white dark:bg-gray-800">
+                            <td class="px-6 py-4">{{ course.code }}</td>
+                            <td class="px-6 py-4">{{ course.title_zh }}</td>
+                            <td class="px-6 py-4">{{ course.stream }}</td>
+                            <td class="px-6 py-4">{{ course.elective }}</td>
+                            <td class="px-6 py-4">{{ course.unit }}</td>
+                            <td class="px-6 py-4">
+                                <ol>
+                                    <li v-for="staff in course.subject_heads">{{ staff.name_zh }}</li>
+                                </ol>
+                            </td>
 
-                                <td class="text-left">
-                                    <ol>
-                                        <li v-for="staff in course.staffs">{{ staff.name_zh }}</li>
-                                    </ol>
-                                </td>
-                                <th class="text-left">
-                                    <a-button as="link" :href="route('director.course.scores.index', course.id)"
-                                        class="ant-btn">學分</a-button>
-                                    <a-button as="link" :href="route('director.course.makeups', course.id)"
-                                        class="ant-btn">補考</a-button>
-                                </th>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                            <td class="px-6 py-4">
+                                <ol>
+                                    <li v-for="staff in course.staffs">{{ staff.name_zh }}</li>
+                                </ol>
+                            </td>
+                            <td class="px-6 py-4">{{ course.current_term }}</td>
+                            <th scope="col" class="px-6 py-3">
+                                <a-button as="link" :href="route('director.course.scores.index', course.id)"
+                                    class="ant-btn">學分</a-button>
+                                <a-button as="link" :href="route('director.course.makeups', course.id)"
+                                    class="ant-btn">補考</a-button>
+                            </th>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
         </div>
 
     </AdminLayout>

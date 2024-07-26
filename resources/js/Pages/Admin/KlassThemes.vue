@@ -44,7 +44,6 @@
             <a-table :dataSource="themes.find(theme => theme.id == selectedThemeId).topics" :columns="columns">
                 <template #bodyCell="{ column, text, record, index }">
                     <template v-if="column.dataIndex == 'operation'">
-                        {{ record.topics }}
                         <a-button @click="topicEdit(record)" :style="'Edit'">修改</a-button>
                         <a-button @click="topicDelete(record)" :style="'Delete'">刪除</a-button>
                     </template>
@@ -54,11 +53,13 @@
                 </template>
             </a-table>
         </template>
+
+
         <!-- modalTheme Start-->
         <a-modal v-model:open="modalTheme.isOpen" :title="modalTheme.title">
             <a-form :model="modalTheme.data" name="Theme" ref="modalThemeRef" :rules="themeRules"
                 :validate-messages="validateMessages" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
-                <a-form-item label="學段" name="section_code">
+                <a-form-item label="學段" name="ability_code">
                     <a-select v-model:value="modalTheme.data.term_id" :options="yearTerms" />
                 </a-form-item>
                 <a-form-item label="主題名稱" name="title">
@@ -77,8 +78,8 @@
         <a-modal v-model:open="modalTopic.isOpen" :title="modalTopic.title">
             <a-form :model="modalTopic.data" name="Topic" ref="modalTopicRef" :rules="topicRules"
                 :validate-messages="validateMessages" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
-                <a-form-item label="分類" name="section_code">
-                    <a-select v-model:value="modalTopic.data.section_code" :options="topicAbilities" />
+                <a-form-item label="分類" name="ability_code">
+                    <a-select v-model:value="modalTopic.data.ability_code" :options="topicAbilities" />
                 </a-form-item>
                 <a-form-item label="分組標題" name="abbr">
                     <a-input v-model:value="modalTopic.data.abbr" />
@@ -128,7 +129,7 @@ export default {
             columns: [
                 {
                     title: '分類名稱',
-                    dataIndex: 'section',
+                    dataIndex: 'ability',
                 }, {
                     title: '分組標題',
                     dataIndex: 'abbr',
@@ -149,7 +150,7 @@ export default {
                 },
             },
             topicRules: {
-                section_code: {
+                ability_code: {
                     required: true,
                 },
                 abbr: {

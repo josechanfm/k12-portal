@@ -1,5 +1,5 @@
 <template>
-    <AdminLayout title="操行成積" :breadcrumb="breadcrumb">
+    <AdminLayout title="操行成績" :breadcrumb="breadcrumb">
         <div>
             <div class="py-5">
             <KlassSelector routePath="director.klass.behaviours.index" :param="[]" :currentKlass="klass" />
@@ -35,7 +35,7 @@ export default {
                 {label:"主控台", url:route('director.dashboard')},
                 {label:"小學", url:route('director.grades.index',{'type':'primary'})},
                 {label:this.klass.tag+'班' ,url:route('director.pre.klasses.show',this.klass.id)},
-                {label:'操行成積' ,url:null},
+                {label:'操行成績' ,url:null},
             ],
             tempBehaviour:null,
         }

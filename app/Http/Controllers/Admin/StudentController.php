@@ -16,6 +16,7 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    /*
     public function course(Course $course){
         return Inertia::render('Admin/CourseStudents',[
             'course'=>$course,
@@ -23,6 +24,8 @@ class StudentController extends Controller
             'students'=>$course->students()->with('courses')->get(),
         ]);
     }
+    */
+    /*
     public function klass(Klass $klass){
         // $klass=Klass::find($id);
         $klassStudents=$klass->students;
@@ -30,7 +33,6 @@ class StudentController extends Controller
         $coursesStudents=$klass->coursesStudents;
         $dataTable=[];
         $dataColumns=[];
-
         //Create student course dataTable array table with initial value of false/0 and dataColumns header
         foreach($courses as $course){
             $dataColumns[]=[
@@ -58,11 +60,10 @@ class StudentController extends Controller
         ]);
     
     }
-    public function index(Request $request){
-        return Inertia::render('Admin/Students',[
-            'students'=>Student::paginate()
-        ]);
-    }
+    */
+
+
+    /*
     public function index2 ($type=null, $id=null){
         if($type==null || $id==null){
             return 'error';
@@ -115,6 +116,13 @@ class StudentController extends Controller
     
         }
 
+    }
+    */
+
+    public function index(){
+        return Inertia::render('Admin/Students',[
+            'students'=>Student::paginate()
+        ]);
     }
     /*
     public function index(Klass $klass)

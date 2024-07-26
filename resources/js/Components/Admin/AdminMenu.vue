@@ -1,43 +1,48 @@
 <template>
-<div id="main_menu">
-    <a-menu v-model:openKeys="openKeys" v-model:selectedKeys="selectedKeys" mode="inline" theme="light" :inline-collapsed="collapsed">
-        <template v-for="item in list" :key="item.key">
-                <a-sub-menu v-role="item.roles" >
-                    <template #icon>
-                        <AppstoreOutlined /></template>
-                    <template #title>{{ item.title }}</template>
-                    <template  v-for="subitem in item.children" :key="subitem.key">
-                            <a-menu-item v-if="!subitem.children"  :key="subitem.key">
+    <div id="main_menu">
+        <a-menu v-model:openKeys="openKeys" v-model:selectedKeys="selectedKeys" mode="inline" theme="light"
+            :inline-collapsed="collapsed">
+            <template v-for="item in list" :key="item.key">
+                <div v-role="item.roles">
+                    <a-sub-menu>
+                        <template #icon>
+                            <AppstoreOutlined />
+                        </template>
+                        <template #title>{{ item.title }}</template>
+                        <template v-for="subitem in item.children" :key="subitem.key">
+                            <a-menu-item v-if="!subitem.children" :key="subitem.key">
                                 <template #icon>
                                     <TagOutlined />
                                 </template>
-                                <a-button   type="text" :href="subitem.url">{{ subitem.title }}</a-button>
+                                <a-button type="text" :href="subitem.url">{{ subitem.title }}</a-button>
                             </a-menu-item>
-                            <a-sub-menu v-else :key="subitem.key" >
-                                        <template #icon>
-                                            <AppstoreOutlined /></template>
-                                        <template #title>{{ item.title }}</template>
-                                     
-                                            <a-menu-item   v-for="ssubitem in subitem.children" :key="ssubitem.key"  >
-                                                <template #icon>
-                                                    <TagOutlined />
-                                                </template>
-                                                <a-button   type="text" :href="ssubitem.url">{{ ssubitem.title }}</a-button>
-                                            </a-menu-item>
-                                       
-                            </a-sub-menu>
-                    </template>
-                </a-sub-menu>
-        </template>
-        <a-menu-item>
-            <template #icon>
-                <LoginOutlined />
-            </template>
-            <a class="w-full text-start" @click='logout'>登出</a>
-        </a-menu-item>
-    </a-menu>
+                            <a-sub-menu v-else :key="subitem.key">
+                                <template #icon>
+                                    <AppstoreOutlined />
+                                </template>
+                                <template #title>{{ item.title }}</template>
 
-</div>
+                                <a-menu-item v-for="ssubitem in subitem.children" :key="ssubitem.key">
+                                    <template #icon>
+                                        <TagOutlined />
+                                    </template>
+                                    <a-button type="text" :href="ssubitem.url">{{ ssubitem.title }}</a-button>
+                                </a-menu-item>
+
+                            </a-sub-menu>
+                        </template>
+                    </a-sub-menu>
+                </div>
+            </template>
+            <a-menu-item>
+                <template #icon>
+                    <LoginOutlined />
+                </template>
+                <a class="w-full text-start" @click='logout'>登出</a>
+            </a-menu-item>
+        </a-menu>
+
+    </div>
 </template>
 
 <script>
@@ -68,48 +73,44 @@ const list = [{
     roles: ['master'],
     title: '系統維護管理',
     children: [{
-            key: 'subjects',
-            title: '全校學科總表',
-            url: '/master/subjects',
-            route: 'master.subjects'
-        }, {
-            key: 'studies',
-            title: '學習計劃',
-            url: '/master/studies',
-        }, {
-            key: 'theme_templates',
-            title: '基力設置',
-            url: '/master/theme_templates',
-        }, {
-            key: 'transcriptTemplate',
-            title: '成積表欄位',
-            url: '/master/transcriptTemplate',
-        }, {
-            key: 'configs',
-            title: '系統參數',
-            url: '/master/configs',
-        }, {
-            key: 'roles',
-            title: '角色及權限',
-            url: '/master/roles',
-        },
-        {
-            key: 'users',
-            title: '用戶權限分配',
-            url: '/master/users',
-        },
-
-        {
-            key: 'manuals',
-            title: '用戶指南',
-            url: '/master/manuals',
-        }, {
-            key: 'issues',
-            title: '問題日志',
-            url: '/master/issues',
-        }
+        key: 'subjects',
+        title: '全校學科總表',
+        url: '/master/subjects',
+        route: 'master.subjects'
+            }, {
+                key: 'studies',
+                title: '學習計劃',
+                url: '/master/studies',
+            }, {
+                key: 'theme_templates',
+                title: '基力設置',
+                url: '/master/theme_templates',
+            }, {
+                key: 'transcriptTemplate',
+                title: '成績表欄位',
+                url: '/master/transcriptTemplate',
+            }, {
+                key: 'configs',
+                title: '系統參數',
+                url: '/master/configs',
+            }, {
+                key: 'roles',
+                title: '角色及權限',
+                url: '/master/roles',
+            },{
+                key: 'users',
+                title: '用戶權限分配',
+                url: '/master/users',
+            },{
+                key: 'manuals',
+                title: '用戶指南',
+                url: '/master/manuals',
+            }, {
+                key: 'issues',
+                title: '問題日志',
+                url: '/master/issues',
+            }
     ],
-
 }, {
     key: 'admin',
     roles: ['master', 'admin'],
@@ -126,6 +127,10 @@ const list = [{
         key: 'grade',
         title: '班別',
         url: '/admin/klasses',
+    }, {
+        key: 'student',
+        title: '學生',
+        url: '/admin/students',
     }],
 }, {
     key: 'director',
@@ -234,19 +239,16 @@ export default defineComponent({
         if (result.length === 1) { // URL只有1個字詞時 
             let findParents = this.list.filter(menu => menu.children.filter(children => children.key == result[0]).length > 0)
             this.selectedKeys = [(result[0] ?? '')]
-            this.openKeys = [findParents[0] ?.key ?? '']
+            this.openKeys = [findParents[0]?.key ?? '']
         }
         //URL有URL params作為menu區分且合共三層時情況 
         let findMenuObj = this.list.find(x => x.key == (result[0] ?? ''))
         if (findMenuObj) {
             let SubMenu = findMenuObj.children.find(x => x.key == (result[1] ?? ''))
-            console.log(SubMenu)
             if ((SubMenu?.urlParamKey ?? undefined) !== undefined) {
                 let searchParams = new URLSearchParams(window.location.search);
                 this.selectedKeys = [searchParams.get(SubMenu.urlParamKey)]
                 this.openKeys = result
-                console.log(searchParams)
-
             }
         }
     },

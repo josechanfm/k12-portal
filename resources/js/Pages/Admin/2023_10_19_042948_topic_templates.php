@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('topic_templates', function (Blueprint $table) {
+        Schema::create('成績s', function (Blueprint $table) {
             $table->id();
             $table->foreignId('theme_template_id');
             $table->integer('sequence')->nullable();
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('topic_templates');
+        Schema::dropIfExists('成績s');
     }
 };

@@ -8,14 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class TopicTemplate extends Model
 {
     use HasFactory;
-    protected $fillable=['theme_template_id','sequence','section_code','section','abbr','title','description'];
-    protected $appends=['section_code_label'];
+    protected $fillable=['theme_template_id','sequence','ability_code','ability','abbr','title','description'];
 
-
-    public function getSectionCodeLabelAttribute(){
-        $sections=array_column(Config::item('topic_abilities'),'label','value');
-        return $sections[$this->section_code]??null;
-    }
     public function themeTemplate(){
         return $this->belongsTo(ThemeTemplate::class);
     }

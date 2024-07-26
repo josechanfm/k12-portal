@@ -1,5 +1,5 @@
 <template>
-    <AdminLayout title="學年年級" :breadcrumb="breadcrumb">
+    <AdminLayout title="年級" :breadcrumb="breadcrumb">
     
             <!--  -->
             
@@ -36,7 +36,7 @@
                     <a-button @click="editRecord(record)">修改</a-button>
                     <a-button @click="deleteRecord(record)">刪除</a-button>
                     <a-popconfirm
-                        title='是否確定鎖定 "全級" 的成積表?'
+                        title='是否確定鎖定 "全級" 的成績表?'
                         ok-text="Yes"
                         cancel-text="No"
                         @confirm="lockTranscript(record)"

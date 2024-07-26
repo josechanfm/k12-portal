@@ -4,49 +4,48 @@
         <div class="py-5">
             <KlassSelector routePath="director.klass.finalScores" :param="{type:'summary'}" :currentKlass="klass"/>
         </div>
-        <div>
-            <div class="ant-table">
-                <div class="ant-table-container">
-                    <div class="ant-table-content">
-                        <table class="table-layout: auto;">
-                            <thead class="ant-table-thead">
-                                <tr>
-                                    <th>學生姓名</th>
-                                    <th v-for="column in finalScores.score_columns">
-                                        {{ column.course_code }}{{ column.course_title }}
-                                    </th>
-                                    <th>不合格單位數</th>
-                                </tr>
-                            </thead>
-                            <tbody class="ant-table-tbody">
-                                <template v-for="(student, ksid) in finalScores['students']">
-                                    <tr class="ant-table-row ant-table-row-level-0">
-                                        <td>{{ student.name_zh }}</td>
-                                        <td v-for="column in finalScores.score_columns" class="text-center">
-                                            <span v-if="isPassed(finalScores['scores'][ksid][column.course_code]['score'])">
+
+
+
+
+        <div class="relative overflow-x-auto">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">學生姓名</th>
+                        <th v-for="column in finalScores.score_columns">
+                            {{ column.course_code }}{{ column.course_title }}
+                        </th>
+                        <th>不合格單位數</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template v-for="(student, ksid) in finalScores['students']">
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                            <td>{{ student.name_zh }}</td>
+                            <td v-for="column in finalScores.score_columns" class="px-6 py-4">
+                                <span v-if="isPassed(finalScores['scores'][ksid][column.course_code]['score'])">
+                                    {{finalScores['scores'][ksid][column.course_code]['score']}}
+                                </span>
+                                <span v-else>
+                                    <span @click="toMakeup(student, column)" class="text-red-500 font-bold">
+                                        <span :class="column.makeups[ksid] ? 'p-1 rounded-full border-2 border-rose-300' : ''">
                                                 {{finalScores['scores'][ksid][column.course_code]['score']}}
+                                            <span v-if="column.makeups[ksid] && column.makeups[ksid]['point']!==null">
+                                                / {{ column.makeups[ksid]['point'] }}
                                             </span>
-                                            <span v-else>
-                                                <span @click="toMakeup(student, column)" class="text-red-500 font-bold">
-                                                    <span :class="column.makeups[ksid] ? 'p-1 rounded-full border-2 border-rose-300' : ''">
-                                                            {{finalScores['scores'][ksid][column.course_code]['score']}}
-                                                        <span v-if="column.makeups[ksid] && column.makeups[ksid]['point']!==null">
-                                                            / {{ column.makeups[ksid]['point'] }}
-                                                        </span>
-                                                        
-                                                    </span>
-                                                </span>
-                                            </span>
-                                        </td>
-                                        <td class="text-center">{{ finalScores['scores'][ksid]['fail_units'] }}</td>
-                                    </tr>
-                                </template>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+                                            
+                                        </span>
+                                    </span>
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">{{ finalScores['scores'][ksid]['fail_units'] }}</td>
+                        </tr>
+                    </template>
+                 </tbody>
+            </table>
         </div>
+
 
         <!-- Modal Start-->
         <a-modal v-model:open="modal.isOpen" 
@@ -123,11 +122,11 @@ export default {
         },
         migrateTranscripts() {
             if (this.klass.transcript_migrated == 1) {
-                if (!confirm('成積表分數已經轉換，是不確定重新轉換？')) {
+                if (!confirm('成績表分數已經轉換，是不確定重新轉換？')) {
                     return false;
                 }
             } else {
-                if (!confirm('是不確定轉換成積表分數？')) {
+                if (!confirm('是不確定轉換成績表分數？')) {
                     return false;
                 }
             }

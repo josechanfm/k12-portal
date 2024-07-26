@@ -30,11 +30,11 @@ mounted() {
 methods: {
 migrateTranscripts() {
 if (this.klass.transcript_migrated == 1) {
-if (!confirm('成積表分數已經轉換，是不確定重新轉換？')) {
+if (!confirm('成績表分數已經轉換，是不確定重新轉換？')) {
 return false;
 }
 } else {
-if (!confirm('是否確定轉換成積表分數？')) {
+if (!confirm('是否確定轉換成績表分數？')) {
 return false;
 }
 }

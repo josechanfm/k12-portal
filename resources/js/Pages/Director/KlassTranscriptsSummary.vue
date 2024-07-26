@@ -1,8 +1,8 @@
 <template>
-    <AdminLayout title="成積總表" :breadcrumb="breadcrumb">
+    <AdminLayout title="成績總表" :breadcrumb="breadcrumb">
         <a-button @click="migrateTranscripts" :disabled="klass.transcript_migrated == 9">
-            <span v-if="klass.transcript_migrated == 1">重新轉換成積表分數</span>
-            <span v-else>轉換成積表分數</span>
+            <span v-if="klass.transcript_migrated == 1">重新轉換成績表分數</span>
+            <span v-else>轉換成績表分數</span>
         </a-button>
 
         <div class="py-5">
@@ -77,7 +77,7 @@ export default {
                 {label:"主控台", url:route('director.dashboard')},
                 {label:"年級班別", url:route('director.grades.index',{'type':'secondary'})},
                 {label:this.klass.tag+'年級' ,url:route('director.klasses.show', this.klass.id)},
-                {label:'成積總表' ,url:null}
+                {label:'成績總表' ,url:null}
             ],
             columns:[
                 {
@@ -104,11 +104,11 @@ export default {
     methods: {
         migrateTranscripts() {
             if (this.klass.transcript_migrated == 1) {
-                if (!confirm('成積表分數已經轉換，是不確定重新轉換？')) {
+                if (!confirm('成績表分數已經轉換，是不確定重新轉換？')) {
                     return false;
                 }
             } else {
-                if (!confirm('是否確定轉換成積表分數？')) {
+                if (!confirm('是否確定轉換成績表分數？')) {
                     return false;
                 }
             }

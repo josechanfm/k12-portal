@@ -98,7 +98,7 @@ class CoursePolicy
 
     public function scores(User $user, Course $course)
     {
-        if(auth()->user()->hasRole('master') || auth()->user()->hasRole('admin')){
+        if(auth()->user()->hasRole('master') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('director')){
             return true;
         }
         $staffId=auth()->user()->staff->id;

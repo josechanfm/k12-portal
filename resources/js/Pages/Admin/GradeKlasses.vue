@@ -1,5 +1,5 @@
 <template>
-    <AdminLayout title="學年階段之班別" :breadcrumb="breadcrumb">
+    <AdminLayout title="班別" :breadcrumb="breadcrumb">
         <a-typography-title :level="4">學年:{{ grade.year.title }}</a-typography-title>
         <a-typography-title :level="4">年級:{{ grade.tag }}</a-typography-title>
         <div>
@@ -12,35 +12,37 @@
         <a-table :dataSource="klasses" :columns="columns">
             <template #bodyCell="{ column, text, record, index }">
                 <template v-if="column.dataIndex == 'operation'">
+                    <a-button as="link" :href="route('director.klasses.show',record.id)" class="ant-btn">班別管理</a-button>
+                    <a-button as="link" :href="route('director.selected.students', {model:'klass',id:record})" class="ant-btn">學生名單</a-button>
                     <span v-if="record.grade.grade_year <= 3">
                         <a-button as="link"  :href="route('admin.klass.themes.index', record.id)" class="ant-btn">主題</a-button>
                     </span>
                     <span v-else>
                         <a-button as="link"  :href="route('admin.klass.courses.index', record.id)" class="ant-btn">科目</a-button>
                     </span>
-                    <a-button as="link" :href="route('director.klasses.show',record.id)" class="ant-btn">班別管理</a-button>
-                    <a-button as="link" :href="route('admin.select.students.index', {type:'klass',id:record.id})" class="ant-btn">學生</a-button>
-                    <a-button @click="editRecord(record)">修改</a-button>
                     <a-popconfirm
-                        :title="(record.course_locked?'是否確定解鎖':'是否確定鎖定')+record.tag+'的成積表?'"
+                        :title="(record.course_locked?'是否確定解鎖':'是否確定鎖定')+record.tag+'的成績表?'"
                         ok-text="Yes"
                         cancel-text="No"
                         @confirm="onClickSelectedTermLock(record.id,0)"
                     >
                         <a-button>
-                            <span v-if="record.course_locked">解鎖成積</span>
-                            <span v-else>鎖定成積</span>
+                            <span v-if="record.course_locked">解鎖成績</span>
+                            <span v-else>鎖定成績</span>
                         </a-button>
                     </a-popconfirm>
+                    <a-button @click="editRecord(record)">修改</a-button>
+
                     <br>
                     現時學段
                     <template v-for="term in yearTerms">
                         <a-button 
                             @click="onClickSelectedTermLock(record.id,term.value)" 
-                            :type="record.current_term==term.value?'secondary':''"
+                            :type="record.current_term==term.value?'secondary':'default'"
                             :disabled="record.course_locked"
                         >{{term.label}}</a-button>
                     </template>
+
                 </template>
                 <template v-else-if="column.dataIndex == 'head_teacher'">
                     <!-- {{ record.klass_heads }} -->
@@ -59,52 +61,13 @@
                 <template v-else-if="column.dataIndex == 'transcript_migrated'">
                     <div class="flex">
                         <div v-if="record.transcript_migrated">
-                            <svg height="20px" width="20px" xmlns="http://www.w3.org/2000/svg" fill="#1c9504"
-                                viewBox="0 0 24 24" stroke="#1c9504">
-                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                <g id="SVGRepo_iconCarrier">
-                                    <path
-                                        d="M3.8 9.2c0-.9 1-2.6 2.3-3.1s3.3-.5 6-.5c2.9 0 5.8.5 5.8.5l-2.3-2.3 1-1.9L22 7.4l-5.5 5.5-1-1.9 2.3-2.3s-2.9-.5-5.9-.5c-2.6 0-4.6 0-5.9.5s-2.2 3.7-2.2 3.7V9.2z">
-                                    </path>
-                                    <path
-                                        d="M20.2 14.8c0 .9-1 2.6-2.3 3.1s-3.3.5-6 .5c-2.9 0-5.8-.5-5.8-.5l2.3 2.3-1 1.9L2 16.6l5.5-5.5 1 1.9-2.3 2.3s2.9.5 5.9.5c2.6 0 4.6 0 5.9-.5s2.2-3.7 2.2-3.7v3.2z">
-                                    </path>
-                                </g>
-                            </svg>
+                            <NodeExpandOutlined />
                         </div>
                         <div v-else>
-                            <svg height="28px" width="28px" viewBox="0 0 2050 2050" data-name="Layer 3" id="Layer_3"
-                                xmlns="http://www.w3.org/2000/svg" fill="#6e6e6e" stroke="#6e6e6e">
-                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                <g id="SVGRepo_iconCarrier">
-                                    <path class="cls-1"
-                                        d="M503.6,1165.9a45,45,0,0,1-44.8-48.9l14.4-164.6a44.9,44.9,0,0,1,13-27.9L947.8,462.9a45.1,45.1,0,0,1,63.6,0l150.2,150.3a44.9,44.9,0,0,1,0,63.6L700,1138.4a44.4,44.4,0,0,1-27.9,13l-164.5,14.3Zm164.6-59.4Z">
-                                    </path>
-                                    <path class="cls-1" d="M1560.8,1113.6H926.3a45,45,0,0,1,0-90h634.5a45,45,0,1,1,0,90Z">
-                                    </path>
-                                    <path class="cls-1" d="M1560.8,1338.4H503.6a45,45,0,1,1,0-90H1560.8a45,45,0,0,1,0,90Z">
-                                    </path>
-                                    <path class="cls-1" d="M1560.8,1563.2H503.6a45,45,0,0,1,0-90H1560.8a45,45,0,0,1,0,90Z">
-                                    </path>
-                                </g>
-                            </svg> 
+                            <MenuOutlined />
                         </div>
                         <div v-if="record.transcript_locked">
-                            <svg fill="#e13737" height="20px" width="20px" version="1.1" id="Layer_1"
-                                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                viewBox="0 0 330 330" xml:space="preserve" stroke="#e13737">
-                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                <g id="SVGRepo_iconCarrier">
-                                    <g id="XMLID_504_">
-                                        <path id="XMLID_505_"
-                                            d="M65,330h200c8.284,0,15-6.716,15-15V145c0-8.284-6.716-15-15-15h-15V85c0-46.869-38.131-85-85-85 S80,38.131,80,85v45H65c-8.284,0-15,6.716-15,15v170C50,323.284,56.716,330,65,330z M207.481,219.356l-42.5,42.5 c-2.929,2.929-6.768,4.394-10.606,4.394s-7.678-1.465-10.606-4.394l-21.25-21.25c-5.858-5.858-5.858-15.354,0-21.213 c5.857-5.858,15.355-5.858,21.213,0l10.644,10.643l31.894-31.893c5.857-5.858,15.355-5.858,21.213,0 C213.34,204.002,213.34,213.498,207.481,219.356z M110,85c0-30.327,24.673-55,55-55s55,24.673,55,55v45H110V85z">
-                                        </path>
-                                    </g>
-                                </g>
-                            </svg>
+                            <LockOutlined />
                         </div>
                     </div>
                 </template>
@@ -138,7 +101,7 @@
                     <a-radio-group v-model:value="modal.data.current_term" :options="yearTerms" option-type="button" button-style="solid"/>
                 </a-form-item>
                 <a-form-item label="學科鎖定" name="course_locked">
-                    <a-switch v-model:checked="modal.data.course_locked" checkedChildren="鎖定成積" unCheckedChildren="解鎖成積"/>
+                    <a-switch v-model:checked="modal.data.course_locked" checkedChildren="鎖定成績" unCheckedChildren="解鎖成績"/>
                 </a-form-item>
                 <a-form-item label="教室編號" name="room">
                     <a-input v-model:value="modal.data.room" />
@@ -162,11 +125,14 @@
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
-
+import { NodeExpandOutlined, MenuOutlined, LockOutlined } from '@ant-design/icons-vue'
 export default {
     components: {
         AdminLayout,
         ButtonLink,
+        NodeExpandOutlined,
+        MenuOutlined,
+        LockOutlined
     },
     props: ['yearTerms','grades', 'grade', 'klasses', 'klassLetters', 'studyStreams', 'studies','teachers'],
     data() {
@@ -192,6 +158,9 @@ export default {
                     title: '班主任',
                     dataIndex: 'head_teacher',
                 }, {
+                    title: '專業方向',
+                    dataIndex: 'stream',
+                }, {
                     title: '教室編號',
                     dataIndex: 'room',
                 }, {
@@ -201,7 +170,7 @@ export default {
                     title: '學生人數',
                     dataIndex: 'students',
                 }, {
-                    title: '成積表鎖定',
+                    title: '成績表鎖定',
                     dataIndex: 'transcript_migrated',
                 }, {
                     title: '操作',

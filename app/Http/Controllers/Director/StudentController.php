@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use App\Models\Student;
 use App\Models\StudentDetail;
 use App\Models\Klass;
+use App\Models\Course;
 use App\Models\Relative;
 use App\Models\Year;
 use App\Models\Grade;
@@ -49,6 +50,20 @@ class StudentController extends Controller
         return response()->json($students);
         
     }
+    public function selected($model, $id){
+        if($model=='course'){
+            $students=Course::find($id)->students;
+        }
+        if($model=='klass'){
+            $students=Klass::find($id)->students;
+        }
+        //dd($model, $students);
+
+        return Inertia::render('Director/SelectedStudents',[
+            'students'=>$students
+        ]);
+    }
+
 
     public function index(Klass $klass, Request $request)
     {

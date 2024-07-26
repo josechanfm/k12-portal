@@ -14,8 +14,8 @@
             <a-button as="link" :href="route('director.klass.students.index', klass.id)" class="ant-btn">學生名單</a-button>
             <a-button as="link" :href="route('director.klass.avatars',klass.id)" class="ant-btn ant-btn-default">學生照片</a-button>
             <a-button as="link" :href="route('director.klass.finalScores', klass.id)" class="ant-btn">期末成績</a-button>
-            <a-button as="link" :href="route('director.klass.transcripts', {'klass':klass.id,'type':'summary'})" class="ant-btn">成積總表</a-button>
-            <a-button as="link" :href="route('director.klass.transcripts', klass.id)" class="ant-btn">成積大表</a-button>
+            <a-button as="link" :href="route('director.klass.transcripts', {'klass':klass.id,'type':'summary'})" class="ant-btn">成績總表</a-button>
+            <a-button as="link" :href="route('director.klass.transcripts', klass.id)" class="ant-btn">成績大表</a-button>
         </template>
         <a-divider type="vertical" />
             <a-button as="link" :href="route('director.klass.behaviours.index', klass.id)" class="ant-btn">操行</a-button>

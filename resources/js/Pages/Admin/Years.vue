@@ -7,11 +7,14 @@
                         <a-button as="link" :href="route('admin.year.grades.index',record.id)" class="ant-btn">年級</a-button>
                         <a-button @click="editRecord(record)">修改</a-button>
                         <a-button @click="deleteRecord(record)">刪除</a-button>
-                        <a-button @click="lockTranscript(record)">鎖定成積表</a-button>
+                        <a-button @click="lockTranscript(record)">鎖定成績表</a-button>
                     </template>
                     <template v-else-if="column.dataIndex=='grade_group'">
                         <a-tag v-for="item in record[column.dataIndex]" :key="item"
                             :color="item.initial=='P'?'blue':item.initial=='S'?'green':'cyan'">{{item.initial}}:{{item.count}}</a-tag>
+                    </template>
+                    <template v-else-if="column.dataIndex=='current_year'">
+                        <CheckOutlined />
                     </template>
                     <template v-else>
                         {{record[column.dataIndex]}}
@@ -25,8 +28,8 @@
             ref="modalRef"
             :model="modal.data"
             name="year"
-            :label-col="{ span: 8 }"
-            :wrapper-col="{ span: 16 }"
+            :label-col="{ span: 4 }"
+            :wrapper-col="{ span: 20 }"
             autocomplete="off"
             :rules="rules"
             :validate-messages="validateMessages"
@@ -35,7 +38,7 @@
         >
         <!-- @validate="handleValidate" -->
 
-            <a-form-item label="學年編號" name="code">
+            <a-form-item label="學年代號" name="code">
                 <a-input v-model:value="modal.data.code" style="width: 100px"/>
             </a-form-item>
             <a-form-item label="學年標題" name="title">
@@ -51,10 +54,10 @@
                     </template>
                 </a-radio-group>
             </a-form-item>
-            <a-form-item label="Current Year" name="current_year">
+            <a-form-item label="當前學年" name="current_year">
                 <a-switch v-model:checked="modal.data.current_year" />
             </a-form-item>
-            <a-form-item label="Active" name="active">
+            <a-form-item label="有效" name="active">
                 <a-switch v-model:checked="modal.data.active" />
             </a-form-item>
             <div v-if="modal.mode=='CREATE'">
@@ -131,9 +134,9 @@
             </div>
         </a-form>
         <template #footer>
-            <a-button key="back" @click="modalCancel">Close</a-button>
-            <a-button v-if="modal.mode=='EDIT'" key="Update" type="primary"  @click="updateRecord(modalForm)">Update</a-button>
-            <a-button v-if="modal.mode=='CREATE'"  key="Store" type="primary"  @click="storeRecord(modalForm)">Add</a-button>
+            <a-button key="back" @click="modalCancel">返回</a-button>
+            <a-button v-if="modal.mode=='EDIT'" key="Update" type="primary"  @click="updateRecord(modalForm)">更新</a-button>
+            <a-button v-if="modal.mode=='CREATE'"  key="Store" type="primary"  @click="storeRecord(modalForm)">創建</a-button>
         </template>
     </a-modal>    
     <!-- Modal End-->
@@ -144,13 +147,14 @@
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { Modal } from 'ant-design-vue';
-import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
+import { ExclamationCircleOutlined,CheckOutlined  } from '@ant-design/icons-vue';
 import { ref, createVNode } from 'vue';
 import dayjs from 'dayjs';
 
 export default {
     components: {
-        AdminLayout, Modal, createVNode, ExclamationCircleOutlined
+        AdminLayout, Modal, createVNode, 
+        ExclamationCircleOutlined, CheckOutlined
     },
     props: ['years','param','yearTerms'],
     data() {
@@ -187,7 +191,7 @@ export default {
                     dataIndex: 'end',
                     key: 'end',
                 },{
-                    title: '學年年級',
+                    title: '年級數目',
                     dataIndex: 'grade_group',
                     key: 'grade_group',
                 },{
@@ -196,8 +200,8 @@ export default {
                     key: 'active',
                 },{
                     title: '當前學年',
-                    dataIndex: 'active',
-                    key: 'active',
+                    dataIndex: 'current_year',
+                    key: 'current_year',
                 },{
                     title: '操作',
                     dataIndex: 'operation',
@@ -354,7 +358,7 @@ export default {
             console.log('errorInfo: '+errorInfo);
         },
         lockTranscript(record){
-            if(!confirm('鎖定成積表分數轉換功能，是不確定？')) return;
+            if(!confirm('鎖定成績表分數轉換功能，是不確定？')) return;
             this.$inertia.get(route('admin.lockTranscripts'),{scope:'year',id:record.id},{
                 onSuccess: (page)=>{
                     console.log(page);

@@ -4,8 +4,15 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 <a-row type="flex">
                     <a-col flex="230px">
-                        <a-image :width="200" v-if="student.avatars && student.avatars[0]"
-                            :src="student.avatars[0].image.original_url" />
+                        <div v-if="student.avatars[0].image">
+                            <a-image :width="200" v-if="student.avatars && student.avatars[0]"
+                                :src="student.avatars[0].image.original_url" />
+                        </div>
+                        <div v-else>
+                            <a-avatar shape="square" :size="128">
+                                <template #icon><UserOutlined /></template>
+                            </a-avatar>                            
+                        </div>
                     </a-col>
                     <a-col flex="auto">
                         <a-descriptions
@@ -24,7 +31,6 @@
         <div class="p-5">
             修改模式: <a-switch v-model:checked="isEdit" @change="onChangeEditMode" checkedChildren="開" unCheckedChildren="關"/>
         </div>
-        
         <div :class="isEdit ? 'formEditOn' : 'formEditOff'">
             <a-form ref="formRef" name="advanced_search" class="ant-advanced-search-form" :model="student"
                 :rules="rules" @finish="onFinish" @finishFailed="onFinishFailed">
@@ -32,9 +38,16 @@
                     <a-collapse-panel key="avatar" header="頭像照片">
                         <a-row>
                             <a-col :span="4" v-for="avatar in student.avatars">
-                                <a-image :width="200" :src="avatar.image.preview_url" />
-                                <br>
-                                {{ avatar.full_tag }}
+                                <div v-if="avatar.image">
+                                    <a-image :width="200" :src="avatar.image.preview_url" />
+                                    <br>
+                                    {{ avatar.full_tag }}
+                                </div>
+                                <div v-else>
+                                    <a-avatar shape="square" :size="92">
+                                        <template #icon><UserOutlined /></template>
+                                    </a-avatar>                            
+                                </div>
                             </a-col>
                         </a-row>
                     </a-collapse-panel>
@@ -379,10 +392,12 @@
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { Link } from '@inertiajs/vue3';
+import { UserOutlined } from '@ant-design/icons-vue';
 
 export default {
     components: {
-        AdminLayout, Link
+        AdminLayout, Link,
+        UserOutlined
     },
     props: ['student'],
     data() {
@@ -426,7 +441,7 @@ export default {
 
             activeKey: ['basic'],
             isEdit: false,
-            labelCol: { span: 10 },
+            labelCol: { span: 10 }, 
             wrapperCol: { span: 14 },
         }
     },
@@ -434,7 +449,6 @@ export default {
         this.init()        
     },
     mounted(){
-        console.log('mounted')
     },  
     methods: {
         init(){

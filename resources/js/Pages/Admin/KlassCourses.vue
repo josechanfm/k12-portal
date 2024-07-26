@@ -12,19 +12,20 @@
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
                         <a-button @click="changeTeachers(record)">修改</a-button>
-                        <a-button as="link" :href="route('admin.select.students.index',{type:'course',id:record.id})" class="ant-btn">學生名單</a-button>
+                        <a-button as="link" :href="route('director.selected.students',{model:'course',id:record.id})" class="ant-btn">學生名單</a-button>
+                        <!-- <a-button as="link" :href="route('admin.course.students.index',record)" class="ant-btn">學生名單2</a-button> -->
                         <br>
                         <template v-for="term in yearTerms" :key="term">
                             <a-button 
                                 @click="onClickSelectedTermLock(record.id, term.value)" 
-                                :type="record.current_term==term.value?'secondary':''"
+                                :type="record.current_term==term.value?'secondary':'default'"
                                 :disabled="klass.course_locked"
                             >{{term.label}}
                             </a-button>
                         </template>
                         <a-button 
                             @click="onClickSelectedTermLock(record.id,0)" 
-                            :type="record.current_term==0?'secondary':''"
+                            :type="record.current_term==0?'secondary':'default'"
                             :disabled="klass.course_locked"
                             >鎖定</a-button>
                     </template>
@@ -86,14 +87,14 @@
                     <a-input v-bind:value="modal.data.title_en" />
                 </a-form-item>
                 <a-form-item label="專業方向" name="stream">
-                    <a-radio-group v-bind:value="modal.data.stream" button-style="solid">
+                    <a-radio-group v-bind:value="modal.data.stream" button-style="solid" disabled="true">
                         <template v-for="item in streams">
                             <a-radio-button :value="item.value">{{ item.label }}</a-radio-button>    
                         </template>
                     </a-radio-group>
                 </a-form-item>
                 <a-form-item label="必修/選修" name="elective">
-                    <a-radio-group v-bind:value="modal.data.elective" button-style="solid">
+                    <a-radio-group v-bind:value="modal.data.elective" button-style="solid" disabled="true">
                         <template v-for="item in subjectTypes">
                             <a-radio-button :value="item.value">{{ item.label }}</a-radio-button>    
                         </template>

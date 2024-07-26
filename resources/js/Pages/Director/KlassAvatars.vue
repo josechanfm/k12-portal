@@ -5,10 +5,18 @@
         <a-row>
             <a-col :span="4" v-for="student in students">
                 <p class="height-100">
-                    <a-image v-if="student.avatar" width="100px" :src="student.avatar.preview_url"/>
-                    <br>
-                    {{ student.pivot.student_number }} | 
-                    {{ student.name_zh }}
+                    <div v-if="student.avatar">
+                        <a-image  width="100px" :src="student.avatar.preview_url"/>
+                    </div>
+                    <div v-else>
+                        <a-avatar shape="square" :size="128">
+                            <template #icon><UserOutlined /></template>
+                        </a-avatar>                            
+                    </div>
+                    <div class="text-lg">
+                        {{ student.pivot.student_number }} | 
+                        {{ student.name_zh }}
+                    </div>
                 </p>
             </a-col>
         </a-row>
@@ -17,10 +25,12 @@
 
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
+import { UserOutlined } from '@ant-design/icons-vue';
 
 export default {
     components: {
         AdminLayout,
+        UserOutlined
     },
     props: ['klass','students'],
     data() {

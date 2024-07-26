@@ -200,8 +200,8 @@ export default {
     data() {
         return {
             breadcrumb:[
-                {label:"主控台", url:route('director.dashboard')},
-                {label:"年級班別", url:route('director.grades.index',{'type':'secondary'})},
+                {label:"主控台", url:null},
+                {label:"年級班別", url:null},
                 {label:this.course.klass.tag+'科學分管理' ,url:null},
             ],
             merge: {

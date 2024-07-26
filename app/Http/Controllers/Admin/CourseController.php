@@ -20,7 +20,7 @@ class CourseController extends Controller
     public function index(Klass $klass)
     {
         $courses=Course::whereBelongsTo($klass)->with('staffs')->get();
-        return Inertia::render('Admin/Courses',[
+        return Inertia::render('Admin/KlassCourses',[
             'yearTerms'=>Config::item('year_terms'),
             'klass'=>$klass,
             'courses'=>$courses,

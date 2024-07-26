@@ -17,8 +17,8 @@ class TopicController extends Controller
      */
     public function index()
     {
-        $sections=array_column(Config::item('topic_abilities'),'label','value');
-        dd($sections['health']);
+        $abilities=array_column(Config::item('topic_abilities'),'label','value');
+        dd($abilities['health']);
     }
 
     /**
@@ -43,9 +43,8 @@ class TopicController extends Controller
         $data=$request->all();
         $data['sequence']=Topic::where('theme_id',$request->theme_id)->get()->count()+1;
         
-        //$data['section']=>Config:
-        $sections=array_column(Config::item('topic_abilities'),'label','value');
-        $data['section']=$sections[$request->section_code];
+        $abilities=array_column(Config::item('topic_abilities'),'label','value');
+        $data['ability']=$abilities[$request->ability_code];
         Topic::create($data);
         return redirect()->back();
 
