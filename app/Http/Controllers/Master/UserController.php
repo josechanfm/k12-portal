@@ -49,7 +49,24 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $userData=$request->validate(
+            [
+            'newRoles'=>'required|Array',
+            'name'=>'required',
+            'password'=>'required',
+            'email'=>'required',
+
+            ]
+        );
+        $newUser=[
+          'email'=>  $userData['email'],
+          'username'=>  $userData['email'],
+          'name'=>  $userData['name'],
+          'password'=>   Hash::make($userData['password'])
+
+        ];
+        $user= User::create( $newUser);
+       $user->syncRoles($userData['newRoles']);
     }
 
     /**
@@ -90,8 +107,12 @@ class UserController extends Controller
             'newPassword'=>'sometimes|min:6',
             ]
         );
+       $updateData=['name'=>$userData['name']];
+       if(isset($updateData['newPassword'])){
+            $updateData['password']=Hash::make($updateData['newPassword']);
+       }
        $user=User::find($userData['id']);
-       $user->update(['name'=>$userData['name']]);
+       $user->update($updateData);
        $user->syncRoles($userData['newRoles']);
     }
 

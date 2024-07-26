@@ -2,7 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+.border{
+    @apply border-solid
+}
+::-webkit-scrollbar {
+    @apply  w-[10px]   
 
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-200 rounded-2xl hover:scale-150
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-400 rounded-2xl hover:bg-black 
+  }
+  
 .ant-btn-secondary{
     background: #10b981 !important;
     border-color: #10b981 !important;

@@ -1,0 +1,16 @@
+{
+    "master":"系統管理員",
+    "admin":"行政",
+    "teacher":"老師",
+    "director":"主任",
+    "klass_head":"班主任",
+    "subject_head":"科組長",
+    "assistant":"助理",
+    
+    "Name":"姓名",
+    "Roles":"角色",
+    "Permissions":"權限",
+    "Operation":"操作"
+
+
+}
