@@ -4,7 +4,12 @@ namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use App\Models\Config;
+use App\Models\Year;
+use App\Models\Klass;
 use App\Models\Course;
+use App\Models\AdditiveTemplate;
 
 class CourseController extends Controller
 {
@@ -13,9 +18,20 @@ class CourseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Klass $klass)
     {
-        //
+        $klass->grade;
+        $klass->courses;
+        $klass->students;
+        return Inertia::render('Teacher/Klass', [
+            'yearTerms'=>Config::item('year_terms'),
+            'currentTerm'=>Year::currentTerm(),
+            'klass' => $klass,
+            'additiveTemplates'=>AdditiveTemplate::all(),
+            'additiveStyle'=>Config::item('additive_styles'),
+            'additiveGroups'=>Config::item('additive_groups')
+        ]);
+
     }
 
     /**

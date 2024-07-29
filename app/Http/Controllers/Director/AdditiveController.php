@@ -107,8 +107,9 @@ class AdditiveController extends Controller
 
     public function scope(Klass $klass, $category){
         $categories=array_column(AdditiveTemplate::all()->toArray(),'category');
+        //dd($klass, $category,$categories);
         if(!in_array(strtoupper($category),$categories)){
-            return redirect()->route('director');
+            return redirect()->route('director.dashboard');
         }
         return Inertia::render('Director/KlassAdditives',[
             'yearTerms'=>Config::item('year_terms'),

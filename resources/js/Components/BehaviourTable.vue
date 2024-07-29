@@ -21,6 +21,7 @@
               <template v-for="term in yearTerms">
                 <td>
                   <template v-if="term.value == currentTermId">
+                    {{ behaviours['scores'][ksid][term.value] }}
                     <a-input-number
                       v-model:value="behaviours['scores'][ksid][term.value]['score']"
                       :min="0"
@@ -60,9 +61,9 @@ export default {
       this.temp = { ...temp };
     },
     onBlurScoreInput(temp) {
-      console.log(temp.reference_id);
+      console.log('onBlurScoreInput2  ')
       if (this.temp.score === temp.score) {
-        console.log("same");
+        console.log("same");  
         return false;
       } else {
         axios

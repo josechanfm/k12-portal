@@ -3,7 +3,6 @@
     <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible style="background: #fff">
       <a :href="route('director.dashboard')">
         <div class="logo">AIMS</div>
-        
       </a>
       <AdminMenu />
     </a-layout-sider>

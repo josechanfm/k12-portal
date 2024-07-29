@@ -1,26 +1,20 @@
 <template>
-    <AdminLayout :title="course?'科目操行':'班別操行'">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Teacher Dashboard
-            </h2>
-        </template>
+    <AdminLayout title="班別操行" :breadcrumb="breadcrumb">
         <div>
-            <p>The collection of route "teacher" is for the general operation management such as serach and preview, which
-                not included setup of year, class or subject etc.</p>
-            <a-typography-title :level="4">{{ staff.name_zh }}</a-typography-title>
+            <div class="py-5">
+            <KlassSelector routePath="director.klass.behaviours.index" :param="[]" :currentKlass="klass" />
+            </div>
+            <a-typography-title :level="4">老師名稱：{{ staff.name_zh }}</a-typography-title>
             <div v-if="course">
-                <div>學段狀態: {{ showCurrentTerm() }}</div>
+                <p>科目操行</p>
                 <p>{{course.klass.tag}}</p>
                 <p>{{course.code}}-{{course.title_zh}}</p>
-                <BehaviourTable :yearTerms="yearTerms" :currentTermId="course.current_term" :behaviours="behaviours"/>
             </div>
             <div v-else-if="klass">
-                <div>學段狀態: {{ showCurrentTerm() }}</div>
+                <p>學段狀態:{{ showCurrentTerm() }}</p>
                 <p>{{klass.tag}}</p>
-                <BehaviourTable :yearTerms="yearTerms" :currentTermId="klass.current_term" :behaviours="behaviours"/>
             </div>
-            
+            <BehaviourTable :yearTerms="yearTerms" :currentTermId="this.klass.course_locked?0:this.klass.current_term" :behaviours="behaviours"/>
         </div>
     </AdminLayout>
 </template>
@@ -28,15 +22,23 @@
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import BehaviourTable from '@/Components/BehaviourTable.vue';
+import KlassSelector from '@/Components/KlassSelector.vue';
 
 export default {
     components: {
         AdminLayout,
-        BehaviourTable
+        BehaviourTable,
+        KlassSelector
     },
-    props: ['yearTerms','staff','course','klass','behaviours'],
+    props: ['yearTerms','course','staff','klass','behaviours'],
     data() {
         return {
+            breadcrumb:[
+                {label:"主控台", url:route('director.dashboard')},
+                {label:"年級班別", url:route('director.grades.index',{'type':'secondary'})},
+                {label:this.klass.tag+'年級' ,url:route('director.klasses.show', this.klass.id)},
+                {label:'操行' ,url:null}
+            ],
             tempBehaviour:null,
         }
     },
@@ -47,6 +49,7 @@ export default {
             this.tempBehaviour={...behaviour}
         },
         onBlurScoreInput(behaviour){
+            console.log('onBlurScoreInput');
             console.log(behaviour);
             if(this.tempBehaviour.score===behaviour.score){
                 console.log('same')
@@ -69,19 +72,12 @@ export default {
             }
         },
         showCurrentTerm(){
-            if(this.course){
-                var currentTerm=this.course.current_term
-            }else{
-                var currentTerm=this.klass.current_term
-            }
-
-            if(currentTerm==0){
+            if(this.klass.course_locked || this.klass.current_term==0){
                 return '已上鎖';
             }else{
-                return this.yearTerms.find(t=>t.value==currentTerm).label;
+                return this.yearTerms.find(t=>t.value==this.klass.current_term).label;
             }
         }
-
 
     },
 }

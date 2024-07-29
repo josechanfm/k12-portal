@@ -37,18 +37,19 @@
                                     <td>{{ course.student_count }}</td>
                                     <td>
                                         <a-button as="link" :href="route('teacher.course.behaviours.index',course.id)" class="ant-btn">操行</a-button>
-                                        <a-button as="link" :href="route('director.course.scores.index',course.id)" class="ant-btn">學分</a-button>
+                                        <a-button as="link" :href="route('teacher.course.scores.index',course.id)" class="ant-btn">學分</a-button>
                                         <a-button @click="course.operation=!course.operation">更多...</a-button>
                                     </td>
                                 </tr>
                                 <tr class="ant-table-expanded-row ant-table-expanded-row-level-1" :style="course.operation==true?'display:true':'display:none'">
                                     <td colspan="7" class="ant-table-cell text-right">
-                                        <a-button as="link" :href="route('director.klass.students.index', course.klass.id)" class="ant-btn">學生名單</a-button>
-                                        <a-button as="link" :href="route('director.klass.finalScores', course.klass.id)" class="ant-btn">期末成績</a-button>
-                                        <a-button as="link" :href="route('director.klass.additive', [course.klass.id, 'attendance'])" class="ant-btn">考勤</a-button>
-                                        <a-button as="link" :href="route('director.klass.additive', [course.klass.id, 'perform'])" class="ant-btn">功過</a-button>
+                                        <a-button as="link" :href="route('teacher.selected.students', {model:'klass',id:course.klass.id})" class="ant-btn">學生名單</a-button>
+                                        <a-button as="link" :href="route('teacher.klass.finalScores', course.klass.id)" class="ant-btn">期末成績</a-button>
+                                        <a-button as="link" :href="route('director.klass.additive', [course.klass.id, 'PARTICIPATION'])" class="ant-btn">考勤</a-button>
+                                        <a-button as="link" :href="route('director.klass.additive', [course.klass.id, 'POSITIVE'])" class="ant-btn">功</a-button>
+                                        <a-button as="link" :href="route('director.klass.additive', [course.klass.id, 'NEGATIVE'])" class="ant-btn">過</a-button>
                                         <a-button as="link" :href="route('director.klass.additive', [course.klass.id, 'conduct'])" class="ant-btn">操行</a-button>
-                                        <a-button as="link" :href="route('director.klass.additive', [course.klass.id, 'comments'])" class="ant-btn">評語</a-button>
+                                        <a-button as="link" :href="route('director.klass.additive', [course.klass.id, 'comment'])" class="ant-btn">評語</a-button>
                                     </td>
                                 </tr>
                                 </template>
@@ -87,7 +88,7 @@
                                     <td>{{ klass.course_count}}</td>
                                     <td>
                                         <template v-if="klassHeadBehaviour">
-                                            <a-button as="link" :href="route('teacher.klass.behaviours',klass.id)" class="ant-btn">操行</a-button>
+                                            <a-button as="link" :href="route('teacher.klass.behaviours.index',klass.id)" class="ant-btn">操行</a-button>
                                         </template>
                                     </td>
                                 </tr>
@@ -137,7 +138,7 @@
                                     <td>
                                         {{ klassHeadBehaviour }}
                                         <template v-if="klassHeadBehaviour">
-                                            <a-button as="link" :href="route('teacher.klass.behaviours',course.klass.id)" class="ant-btn">操行</a-button>
+                                            <!-- <a-button as="link" :href="route('teacher.klass.behaviours',course.klass.id)" class="ant-btn">操行</a-button> -->
                                         </template>
                                     </td>
                                 </tr>

@@ -50,19 +50,19 @@ class StudentController extends Controller
         return response()->json($students);
         
     }
-    public function selected($model, $id){
-        if($model=='course'){
-            $students=Course::find($id)->students;
-        }
-        if($model=='klass'){
-            $students=Klass::find($id)->students;
-        }
-        //dd($model, $students);
+    // public function selected($model, $id){
+    //     if($model=='course'){
+    //         $students=Course::find($id)->students;
+    //     }
+    //     if($model=='klass'){
+    //         $students=Klass::find($id)->students;
+    //     }
+    //     //dd($model, $students);
 
-        return Inertia::render('Director/SelectedStudents',[
-            'students'=>$students
-        ]);
-    }
+    //     return Inertia::render('Director/SelectedStudents',[
+    //         'students'=>$students
+    //     ]);
+    // }
 
 
     public function index(Klass $klass, Request $request)
@@ -200,6 +200,7 @@ class StudentController extends Controller
         }
         return response()->json($students);
     }
+
     public function getByNames(Request $request){
         //$students=Student::whereIn('name_zh',$request->all())->get();
         //return response()->json($request->all());

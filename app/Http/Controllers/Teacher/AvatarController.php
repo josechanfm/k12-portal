@@ -111,7 +111,7 @@ class AvatarController extends Controller
  
     }
     public function klass(Klass $klass){
-        return Inertia::render('Director/KlassAvatars', [
+        return Inertia::render('Teacher/KlassAvatars', [
             'klass' => $klass,
             'students' => $klass->studentsWithAvatar(),
         ]);

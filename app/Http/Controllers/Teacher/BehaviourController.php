@@ -3,47 +3,51 @@
 namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
-use App\Models\Behaviour;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-use App\Models\Course;
-use App\Models\Klass;
-use App\Models\Year;
 use App\Models\Config;
+use App\Models\Klass;
+use App\Models\Course;
+use App\Models\Behaviour;
+use App\Models\Year;
+use Inertia\Inertia;
+use PDO;
 
 class BehaviourController extends Controller
 {
+
+    public function course(Course $course){
+        dd($course);
+    }
+/*
+    public function list(){
+        $year=Year::find(Year::currentYear()->id);
+        $grade=$year->grades->where('grade_year',4)->first();
+//        dd($grade->klasses->first()->id);     
+        return redirect()->route('director.klass.behaviour.summary',$grade->klasses->first());   
+    }
+    */
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function klass(Klass $klass){
-        if($klass->isKlassHead() ){
-            return Inertia::render('Teacher/Behaviours',[
-                'yearTerms'=>Config::item('year_terms'),
-                'staff'=>auth()->user()->staff, 
-                //'course'=>$course,
-                'klass'=>$klass,
-                'behaviours'=>$klass->behaviours('KLASS_HEAD')
-            ]);
-        }
-    }
-    public function index(Course $course)
+    public function index(Klass $klass)
     {
-        $course->klass;
-        if($course->isTeacher() ){
-            return Inertia::render('Teacher/Behaviours',[
-                'yearTerms'=>Config::item('year_terms'),
-                'staff'=>auth()->user()->staff,
-                //'klass'=>$course->klass,
-                'course'=>$course,
-                'behaviours'=>$course->behaviours()
+        dd($klass);
+        if(empty(auth()->user()->staff)){
+            return Inertia::render('Error',[
+                'message'=>"You are not subject teacher."
             ]);
+    
         }
-        return Inertia::render('Error',[
-            'message'=>"You are not subject teacher."
+        //dd($klass->behaviours('DIRECTOR')['scores'][316][1]);
+        return Inertia::render('Teacher/KlassBehaviours',[
+            'yearTerms'=>Config::item('year_terms'),
+            'staff'=>auth()->user()->staff,
+            'klass'=>$klass,
+            'behaviours'=>$klass->behaviours('DIRECTOR')
         ]);
+
     }
 
     /**
@@ -53,7 +57,7 @@ class BehaviourController extends Controller
      */
     public function create()
     {
-        //
+        dd('ok created');
     }
 
     /**
@@ -62,22 +66,22 @@ class BehaviourController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store($id, Request $request)
+    public function store(Request $request)
     {
-        //return response()->json($request->all());
-        if(is_null($request->score)){
-            return redirect()->back();
-        };
-        $data['klass_student_id']=$request->klass_student_id;
-        $data['term_id']=$request->term_id;
-        $data['staff_id']=$request->staff_id;
-        $data['reference_id']=$request->reference_id;
-        $data['actor']=$request->actor;
-        Behaviour::updateOrCreate(
-            $data, 
-            ['actor'=>$request->actor,'score'=>$request->score]
-        );
-        return response()->json('done');
+        
+        $behaviour=new Behaviour();
+        $behaviour->klass_student_id=$request->klass_student_id;
+        $behaviour->term_id=$request->term_id;
+        $behaviour->staff_id=$request->staff_id;
+        $behaviour->reference_id=$request->reference_id;
+        $behaviour->score=$request->score;
+        // $behaviour->genre=$request->genre;
+        // $behaviour->date=date('Y-m-d',strtotime($request->date));
+        // $behaviour->qty=$request->qty;
+        // $behaviour->description=$request->description;
+        //$behaviour->remark=$request->remark;
+        $behaviour->save();
+        return response()->json($behaviour);
     }
 
     /**
@@ -86,9 +90,10 @@ class BehaviourController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Klass $klass, $id)
     {
-        //
+        //dd($id);
+        //dd($klass->behaviourSummary()[0]);
     }
 
     /**
@@ -124,4 +129,15 @@ class BehaviourController extends Controller
     {
         //
     }
+
+    public function adjust(Klass $klass){
+        $klass->grade;
+        return Inertia::render('Director/BehaviourAdjust',[
+            'currentTerm'=>Year::currentTerm(),
+            'staff'=>auth()->user()->staff,
+            'klass'=>$klass,
+            'behaviours'=>$klass->behaviourSummary()
+        ]);
+    }
+
 }

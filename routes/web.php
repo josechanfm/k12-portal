@@ -181,7 +181,7 @@ Route::group([
         Route::get('students/get_by_klass_id/{klass}',[App\Http\Controllers\Director\StudentController::class,'getByKlassId'])->name('director.students.getByKlassId');
         Route::post('students/get_by_names',[App\Http\Controllers\Director\StudentController::class,'getByNames'])->name('director.students.getByNames');
         
-        Route::get('{model}/{id}/students',[App\Http\Controllers\Director\StudentController::class,'selected'])->name('director.selected.students');
+        //Route::get('{model}/{id}/students',[App\Http\Controllers\Director\StudentController::class,'selected'])->name('director.selected.students');
 
         Route::resource('klass/{klass}/behaviours',App\Http\Controllers\Director\BehaviourController::class)->names('director.klass.behaviours');
         Route::get('klass/{klass}/behaviour/adjust',[App\Http\Controllers\Director\BehaviourController::class,'adjust'])->name('director.klass.behaviour.adjust');
@@ -197,7 +197,7 @@ Route::group([
 
         //Route::resource('course/{course}/scores',App\Http\Controllers\Director\ScoreController::class)->names('director.course.scores');
         // Route::post('/course/{course}/scores/batch_update',[App\Http\Controllers\Director\ScoreController::class,'batchUpdate'])->name('director.course.scores.batchUpdate');
-        // Route::get('/klass/{klass}/final_scores',[App\Http\Controllers\Director\ScoreController::class,'finalScores'])->name('director.klass.finalScores');
+        Route::get('/klass/{klass}/final_scores',[App\Http\Controllers\Director\ScoreController::class,'finalScores'])->name('director.klass.finalScores');
         
         Route::post('course/{course}/score_column/reorder',[App\Http\Controllers\Director\ScoreColumnController::class,'reorder'])->name('director.course.scoreColumn.reorder');
         Route::resource('course/{course}/score_columns',App\Http\Controllers\Director\ScoreColumnController::class)->names('director.course.scoreColumns');
@@ -281,19 +281,25 @@ Route::group([
         'role:master|admin|director|teacher'
     ]
 ],function () {        
-        //Route::resource('/',App\Http\Controllers\Teacher\DashboardController::class)->names('teachers');
-        Route::resource('/course/{course}/behaviours',App\Http\Controllers\Teacher\BehaviourController::class)->names('teacher.course.behaviours');
-        Route::get('/klass/{klass}/behaviours',[App\Http\Controllers\Teacher\BehaviourController::class,'klass'])->name('teacher.klass.behaviours');
+        Route::get('/',[App\Http\Controllers\Teacher\DashboardController::class,'index'])->name('teacher.dashboard');
+        Route::resource('course/{course}/behaviours',App\Http\Controllers\Teacher\BehaviourController::class)->names('teacher.course.behaviours');
+        //Route::get('klass/{klass}/behaviours',[App\Http\Controllers\Teacher\BehaviourController::class,'klass'])->name('teacher.klass.behaviours');
         
-        Route::resource('/course/{course}/scores',App\Http\Controllers\Teacher\ScoreController::class)->names('teacher.course.scores');
-        Route::post('/course/{course}/scores/batch_update',[App\Http\Controllers\Teacher\ScoreController::class,'batchUpdate'])->name('teacher.course.scores.batchUpdate');
-        Route::get('/klass/{klass}/final_scores',[App\Http\Controllers\Teacher\ScoreController::class,'finalScores'])->name('teacher.klass.finalScores');
+        Route::resource('course/{course}/scores',App\Http\Controllers\Teacher\ScoreController::class)->names('teacher.course.scores');
+        Route::post('course/{course}/scores/batch_update',[App\Http\Controllers\Teacher\ScoreController::class,'batchUpdate'])->name('teacher.course.scores.batchUpdate');
+        Route::get('klass/{klass}/final_scores',[App\Http\Controllers\Teacher\ScoreController::class,'finalScores'])->name('teacher.klass.finalScores');
 
         Route::resource('avatars',App\Http\Controllers\Teacher\AvatarController::class)->names('teacher.avatars');
         Route::post('avatar/upload',[App\Http\Controllers\Teacher\AvatarController::class,'upload'])->name('teacher.avatar.upload');
         Route::get('student/{student}/avatars',[App\Http\Controllers\Teacher\AvatarController::class,'student'])->name('teacher.student.avatars');
+        
         Route::get('klass/{klass}/avatars',[App\Http\Controllers\Teacher\AvatarController::class,'klass'])->name('teacher.klass.avatars');
+        
+        Route::get('klass/{klass}/courses',[App\Http\Controllers\Teacher\CourseController::class,'index'])->name('teacher.klass.courses');
+        Route::resource('klass/{klass}/behaviours',App\Http\Controllers\Teacher\BehaviourController::class)->names('.klass.behaviours');
 
+        Route::get('{model}/{id}/students',[App\Http\Controllers\Teacher\StudentController::class,'selected'])->name('teacher.selected.students');
+        Route::get('student/{student}/profile',[App\Http\Controllers\Teacher\StudentController::class,'profile'])->name('teacher.student.profile');
         //Route::resource('/course',App\Http\Controllers\Teachejaon()r\CourseController::class)->names('teacher.course');
 })->name('teacher');
 

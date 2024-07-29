@@ -13,7 +13,7 @@
             <template #bodyCell="{ column, text, record, index }">
                 <template v-if="column.dataIndex == 'operation'">
                     <a-button as="link" :href="route('director.klasses.show',record.id)" class="ant-btn">班別管理</a-button>
-                    <a-button as="link" :href="route('director.selected.students', {model:'klass',id:record})" class="ant-btn">學生名單</a-button>
+                    <a-button as="link" :href="route('teacher.selected.students', {model:'klass',id:record})" class="ant-btn">學生名單</a-button>
                     <span v-if="record.grade.grade_year <= 3">
                         <a-button as="link"  :href="route('admin.klass.themes.index', record.id)" class="ant-btn">主題</a-button>
                     </span>
