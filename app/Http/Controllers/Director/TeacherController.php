@@ -49,9 +49,12 @@ class TeacherController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
+    public function show($id){
+        $teacher=Staff::with('courses')->find($id);
+        return Inertia::render('Director/Teacher',[
+            'teacher'=>$teacher
+        ]);
+        
     }
 
     /**
@@ -90,6 +93,7 @@ class TeacherController extends Controller
 
     public function teaching($teacherId){
         $teacher=Staff::with('courses')->find($teacherId);
+        dd($teacher);
         return Inertia::render('Director/Teaching',[
             'teacher'=>$teacher
         ]);

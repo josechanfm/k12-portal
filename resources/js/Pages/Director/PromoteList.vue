@@ -4,7 +4,7 @@
             <template #bodyCell="{ column, text, record, index }">
                 <template v-if="column.dataIndex == 'operation'">
                     <template v-for="klass in record.klasses">
-                        <a-button as="link" :href="route('director.klass.promotes.index',klass.id)" class="ant-btn">
+                        <a-button as="link" href="route('director.klass.promotes.index',klass.id)" class="ant-btn">
                             {{klass.tag}}
                         </a-button>
                     </template>

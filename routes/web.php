@@ -176,10 +176,8 @@ Route::group([
         Route::get('student/{student}/siblings',[App\Http\Controllers\Director\StudentController::class,'siblings'])->name('director.student.siblings');
         Route::patch('student/{student}/join_sibling',[App\Http\Controllers\Director\StudentController::class,'joinSibling'])->name('director.student.joinSibling');
 
-        Route::get('student/{student}/avatars',[App\Http\Controllers\Director\AvatarController::class,'student'])->name('director.student.avatars');
         Route::resource('klass/{klass}/students',App\Http\Controllers\Director\StudentController::class)->names('director.klass.students');
 
-        Route::get('klass/{klass}/avatars',[App\Http\Controllers\Director\AvatarController::class,'klass'])->name('director.klass.avatars');
         Route::get('students/get_by_klass_id/{klass}',[App\Http\Controllers\Director\StudentController::class,'getByKlassId'])->name('director.students.getByKlassId');
         Route::post('students/get_by_names',[App\Http\Controllers\Director\StudentController::class,'getByNames'])->name('director.students.getByNames');
         
@@ -196,14 +194,13 @@ Route::group([
         Route::get('klass/{klass}/generate_transcripts',[App\Http\Controllers\Director\TranscriptController::class,'generateTranscripts'])->name('director.klass.generateTranscripts');
         
         Route::resource('/teachers',App\Http\Controllers\Director\TeacherController::class)->names('director.teachers');
-        Route::get('teaching/{teacherId}',[App\Http\Controllers\Director\TeacherController::class,'teaching'])->name('director.teaching');   
 
-        Route::resource('course/{course}/scores',App\Http\Controllers\Director\ScoreController::class)->names('director.course.scores');
+        //Route::resource('course/{course}/scores',App\Http\Controllers\Director\ScoreController::class)->names('director.course.scores');
+        // Route::post('/course/{course}/scores/batch_update',[App\Http\Controllers\Director\ScoreController::class,'batchUpdate'])->name('director.course.scores.batchUpdate');
+        // Route::get('/klass/{klass}/final_scores',[App\Http\Controllers\Director\ScoreController::class,'finalScores'])->name('director.klass.finalScores');
         
         Route::post('course/{course}/score_column/reorder',[App\Http\Controllers\Director\ScoreColumnController::class,'reorder'])->name('director.course.scoreColumn.reorder');
         Route::resource('course/{course}/score_columns',App\Http\Controllers\Director\ScoreColumnController::class)->names('director.course.scoreColumns');
-        Route::post('/course/{course}/scores/batch_update',[App\Http\Controllers\Director\ScoreController::class,'batchUpdate'])->name('director.course.scores.batchUpdate');
-        Route::get('/klass/{klass}/final_scores',[App\Http\Controllers\Director\ScoreController::class,'finalScores'])->name('director.klass.finalScores');
 
         Route::post('/makeup/create_or_cancel',[App\Http\Controllers\Director\MakeupController::class,'createOrCancel'])->name('director.makeup.createOrCancel');
         Route::post('/makeup/update',[App\Http\Controllers\Director\MakeupController::class,'update'])->name('director.makeup.update');
@@ -227,11 +224,9 @@ Route::group([
         Route::resource('certificates',App\Http\Controllers\Director\CertificateController::class)->names('director.certificates');
         Route::get('certificate/get_by_conditions',[App\Http\Controllers\Director\CertificateController::class,'getByConditions'])->name('director.certificate.getByConditions');
 
-        // Route::get('promotes',[App\Http\Controllers\Director\PromotionController::class,'list'])->name('director.promotes');
-        // Route::resource('klass/{klass}/promotes/',App\Http\Controllers\Director\PromotionController::class)->names('director.klass.promotes');
+        //Route::get('promotes',[App\Http\Controllers\Director\PromotionController::class,'list'])->name('director.promotes');
+        Route::resource('klass/{klass}/promotes',App\Http\Controllers\Director\PromotionController::class)->names('director.klass.promotes');
         
-        //Route::resource('avatars/',App\Http\Controllers\Director\AvatarController::class)->names('director.avatars');
-        Route::post('avatar/upload',[App\Http\Controllers\Director\AvatarController::class,'upload'])->name('director.avatar.upload');
 
         Route::group(['prefix'=>'pre',],function () {
             Route::get('/klass/{klass}/final_scores',[App\Http\Controllers\Director\Pre\KlassController::class,'finalScores'])->name('director.pre.klass.finalScores');
@@ -289,8 +284,15 @@ Route::group([
         //Route::resource('/',App\Http\Controllers\Teacher\DashboardController::class)->names('teachers');
         Route::resource('/course/{course}/behaviours',App\Http\Controllers\Teacher\BehaviourController::class)->names('teacher.course.behaviours');
         Route::get('/klass/{klass}/behaviours',[App\Http\Controllers\Teacher\BehaviourController::class,'klass'])->name('teacher.klass.behaviours');
-
+        
         Route::resource('/course/{course}/scores',App\Http\Controllers\Teacher\ScoreController::class)->names('teacher.course.scores');
+        Route::post('/course/{course}/scores/batch_update',[App\Http\Controllers\Teacher\ScoreController::class,'batchUpdate'])->name('teacher.course.scores.batchUpdate');
+        Route::get('/klass/{klass}/final_scores',[App\Http\Controllers\Teacher\ScoreController::class,'finalScores'])->name('teacher.klass.finalScores');
+
+        Route::resource('avatars',App\Http\Controllers\Teacher\AvatarController::class)->names('teacher.avatars');
+        Route::post('avatar/upload',[App\Http\Controllers\Teacher\AvatarController::class,'upload'])->name('teacher.avatar.upload');
+        Route::get('student/{student}/avatars',[App\Http\Controllers\Teacher\AvatarController::class,'student'])->name('teacher.student.avatars');
+        Route::get('klass/{klass}/avatars',[App\Http\Controllers\Teacher\AvatarController::class,'klass'])->name('teacher.klass.avatars');
 
         //Route::resource('/course',App\Http\Controllers\Teachejaon()r\CourseController::class)->names('teacher.course');
 })->name('teacher');

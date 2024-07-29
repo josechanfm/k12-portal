@@ -84,7 +84,7 @@ export default {
             })
         },
         uploadFile(klassStudentId, file){
-            axios.post(route('director.avatars.store'),{
+            axios.post(route('teacher.avatars.store'),{
                 avatar:file,
                 klassStudentId:klassStudentId
             },{

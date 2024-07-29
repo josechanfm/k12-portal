@@ -200,8 +200,8 @@ export default {
     data() {
         return {
             breadcrumb:[
-                {label:"主控台", url:null},
-                {label:"年級班別", url:null},
+                {label:"主控台", url:route('director.dashboard')},
+                {label:"年級班別", url:route('director.grades.index',{'type':'secondary'})},
                 {label:this.course.klass.tag+'科學分管理' ,url:null},
             ],
             merge: {
@@ -318,7 +318,7 @@ export default {
             this.modal.isOpen = true;
         },
         onClickDeleteScoreColumn(recordId) {
-            this.$inertia.delete(route("director.course.scoreColumns.destroy",{course:this.course.id,score_column:recordId}), {
+            this.$inertia.delete(route("teacher.course.scoreColumns.destroy",{course:this.course.id,score_column:recordId}), {
                 onSuccess: (page) => {
                     console.log(page)
                 },
@@ -331,7 +331,7 @@ export default {
             console.log(recordId);
         },
         createScoreColumn(data) {
-            this.$inertia.post(route("director.course.scoreColumns.store",this.course), data, {
+            this.$inertia.post(route("teacher.course.scoreColumns.store",this.course), data, {
                 onSuccess: (page) => {
                     this.modal.mode = null;
                     this.modal.isOpen = false;
@@ -344,7 +344,7 @@ export default {
         updateScoreColumn(data) {
             //this.$inertia.put('/director/score_column/'+data.id, data, {
             console.log(data);
-            this.$inertia.put(route("director.course.scoreColumns.update", {course:this.course,score_column:data.id}), data, {
+            this.$inertia.put(route("teacher.course.scoreColumns.update", {course:this.course,score_column:data.id}), data, {
                 onSuccess: (page) => {
                     this.modal.mode = null;
                     this.modal.isOpen = false;
@@ -371,7 +371,7 @@ export default {
                     })
                 })
             })
-            this.$inertia.post(route("director.course.scores.batchUpdate",this.course), data, {
+            this.$inertia.post(route("teacher.course.scores.batchUpdate",this.course), data, {
                 onSuccess: (page) => {
                     console.log("update " + page)
                 },
@@ -489,7 +489,7 @@ export default {
             this.scoreColumns.forEach(column => {
                 column.sequence = i++
             })
-            this.$inertia.post(route("director.course.scoreColumn.reorder",this.course), this.scoreColumns, {
+            this.$inertia.post(route("teacher.course.scoreColumn.reorder",this.course), this.scoreColumns, {
                 onSuccess: (page) => {
                     console.log(page);
                 },

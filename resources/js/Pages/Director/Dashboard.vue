@@ -3,7 +3,7 @@
         <div v-if="defaultKlass">
             <a-button as="link" :href="route('director.klass.behaviours.index',defaultKlass.id)" class="ant-btn">操行</a-button>
             <a-button as="link" :href="route('director.klass.behaviour.adjust',defaultKlass.id)" class="ant-btn">操行調整</a-button>
-            <a-button as="link" :href="route('director.klass.finalScores',defaultKlass.id)" class="ant-btn">期末成績</a-button>
+            <a-button as="link" :href="route('teacher.klass.finalScores',defaultKlass.id)" class="ant-btn">期末成績</a-button>
             <a-button as="link" :href="route('director.klass.transcripts',defaultKlass.id)" class="ant-btn">成績大表</a-button>
             <a-button as="link" :href="route('director.klass.transcripts',[defaultKlass.id,{type:'summary'}])" class="ant-btn">成績總表</a-button>
             <a-button as="link" :href="route('director.student.finder')" class="ant-btn">查找學生</a-button>

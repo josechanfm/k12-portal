@@ -4,7 +4,7 @@
         <p>Students: {{ klass.student_count }}</p>
         <p>Current Term: {{currentTerm.label}}</p>
         <a-button as="link" :href="route('director.selected.students', {model:'klass',id:klass})" class="ant-btn">學生名單</a-button>
-        <a-button as="link" :href="route('director.klass.avatars',klass.id)" class="ant-btn ant-btn-default">學生照片</a-button>
+        <a-button as="link" :href="route('teacher.klass.avatars',klass.id)" class="ant-btn ant-btn-default">學生照片</a-button>
         <template v-if="klass.grade_year<=3">
             <!-- <a-button as="link" :href="route('director.klass.students.index', klass.id)" class="ant-btn">學生名單</a-button> -->
             <a-button as="link" :href="route('director.pre.klass.habits', klass.id)" class="ant-btn">生活習摜</a-button>
@@ -13,7 +13,7 @@
         </template>
         <template v-else>
             <!-- <a-button as="link" :href="route('director.klass.students.index', klass.id)" class="ant-btn">學生名單</a-button> -->
-            <a-button as="link" :href="route('director.klass.finalScores', klass.id)" class="ant-btn">期末成績</a-button>
+            <a-button as="link" :href="route('teacher.klass.finalScores', klass.id)" class="ant-btn">期末成績</a-button>
             <a-button as="link" :href="route('director.klass.transcripts', {'klass':klass.id,'type':'summary'})" class="ant-btn">成績總表</a-button>
             <a-button as="link" :href="route('director.klass.transcripts', klass.id)" class="ant-btn">成績大表</a-button>
         </template>

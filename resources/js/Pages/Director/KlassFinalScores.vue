@@ -2,7 +2,7 @@
     <AdminLayout title="期末成績" :breadcrumb="breadcrumb">
         <p>點擊紅色不合格分數批准補考</p>
         <div class="py-5">
-            <KlassSelector routePath="director.klass.finalScores" :param="{type:'summary'}" :currentKlass="klass"/>
+            <KlassSelector routePath="teacher.klass.finalScores" :param="{type:'summary'}" :currentKlass="klass"/>
         </div>
 
 

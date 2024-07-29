@@ -5,7 +5,7 @@
             <a-table :dataSource="teacher.courses" :columns="columns">
                 <template #bodyCell="{ column, text, record, index }">
                     <template v-if="column.dataIndex == 'operation'">
-                        <a-button as="link" :href="route('director.course.scores.index', record.id)"
+                        <a-button as="link" :href="route('teacher.course.scores.index', record.id)"
                             class="ant-btn">學分</a-button>
                     </template>
                     <template v-else>

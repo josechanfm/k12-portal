@@ -2,7 +2,7 @@
     <AdminLayout title="學生名單" :breadcrumb="breadcrumb">
 
 
-        <a-button as="link" :href="route('director.klass.avatars',klass.id)" class="ant-btn ant-btn-default float-right">學生照片</a-button>
+        <a-button as="link" :href="route('teacher.klass.avatars',klass.id)" class="ant-btn ant-btn-default float-right">學生照片</a-button>
         <a-typography-title :level="3">班別: {{ klass.tag }}</a-typography-title>
         <a-table :dataSource="students" :columns="columns">
             <template #bodyCell="{column, text, record, index}">

@@ -4,14 +4,13 @@
             <a-table :dataSource="teachers" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
-                        <ButtonLink :href="'teaching/'+record.id" :type="'Link'">任教</ButtonLink>
-                        
+                        <a-button as="link" :href="route('director.teachers.show',record.id)">任教</a-button>
                     </template>
                     <template v-else-if="column.dataIndex=='courses'">
                         <ul>
                             <li v-for="course in record.courses">
                                 {{ course.klass.tag }} - {{ course.code }}-{{ course.title_zh }}
-                                <Link :href="'score?kid='+course.klass_id + '&cid='+course.id" method="get" as="button" type="button">Score</Link>
+                                <a-button as="link" :href="route('teacher.course.scores.index', course.id)" class="ant-btn">學分</a-button>
                             </li>
                         </ul>
                     </template>
