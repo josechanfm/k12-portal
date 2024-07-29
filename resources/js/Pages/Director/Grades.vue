@@ -1,5 +1,6 @@
 <template>
   <AdminLayout title="年級班別" :breadcrumb="breadcrumb">
+    <div class="p-2 bg-white rounded-lg flex flex-col gap-1">
     <div class="flex flex-wrap font-bold text-sm gap-1">
       <div class="flex bg-gray-300 rounded-lg p-1 px-2 items-center gap-1">
         <div class="text-gray-600 font-black rounded-l-lg bg-gray-100 p-1">
@@ -22,20 +23,26 @@
         <div>{{ year.end }}</div>
       </div>
     </div>
-    <a-table :dataSource="viewGrades" class="">
-        <a-table-column title="年級">
+  
+    <div class="rounded-lg border-gray-200 border p-2">
+    <a-table :dataSource="viewGrades" :pagination="false"  bordered>
+      <template #headerCell="{column}">
+        <div class="flex itmes-center justify-center">{{ column.title }}</div>
+      </template>
+        <a-table-column title="年級" align="center" >
             <template #default="{record}">
-                {{ record.tag}}
+                <div class="font-black">{{ record.tag}}</div>
             </template>
         </a-table-column>
-        <template v-for="aph in 'abcdefghi'.toUpperCase().split('')" :key="aph">
-            <a-table-column :title="aph">
+        <template v-for="aph in letters" :key="aph">
+            <a-table-column :title="'Class-'+aph" align="center">
                 <template #default="{record}">
                     <div v-if="record.klasses[aph]">
-                        <a-button as="link" :href="route('director.klasses.show',record.klasses[aph].id)" class="ant-btn">
-                            <div class="flex  gap-1">
-                                <div>{{ record.klasses[aph].tag }}</div>
-                                <a-tag> {{ record.klasses[aph].student_count}} 人</a-tag>
+                        <a-button as="link"  type="text" class="hover-scale"
+                          :href="route(routeName(record.id),record.klasses[aph].id)" >
+                            <div class="flex  gap-1 items-center">
+                                <div  class="font-bold text-lg !text-blue-500 underline">{{ record.klasses[aph].tag }}</div>
+                                <a-tag class="font-bold"> {{ record.klasses[aph].student_count}} 人</a-tag>
                             </div>
                         </a-button>
                     </div>
@@ -43,8 +50,8 @@
             </a-table-column>
         </template>
     </a-table>
-
-
+  </div>
+</div>
     <a-divider />
   </AdminLayout>
 </template>
@@ -89,8 +96,8 @@ export default {
     // });
   },
   methods: {
-    findKclass(record,aph){
-       return record.klasses.find(x=>x.letter==aph)??false
+    routeName(gradeId){
+      return gradeId<=3?'director.pre.klasses.show':'director.klasses.show'
     }
     // selectKlass(klass,activeKey){
     //     this.selectedKlass=klass;
@@ -116,14 +123,16 @@ export default {
   },
   
   computed: {
-     
     viewGrades() {
         let grades = JSON.parse(JSON.stringify( this.grades) );
         grades.forEach(g => {
             g.klasses = Object.fromEntries((g?.klasses??[]).map(k => [k.letter, k]))
         })
         return grades
-    }
+    },
+    letters(){
+      return Object.assign([],...this.grades.map(x=>x.klasses.map(k=>k.letter)))
+    },
     },
 
 };
