@@ -1,5 +1,5 @@
 <template>
-    <AdminLayout title="老師主控台">
+    <AdminLayout title="老師主控台" :breadcrumb="breadcrumb">
         <div>
             <p>The collection of route "teacher" is for the general operation management such as serach and preview, which
                 not included setup of year, class or subject etc.</p>
@@ -36,7 +36,7 @@
                                     </td>
                                     <td>{{ course.student_count }}</td>
                                     <td>
-                                        <a-button as="link" :href="route('teacher.course.behaviours.index',course.id)" class="ant-btn">操行</a-button>
+                                        <a-button as="link" :href="route('teacher.selected.behaviours', {model:'course',id:course.id})" class="ant-btn">操行</a-button>
                                         <a-button as="link" :href="route('teacher.course.scores.index',course.id)" class="ant-btn">學分</a-button>
                                         <a-button @click="course.operation=!course.operation">更多...</a-button>
                                     </td>
@@ -48,8 +48,8 @@
                                         <a-button as="link" :href="route('director.klass.additive', [course.klass.id, 'PARTICIPATION'])" class="ant-btn">考勤</a-button>
                                         <a-button as="link" :href="route('director.klass.additive', [course.klass.id, 'POSITIVE'])" class="ant-btn">功</a-button>
                                         <a-button as="link" :href="route('director.klass.additive', [course.klass.id, 'NEGATIVE'])" class="ant-btn">過</a-button>
-                                        <a-button as="link" :href="route('director.klass.additive', [course.klass.id, 'conduct'])" class="ant-btn">操行</a-button>
                                         <a-button as="link" :href="route('director.klass.additive', [course.klass.id, 'comment'])" class="ant-btn">評語</a-button>
+                                        
                                     </td>
                                 </tr>
                                 </template>
@@ -88,7 +88,7 @@
                                     <td>{{ klass.course_count}}</td>
                                     <td>
                                         <template v-if="klassHeadBehaviour">
-                                            <a-button as="link" :href="route('teacher.klass.behaviours.index',klass.id)" class="ant-btn">操行</a-button>
+                                            <a-button as="link" :href="route('teacher.selected.behaviours',{model:'klass',id:klass.id})" class="ant-btn">操行</a-button>
                                         </template>
                                     </td>
                                 </tr>
@@ -164,6 +164,9 @@ export default {
     props: ['klassHeadBehaviour','subjectHeadBehaviour','staff'],
     data() {
         return {
+            breadcrumb:[
+                {label:'教師' ,url:null},
+            ],
             columns: [
                 {
                     title: '班級代號',

@@ -18,7 +18,6 @@ return new class extends Migration
             $table->foreignId('klass_student_id');
             $table->integer('term_id');
             $table->bigInteger('staff_id');
-            $table->string('reference_id')->nullable();
             $table->string('actor')->nullable();
             $table->integer('score')->nullable();
             $table->text('remark')->nullable();

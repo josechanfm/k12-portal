@@ -1,7 +1,8 @@
 <template>
     <AdminLayout title="主控台" :breadcrumb="breadcrumb">
         <div v-if="defaultKlass">
-            <a-button as="link" :href="route('director.klass.behaviours.index',defaultKlass.id)" class="ant-btn">操行</a-button>
+            <a-button as="link" :href="route('director.klass.behaviours.index',defaultKlass.id)" class="ant-btn">操行2</a-button>
+            <a-button as="link" :href="route('teacher.selected.behaviours',{model:'klass',id:defaultKlass.id})" class="ant-btn">操行</a-button>
             <a-button as="link" :href="route('director.klass.behaviour.adjust',defaultKlass.id)" class="ant-btn">操行調整</a-button>
             <a-button as="link" :href="route('teacher.klass.finalScores',defaultKlass.id)" class="ant-btn">期末成績</a-button>
             <a-button as="link" :href="route('director.klass.transcripts',defaultKlass.id)" class="ant-btn">成績大表</a-button>

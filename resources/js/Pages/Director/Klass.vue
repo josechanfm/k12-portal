@@ -18,6 +18,7 @@
             <a-button as="link" :href="route('director.klass.transcripts', klass.id)" class="ant-btn">成績大表</a-button>
         </template>
         <a-divider type="vertical" />
+            <a-button as="link" :href="route('teacher.selected.behaviours', {model:'klass',id:klass.id})" class="ant-btn">操行分數2</a-button>
             <a-button as="link" :href="route('director.klass.behaviours.index', klass.id)" class="ant-btn">操行分數</a-button>
             <a-button as="link" :href="route('director.klass.behaviour.adjust', klass.id)" class="ant-btn">操行調整</a-button>
         <a-divider type="vertical" />

@@ -94,17 +94,13 @@ class Klass extends Model
     public function medicnotes(){
         return $this->belongsToMany(Student::class)->with('medicnote');
     }
-    public function behaviours($actor='KLASS_HEAD'){
+    public function behaviours($actor='SUBJECT'){
         $students=$this->students;
         $terms=Config::item('year_terms');
-        $staff=auth()->user()->staff;
-        //$actor="KLASS_HEAD";
-        $klass=$this;
         $data=[];
-        $referenceId=$this->id;
         foreach($students as $student){
             $data['students'][$student->pivot->klass_student_id]=$student;
-            $data['scores'][$student->pivot->klass_student_id]=$student->getBehaviours($student->pivot->klass_student_id, $staff, $terms, $referenceId , $actor);
+            $data['scores'][$student->pivot->klass_student_id]=$student->getBehaviours($student->pivot->klass_student_id, $terms, $actor);
         }
         return $data;
         //return $students;

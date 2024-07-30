@@ -2,7 +2,10 @@
   <div class="ant-table">
     <div class="ant-table-container">
       <div class="ant-table-content">
-        <table style="table-layout: auto" ref="behaviourTable">
+        <div v-role="['director']">
+          is director
+        </div>
+        <table style="table-layout: auto" ref="behaviourTable" border="1">
           <thead class="ant-table-thead">
             <tr>
               <th>學生編號</th>
@@ -10,6 +13,8 @@
               <template v-for="term in yearTerms">
                 <th>{{ term.label }}操行分</th>
               </template>
+              <th>全年總分</th>
+              <th v-role="['master','admin','director']">Control</th>
             </tr>
           </thead>
           <tbody class="ant-table-tbody">
@@ -19,24 +24,43 @@
                 {{ student.name_zh }}
               </td>
               <template v-for="term in yearTerms">
-                <td>
+                <td width="200px">
                   <template v-if="term.value == currentTermId">
-                    {{ behaviours['scores'][ksid][term.value] }}
                     <a-input-number
-                      v-model:value="behaviours['scores'][ksid][term.value]['score']"
+                      v-model:value="behaviours['scores'][ksid][term.value]['staff'].score"
                       :min="0"
                       :max="100"
-                      @focus="onFocusScoreInput(behaviours['scores'][ksid][term.value])"
-                      @blur="onBlurScoreInput(behaviours['scores'][ksid][term.value])"
+                      style="width:50px"
+                      @focus="onFocusScoreInput(behaviours['scores'][ksid][term.value]['staff'])"
+                      @blur="onBlurScoreInput(behaviours['scores'][ksid][term.value]['staff'])"
                     />
                   </template>
-                  
                   <template v-else>
-                    {{ behaviours['scores'][ksid][term.value]['score'] }}
+                    <div>{{ behaviours['scores'][ksid][term.value]['staff'].score }}</div>
                     <!-- {{ getBehaviourScore(student.behaviours, term.value) }} -->
+                  </template>
+                  <template v-if="behaviours['scores'][ksid][term.value]['total']>0">
+                    / {{ behaviours['scores'][ksid][term.value]['total'] }}
+                  </template>
+                  <!-- Adjust behaviour score -->
+                  <template v-if="term.value == currentTermId">
+                    <a-input-number
+                      v-model:value="behaviours['scores'][ksid][term.value]['adjust'].score"
+                      :min="0"
+                      :max="100"
+                      style="width:50px"
+                      @blur="onBlurAdjustInput(behaviours['scores'][ksid][term.value]['adjust'])"
+                    >
+                    </a-input-number>
                   </template>
                 </td>
               </template>
+              <td>
+                {{ sumYearTotal(behaviours['scores'][ksid]) }}
+              </td>
+              <td v-role="['master','admin','director']">
+                control
+              </td>
             </tr>
           </tbody>
         </table>
@@ -61,18 +85,24 @@ export default {
       this.temp = { ...temp };
     },
     onBlurScoreInput(temp) {
-      console.log('onBlurScoreInput2  ')
       if (this.temp.score === temp.score) {
-        console.log("same");  
         return false;
       } else {
-        axios
-          .post(
-            route("teacher.course.behaviours.store", temp.reference_id),
-            temp
-          )
-          .then((resp) => console.log(resp.data));
+        console.log(temp)
+        axios.post(
+          route("teacher.behaviours.store", temp),
+          temp
+        ).then((resp) =>{
+          console.log(resp.data)
+        });
       }
+    },
+    onBlurAdjustInput(score){
+      console.log(score)
+      axios.post(route("teacher.behaviours.store"),score)
+      .then((resp) =>{
+        console.log(resp.data)
+      });
     },
     getBehaviourScore(behaviours, termId) {
       //var behaviour=behaviours.find(b=>b.term_id==termId)
@@ -83,6 +113,13 @@ export default {
         return null;
       }
     },
+    sumYearTotal(scores){
+      let sum=0;
+      Object.values(scores).forEach(s=>{
+        sum+=parseInt(s.total)
+      }) 
+      return sum
+    }
   },
 };
 </script>

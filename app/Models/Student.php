@@ -78,7 +78,6 @@ class Student extends Model implements HasMedia
     }
     public function klassStudentWithAvatar(){
         $klassStudent=$this->hasOne(KlassStudent::class);
-        dd($klassStudent->getMedia('avatar')->first());
         return $klassStudent->getMedia('avatar')->first();
     }
     public function courses(){
@@ -143,43 +142,42 @@ class Student extends Model implements HasMedia
     public function klassStudent(){
         return $this->hasOne(KlassStudent::class)->latestOfMany();
     }
-    public static function getBehaviours($klassStudentId, $staff, $terms, $referenceId,$actor='SUBJECT'){
+    public static function getBehaviours($klassStudentId, $terms,$actor='SUBJECT'){
+        //dd('klassStudentId',$klassStudentId,'staff',$staff);
         $behaviours=[];
+        $staff=auth()->user()->staff;
+        
         foreach($terms as $term){
-            if($staff==null){ //if director
-                $tmp=Behaviour::where('klass_student_id',$klassStudentId)
-                ->where('term_id',$term->value)
-                ->where('actor',$actor)->first();
-                if(empty($tmp)){
-                    // dd('is empty'.$klassStudentId.$term->value);
-                    $tmp=Behaviour::make([
-                        'klass_student_id'=>$klassStudentId,
-                        'staff_id'=>null,
-                        'term_id'=>$term->value,
-                        'reference_id'=>$referenceId,
-                        'actor'=>$actor,
-                        'score'=>null
-                    ]);
-                }
-            }else{ //include course teachers and klass head teachers
-                $tmp=Behaviour::where('klass_student_id',$klassStudentId)
-                ->where('staff_id',$staff->id)
-                ->where('term_id',$term->value)
-                ->where('actor',$actor)->first();
-                if(empty($tmp)){
-                    // dd('is empty'.$klassStudentId.$term->value);
-                    $tmp=Behaviour::make([
-                        'klass_student_id'=>$klassStudentId,
-                        'staff_id'=>$staff->id,
-                        'term_id'=>$term->value,
-                        'reference_id'=>$referenceId,
-                        'actor'=>$actor,
-                        'score'=>null
-                    ]);
-                }
-    
+            $tmp=Behaviour::where('klass_student_id',$klassStudentId)
+            ->where('term_id',$term->value)
+            ->whereNot('actor','ADJUST')
+            ->where('staff_id',$staff->id)->first();
+            if(empty($tmp)){
+                // dd('is empty'.$klassStudentId.$term->value);
+                $tmp=Behaviour::make([
+                    'klass_student_id'=>$klassStudentId,
+                    'term_id'=>$term->value,
+                    'staff_id'=>$staff->id,
+                    'actor'=>$actor,
+                    'score'=>null
+                ]);
             }
-            $behaviours[$term->value]=$tmp;
+            $adjust=Behaviour::where('klass_student_id',$klassStudentId)->where('term_id',$term->value)->where('actor','ADJUST')->first();
+            if(empty($adjust)){
+                // dd('is empty'.$klassStudentId.$term->value);
+                $adjust=Behaviour::make([
+                    'klass_student_id'=>$klassStudentId,
+                    'term_id'=>$term->value,
+                    'staff_id'=>$staff->id,
+                    'actor'=>'ADJUST',
+                    'score'=>null
+                ]);
+            }
+
+            $behaviours[$term->value]['staff']=$tmp;
+            $behaviours[$term->value]['all']=Behaviour::where('klass_student_id',$klassStudentId)->where('term_id',$term->value)->get();
+            $behaviours[$term->value]['total']=Behaviour::where('klass_student_id',$klassStudentId)->where('term_id',$term->value)->sum('score');
+            $behaviours[$term->value]['adjust']=$adjust;
         }
         return $behaviours;
     }
