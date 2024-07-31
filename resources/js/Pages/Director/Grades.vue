@@ -1,5 +1,6 @@
 <template>
   <AdminLayout title="年級班別" :breadcrumb="breadcrumb">
+    <div class="p-2 bg-white rounded-lg flex flex-col gap-1">
     <div class="flex flex-wrap font-bold text-sm gap-1">
       <div class="flex bg-gray-300 rounded-lg p-1 px-2 items-center gap-1">
         <div class="text-gray-600 font-black rounded-l-lg bg-gray-100 p-1">
@@ -22,58 +23,35 @@
         <div>{{ year.end }}</div>
       </div>
     </div>
-
-
-    <div class="ant-table">
-      <div class="ant-table-container">
-        <div class="ant-table-content">
-          <table style="table-layout: auto">
-            <thead class="ant-table-thead">
-              <tr>
-                <th class="text-left">班別學生數目</th>
-                <th class="text-left">A</th>
-                <th class="text-left">B</th>
-                <th class="text-left">C</th>
-                <th class="text-left">D</th>
-                <th class="text-left">E</th>
-                <th class="text-left">F</th>
-              </tr>
-            </thead>
-            <tbody class="ant-table-tbody">
-              <tr
-                v-for="(grade, gradeKey) in grades"
-                :grade_id="grade.id"
-                class="ant-table-row"
-              >
-                <td class="ant-table-cell text-left">{{ grade.tag }}</td>
-                <template v-for="klass in grade.klasses">
-                  <td class="ant-table-cell text-left">
-                    <template v-if="klass.grade_year <= 3">
-                      <a-button
-                        as="link"
-                        :href="route('director.pre.klasses.show', klass.id)"
-                        class="ant-btn"
-                        >{{ klass.tag }}</a-button
-                      >
-                      {{ klass.student_count }}
-                    </template>
-                    <template v-else>
-                      <a-button
-                        as="link"
-                        :href="route('director.klasses.show', klass.id)"
-                        class="ant-btn"
-                        >{{ klass.tag }}</a-button
-                      >
-                      {{ klass.student_count }}
-                    </template>
-                  </td>
+  
+    <div class="rounded-lg border-gray-200 border p-2">
+    <a-table :dataSource="viewGrades" :pagination="false"  bordered>
+      <template #headerCell="{column}">
+        <div class="flex itmes-center justify-center">{{ column.title }}</div>
+      </template>
+        <a-table-column title="年級" align="center" >
+            <template #default="{record}">
+                <div class="font-black">{{ record.tag}}</div>
+            </template>
+        </a-table-column>
+        <template v-for="aph in letters" :key="aph">
+            <a-table-column :title="'Class-'+aph" align="center">
+                <template #default="{record}">
+                    <div v-if="record.klasses[aph]">
+                        <a-button as="link"  type="text" class="hover-scale"
+                          :href="route(routeName(record.id),record.klasses[aph].id)" >
+                            <div class="flex  gap-1 items-center">
+                                <div  class="font-bold text-lg !text-blue-500 underline">{{ record.klasses[aph].tag }}</div>
+                                <a-tag class="font-bold"> {{ record.klasses[aph].student_count}} 人</a-tag>
+                            </div>
+                        </a-button>
+                    </div>
                 </template>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+            </a-table-column>
+        </template>
+    </a-table>
+  </div>
+</div>
     <a-divider />
   </AdminLayout>
 </template>
@@ -118,6 +96,9 @@ export default {
     // });
   },
   methods: {
+    routeName(gradeId){
+      return gradeId<=3?'director.pre.klasses.show':'director.klasses.show'
+    }
     // selectKlass(klass,activeKey){
     //     this.selectedKlass=klass;
     //     axios.get('/director/students/get_by_klass_id/'+klass.id)
@@ -140,6 +121,20 @@ export default {
     //         });
     // }
   },
+  
+  computed: {
+    viewGrades() {
+        let grades = JSON.parse(JSON.stringify( this.grades) );
+        grades.forEach(g => {
+            g.klasses = Object.fromEntries((g?.klasses??[]).map(k => [k.letter, k]))
+        })
+        return grades
+    },
+    letters(){
+      return Object.assign([],...this.grades.map(x=>x.klasses.map(k=>k.letter)))
+    },
+    },
+
 };
 </script>
 

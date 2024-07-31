@@ -17,10 +17,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('theme_template_id');
             $table->integer('sequence')->nullable();
-            $table->string('ability_code');
-            $table->string('ability');
-            $table->string('abbr');
-            $table->string('title');
+            $table->string('ability_code')->nullable();
+            $table->string('ability')->nullable();
+            $table->string('abbr')->nullable();
+            $table->string('section_code')->nullable();
+            $table->string('section')->nullable();
+            $table->string('title')->nullable();
             $table->text('description')->nullable();
             $table->timestamps();
         });
