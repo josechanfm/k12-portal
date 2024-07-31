@@ -175,7 +175,7 @@ class Student extends Model implements HasMedia
             }
 
             $behaviours[$term->value]['staff']=$tmp;
-            $behaviours[$term->value]['all']=Behaviour::where('klass_student_id',$klassStudentId)->where('term_id',$term->value)->get();
+            $behaviours[$term->value]['all']=Behaviour::where('klass_student_id',$klassStudentId)->where('term_id',$term->value)->orderBy('created_at','DESC')->get();
             $behaviours[$term->value]['total']=Behaviour::where('klass_student_id',$klassStudentId)->where('term_id',$term->value)->sum('score');
             $behaviours[$term->value]['adjust']=$adjust;
         }

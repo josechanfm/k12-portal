@@ -14,7 +14,7 @@
                 <th>{{ term.label }}操行分</th>
               </template>
               <th>全年總分</th>
-              <th v-role="['master','admin','director']">Control</th>
+              <th v-role="['master','admin','director']">操作</th>
             </tr>
           </thead>
           <tbody class="ant-table-tbody">
@@ -59,7 +59,7 @@
                 {{ sumYearTotal(behaviours['scores'][ksid]) }}
               </td>
               <td v-role="['master','admin','director']">
-                control
+                <a-button @click="showBehaviourScores(behaviours['scores'][ksid])">詳細內容</a-button>
               </td>
             </tr>
           </tbody>
@@ -67,6 +67,31 @@
       </div>
     </div>
   </div>
+
+
+  <a-modal v-model:open="modal.isOpen" :title="modal.title" :okButtonProps="{hidden:true}" cancelText="關閉">
+    <table border="1" width="100%">
+      <thead>
+        <tr>
+          <th width="50">Term</th>
+          <th width="50">Score</th>
+          <th>Actor</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template v-for="term in modal.data">
+          <tr v-for="(item, termId) in term['all']">
+            <td class="text-center">{{ termId }}</td>
+            <td class="text-center">{{ item['score'] }}</td>
+            <td>{{ item['actor'] }}</td>
+            <td>{{ item['created_at'] }}</td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+  </a-modal>
+
 </template>
 
 <script>
@@ -75,8 +100,14 @@ export default {
   props: ["yearTerms", "currentTermId", "behaviours"],
   data() {
     return {
-      tempBehaviour: null,
       temp:null,
+      modal: {
+          mode: null,
+          isOpen: false,
+          title: '操行分明細',
+          data: {}
+      },
+
     };
   },
   mounted() {},
@@ -119,8 +150,15 @@ export default {
         sum+=parseInt(s.total)
       }) 
       return sum
+    },
+    showBehaviourScores(scores){
+      this.modal.isOpen=true
+      this.modal.data=scores
+      console.log(scores)
     }
+
   },
 };
 </script>
+
 

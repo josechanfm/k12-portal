@@ -13,6 +13,7 @@
             </div>
             <BehaviourTable :yearTerms="yearTerms" :currentTermId="this.klass.course_locked?0:this.klass.current_term" :behaviours="behaviours"/>
         </div>
+
     </AdminLayout>
 </template>
 
@@ -36,7 +37,6 @@ export default {
                 {label:this.klass.tag+'年級' ,url:route('director.klasses.show', this.klass.id)},
                 {label:'操行' ,url:null}
             ],
-            tempBehaviour:null,
         }
     },
     mounted() {
