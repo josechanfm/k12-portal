@@ -5,14 +5,19 @@
                 年級學習計劃
             </h2>
         </template>
-            <a-button @click="onClickCreate()" type="primary" >新增年級</a-button>
+        <div  class="p-2 bg-white rounded-lg flex flex-col gap-1">
+            <div class="flex">
+                <div class="flex-1"></div>
+                 <a-button @click="onClickCreate()" type="primary" >新增年級</a-button>
+            </div>
+        <div  class="rounded-lg border-gray-200 border p-2">
             <a-table :dataSource="studies" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
-                    <template v-if="column.dataIndex=='operation'">
-                        <a-button as="link" :href="route('master.studySubjects.edit',record.id)" class="ant-btn">選擇學科</a-button>
-                        <a-button @click="onClickEdit(record)">修改</a-button>
-                        <a-button @click="onClickDelete(record)">刪除</a-button>
-                    </template>
+                    <div v-if="column.dataIndex=='operation'" class="flex gap-1">
+                        <a-button as="link" :href="route('master.studySubjects.edit',record.id)" size="small" type="info">選擇學科</a-button>
+                        <a-button @click="onClickEdit(record)" size="small" type="edit">修改</a-button>
+                        <a-button @click="onClickDelete(record)" size="small" type="delete">刪除</a-button>
+                    </div>
                     <template v-else-if="column.dataIndex=='courses'">
                         <ul>
                             <li v-for="klass in record['klasses']">Class: {{klass.acronym}}</li>
@@ -26,7 +31,7 @@
                     </template>
                 </template>
             </a-table>
-
+        </div>
         <!-- Modal Start-->
         <a-modal v-model:open="modal.isOpen" :title="modal.title" width="60%" >
             <a-form
@@ -80,6 +85,7 @@
         </template>
         </a-modal>    
         <!-- Modal End-->
+         </div>
     </AdminLayout>
 
 </template>

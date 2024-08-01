@@ -5,16 +5,22 @@
                 學年級別學科列表
             </h2>
         </template>
-        <div>List all students</div>
-        <div>Might need to add search and filter features</div>
-        <a-button @click="onClickCreate()">新增學生</a-button>
+        <div  class="p-2 bg-white rounded-lg flex flex-col gap-1">
+        <div class="flex">
+            <div class="flex-1">
+                <div>List all students</div>
+                <div>Might need to add search and filter features</div>
+            </div>
+            <a-button @click="onClickCreate()" size="small" type="create">新增學生</a-button>
+        </div>
+        <div  class="rounded-lg border-gray-200 border p-2">
             <a-table :dataSource="students.data" :columns="columns" :pagination="pagination" @change="onPaginationChange" ref="dataTable">
                 <template #bodyCell="{column, text, record, index}">
-                    <template v-if="column.dataIndex=='operation'">
-                        <a-button :href="route('director.students.show',record.id)" class="ant-btn" target="_blank">學生檔案</a-button>
-                        <a-button @click="onClickEdit(record)" :style="'Edit'">修改</a-button>
-                        <a-button @click="onClickDelete(record)" :style="'Delete'">刪除</a-button>
-                    </template>
+                    <div v-if="column.dataIndex=='operation'" class="flex gap-1">
+                        <a-button :href="route('director.students.show',record.id)"  target="_blank" size="small" type="info"> 學生檔案</a-button>
+                        <a-button @click="onClickEdit(record)" size="small" type="edit">修改</a-button>
+                        <a-button @click="onClickDelete(record)"  size="small" type="delete">刪除</a-button>
+                    </div>
                     <template v-if="column.dataIndex=='username'">
                         <span v-if="record.user">
                             {{ record.user.username }}
@@ -25,7 +31,7 @@
                     </template>
                 </template>
             </a-table>
-
+        </div>
         <!-- Modal Start-->
         <a-modal v-model:open="modal.isOpen" :title="modal.title" >
             <a-form
@@ -63,12 +69,13 @@
                 </a-form-item>
             </a-form>
             <template #footer>
-                <a-button key="back" @click="modalCancel">Return</a-button>
-                <a-button v-if="modal.mode=='EDIT'" key="Update" type="primary" @click="updateRecord()">Update</a-button>
-                <a-button v-if="modal.mode=='CREATE'"  key="Store" type="primary" @click="storeRecord()">Create</a-button>
+                <a-button key="back" @click="modalCancel" type="delete">關閉</a-button>
+                <a-button v-if="modal.mode=='EDIT'" key="Update" type="edit" @click="updateRecord()">提交並更改</a-button>
+                <a-button v-if="modal.mode=='CREATE'"  key="Store" type="create" @click="storeRecord()">提交並新增</a-button>
             </template>
 
         </a-modal>
+        </div>
     </AdminLayout>
 
 </template>

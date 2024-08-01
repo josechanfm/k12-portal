@@ -5,26 +5,32 @@
                 學科列表
             </h2>
         </template>
-        <!-- {{ study.grade }}- {{ study.title_zh }}<br>
-        {{ study.stream }}<br> -->
-        <br>
-        <button @click="onClickCreate()"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">新增學科</button>
-            <a-table :dataSource="subjects" :columns="columns" @change="onPaginationChange" ref="dataTable">
-                <template #bodyCell="{column, text, record, index}">
-                    <template v-if="column.dataIndex=='operation'">
-                        <ButtonLink @click="onClickEdit(record)" :style="'Edit'">修改</ButtonLink>
-                        <ButtonLink @click="onClickDelete(record)" :style="'Delete'">刪除</ButtonLink>
+        <div  class="p-2 bg-white rounded-lg flex flex-col gap-1">
+        <div class="flex ">
+            <div class="flex-1"></div>
+            <a-button @click="onClickCreate()"
+             size="small" type="create">
+                新增學科</a-button>
+        </div>
+            <div  class="rounded-lg border-gray-200 border p-2">
+
+                <a-table :dataSource="subjects" :columns="columns" @change="onPaginationChange" ref="dataTable">
+                    <template #bodyCell="{column, text, record, index}">
+                        <div v-if="column.dataIndex=='operation'" class="flex gap-1" >
+                            <a-button @click="onClickEdit(record)"  size='small' type="edit">修改</a-button>
+                            <a-button @click="onClickDelete(record)" size='small' type="delete">刪除</a-button>
+                        </div>
+                        <template v-if="column.dataIndex=='active'">
+                            <check-square-outlined v-if="text=='1'" :style="{color:'green'}"/>
+                            <stop-outlined v-else :style="{color:'red'}"/>
+                        </template>
+                        <template v-else>
+                            {{record[column.dataIndex]}}
+                        </template>
                     </template>
-                    <template v-if="column.dataIndex=='active'">
-                        <check-square-outlined v-if="text=='1'" :style="{color:'green'}"/>
-                        <stop-outlined v-else :style="{color:'red'}"/>
-                    </template>
-                    <template v-else>
-                        {{record[column.dataIndex]}}
-                    </template>
-                </template>
-            </a-table>
+                </a-table>
+            </div>
+        </div>
 
         <!-- Modal Start-->
         <a-modal v-model:open="modal.isOpen" :title="modal.title" width="60%" @update="updateRecord()" @onCancel="closeModal()">
@@ -80,9 +86,9 @@
             </a-form>
         <template #footer>
             <a-checkbox v-if="modal.mode=='CREATE'" class="float-left" v-model:checked="selectAll" @change="onChangeSelectAll">SelectAll</a-checkbox>
-            <a-button key="back" @click="modalCancel">反回</a-button>
-            <a-button v-if="modal.mode=='EDIT'" key="Update" type="primary" @click="updateRecord()">更新</a-button>
-            <a-button v-if="modal.mode=='CREATE'"  key="Store" type="primary" @click="storeRecord()">新增</a-button>
+            <a-button key="back" @click="modalCancel" type="delete">關閉</a-button>
+            <a-button v-if="modal.mode=='EDIT'" key="Update" type="edit" @click="updateRecord()">提交並更改</a-button>
+            <a-button v-if="modal.mode=='CREATE'"  key="Store" type="create" @click="storeRecord()">提交並新增</a-button>
         </template>
     </a-modal>    
     <!-- Modal End-->

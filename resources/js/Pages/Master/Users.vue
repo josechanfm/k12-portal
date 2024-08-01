@@ -1,9 +1,12 @@
 <template>
     <AdminLayout title="用戶權限及分配">
-        <div class="bg-white p-2 rounded-lg">
-        <button @click="createRecord()" class="border-none bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">
-            新增用戶
-        </button>
+        <div class="flex flex-col bg-white p-2 rounded-lg gap-1">
+            <div class="flex">
+                <div class="flex-1"></div>
+                <a-button @click="createRecord()" type="create" size="small">
+                    新增用戶
+                </a-button>
+            </div>
         <a-table :dataSource="users" :columns="columns" size="small"
             :pagination="false" :scroll="{ y: '60vh' }"
             class="rounded-lg border-gray-200  border p-2 "  bordered>
@@ -12,8 +15,8 @@
             </template>
             <template #bodyCell="{column, text, record, index}">
                 <div v-if="column.dataIndex=='operation'" class="flex gap-1  justify-center">
-                    <a-button @click="editRecord(record)" size="small" class=" !h-fit font-black text-lg text-white bg-amber-600 ">編輯</a-button>
-                    <a-button @click="deleteRecord(record.id)" size="small" class="!h-fit font-black text-lg text-white bg-red-600">刪除</a-button>
+                    <a-button @click="editRecord(record)" size="small" type="edit">編輯</a-button>
+                    <a-button @click="deleteRecord(record.id)" size="small" type="delete">刪除</a-button>
                 </div>
                 <template v-else-if="column.dataIndex=='roles'">
                     <a-tag v-for="role in record.roles" color="green">{{ $t(role.name) }}</a-tag>

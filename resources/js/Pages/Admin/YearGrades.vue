@@ -1,35 +1,41 @@
 <template>
-    <AdminLayout title="年級列表" :breadcrumb="breadcrumb">
-        <div class="flex flex-wrap font-bold text-sm gap-1">
-            <div class="flex bg-gray-300 rounded-lg p-1 px-2 items-center gap-1">
-                <div class="text-gray-600 font-black rounded-l-lg bg-gray-100  p-1 ">學年代號</div>
-                <div class=" "> 
-                    <a-select  ref="select"   v-model:value="year.id"  style="width: 120px"
-                        @change="selectYear"    :options="years"  :field-names="{label:'code',value:'id'}" >
-                    </a-select>       
+    <AdminLayout title="年級" :breadcrumb="breadcrumb">
+        <div class="p-2 bg-white rounded-lg flex flex-col gap-1">
+            <!--  -->
+            
+            <div class="flex flex-wrap font-bold text-sm gap-1">
+                <div class="flex bg-gray-300 rounded-lg p-1 px-2 items-center gap-1">
+                    <div class="text-gray-600 font-black rounded-l-lg bg-gray-100  p-1 ">學年代號</div>
+                    <div class=" "> 
+                        <a-select  ref="select"   v-model:value="year.id"  style="width: 120px"
+                            @change="selectYear"    :options="years"  :field-names="{label:'code',value:'id'}" >
+                        </a-select>       
+                    </div>
                 </div>
+                <div class="flex bg-gray-300 rounded-lg p-1 items-center gap-1">
+                    <div class="text-gray-600 font-black rounded-l-lg bg-gray-100  p-1 ">學年全稱</div>
+                    <div class=" ">{{ year.title }}</div>
+                </div>
+                <div class="flex bg-gray-300 rounded-lg p-1 items-center gap-1 ">
+                    <div class="text-gray-600 font-black rounded-l-lg bg-gray-100  p-1 ">日期</div>
+                    <div>{{ year.start }}</div>
+                <ArrowRightOutlined/>
+                    <div>{{ year.end }}</div>
+                </div>
+                <div class="flex-1"></div>
+                <a-button @click="createRecord()" type="create" size="small">
+                    新增學年級別
+                </a-button>
             </div>
-            <div class="flex bg-gray-300 rounded-lg p-1 items-center gap-1">
-                <div class="text-gray-600 font-black rounded-l-lg bg-gray-100  p-1 ">學年全稱</div>
-                <div class=" ">{{ year.title }}</div>
-            </div>
-            <div class="flex bg-gray-300 rounded-lg p-1 items-center gap-1 ">
-                <div class="text-gray-600 font-black rounded-l-lg bg-gray-100  p-1 ">日期</div>
-                <div>{{ year.start }}</div>
-            <ArrowRightOutlined/>
-                <div>{{ year.end }}</div>
-            </div>
-            <div class="flex-1"></div>
-            <a-button @click="createRecord()" type="primary">
-                新增學年級別
-            </a-button>
-        </div>
-        <a-table :dataSource="grades" :columns="columns" :pagination="{ pageSize: 20 }">
+            <!--  -->
+        <div class="rounded-lg border-gray-200 border p-2">
+        <a-table :dataSource="grades" :columns="columns" :pagination="{ pageSize: 20 }"
+>
             <template #bodyCell="{column, text, record, index}">
-                <template v-if="column.dataIndex=='operation'">
-                    <a-button as="link" :href="route('admin.grade.klasses.index',record.id)" class="ant-btn">班別</a-button>
-                    <a-button @click="editRecord(record)">修改</a-button>
-                    <a-button @click="deleteRecord(record)">刪除</a-button>
+                <div v-if="column.dataIndex=='operation'" class="flex gap-1">
+                    <a-button as="link" :href="route('admin.grade.klasses.index',record.id)" size="small" type="info">班別</a-button>
+                    <a-button @click="editRecord(record)" size="small" type="edit">修改</a-button>
+                    <a-button @click="deleteRecord(record)" size="small" type="delete">刪除</a-button>
                     <a-popconfirm
                         title='是否確定鎖定 "全級" 的成績表?'
                         ok-text="Yes"
@@ -37,7 +43,7 @@
                         @confirm="lockTranscript(record)"
                     >
                     </a-popconfirm>
-                </template>
+                </div>
                 <template v-if="column.dataIndex=='active'">
                     <check-square-outlined v-if="text=='1'" :style="{color:'green'}"/>
                     <stop-outlined v-else :style="{color:'red'}"/>
@@ -47,60 +53,61 @@
                 </template>
             </template>
         </a-table>
-
-        <!-- Modal Start-->
-        <a-modal v-model:open="modal.isOpen"  :title="modal.title" width="60%" >
-            <a-form
-                ref="modalRef"
-                :model="modal.data"
-                name="grade"
-                :rules="rules"
-                :validate-messages="validateMessages"
-                :label-col="{ span: 4 }"
-                :wrapper-col="{ span: 20 }"
-            >
-                <a-form-item label="學習年" name="grade_year" v-if="modal.mode=='CREATE'">
-                    <a-select
-                        v-model:value="modal.data.grade_year"
-                        style="width: 100%"
-                        placeholder="請選擇..."
-                        max-tag-count="responsive"
-                        :options="gradeLevels.map(level=>({value:level.value, label:level.label}))"
-                        @change="onChangeGradeSelected"
-                    ></a-select>
-                </a-form-item>
-                <a-form-item label="年級代號" name="tag" v-else >
-                    {{ modal.data.initial }}{{ modal.data.level }}
-                </a-form-item>
-                <a-form-item label="中文名稱" name="title_zh">
-                    <a-input v-model:value="modal.data.title_zh" />
-                </a-form-item>
-                <a-form-item label="英文名稱" name="title_en">
-                    <a-input v-model:value="modal.data.title_en" />
-                </a-form-item>
-                <a-form-item label="成績表模版" name="transcript_template_id">
-                    <a-input-number v-model:value="modal.data.transcript_template_id" />
-                </a-form-item>
-                <a-form-item label="操行分比" name="behaviour_scheme_data">
-                    <a-textarea v-model:value="modal.data.behaviour_scheme_data" />
-                </a-form-item>
-                <a-form-item label="版本" name="version">
-                    <a-input v-model:value="modal.data.version" />
-                </a-form-item>
-                <a-form-item label="有效" name="active">
-                    <a-switch v-model:checked="modal.data.active" :checkedValue="1" :unCheckedValue="0"/>
-                </a-form-item>
-                <a-form-item label="簡介" name="description">
-                    <a-textarea v-model:value="modal.data.description" />
-                </a-form-item>
-            </a-form>
-            <template #footer>
-                <a-button key="back" @click="modalCancel">Close</a-button>
-                <a-button v-if="modal.mode=='EDIT'" key="Update" type="primary"  @click="updateRecord()">Update</a-button>
-                <a-button v-if="modal.mode=='CREATE'"  key="Store" type="primary" @click="storeRecord()">Add</a-button>
-            </template>
-        </a-modal>    
-        <!-- Modal End-->
+        </div>
+            <!-- Modal Start-->
+            <a-modal v-model:open="modal.isOpen"  :title="modal.title" width="60%" >
+                <a-form
+                    ref="modalRef"
+                    :model="modal.data"
+                    name="grade"
+                    :rules="rules"
+                    :validate-messages="validateMessages"
+                    :label-col="{ span: 4 }"
+                    :wrapper-col="{ span: 20 }"
+                >
+                    <a-form-item label="學習年" name="grade_year" v-if="modal.mode=='CREATE'">
+                        <a-select
+                            v-model:value="modal.data.grade_year"
+                            style="width: 100%"
+                            placeholder="請選擇..."
+                            max-tag-count="responsive"
+                            :options="gradeLevels.map(level=>({value:level.value, label:level.label}))"
+                            @change="onChangeGradeSelected"
+                        ></a-select>
+                    </a-form-item>
+                    <a-form-item label="年級代號" name="tag" v-else >
+                        {{ modal.data.initial }}{{ modal.data.level }}
+                    </a-form-item>
+                    <a-form-item label="中文名稱" name="title_zh">
+                        <a-input v-model:value="modal.data.title_zh" />
+                    </a-form-item>
+                    <a-form-item label="英文名稱" name="title_en">
+                        <a-input v-model:value="modal.data.title_en" />
+                    </a-form-item>
+                    <a-form-item label="成績表模版" name="transcript_template_id">
+                        <a-input-number v-model:value="modal.data.transcript_template_id" />
+                    </a-form-item>
+                    <a-form-item label="操行分比" name="behaviour_scheme_data">
+                        <a-textarea v-model:value="modal.data.behaviour_scheme_data" />
+                    </a-form-item>
+                    <a-form-item label="版本" name="version">
+                        <a-input v-model:value="modal.data.version" />
+                    </a-form-item>
+                    <a-form-item label="有效" name="active">
+                        <a-switch v-model:checked="modal.data.active" :checkedValue="1" :unCheckedValue="0"/>
+                    </a-form-item>
+                    <a-form-item label="簡介" name="description">
+                        <a-textarea v-model:value="modal.data.description" />
+                    </a-form-item>
+                </a-form>
+                <template #footer>
+                    <a-button key="back" @click="modalCancel">Close</a-button>
+                    <a-button v-if="modal.mode=='EDIT'" key="Update" type="primary"  @click="updateRecord()">Update</a-button>
+                    <a-button v-if="modal.mode=='CREATE'"  key="Store" type="primary" @click="storeRecord()">Add</a-button>
+                </template>
+            </a-modal>    
+            <!-- Modal End-->
+        </div>
         </AdminLayout>
 </template>
 
