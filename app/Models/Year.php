@@ -49,7 +49,7 @@ class Year extends Model
         return $this->hasManyDeepFromRelations($this->klasses(),(new Klass())->students());
     }
     public function autoGenerate($data){
-        $gradeLetters=array_column(Config::item('grade_letters'),null,'value');
+        $gradeLetters=array_column(Config::item('grade_years'),null,'value');
         
         $kklass=$data['kklass'];
         $kgrade=$data['kgrade'];
@@ -58,9 +58,11 @@ class Year extends Model
         $sklass=$data['sklass'];
         $sgrade=$data['sgrade'];
 
-        $gradeYear=1; 
         $letters=['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','W','X','Y','Z'];
         $klassLetters=array_column(Config::item('klass_letters'),'label');
+        //幼稚園一至三年級
+        //如果沒有相應學習計劃，study_id設為0
+        $gradeYear=1; 
         for($i=1;$i<=$kgrade;$i++){ //$i is going to transfer to letter
             //$grade=new Grade;
             $g['year_id']=$this->id;
@@ -80,10 +82,12 @@ class Year extends Model
                 $k['tag']=$grade->tag.$klassLetters[$j-1];
                 $k['stream']='ALL';
                 $k['byname']=$grade->tag.$klassLetters[$j-1];
-                $k['study_id']=Study::where('active',true)->where('grade_year',$grade->grade_year)->latest()->first()->id??1;
+                $k['study_id']=Study::where('active',true)->where('grade_year',$grade->grade_year)->latest()->first()->id??0;
                 Klass::create($k);
             }
         }
+        //小一至小六
+        //如果沒有相應學習計劃，study_id設為0
         $gradeYear=4;
         for($i=1;$i<=$pgrade;$i++){
             $g['year_id']=$this->id;
@@ -104,10 +108,12 @@ class Year extends Model
                 $k['tag']=$grade->tag.$klassLetters[$j-1];
                 $k['stream']='ALL';
                 $k['byname']=$grade->tag.$klassLetters[$j-1];
-                $k['study_id']=Study::where('active',true)->where('grade_year',$grade->grade_year)->latest()->first()->id??1;
+                $k['study_id']=Study::where('active',true)->where('grade_year',$grade->grade_year)->latest()->first()->id??0;
                 Klass::create($k);
             }
         }
+        //初一至高三
+        //如果沒有相應學習計劃，study_id設為0
         $gradeYear=10;
         for($i=1;$i<=$sgrade;$i++){
             $g['year_id']=$this->id;
@@ -127,7 +133,7 @@ class Year extends Model
                 $k['tag']=$grade->tag.$klassLetters[$j-1];
                 $k['stream']='ALL';
                 $k['byname']=$grade->tag.$klassLetters[$j-1];
-                $k['study_id']=Study::where('active',true)->where('grade_year',$grade->grade_year)->latest()->first()->id??1;
+                $k['study_id']=Study::where('active',true)->where('grade_year',$grade->grade_year)->latest()->first()->id??0;
                 Klass::create($k);
             }
         }

@@ -1,5 +1,5 @@
 <template>
-    <AdminLayout title="學年" :breadcrumb="breadcrumb">
+    <AdminLayout title="學年列表" :breadcrumb="breadcrumb">
         <a-button @click="createRecord()" type="primary">創建新學年</a-button>
             <a-table :dataSource="years" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
@@ -65,7 +65,7 @@
                     <a-textarea v-model:value="modal.data.description" />
                 </a-form-item>
 
-                <a-divider orientation="left">幼雅園</a-divider>
+                <a-divider orientation="left">幼稚園</a-divider>
                 <a-row>
                     <a-col :span="8"></a-col>
                     <a-col :span="8">
@@ -78,7 +78,7 @@
                         </a-form-item>
                     </a-col>
                     <a-col :span="8">
-                        <a-form-item label="班級數" name="kklass">
+                        <a-form-item label="班別數" name="kklass">
                             <a-select
                             v-model:value="modal.data.kklass"
                             :options="kklassOptions"

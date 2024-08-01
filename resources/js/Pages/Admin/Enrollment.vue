@@ -39,6 +39,9 @@
             </a-form-item>
 
         </a-form>
+        <div class="text-red-500">
+            Might need to confirm the student has not been assigned in any class. and the confirm button is still missing.
+        </div>
     </AdminLayout>
 </template>
 

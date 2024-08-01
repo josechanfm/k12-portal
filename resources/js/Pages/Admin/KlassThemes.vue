@@ -1,11 +1,6 @@
 <template>
-    <AdminLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                學習主題
-            </h2>
-        </template>
-        <a-typography-title :level="3">年級: {{ klass.tag }}</a-typography-title>
+    <AdminLayout title="主題列表" :breadcrumb="breadcrumb">
+        <a-typography-title :level="3">班別: {{ klass.tag }}</a-typography-title>
         <a-button @click="themeCreate()"
             type="primary">新增主題
         </a-button>
@@ -37,21 +32,23 @@
         </div>
 
         <template v-if="themes.length > 0">
-            <a-button @click="topicCreate()" type="primary">新增內容</a-button>
+            <a-button @click="topicCreate()" type="primary">新增話題</a-button>
             <a-divider type="vertical"></a-divider>
-            <a-select v-model:value="selectedThemeId" :options="themes" :fieldNames="{ value: 'id', label: 'title' }"
-                style="width:150px" />
-            <a-table :dataSource="themes.find(theme => theme.id == selectedThemeId).topics" :columns="columns">
-                <template #bodyCell="{ column, text, record, index }">
-                    <template v-if="column.dataIndex == 'operation'">
-                        <a-button @click="topicEdit(record)" :style="'Edit'">修改</a-button>
-                        <a-button @click="topicDelete(record)" :style="'Delete'">刪除</a-button>
+            <a-select v-model:value="selectedThemeId" :options="themes" :fieldNames="{ value: 'id', label: 'title' }" style="width:150px" />
+            <template v-if="themes && selectedThemeId">
+                <a-table :dataSource="themes.find(theme => theme.id == selectedThemeId).topics" :columns="columns">
+                    <template #bodyCell="{ column, text, record, index }">
+                        <template v-if="column.dataIndex == 'operation'">
+                            <a-button @click="topicEdit(record)" :style="'Edit'">修改</a-button>
+                            <a-button @click="topicDelete(record)" :style="'Delete'">刪除</a-button>
+                        </template>
+                        <template v-else>
+                            {{ record[column.dataIndex] }}
+                        </template>
                     </template>
-                    <template v-else>
-                        {{ record[column.dataIndex] }}
-                    </template>
-                </template>
-            </a-table>
+                </a-table>
+            </template>
+
         </template>
 
 
@@ -78,13 +75,13 @@
         <a-modal v-model:open="modalTopic.isOpen" :title="modalTopic.title">
             <a-form :model="modalTopic.data" name="Topic" ref="modalTopicRef" :rules="topicRules"
                 :validate-messages="validateMessages" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
-                <a-form-item label="分類" name="ability_code">
+                <a-form-item label="話題分類" name="ability_code">
                     <a-select v-model:value="modalTopic.data.ability_code" :options="topicAbilities" />
                 </a-form-item>
-                <a-form-item label="分組標題" name="abbr">
+                <a-form-item label="話題標題" name="abbr">
                     <a-input v-model:value="modalTopic.data.abbr" />
                 </a-form-item>
-                <a-form-item label="分組全稱" name="title">
+                <a-form-item label="話題全稱" name="title">
                     <a-input v-model:value="modalTopic.data.title" />
                 </a-form-item>
             </a-form>
@@ -113,6 +110,13 @@ export default {
     props: ['yearTerms', 'topicAbilities', 'klass', 'themes'],
     data() {
         return {
+            breadcrumb:[
+                {label:"行政管理" ,url:route('admin.dashboard')},
+                {label:"學年" ,url:route('admin.years.index')},
+                {label:"年級" ,url:route('admin.year.grades.index',this.klass.grade.year_id)},
+                {label:"班別" ,url:route('admin.grade.klasses.index',this.klass.grade.id)},
+                {label:"主題" ,url:null},
+            ],
             selectedThemeId: null,
             modalTheme: {
                 mode: null,
@@ -128,16 +132,16 @@ export default {
             },
             columns: [
                 {
-                    title: '分類名稱',
+                    title: '話題名稱',
                     dataIndex: 'ability',
                 }, {
-                    title: '分組標題',
+                    title: '話題標題',
                     dataIndex: 'abbr',
                 }, {
-                    title: '分組全稱',
+                    title: '話題全稱',
                     dataIndex: 'title',
                 }, {
-                    title: 'Operation',
+                    title: '操作',
                     dataIndex: 'operation',
                 }
             ],
@@ -182,10 +186,16 @@ export default {
         themeCreate() {
             this.modalTheme.data = {}
             this.modalTheme.data.klass_id = this.klass.id
-            this.modalTheme.title = "新增"
+            this.modalTheme.title = "新增主題"
             this.modalTheme.mode = 'CREATE'
             this.modalTheme.isOpen = true
 
+        },
+        themeEdit(theme) {
+            this.modalTheme.data = { ...theme }
+            this.modalTheme.isOpen = true
+            this.modalTheme.mode = 'EDIT'
+            this.modalTheme.title = "修改主題"
         },
         themeUpdate() {
             this.$refs.modalThemeRef.validateFields().then(() => {
@@ -208,6 +218,9 @@ export default {
                     onSuccess: (page) => {
                         this.modalTheme.data = {}
                         this.modalTheme.isOpen = false;
+                        if(this.selectedThemeId==null){
+                            this.selectedThemeId=page.props.themes[0].id
+                        }
                     },
                     onError: (error) => {
                         console.log(error);
@@ -237,16 +250,10 @@ export default {
                 }
             })
         },
-        themeEdit(theme) {
-            this.modalTheme.data = { ...theme }
-            this.modalTheme.isOpen = true
-            this.modalTheme.mode = 'EDIT'
-            this.modalTheme.title = "修改"
-        },
         topicCreate() {
             this.modalTopic.data = {}
             this.modalTopic.data.theme_id = this.selectedThemeId
-            this.modalTopic.title = "新增"
+            this.modalTopic.title = "新增話題"
             this.modalTopic.mode = 'CREATE'
             this.modalTopic.isOpen = true
         },
@@ -255,7 +262,7 @@ export default {
             this.modalTopic.data = { ...topic }
             this.modalTopic.isOpen = true
             this.modalTopic.mode = 'EDIT'
-            this.modalTopic.title = "修改"
+            this.modalTopic.title = "修改話題"
         },
         topicUpdate() {
             this.$refs.modalTopicRef.validateFields().then(() => {
@@ -313,10 +320,6 @@ export default {
         topicModalTopicCancel() {
             this.modalTopic.isOpen = false
         }
-
-        
-
-
     },
 }
 </script>

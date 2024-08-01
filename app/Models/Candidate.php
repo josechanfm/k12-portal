@@ -35,9 +35,9 @@ class Candidate extends Model
         'start_klass',
         'phone',
         'phone_home',
-        'confirmed'
+        'accepted',
+        'registered'
     ];
-
-    
+    protected $casts=['accepted'=>'boolean','registered'=>'boolean'];
 
 }

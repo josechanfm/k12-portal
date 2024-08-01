@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Theme extends Model
 {
     use HasFactory;
-    protected $fillable=['klass_id','term_id','sequence','title'];
+    protected $fillable=['klass_id','term_id','sequence','title','description'];
     protected $appends= ['topic_count'];
     
     public function getTopicCountAttribute(){

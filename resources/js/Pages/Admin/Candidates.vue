@@ -1,13 +1,14 @@
 <template>
-    <AdminLayout title="入學報名">
+    <AdminLayout title="入學報名列表">
         <a-button @click="onClickCreate()" type="primary">新增報名</a-button>
             <a-table :dataSource="candidates.data" :columns="columns" :pagination="pagination" @change="onPaginationChange" ref="dataTable">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
-                        <ButtonLink @click="onClickEdit(record)" :style="'Edit'">修改</ButtonLink>
-                        <ButtonLink @click="onClickDelete(record)" :style="'Delete'">刪除</ButtonLink>
-                        <ButtonLink @click="onClickEnroll(record)" :style="'Default'">Enroll</ButtonLink>
-                        <a-button :href="route('admin.registrations.create',{candidate_id:record.id})">Registration</a-button>
+                        <a-button @click="onClickEdit(record)">修改</a-button>
+                        <a-button @click="onClickDelete(record)">刪除</a-button>
+                        <a-button @click="onClickAccepted(record)">接收</a-button>
+                        <a-button :href="route('admin.registrations.create',{candidate_id:record.id})" :disabled="!record.accepted">注冊</a-button>
+                        <a-button :href="route('admin.enrollments.create',{student_id:record.student_id})" :disabled="record.student_id==null">分班</a-button>
                     </template>
                     <template v-else-if="column.dataIndex=='start_grade'">
                         {{ gradesKlasses.find(g=>g.id==text).tag }}
@@ -20,12 +21,9 @@
                     <template v-else>
                         {{record[column.dataIndex]}}
                     </template>
-                        
                 </template>
             </a-table>
-
     </AdminLayout>
-
 </template>
 
 <script>
@@ -63,6 +61,12 @@ export default {
                 },{
                     title: '入讀年級',
                     dataIndex: 'start_grade',
+                },{
+                    title: '接收',
+                    dataIndex: 'accepted',
+                },{
+                    title: '已注冊',
+                    dataIndex: 'registered',
                 },{
                     title: '操作',
                     dataIndex: 'operation',
@@ -120,10 +124,9 @@ export default {
                 }
             });
         },
-        onClickEnroll(record){
-            console.log(record);
-            record.enroll_confirm=true;
-            this.$inertia.put(route('admin.candidate.enroll',record.id), record,{
+        onClickAccepted(record){
+            record.accepted=true;
+            this.$inertia.put(route('admin.candidate.accepted',record.id), record,{
                 onSuccess:(page)=>{
                     console.log(page)
                     record.enroll_confirm=false

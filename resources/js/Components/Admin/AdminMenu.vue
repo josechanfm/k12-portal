@@ -131,6 +131,10 @@ const list = [{
         key: 'student',
         title: '學生',
         url: '/admin/students',
+    }, {
+        key: 'student',
+        title: '新生',
+        url: '/admin/candidates',
     }],
 }, {
     key: 'director',

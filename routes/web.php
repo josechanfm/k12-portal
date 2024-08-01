@@ -120,7 +120,7 @@ Route::group([
     //Route::get('year/{year}/grades',[App\Http\Controllers\Admin\YearController::class,'grades'])->name('admin.year.grades');
     Route::resource('enrollments',App\Http\Controllers\Admin\EnrollmentController::class)->names('admin.enrollments');
     Route::resource('candidates',App\Http\Controllers\Admin\CandidateController::class)->names('admin.candidates');
-    Route::put('candidate/enroll',[App\Http\Controllers\Admin\CandidateController::class,'enroll'])->name('admin.candidate.enroll');
+    Route::put('candidate/accepted',[App\Http\Controllers\Admin\CandidateController::class,'accepted'])->name('admin.candidate.accepted');
 
     Route::resource('year/{year}/grades',App\Http\Controllers\Admin\GradeController::class)->names('admin.year.grades');
     Route::resource('grade/{grade}/klasses',App\Http\Controllers\Admin\KlassController::class)->names('admin.grade.klasses');

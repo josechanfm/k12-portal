@@ -2,11 +2,13 @@
 
 namespace App\Observers;
 use App\Models\Config;
-use App\Models\Klass;
 use App\Models\Study;
+use App\Models\Klass;
 use App\Models\Course;
 use App\Models\ScoreColumn;
-use App\Models\ScoreTemplate;
+use App\Models\ThemeTemplate;
+use App\Models\Theme;
+use App\Models\Topic;
 
 class KlassObserver
 {
@@ -18,16 +20,39 @@ class KlassObserver
      */
     public function created(Klass $klass)
     {
-        //$subjects=Subject::where('grade_id',$klass->grade_id)->get();
+        //幼稚園一至三年級
         if($klass->grade->grade_year <= 3){
+            $themeTemplates=ThemeTemplate::where('grade_year',$klass->grade->grade_year)->orderBy('term_id')->orderBy('sequence')->get();
+            foreach($themeTemplates as $themeTemplate){
+                $theme=$klass->themes()->create($themeTemplate->toArray());
+                // $theme=Theme::create([
+                //     'klass_id'=>$klass->id,
+                //     'term_id'=>$themeTemplate->term_id,
+                //     'sequence'=>$themeTemplate->sequence,
+                //     'title'=>$themeTemplate->title,
+                //     'description'=>$themeTemplate->description
+                // ]);
+                $topicTemplates=$themeTemplate->topicTemplates;
+                foreach($topicTemplates as $topicTemplate){
+                    $theme->topics()->create($topicTemplate->toArray());
+                    // Topic::create([
+                    //     'theme_id'=>$theme->id,
+                    //     'sequence'=>$topicTemplate->sequence,
+                    //     'ability_code'=>$topicTemplate->ability_code,
+                    //     'ability'=>$topicTemplate->ability,
+                    //     'abbr'=>$topicTemplate->abbr,
+                    //     'title'=>$topicTemplate->title,
+                    //     'description'=>$topicTemplate->description
+                    // ]);
+                }
+            }
             return true;
         }
+        //如果沒有學習計劃
         if(empty($klass->study_id)){
-            if($klass->grade->level<=3){
-                
-            }
             return false;
         };
+        //小學至中學學習計劃,
         $subjects=Study::find($klass->study_id)->subjects;
         $fields=[];
         $data=[];

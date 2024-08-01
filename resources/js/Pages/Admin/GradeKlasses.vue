@@ -1,5 +1,5 @@
 <template>
-    <AdminLayout title="班別" :breadcrumb="breadcrumb">
+    <AdminLayout title="班別列表" :breadcrumb="breadcrumb">
         <a-typography-title :level="4">學年:{{ grade.year.title }}</a-typography-title>
         <a-typography-title :level="4">年級:{{ grade.tag }}</a-typography-title>
         <div>
@@ -139,6 +139,7 @@ export default {
         return {
             breadcrumb:[
                 {label:"行政管理" ,url:route('admin.dashboard')},
+                {label:"學年" ,url:route('admin.years.index')},
                 {label:"年級" ,url:route('admin.year.grades.index',this.grade.year_id)},
                 {label:"班別" ,url:null},
             ],

@@ -34,10 +34,15 @@
                 <a-form-item label="入讀班別" name="start_klass">
                     <a-select v-model:value="candidate.start_klass" :options="klassOptions" :fieldNames="{value:'id',label:'tag'}"/>
                 </a-form-item>
+                <a-form-item label="接收" name="accepted">
+                    <a-switch v-model:checked="candidate.accepted"/>
+                </a-form-item>
+                <a-form-item label="已注冊" name="registered">
+                    <a-switch v-model:checked="candidate.registered" :disabled="true"/>
+                </a-form-item>
                 <a-form-item  :wrapper-col="{ span: 14, offset: 4 }">
                     <a-button key="back" :href="route('admin.candidates.index')">返回</a-button>
                     <a-button key="store" type="primary" html-type="submit" style="margin-left: 10px">保存</a-button>    
-                    <a-button key="enroll" type="primary" danger @click="onClickEnroll"  style="margin-left: 10px">確認入讀班別</a-button>    
                 </a-form-item>
             </a-form>
         </div>
@@ -136,21 +141,6 @@ export default {
                 });
             }
         },
-        onClickEnroll(){
-            this.candidate.enroll_confirm=true;
-            this.$inertia.put(route('admin.candidate.enroll'), this.candidate,{
-                onSuccess:(page)=>{
-                    console.log(page)
-                    this.candidate.enroll_confirm=false
-                },
-                onError:(error)=>{
-                    this.candidate.enroll_confirm=false
-                    console.log(error);
-                }
-            });
-        },
-
-
     },
 }
 </script>
