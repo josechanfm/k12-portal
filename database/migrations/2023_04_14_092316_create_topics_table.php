@@ -17,7 +17,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('theme_id');
             $table->integer('sequence');
-            $table->string('category_code')->nullable();
+            $table->string('ability_code')->nullable();
+            $table->string('ability')->nullable();
             $table->string('section')->nullable();
             $table->string('abbr')->nullable();
             $table->string('title')->nullable();
