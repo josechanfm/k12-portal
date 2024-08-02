@@ -50,7 +50,7 @@ class CandidateController extends Controller
     {
         //enroll_confirm column is not included in fillable
         Candidate::create($request->all());
-        return redirect()->back();
+        return redirect()->route('admin.candidates.index');
     }
 
     /**

@@ -1,5 +1,5 @@
 <template>
-    <AdminLayout title="學年" :breadcrumb="breadcrumb">
+    <AdminLayout title="學年列表" :breadcrumb="breadcrumb">
         <div class="p-2 bg-white rounded-lg flex flex-col gap-1">
         <div class="flex">
             <div class="flex-1"></div> <a-button @click="createRecord()" type="create" size="small">創建新學年</a-button>
@@ -8,10 +8,10 @@
             <a-table :dataSource="years" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <div v-if="column.dataIndex=='operation'" class="flex gap-1">
-                        <a-button @click="editRecord(record)" size="small" type="edit">修改</a-button>
-                        <a-button @click="deleteRecord(record)" size="small" type="delete">刪除</a-button>
                         <a-button as="link" :href="route('admin.year.grades.index',record.id)" size="small" type="info">年級</a-button>
                         <a-button @click="lockTranscript(record)" size="small" type="info">鎖定成績表</a-button>
+                        <a-button @click="editRecord(record)" size="small" type="edit">修改</a-button>
+                        <a-button @click="deleteRecord(record)" size="small" type="delete">刪除</a-button>
                     </div>
                     <template v-else-if="column.dataIndex=='grade_group'">
                         <a-tag v-for="item in record[column.dataIndex]" :key="item"

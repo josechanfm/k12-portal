@@ -1,5 +1,5 @@
 <template>
-    <AdminLayout title="班別" :breadcrumb="breadcrumb">
+    <AdminLayout title="班別列表" :breadcrumb="breadcrumb">
         <div  class="p-2 bg-white rounded-lg flex flex-col gap-1">
         <!--  -->
         <div class="flex flex-wrap font-bold text-sm gap-1">

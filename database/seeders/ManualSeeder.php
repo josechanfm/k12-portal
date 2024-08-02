@@ -21,13 +21,13 @@ class ManualSeeder extends Seeder
             'title'=>'Help Menu Index Page',
             'content'=>'Help Menu Index Page'
         ]);
-        Help::create([
+        Manual::create([
             'parent_id'=>0,
             'route'=>'tutorial',
             'title'=>'Tutorial Index Page',
             'content'=>'Tutorial home page'
         ]);
-        Help::create([
+        Manual::create([
             'parent_id'=>0,
             'route'=>'faq',
             'title'=>'Faq Index Page',

@@ -1,12 +1,8 @@
 <template>
     <AdminLayout title="學生註冊表">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Enrollment
-            </h2>
-        </template>
         <div>
-            學年:{{year.title}}
+            <a-typography-title :level="4">入讀本學年:{{currentYear.title}}</a-typography-title> 
+            <a-typography-title :level="4">入讀下學年:{{nextYear.title}}</a-typography-title> 
         </div>
         <a-row>
             <a-col :span="12">
@@ -27,20 +23,29 @@
                     <div>出生日期:{{ candidate.name_dob }}</div>
                     <div>報讀年級:{{ candidate.start_grade }}</div>
                     <div>報讀班別{{ candidate.start_klass }}</div>
+                    <a-button as="link" :href="route('admin.candidates.edit',candidate.id)" target="_blank">報名表</a-button>
                 </div>
             </a-col>
         </a-row>
-        <a-form :model="enroll" :rules="rules" layout="vertical">
+        <a-form :model="enroll" :rules="rules" layout="vertical" @finish="onFinish" @finishFailed="onFinishFailed">
+            <a-form-item label="入讀學年" name="year_id">
+                <a-radio-group v-model:value="enroll.year_id" button-style="solid">
+                    <a-radio-button :value="currentYear.id" @click="refresh(currentYear)">本學年 {{ currentYear.title }}</a-radio-button>
+                    <a-radio-button :value="nextYear.id" @click="refresh(nextYear)">下學年 {{ nextYear.title }}</a-radio-button>
+                </a-radio-group>
+            </a-form-item>
             <a-form-item label="級別" name="grade_id">
                 <a-select v-model:value="enroll.grade_id" :options="grades" :fieldNames="{value:'id',label:'tag'}" @change="onChangeGrade"/>
             </a-form-item>
-            <a-form-item label="班別" name="klass_id">
-                <a-select v-model:value="enroll.klass_id" :options="klasses" :fieldNames="{value:'id',label:'tag'}" @change="onChangeKlass"/>
+            <a-form-item label="班別" name="klass_id" v-if="enroll.grade_id">
+                <a-select v-model:value="enroll.klass_id" :options="grades.find(g=>g.id==enroll.grade_id).klasses" :fieldNames="{value:'id',label:'tag'}"/>
             </a-form-item>
-
+            <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
+                <a-button type="primary" html-type="submit">Submit</a-button>
+            </a-form-item>
         </a-form>
         <div class="text-red-500">
-            Might need to confirm the student has not been assigned in any class. and the confirm button is still missing.
+            若下個學年未創建，此功能再無效！
         </div>
     </AdminLayout>
 </template>
@@ -52,13 +57,16 @@ export default {
     components: {
         AdminLayout
     },
-    props: ['year','grades','enrollment','student','candidate'],
+    props: ['currentYear','nextYear','year','student','candidate'],
     data() {
         return {
             selectedGrade:{},
             selectedKlass:{},
+            grades:[],
             klasses:[],
             enroll:{
+                candidate_id:this.candidate?this.candidate.id:null,
+                student_id:this.student.id,
                 year_id:null,
                 grade_id:null,
                 klass_id:null,
@@ -71,42 +79,35 @@ export default {
         }
     },
     created(){
-        //this.selectedYear=this.years[0]
-        this.enroll.year_id=this.year.id
-        //this.grades=this.grades.klasses;
-        this.selectedGrade=this.grades?this.grades[0]:null
-        this.enroll.grade_id=this.selectedGrade?this.selectedGrade.id:null
-        this.selectedKlass=this.selectedGrade?this.selectedGrade.klasses[0]:null
-        this.enroll.klass_id=this.selectedKlass?this.selectedKlass.id:null
-        this.klasses=this.selectedGrade?this.selectedGrade.klasses:null
-        if(this.candidate && this.candidate.start_grade){
-            
-        }
+        //根據報名表預設入讀年級及班別，班別預設為第一個班
+        this.refresh(this.nextYear)
     },
     methods: {
-        refresh(){
-            //this.selectedYear=this.years.find(y=>y.id==this.enroll.year_id)
-            //this.grades=this.selectedYear.grades_klasses
-            this.selectedGrade=this.grades[0]
-            this.klasses=this.selectedGrade.klasses
-            this.selectedKlass=this.klasses[0]
-        },
-        onChangeYear(){
-            //this.selectedYear=this.years.find(y=>y.id==this.enroll.year_id)
-            //this.grades=this.selectedYear.grades_klasses??null
-            this.selectedGrade=this.grades?this.grades[0]:null
-            this.klasses=this.selectedGrade?this.selectedGrade.klasses:null
-            this.selectedKlass=this.klasses?this.klasses[0]:null
+        refresh(year){
+            this.enroll.year_id=year.id
+            this.grades=year.grades_klasses
+            this.enroll.grade_id=this.grades.find(g=>g.tag==this.candidate.start_grade_tag).id
+            this.enroll.klass_id=this.grades.find(g=>g.id==this.enroll.grade_id).klasses[0].id
+
         },
         onChangeGrade(){
-            //this.grades=this.year.grades.filter(g=>g.year_id==this.enroll.year_id)
-            this.selectedGrade=this.grades.find(g=>g.id==this.enroll.grade_id)
-            this.klasses=this.selectedGrade.klasses
-            this.enroll.klass_id=this.klasses[0].id
+            this.enroll.klass_id=this.grades.find(g=>g.id==this.enroll.grade_id).klasses[0].id
         },
-        onChangeKlass(){
-            //this.klasess=this.filter(g=>g.year_id==this.enroll.year_id)
-            console.log(this.enroll.klass_id)
+        onFinish(){
+            console.log('on finish');
+            console.log(this.enroll,this.student);
+            this.$inertia.post(route('admin.enrollments.store'),this.enroll, {
+                onSuccess: (page) => {
+                    console.log('enrolled');
+                },
+                onError: (error) => {
+                    console.log(error);
+                }
+            });
+
+        },
+        onFinishFailed(){
+            console.log('on Finish Failed')
         }
     }
 }

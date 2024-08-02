@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use App\Models\Year;
 use App\Models\Student;
 use App\Models\Candidate;
+use App\Models\Klass;
 
 class EnrollmentController extends Controller
 {
@@ -32,13 +33,30 @@ class EnrollmentController extends Controller
      */
     public function create(Request $request)
     {
+        $student=Student::find($request->student_id);
+        $currentYear=Year::currentYear();
+        $nextYear=$currentYear->nextYear();
+
+        if(empty($nextYear)){
+            return Inertia::render('Error',[
+                'message'=>"需要先創建下一個學年！",
+            ]);
+        }
+        $currentYear->gradesKlasses;
+        $nextYear->gradesKlasses;
+        //dd($currentYear,$nextYear, $student,);
+        if($student->klasses->count()>0){
+            return Inertia::render('Error',[
+                'message'=>"此學生並非新入學之學生！",
+            ]);
+        }
         return Inertia::render('Admin/Enrollment',[
-            'years'=>Year::with('gradesKlasses')->get(),
+            'currentYear'=>$currentYear,
+            'nextYear'=>$nextYear,
             'year'=>Year::currentYear(),
             'grades'=>Year::currentYear()->gradesKlasses,
-            'enrollment'=>(object)[],
-            'student'=>Student::find($request->student_id),
-            'candidate'=>Candidate::where('student_id',$request->student_id)->first()
+            'student'=>$student,
+            'candidate'=>Candidate::where('student_id',$student->id)->first()
         ]);        
     }
 
@@ -50,7 +68,12 @@ class EnrollmentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //dd($request->all());
+        $klass=Klass::find($request->klass_id);
+        $studentNubmer=$klass->students->count()+1;
+        $klass->students()->attach($request->student_id,['student_number'=>$studentNubmer,'state'=>'ACT','stream'=>$klass->stream]);
+        Candidate::find($request->candidate_id)->update(['enrolled'=>true]);
+        return redirect()->route('admin.candidates.index');
     }
 
     /**
@@ -84,7 +107,7 @@ class EnrollmentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        
     }
 
     /**

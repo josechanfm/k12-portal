@@ -77,7 +77,7 @@
               <div>
                 <a :href="route('manual', { route: route().current() })" target="_blank">
                   <div class="flex items-center pl-1 pt-0.5">
-                    <QuestionCircleOutlined />123
+                    <QuestionCircleOutlined />
                   </div>
                 </a>
               </div>

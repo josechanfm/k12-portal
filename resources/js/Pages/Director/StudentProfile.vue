@@ -4,7 +4,7 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight flex-1">
                 <div class="flex flex-wrap bg-white rounded-lg p-1 items-center gap-2">
                     <div>
-                        <div v-if="student.avatars[0].image">
+                        <div v-if="student.avatars[0] && student.avatars[0].image">
                             <a-image :width="200" v-if="student.avatars && student.avatars[0]"
                                 :src="student.avatars[0].image.original_url" />
                         </div>

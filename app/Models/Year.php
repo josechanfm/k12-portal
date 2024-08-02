@@ -19,6 +19,14 @@ class Year extends Model
     public static function currentYear(){
         return Year::where('current_year',true)->orderBy('start','DESC')->first();
     }
+    public static function nextYear($yearId=null){
+        if($yearId==null){
+            $year=self::currentYear();
+        }else{
+            $year=Year::find($yearId);
+        }
+        return Year::where('start','>',$year->start)->orderBy('start','ASC')->first();
+    }
     public static function currentTerm(){
         $yearTerms=array_column(Config::item('year_terms'),null,'value');
         return $yearTerms[Year::currentYear()->current_term];
@@ -37,10 +45,6 @@ class Year extends Model
     }
     public function gradesKlasses(){
         return $this->hasMany(Grade::class)->with('klasses');
-    }
-    public static function nextYear($yearId){
-        $year=Year::find($yearId);
-        return Year::where('start','>',$year->start)->orderBy('start','ASC')->first();
     }
     public function courses(){
         return $this->hasManyThrough(Course::class, Klass::class);
