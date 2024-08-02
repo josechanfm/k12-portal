@@ -45,8 +45,8 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('phone_home')->nullable();
             $table->boolean('confirmed')->default(false);
-            $table->boolean('enrolled')->default(false);
             $table->foreignId('student_id')->nullable();
+            $table->boolean('enrolled')->default(false);
 
             $table->timestamps();
         });

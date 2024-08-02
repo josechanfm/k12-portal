@@ -1,5 +1,21 @@
 <template>
     <AdminLayout title="學生名單" :breadcrumb="breadcrumb">
+        <!--  -->
+            <div class="flex flex-wrap font-bold text-sm gap-1">
+                <div class="flex bg-gray-300 rounded-lg p-1 px-2 items-center gap-1">
+                    <div class="text-gray-600 font-black rounded-l-lg bg-gray-100  p-1 ">學年</div>
+                    <div class=" "> 
+                       {{ klass.grade.year.title }}    
+                    </div>
+                </div>
+                <div class="flex bg-gray-300 rounded-lg p-1 items-center gap-1">
+                    <div class="text-gray-600 font-black rounded-l-lg bg-gray-100  p-1 ">班別</div>
+                    <div class=" ">{{ klass.tag  }}</div>
+                </div>
+                <div class="flex-1"></div>
+            </div>
+        <!--  -->
+
         <a-table :dataSource="students" :columns="columns">
             <template #bodyCell="{column, text, record, index}">
                 <template v-if="column.dataIndex == 'action'">
@@ -23,7 +39,7 @@ export default {
     components: {
         AdminLayout,
     },
-    props: ['students'],
+    props: ['klass','students'],
     data() {
         return {
             breadcrumb:[

@@ -70,8 +70,12 @@ class EnrollmentController extends Controller
     {
         //dd($request->all());
         $klass=Klass::find($request->klass_id);
+        $student=Student::find($request->student_id);
         $studentNubmer=$klass->students->count()+1;
-        $klass->students()->attach($request->student_id,['student_number'=>$studentNubmer,'state'=>'ACT','stream'=>$klass->stream]);
+        $klass->students()->attach($student->id,['student_number'=>$studentNubmer,'state'=>'ACT','stream'=>$klass->stream]);
+        $courseIds=$klass->courses->pluck('id');
+        $student->courses()->attach($courseIds);
+
         Candidate::find($request->candidate_id)->update(['enrolled'=>true]);
         return redirect()->route('admin.candidates.index');
     }
