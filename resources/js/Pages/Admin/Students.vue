@@ -1,10 +1,5 @@
 <template>
-    <AdminLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                學年級別學科列表
-            </h2>
-        </template>
+    <AdminLayout title="全校學生列表" :breadcrumb="breadcrumb">
         <div  class="p-2 bg-white rounded-lg flex flex-col gap-1">
         <div class="flex">
             <div class="flex-1 text-red-500">
@@ -94,6 +89,10 @@ export default {
     props: ['students'],
     data() {
         return {
+            breadcrumb:[
+                {label:"行政管理" ,url:route('admin.dashboard')},
+                {label:"全校學生" ,url:null},
+            ],
             modal: {
                 mode:null,
                 isOpen: false,
