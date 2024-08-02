@@ -41,14 +41,16 @@ class GradeSeeder extends Seeder
                     'letter'=>$ini,
                     'tag'=>$grade->tag.$ini,
                     'study_id'=>1,
-                    'klass_head_ids'=>[rand(1,50)]
+                    'klass_head_ids'=>null
                 ]);
                 $klassStudents=[];
                 for($j=1; $j<20; $j++){
-                    $klassStudents[$studentId++]= ['student_number'=>$j];
+                    $klassStudents[$studentId++]= [
+                        'student_number'=>$j,
+                    ];
                 }
                 $klass->students()->sync($klassStudents);
-                        //enrol all klass student to all klass courses
+                //enrol all klass student to all klass courses
                 $courses=$klass->courses;
                 foreach($courses as $c=>$course){
                     $course->subject_head_ids=[rand(1,50)];
@@ -60,7 +62,6 @@ class GradeSeeder extends Seeder
             };
 
         }
-
         //primary
         for($i=4;$i<=9;$i++){
             $grade=Grade::firstOrCreate([
