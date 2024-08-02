@@ -7,9 +7,10 @@
         </template>
         <div  class="p-2 bg-white rounded-lg flex flex-col gap-1">
         <div class="flex">
-            <div class="flex-1">
+            <div class="flex-1 text-red-500">
                 <div>List all students</div>
                 <div>Might need to add search and filter features</div>
+                <div>Add student should not be here. can be remove from this page</div>
             </div>
             <a-button @click="onClickCreate()" size="small" type="create">新增學生</a-button>
         </div>
@@ -43,9 +44,6 @@
                 :label-col="{ span: 4 }"
                 :wrapper-col="{ span: 20 }"
             >
-                <a-form-item label="登入名稱" name="username">
-                    <a-input v-model:value="modal.data.username" />
-                </a-form-item>
                 <a-form-item label="中文姓名" name="name_zh">
                     <a-input v-model:value="modal.data.name_zh" />
                 </a-form-item>
@@ -109,9 +107,6 @@ export default {
             },
             columns:[
                 {
-                    title: '登入名稱',
-                    dataIndex: 'username',
-                },{
                     title: '姓名(中文)',
                     dataIndex: 'name_zh',
                 },{
