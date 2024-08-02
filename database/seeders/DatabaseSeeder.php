@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\Extracurricular;
+use App\Models\Manual;
 use App\Models\Subject;
 use Illuminate\Database\Seeder;
 
@@ -32,6 +33,7 @@ class DatabaseSeeder extends Seeder
             SupplierSeeder::class,
             LocationSeeder::class,
             YearSeeder::class,
+            ManualSeeder::class
             // YearSeeder::class,
             // KlassSeeder::class,
             // ThemeSeeder::class,

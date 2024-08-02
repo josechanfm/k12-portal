@@ -1,6 +1,6 @@
 <template>
-    <AdminLayout title="Dashboard" :breadcrumb="breadcrumb">
-            <a-typography-title :level="3">班級: {{ klass.tag }} - {{ klass.title_zh }}</a-typography-title>
+    <AdminLayout title="科目列表" :breadcrumb="breadcrumb">
+            <a-typography-title :level="3">班別: {{ klass.tag }} - {{ klass.title_zh }}</a-typography-title>
             <a-typography-title :level="3">
                 班主任: <span :key="teacher" v-for="teacher in klass.klass_heads">{{ teacher.name_zh }}, </span>
             </a-typography-title>
@@ -12,7 +12,7 @@
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
                         <a-button @click="changeTeachers(record)">修改</a-button>
-                        <a-button as="link" :href="route('director.selected.students',{model:'course',id:record.id})" class="ant-btn">學生名單</a-button>
+                        <a-button as="link" :href="route('teacher.selected.students',{model:'course',id:record.id})" class="ant-btn">學生名單</a-button>
                         <!-- <a-button as="link" :href="route('admin.course.students.index',record)" class="ant-btn">學生名單2</a-button> -->
                         <br>
                         <template v-for="term in yearTerms" :key="term">
@@ -87,14 +87,14 @@
                     <a-input v-bind:value="modal.data.title_en" />
                 </a-form-item>
                 <a-form-item label="專業方向" name="stream">
-                    <a-radio-group v-bind:value="modal.data.stream" button-style="solid" disabled="true">
+                    <a-radio-group v-bind:value="modal.data.stream" button-style="solid" :disabled="true">
                         <template v-for="item in streams">
                             <a-radio-button :value="item.value">{{ item.label }}</a-radio-button>    
                         </template>
                     </a-radio-group>
                 </a-form-item>
                 <a-form-item label="必修/選修" name="elective">
-                    <a-radio-group v-bind:value="modal.data.elective" button-style="solid" disabled="true">
+                    <a-radio-group v-bind:value="modal.data.elective" button-style="solid" :disabled="true">
                         <template v-for="item in subjectTypes">
                             <a-radio-button :value="item.value">{{ item.label }}</a-radio-button>    
                         </template>
@@ -149,6 +149,7 @@ export default {
         return {
             breadcrumb:[
                 {label:"行政管理" ,url:route('admin.dashboard')},
+                {label:"學年" ,url:route('admin.years.index')},
                 {label:"年級" ,url:route('admin.year.grades.index',this.klass.grade.year_id)},
                 {label:"班別" ,url:route('admin.grade.klasses.index',this.klass.grade.id)},
                 {label:"科目" ,url:null},

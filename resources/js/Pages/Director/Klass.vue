@@ -1,8 +1,29 @@
 <template>
     <AdminLayout title="班別管理" :breadcrumb="breadcrumb">
-        <p>Klass: {{ klass.tag }}</p>
-        <p>Students: {{ klass.student_count }}</p>
-        <p>Current Term: {{currentTerm.label}}</p>
+        <!--  -->
+        <div class="flex flex-wrap font-bold text-sm gap-1">
+                <div class="flex bg-gray-300 rounded-lg p-1 px-2 items-center gap-1">
+                    <div class="text-gray-600 font-black rounded-l-lg bg-gray-100  p-1 ">學年</div>
+                    <div class=" "> 
+                       {{ klass.grade.year.title }}    
+                    </div>
+                </div>
+                <div class="flex bg-gray-300 rounded-lg p-1 items-center gap-1">
+                    <div class="text-gray-600 font-black rounded-l-lg bg-gray-100  p-1 ">年級</div>
+                    <div class=" ">{{ klass.grade.tag  }}</div>
+                </div>
+                <div class="flex bg-gray-300 rounded-lg p-1 items-center gap-1">
+                    <div class="text-gray-600 font-black rounded-l-lg bg-gray-100  p-1 ">學段</div>
+                    <div class=" ">{{ currentTerm.label  }}</div>
+                </div>
+                <div class="flex bg-gray-300 rounded-lg p-1 items-center gap-1">
+                    <div class="text-gray-600 font-black rounded-l-lg bg-gray-100  p-1 ">學生人數</div>
+                    <div class=" ">{{ klass.student_count  }}</div>
+                </div>
+                <div class="flex-1"></div>
+            </div>
+        <!--  -->
+
         <a-button as="link" :href="route('teacher.selected.students', {model:'klass',id:klass})" class="ant-btn">學生名單</a-button>
         <a-button as="link" :href="route('teacher.klass.avatars',klass.id)" class="ant-btn ant-btn-default">學生照片</a-button>
         <template v-if="klass.grade_year<=3">
@@ -18,6 +39,7 @@
             <a-button as="link" :href="route('director.klass.transcripts', klass.id)" class="ant-btn">成績大表</a-button>
         </template>
         <a-divider type="vertical" />
+            <a-button as="link" :href="route('teacher.selected.behaviours', {model:'klass',id:klass.id})" class="ant-btn">操行分數2</a-button>
             <a-button as="link" :href="route('director.klass.behaviours.index', klass.id)" class="ant-btn">操行分數</a-button>
             <a-button as="link" :href="route('director.klass.behaviour.adjust', klass.id)" class="ant-btn">操行調整</a-button>
         <a-divider type="vertical" />

@@ -1,10 +1,10 @@
 <template>
     <AdminLayout title="個人信息" :breadcrumb="breadcrumb">
-        <div>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                <a-row type="flex">
-                    <a-col flex="230px">
-                        <div v-if="student.avatars[0].image">
+        <div class="flex flex-wrap bg-white rounded-lg p-4 ">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight flex-1">
+                <div class="flex flex-wrap bg-white rounded-lg p-1 items-center gap-2">
+                    <div>
+                        <div v-if="student.avatars[0] && student.avatars[0].image">
                             <a-image :width="200" v-if="student.avatars && student.avatars[0]"
                                 :src="student.avatars[0].image.original_url" />
                         </div>
@@ -13,29 +13,37 @@
                                 <template #icon><UserOutlined /></template>
                             </a-avatar>                            
                         </div>
-                    </a-col>
-                    <a-col flex="auto">
-                        <a-descriptions
-                            bordered
-                            :column="{ xxl: 2, xl: 2, lg: 2, md: 2, sm: 2, xs: 1 }"
-                        >
-                            <a-descriptions-item label="中文姓名：">{{ student.name_zh }}</a-descriptions-item>
-                            <a-descriptions-item label="外文姓名：">{{ student.name_fn }}</a-descriptions-item>
-                            <a-descriptions-item label="性別：">{{ student.gender }}</a-descriptions-item>
-                            <a-descriptions-item label="出生日期(年齡)：">{{ student.dob }} ({{ calculateAge(student.dob) }})</a-descriptions-item>
-                        </a-descriptions>
-                    </a-col>
-                </a-row>
+                    </div>
+                    <div class="flex gap-1 flex-col">
+                        <div class="profile-row">   
+                            <div class="profile-label ">中文姓名：</div>
+                            <div>{{ student.name_zh }}</div>
+                        </div>
+                        <div class="profile-row"> 
+                            <div  class="profile-label">外文姓名：</div>
+                            <div >{{ student.name_fn }}</div>
+                        </div>
+                        <div class="profile-row">
+                            <div  class="profile-label">性別：</div>
+                            <div >{{ student.gender }}</div>
+                        </div>
+                        <div class="profile-row"> 
+                            <div class="profile-label">出生日期(年齡)：</div>
+                            <div>{{ student.dob }} ({{ calculateAge(student.dob) }})</div>
+                        </div>
+                    </div>
+                </div>
             </h2>
+            <div >
+                <a-switch class="font-semibold" v-model:checked="isEdit" @change="onChangeEditMode" checkedChildren="編輯中" unCheckedChildren="鎖定中"/>
+            </div>
         </div>
-        <div class="p-5">
-            修改模式: <a-switch v-model:checked="isEdit" @change="onChangeEditMode" checkedChildren="開" unCheckedChildren="關"/>
-        </div>
+      
         <div :class="isEdit ? 'formEditOn' : 'formEditOff'">
             <a-form ref="formRef" name="advanced_search" class="ant-advanced-search-form" :model="student"
                 :rules="rules" @finish="onFinish" @finishFailed="onFinishFailed">
                 <a-collapse v-model:activeKey="activeKey">
-                    <a-collapse-panel key="avatar" header="頭像照片">
+                    <a-collapse-panel class="bg-white font-black" key="avatar" header="頭像照片">
                         <a-row>
                             <a-col :span="4" v-for="avatar in student.avatars">
                                 <div v-if="avatar.image">
@@ -52,7 +60,7 @@
                         </a-row>
                     </a-collapse-panel>
 
-                    <a-collapse-panel key="basic" header="基本信息">
+                    <a-collapse-panel class="bg-white font-black"  key="basic" header="基本信息">
                         <a-row>
                             <a-col :span="6">
                                 <a-form-item label="姓名" name="name_zh" :label-col="labelCol" :wrapper-col="wrapperCol">
@@ -128,7 +136,7 @@
                         </a-row>
                     </a-collapse-panel>
 
-                    <a-collapse-panel key="id_card" header="證件信息">
+                    <a-collapse-panel class="bg-white font-black" key="id_card" header="證件信息">
                         <a-row>
                             <a-col :span="8">
                                 <a-form-item label="證件類別" name="id_type">
@@ -188,7 +196,7 @@
                         </a-row>
                     </a-collapse-panel>
 
-                    <a-collapse-panel key="detail" header="補充信息">
+                    <a-collapse-panel class="bg-white font-black" key="detail" header="補充信息">
                         <a-descriptions bordered v-if="student.detail">
                             <a-descriptions-item label="聖名">
                                 <a-input v-model:value="student.detail.holy_name" />
@@ -220,7 +228,7 @@
                         </a-descriptions>
                     </a-collapse-panel>
 
-                    <a-collapse-panel key="address" header="住址信息">
+                    <a-collapse-panel class="bg-white font-black" key="address" header="住址信息">
                         <a-descriptions bordered v-if="student.address">
                             <a-descriptions-item label="住址街名" :span="2">
                                 <a-input v-model:value="student.address.road" />
@@ -235,7 +243,7 @@
                         </a-descriptions>
                     </a-collapse-panel>
 
-                    <a-collapse-panel key="bank" header="銀行信息">
+                    <a-collapse-panel class="bg-white font-black" key="bank" header="銀行信息">
                         <a-descriptions bordered>
                             <a-descriptions-item label="銀行">
                                 <a-input v-model:value="student.bank.bank_name" />
@@ -250,7 +258,7 @@
                     </a-collapse-panel>
 
 
-                    <a-collapse-panel key="parent" header="父母信息" >
+                    <a-collapse-panel class="bg-white font-black" key="parent" header="父母信息" >
                         <a-descriptions bordered  v-if="student.father">
                             <a-form-item label="父親姓名">
                                 <a-input v-model:value="student.father.name_zh" />
@@ -285,7 +293,7 @@
                         </a-descriptions>
                     </a-collapse-panel>
 
-                    <a-collapse-panel key="guardian" header="監護人信息">
+                    <a-collapse-panel class="bg-white font-black" key="guardian" header="監護人信息">
                         <a-descriptions bordered v-if="student.guardian">
                             <a-descriptions-item label="監護人姓名">
                                 <a-input v-model:value="student.guardian.name_zh" />
@@ -320,7 +328,7 @@
                         </a-descriptions>
                     </a-collapse-panel>
 
-                    <a-collapse-panel key="health" header="健康信息">
+                    <a-collapse-panel class="bg-white font-black" key="health" header="健康信息">
                         <a-descriptions bordered v-if="student.health">
                             <a-descriptions-item label="醫院">
                                 <a-input v-model:value="student.health.hospital" />
@@ -355,7 +363,7 @@
                         </a-descriptions>
                     </a-collapse-panel>
 
-                    <a-collapse-panel key="siblings" header="本校兄弟姊妹">
+                    <a-collapse-panel class="bg-white font-black" key="siblings" header="本校兄弟姊妹">
                         <a-table :dataSource="student.siblings" :columns="columnSiblings">
                             <template #bodyCell="{ column, text, record, index }">
                                 <template v-if="column.dataIndex == 'klasses'">
@@ -374,9 +382,7 @@
 
                 </a-collapse>
 
-                <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
-                    <a-button type="primary" html-type="submit">Submit</a-button>
-                </a-form-item>
+                <a-button class="w-full" type="create" @click="onFinish" html-type="submit">提交並更改</a-button>
 
             </a-form>
         </div>

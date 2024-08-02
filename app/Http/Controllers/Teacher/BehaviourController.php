@@ -15,8 +15,38 @@ use PDO;
 class BehaviourController extends Controller
 {
 
-    public function course(Course $course){
-        dd($course);
+    public function selected($model, $id){
+        if(empty(auth()->user()->staff)){
+            return Inertia::render('Error',[
+                'message'=>"You are not subject teacher."
+            ]);
+        }
+        $actor=auth()->user()->hasRole('director')?'DIRECTOR':'SUBJECT';
+        if($model=='klass'){
+            $klass=Klass::find($id);
+            $course=null;
+            $behaviours=$klass->behaviours($actor);
+        }else if($model=='course'){
+            $course=Course::find($id);
+            $course->staffs;
+            $course->klass;
+            $klass=Klass::find($course->klass_id);
+            $behaviours=$klass->behaviours($actor);
+        }else{
+            return Inertia::render('Error',[
+                'message'=>"Route incorrect!"
+            ]);
+        }
+        //dd($klass,$klass->behaviours()['scores']);
+        //dd($klass->behaviours()['scores'][362   ], $klass, $course);
+        return Inertia::render('Teacher/SelectedBehaviours',[
+            'staff'=>auth()->user()->staff,
+            'yearTerms'=>Config::item('year_terms'),
+            'course'=>$course,
+            'klass'=>$klass,
+            'behaviours'=>$behaviours
+        ]);
+
     }
 /*
     public function list(){
@@ -68,20 +98,12 @@ class BehaviourController extends Controller
      */
     public function store(Request $request)
     {
-        
-        $behaviour=new Behaviour();
-        $behaviour->klass_student_id=$request->klass_student_id;
-        $behaviour->term_id=$request->term_id;
-        $behaviour->staff_id=$request->staff_id;
-        $behaviour->reference_id=$request->reference_id;
-        $behaviour->score=$request->score;
-        // $behaviour->genre=$request->genre;
-        // $behaviour->date=date('Y-m-d',strtotime($request->date));
-        // $behaviour->qty=$request->qty;
-        // $behaviour->description=$request->description;
-        //$behaviour->remark=$request->remark;
-        $behaviour->save();
-        return response()->json($behaviour);
+        if($request->id){
+            Behaviour::find($request->id)->update($request->all());
+        }else{
+            Behaviour::create($request->all());
+        }
+        return response()->json(['message'=>'Success']);
     }
 
     /**
@@ -116,7 +138,6 @@ class BehaviourController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
     }
 
     /**

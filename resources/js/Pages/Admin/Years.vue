@@ -1,14 +1,18 @@
 <template>
-    <AdminLayout title="學年" :breadcrumb="breadcrumb">
-        <a-button @click="createRecord()" type="primary">創建新學年</a-button>
+    <AdminLayout title="學年列表" :breadcrumb="breadcrumb">
+        <div class="p-2 bg-white rounded-lg flex flex-col gap-1">
+        <div class="flex">
+            <div class="flex-1"></div> <a-button @click="createRecord()" type="create" size="small">創建新學年</a-button>
+        </div>
+        <div class="rounded-lg border-gray-200 border p-2">
             <a-table :dataSource="years" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
-                    <template v-if="column.dataIndex=='operation'">
-                        <a-button as="link" :href="route('admin.year.grades.index',record.id)" class="ant-btn">年級</a-button>
-                        <a-button @click="editRecord(record)">修改</a-button>
-                        <a-button @click="deleteRecord(record)">刪除</a-button>
-                        <a-button @click="lockTranscript(record)">鎖定成績表</a-button>
-                    </template>
+                    <div v-if="column.dataIndex=='operation'" class="flex gap-1">
+                        <a-button as="link" :href="route('admin.year.grades.index',record.id)" size="small" type="info">年級</a-button>
+                        <a-button @click="lockTranscript(record)" size="small" type="info">鎖定成績表</a-button>
+                        <a-button @click="editRecord(record)" size="small" type="edit">修改</a-button>
+                        <a-button @click="deleteRecord(record)" size="small" type="delete">刪除</a-button>
+                    </div>
                     <template v-else-if="column.dataIndex=='grade_group'">
                         <a-tag v-for="item in record[column.dataIndex]" :key="item"
                             :color="item.initial=='P'?'blue':item.initial=='S'?'green':'cyan'">{{item.initial}}:{{item.count}}</a-tag>
@@ -21,7 +25,7 @@
                     </template>
                 </template>
             </a-table>
-
+        </div>
         <!-- Modal Start-->
         <a-modal v-model:open="modal.isOpen" :title="modal.title" width="60%" @update="updateRecord(modalForm)" @onCancel="closeModal()">
             <a-form
@@ -65,7 +69,7 @@
                     <a-textarea v-model:value="modal.data.description" />
                 </a-form-item>
 
-                <a-divider orientation="left">幼雅園</a-divider>
+                <a-divider orientation="left">幼稚園</a-divider>
                 <a-row>
                     <a-col :span="8"></a-col>
                     <a-col :span="8">
@@ -78,7 +82,7 @@
                         </a-form-item>
                     </a-col>
                     <a-col :span="8">
-                        <a-form-item label="班級數" name="kklass">
+                        <a-form-item label="班別數" name="kklass">
                             <a-select
                             v-model:value="modal.data.kklass"
                             :options="kklassOptions"
@@ -140,6 +144,7 @@
         </template>
     </a-modal>    
     <!-- Modal End-->
+    </div>
     </AdminLayout>
 
 </template>

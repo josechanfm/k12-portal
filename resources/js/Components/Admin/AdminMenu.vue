@@ -4,7 +4,7 @@
             :inline-collapsed="collapsed">
             <template v-for="item in list" :key="item.key">
                 <div v-role="item.roles">
-                    <a-sub-menu>
+                    <a-sub-menu :key="item.key">
                         <template #icon>
                             <AppstoreOutlined />
                         </template>
@@ -128,9 +128,13 @@ const list = [{
         title: '班別',
         url: '/admin/klasses',
     }, {
-        key: 'student',
+        key: 'students',
         title: '學生',
         url: '/admin/students',
+    }, {
+        key: 'student',
+        title: '新生',
+        url: '/admin/candidates',
     }],
 }, {
     key: 'director',
@@ -259,3 +263,8 @@ export default defineComponent({
     }
 });
 </script>
+
+<style>
+
+
+</style>

@@ -3,7 +3,6 @@ import { ref } from 'vue';
 import { router } from '@inertiajs/vue3';
 import { Head, Link } from '@inertiajs/vue3';
 import ApplicationMark from '@/Components/ApplicationMark.vue';
-import Banner from '@/Components/Banner.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 
@@ -29,8 +28,6 @@ const logout = () => {
 <template>
     <div>
         <Head :title="title" />
-
-        <Banner />
 
         <div class="min-h-screen bg-gray-100">
             <nav class="bg-white border-b border-gray-100">

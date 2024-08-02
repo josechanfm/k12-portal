@@ -1,20 +1,22 @@
 <template>
-    <AdminLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                學年級別學科列表
-            </h2>
-        </template>
-        <div>List all students</div>
-        <div>Might need to add search and filter features</div>
-        <a-button @click="onClickCreate()">新增學生</a-button>
+    <AdminLayout title="全校學生列表" :breadcrumb="breadcrumb">
+        <div  class="p-2 bg-white rounded-lg flex flex-col gap-1">
+        <div class="flex">
+            <div class="flex-1 text-red-500">
+                <div>List all students</div>
+                <div>Might need to add search and filter features</div>
+                <div>Add student should not be here. can be remove from this page</div>
+            </div>
+            <a-button @click="onClickCreate()" size="small" type="create">新增學生</a-button>
+        </div>
+        <div  class="rounded-lg border-gray-200 border p-2">
             <a-table :dataSource="students.data" :columns="columns" :pagination="pagination" @change="onPaginationChange" ref="dataTable">
                 <template #bodyCell="{column, text, record, index}">
-                    <template v-if="column.dataIndex=='operation'">
-                        <a-button :href="route('director.students.show',record.id)" class="ant-btn" target="_blank">學生檔案</a-button>
-                        <a-button @click="onClickEdit(record)" :style="'Edit'">修改</a-button>
-                        <a-button @click="onClickDelete(record)" :style="'Delete'">刪除</a-button>
-                    </template>
+                    <div v-if="column.dataIndex=='operation'" class="flex gap-1">
+                        <a-button :href="route('director.students.show',record.id)"  target="_blank" size="small" type="info"> 學生檔案</a-button>
+                        <a-button @click="onClickEdit(record)" size="small" type="edit">修改</a-button>
+                        <a-button @click="onClickDelete(record)"  size="small" type="delete">刪除</a-button>
+                    </div>
                     <template v-if="column.dataIndex=='username'">
                         <span v-if="record.user">
                             {{ record.user.username }}
@@ -25,7 +27,7 @@
                     </template>
                 </template>
             </a-table>
-
+        </div>
         <!-- Modal Start-->
         <a-modal v-model:open="modal.isOpen" :title="modal.title" >
             <a-form
@@ -37,9 +39,6 @@
                 :label-col="{ span: 4 }"
                 :wrapper-col="{ span: 20 }"
             >
-                <a-form-item label="登入名稱" name="username">
-                    <a-input v-model:value="modal.data.username" />
-                </a-form-item>
                 <a-form-item label="中文姓名" name="name_zh">
                     <a-input v-model:value="modal.data.name_zh" />
                 </a-form-item>
@@ -63,12 +62,13 @@
                 </a-form-item>
             </a-form>
             <template #footer>
-                <a-button key="back" @click="modalCancel">Return</a-button>
-                <a-button v-if="modal.mode=='EDIT'" key="Update" type="primary" @click="updateRecord()">Update</a-button>
-                <a-button v-if="modal.mode=='CREATE'"  key="Store" type="primary" @click="storeRecord()">Create</a-button>
+                <a-button key="back" @click="modalCancel" type="delete">關閉</a-button>
+                <a-button v-if="modal.mode=='EDIT'" key="Update" type="edit" @click="updateRecord()">提交並更改</a-button>
+                <a-button v-if="modal.mode=='CREATE'"  key="Store" type="create" @click="storeRecord()">提交並新增</a-button>
             </template>
 
         </a-modal>
+        </div>
     </AdminLayout>
 
 </template>
@@ -89,6 +89,10 @@ export default {
     props: ['students'],
     data() {
         return {
+            breadcrumb:[
+                {label:"行政管理" ,url:route('admin.dashboard')},
+                {label:"全校學生" ,url:null},
+            ],
             modal: {
                 mode:null,
                 isOpen: false,
@@ -102,9 +106,6 @@ export default {
             },
             columns:[
                 {
-                    title: '登入名稱',
-                    dataIndex: 'username',
-                },{
                     title: '姓名(中文)',
                     dataIndex: 'name_zh',
                 },{

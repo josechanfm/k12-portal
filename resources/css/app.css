@@ -22,3 +22,40 @@
     border-color: #10b981 !important;
     color: white!important;
 }
+
+.hover-scale{ 
+  @apply  hover:!bg-blue-100  hover:animate-pulse 
+}
+.ant-btn-info{
+    @apply !h-fit font-black text-lg text-white 
+        !bg-gray-600/80   hover:!bg-gray-700  hover:!text-white 
+}
+.ant-btn-edit{
+    @apply !h-fit font-black text-lg text-white 
+   bg-amber-600/80   hover:bg-amber-700
+}
+.ant-btn-delete{
+    @apply !h-fit font-black text-lg text-white  
+    bg-rose-600/80   hover:bg-rose-700
+}
+.ant-btn-create{
+    @apply !h-fit font-black text-lg text-white 
+    bg-blue-600/80   hover:bg-blue-700
+}
+.ant-btn-active{
+    @apply min-w-[40px] !h-fit p-1 font-black text-base text-white bg-sky-600/70 hover:text-white
+}
+.ant-btn-list{
+    @apply min-w-[40px] !h-fit p-1 font-semibold text-xs text-black bg-white !border  border-gray-300 hover:border-sky-300 hover:text-base hover:font-black
+}
+
+.ant-btn-xs-normal{
+    @apply p-0 !h-fit font-semibold text-xs text-black bg-white !border  border-gray-300 
+    hover:border-sky-500 hover:font-black hover:text-blue-500 
+}
+.profile-label{
+    @apply rounded-l-lg bg-gray-300 text-stone-700 w-64 text-right
+}
+.profile-row{
+   @apply flex gap-1 hover:bg-slate-100 rounded-lg
+}

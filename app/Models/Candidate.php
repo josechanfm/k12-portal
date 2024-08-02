@@ -31,13 +31,14 @@ class Candidate extends Model
         'ssm_num',
         'previour_school',
         'previour_grade',
-        'start_grade',
-        'start_klass',
+        'start_grade_tag',
+        'start_klass_tag',
         'phone',
         'phone_home',
-        'confirmed'
+        'accepted',
+        'enrolled',
+        'student_id',
     ];
-
-    
+    protected $casts=['accepted'=>'boolean','enrolled'=>'boolean'];
 
 }

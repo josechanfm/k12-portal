@@ -120,7 +120,7 @@ Route::group([
     //Route::get('year/{year}/grades',[App\Http\Controllers\Admin\YearController::class,'grades'])->name('admin.year.grades');
     Route::resource('enrollments',App\Http\Controllers\Admin\EnrollmentController::class)->names('admin.enrollments');
     Route::resource('candidates',App\Http\Controllers\Admin\CandidateController::class)->names('admin.candidates');
-    Route::put('candidate/enroll',[App\Http\Controllers\Admin\CandidateController::class,'enroll'])->name('admin.candidate.enroll');
+    Route::put('candidate/accepted',[App\Http\Controllers\Admin\CandidateController::class,'accepted'])->name('admin.candidate.accepted');
 
     Route::resource('year/{year}/grades',App\Http\Controllers\Admin\GradeController::class)->names('admin.year.grades');
     Route::resource('grade/{grade}/klasses',App\Http\Controllers\Admin\KlassController::class)->names('admin.grade.klasses');
@@ -282,7 +282,7 @@ Route::group([
     ]
 ],function () {        
         Route::get('/',[App\Http\Controllers\Teacher\DashboardController::class,'index'])->name('teacher.dashboard');
-        Route::resource('course/{course}/behaviours',App\Http\Controllers\Teacher\BehaviourController::class)->names('teacher.course.behaviours');
+        //Route::resource('course/{course}/behaviours',App\Http\Controllers\Teacher\BehaviourController::class)->names('teacher.course.behaviours');
         //Route::get('klass/{klass}/behaviours',[App\Http\Controllers\Teacher\BehaviourController::class,'klass'])->name('teacher.klass.behaviours');
         
         Route::resource('course/{course}/scores',App\Http\Controllers\Teacher\ScoreController::class)->names('teacher.course.scores');
@@ -296,7 +296,9 @@ Route::group([
         Route::get('klass/{klass}/avatars',[App\Http\Controllers\Teacher\AvatarController::class,'klass'])->name('teacher.klass.avatars');
         
         Route::get('klass/{klass}/courses',[App\Http\Controllers\Teacher\CourseController::class,'index'])->name('teacher.klass.courses');
-        Route::resource('klass/{klass}/behaviours',App\Http\Controllers\Teacher\BehaviourController::class)->names('.klass.behaviours');
+        
+        Route::resource('behaviours',App\Http\Controllers\Teacher\BehaviourController::class)->names('teacher.behaviours');
+        Route::get('{model}/{id}/behaviours',[App\Http\Controllers\Teacher\BehaviourController::class,'selected'])->name('teacher.selected.behaviours');
 
         Route::get('{model}/{id}/students',[App\Http\Controllers\Teacher\StudentController::class,'selected'])->name('teacher.selected.students');
         Route::get('student/{student}/profile',[App\Http\Controllers\Teacher\StudentController::class,'profile'])->name('teacher.student.profile');

@@ -39,13 +39,14 @@ return new class extends Migration
 
             $table->string('previour_school')->nullable();
             $table->string('previour_grade')->nullable();
-            $table->foreignId('start_grade')->nullable();
-            $table->foreignId('start_klass')->nullable();
-            $table->boolean('enrolled')->default(false);
+            $table->string('start_grade_tag',5)->nullable();
+            $table->string('start_klass_tag',5)->nullable();
             
             $table->string('phone')->nullable();
             $table->string('phone_home')->nullable();
             $table->boolean('confirmed')->default(false);
+            $table->foreignId('student_id')->nullable();
+            $table->boolean('enrolled')->default(false);
 
             $table->timestamps();
         });

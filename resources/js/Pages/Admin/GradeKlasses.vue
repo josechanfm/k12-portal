@@ -1,48 +1,64 @@
 <template>
-    <AdminLayout title="班別" :breadcrumb="breadcrumb">
-        <a-typography-title :level="4">學年:{{ grade.year.title }}</a-typography-title>
-        <a-typography-title :level="4">年級:{{ grade.tag }}</a-typography-title>
-        <div>
-            <a-button as="link" v-for="g in grades" :href="route('admin.grade.klasses.index', g.id)" :class="grade.tag==g.tag?'ant-btn ant-btn-primary':'ant-btn'" >
+    <AdminLayout title="班別列表" :breadcrumb="breadcrumb">
+        <div  class="p-2 bg-white rounded-lg flex flex-col gap-1">
+        <!--  -->
+        <div class="flex flex-wrap font-bold text-sm gap-1">
+                <div class="flex bg-gray-300 rounded-lg p-1 px-2 items-center gap-1">
+                    <div class="text-gray-600 font-black rounded-l-lg bg-gray-100  p-1 ">學年</div>
+                    <div class=" "> 
+                       {{ grade.year.title }}    
+                    </div>
+                </div>
+                <div class="flex bg-gray-300 rounded-lg p-1 items-center gap-1">
+                    <div class="text-gray-600 font-black rounded-l-lg bg-gray-100  p-1 ">年級</div>
+                    <div class=" ">{{ grade.tag  }}</div>
+                </div>
+                <div class="flex-1"></div>
+            </div>
+        <!--  -->
+        
+        <div class="flex">
+            <div class="flex-1 flex gap-1 items-center">
+            <a-button as="link" :key="g.id" v-for="g in grades" :href="route('admin.grade.klasses.index', g.id)"
+                :type="grade.tag==g.tag?'active':'list'" >
                 {{g.tag }}
             </a-button>
-        </div>   
-        <a-button @click="createRecord()" type="primary">新增班別</a-button>
-        
-        <a-table :dataSource="klasses" :columns="columns">
+        </div>  
+            <a-button @click="createRecord()" type="create" size="small">新增班別</a-button>
+        </div>
+        <div  class="rounded-lg border-gray-200 border p-2">
+        <a-table :dataSource="klasses" :columns="columns" >
             <template #bodyCell="{ column, text, record, index }">
                 <template v-if="column.dataIndex == 'operation'">
-                    <a-button as="link" :href="route('director.klasses.show',record.id)" class="ant-btn">班別管理</a-button>
-                    <a-button as="link" :href="route('teacher.selected.students', {model:'klass',id:record})" class="ant-btn">學生名單</a-button>
-                    <span v-if="record.grade.grade_year <= 3">
-                        <a-button as="link"  :href="route('admin.klass.themes.index', record.id)" class="ant-btn">主題</a-button>
-                    </span>
-                    <span v-else>
-                        <a-button as="link"  :href="route('admin.klass.courses.index', record.id)" class="ant-btn">科目</a-button>
-                    </span>
-                    <a-popconfirm
-                        :title="(record.course_locked?'是否確定解鎖':'是否確定鎖定')+record.tag+'的成績表?'"
-                        ok-text="Yes"
-                        cancel-text="No"
-                        @confirm="onClickSelectedTermLock(record.id,0)"
-                    >
-                        <a-button>
-                            <span v-if="record.course_locked">解鎖成績</span>
-                            <span v-else>鎖定成績</span>
-                        </a-button>
-                    </a-popconfirm>
-                    <a-button @click="editRecord(record)">修改</a-button>
-
-                    <br>
-                    現時學段
-                    <template v-for="term in yearTerms">
-                        <a-button 
-                            @click="onClickSelectedTermLock(record.id,term.value)" 
-                            :type="record.current_term==term.value?'secondary':'default'"
-                            :disabled="record.course_locked"
-                        >{{term.label}}</a-button>
-                    </template>
-
+                    <div class="flex flex-col gap-1" >
+                        <a-button  type="xs-normal"  as="link" :href="route('director.klasses.show',record.id)" >班別管理</a-button>
+                        <a-button  type="xs-normal" as="link" :href="route('teacher.selected.students', {model:'klass',id:record})" >學生名單</a-button>
+                        <span v-if="record.grade.grade_year <= 3">
+                            <a-button class="w-full"  type="xs-normal" as="link"  :href="route('admin.klass.themes.index', record.id)" >主題</a-button>
+                        </span>
+                        <span v-else>
+                            <a-button class="w-full"  type="xs-normal" as="link"  :href="route('admin.klass.courses.index', record.id)">科目</a-button>
+                        </span>
+                        <a-popconfirm
+                            :title="(record.course_locked?'是否確定解鎖':'是否確定鎖定')+record.tag+'的成績表?'"
+                            ok-text="Yes"
+                            cancel-text="No"
+                            @confirm="onClickSelectedTermLock(record.id,0)"
+                        > 
+                        <a-button type="xs-normal">
+                                {{ record.course_locked?'解鎖成績':'鎖定成績' }}
+                            </a-button>
+                        </a-popconfirm>
+                        <a-button @click="editRecord(record)" size="small" class="!text-xs" type="edit">修改</a-button>
+                    </div>
+                </template>
+                <template  v-else-if="column.dataIndex == 'terms'">
+                    <!--  :disabled="record.course_locked" ? -->
+                    <a-radio-group size="small" class="flex flex-col text-nowrap items-center" v-model:value="record.current_term"  @change="onClickSelectedTermLock(record.id,record.current_term)" >
+                        <a-radio class="rounded-lg"
+                            :class="term.value==record.current_term?'text-blue-600 font-black':''"
+                            v-for="term in yearTerms" :key="term.value" :value="term.value">{{term.label}}</a-radio>
+                    </a-radio-group>   
                 </template>
                 <template v-else-if="column.dataIndex == 'head_teacher'">
                     <!-- {{ record.klass_heads }} -->
@@ -76,7 +92,7 @@
                 </template>
             </template>
         </a-table>
-
+    </div>
         <!-- Modal Start-->
         <a-modal v-model:open="modal.isOpen" :title="modal.title" width="60%">
             <a-form ref="modalRef" :model="modal.data" name="klasses" :label-col="{ span: 8 }" :wrapper-col="{ span: 16 }"
@@ -113,12 +129,13 @@
                 </a-form-item>
             </a-form>
             <template #footer>
-                <a-button key="back" @click="modalCancel">Close</a-button>
-                <a-button v-if="modal.mode == 'EDIT'" key="Update" type="primary" @click="updateRecord()">Update</a-button>
-                <a-button v-if="modal.mode == 'CREATE'" key="Store" type="primary" @click="storeRecord()">Add</a-button>
+                <a-button key="back" @click="modalCancel" type="delete">關閉</a-button>
+                <a-button v-if="modal.mode == 'EDIT'" key="Update" type="edit" @click="updateRecord()" >提交並更改</a-button>
+                <a-button v-if="modal.mode == 'CREATE'" key="Store" type="create" @click="storeRecord()">提交並新增</a-button>
             </template>
         </a-modal>
         <!-- Modal End-->
+    </div>
     </AdminLayout>
 </template>
 
@@ -139,6 +156,7 @@ export default {
         return {
             breadcrumb:[
                 {label:"行政管理" ,url:route('admin.dashboard')},
+                {label:"學年" ,url:route('admin.years.index')},
                 {label:"年級" ,url:route('admin.year.grades.index',this.grade.year_id)},
                 {label:"班別" ,url:null},
             ],
@@ -172,7 +190,12 @@ export default {
                 }, {
                     title: '成績表鎖定',
                     dataIndex: 'transcript_migrated',
-                }, {
+                }, 
+                {
+                    title: '學段狀態',
+                    dataIndex: 'terms',
+                },
+                {
                     title: '操作',
                     dataIndex: 'operation',
                 },

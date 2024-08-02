@@ -1,6 +1,6 @@
 <template>
-    <AdminLayout title="年級" :breadcrumb="breadcrumb">
-    
+    <AdminLayout title="年級列表" :breadcrumb="breadcrumb">
+        <div class="p-2 bg-white rounded-lg flex flex-col gap-1">
             <!--  -->
             
             <div class="flex flex-wrap font-bold text-sm gap-1">
@@ -23,18 +23,19 @@
                     <div>{{ year.end }}</div>
                 </div>
                 <div class="flex-1"></div>
-                <a-button @click="createRecord()" type="primary">
+                <a-button @click="createRecord()" type="create" size="small">
                     新增學年級別
                 </a-button>
             </div>
             <!--  -->
+        <div class="rounded-lg border-gray-200 border p-2">
         <a-table :dataSource="grades" :columns="columns" :pagination="{ pageSize: 20 }"
 >
             <template #bodyCell="{column, text, record, index}">
-                <template v-if="column.dataIndex=='operation'">
-                    <a-button as="link" :href="route('admin.grade.klasses.index',record.id)" class="ant-btn">班別</a-button>
-                    <a-button @click="editRecord(record)">修改</a-button>
-                    <a-button @click="deleteRecord(record)">刪除</a-button>
+                <div v-if="column.dataIndex=='operation'" class="flex gap-1">
+                    <a-button as="link" :href="route('admin.grade.klasses.index',record.id)" size="small" type="info">班別</a-button>
+                    <a-button @click="editRecord(record)" size="small" type="edit">修改</a-button>
+                    <a-button @click="deleteRecord(record)" size="small" type="delete">刪除</a-button>
                     <a-popconfirm
                         title='是否確定鎖定 "全級" 的成績表?'
                         ok-text="Yes"
@@ -42,7 +43,7 @@
                         @confirm="lockTranscript(record)"
                     >
                     </a-popconfirm>
-                </template>
+                </div>
                 <template v-if="column.dataIndex=='active'">
                     <check-square-outlined v-if="text=='1'" :style="{color:'green'}"/>
                     <stop-outlined v-else :style="{color:'red'}"/>
@@ -52,7 +53,7 @@
                 </template>
             </template>
         </a-table>
-
+        </div>
             <!-- Modal Start-->
             <a-modal v-model:open="modal.isOpen"  :title="modal.title" width="60%" >
                 <a-form
@@ -106,9 +107,8 @@
                 </template>
             </a-modal>    
             <!-- Modal End-->
-
+        </div>
         </AdminLayout>
-
 </template>
 
 <script>
@@ -132,6 +132,7 @@ export default {
         return {
             breadcrumb:[
                 {label:"行政管理" ,url:route('admin.dashboard')},
+                {label:"學年" ,url:route('admin.years.index')},
                 {label:"年級" ,url:null},
             ],
             selectedYear:this.year.id,

@@ -34,6 +34,7 @@ class RegistrationController extends Controller
             $candidate['candidate_id']=$candidate['id'];
             unset($candidate['id']);
             $student=$candidate;
+            $student->cadidate_id=$request->candidate_id;
         }else{
             $student=(object)[];
         }
@@ -51,7 +52,6 @@ class RegistrationController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request->all());
         $std=Student::where('id_type',$request->student['id_type'])->where('id_num',$request->student['id_num'])->first();
         if($std){
             return redirect()->back()->withErrors([
@@ -61,7 +61,7 @@ class RegistrationController extends Controller
         }
         $student=Student::create($request->student);
         if(isset($request->student['candidate_id'])){
-            Candidate::where('id',$request->student['candidate_id'])->update(['student_id'=>$student->id]);
+            Candidate::where('id',$request->student['candidate_id'])->update(['student_id'=>$student->id,'registered'=>true]);
         }
         $student->detail()->create($request->detail);
         $student->address()->create($request->address);
@@ -77,6 +77,7 @@ class RegistrationController extends Controller
                 $student->relatives()->create($relative);
             }
         }
+
         return redirect()->route('director.students.show',$student);
         // $student->detail;
         // $student->address;

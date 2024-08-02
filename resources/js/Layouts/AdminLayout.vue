@@ -1,13 +1,18 @@
 <template>
-  <a-layout class=" background: #fff">
-    <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible style="background: #fff">
+  <a-layout class="">
+
+    <!-- side menu -->
+    <a-layout-sider class="shadow-md" v-model:collapsed="collapsed" :trigger="null" collapsible
+      style="background: #fff">
       <a :href="route('director.dashboard')">
         <div class="logo">AIMS</div>
       </a>
       <AdminMenu />
     </a-layout-sider>
+
+    <!-- above menu -->
     <a-layout class="!min-h-screen ">
-      <a-layout-header class="h-fit" style="background: #fff; padding: 0">
+      <a-layout-header class="h-fit rounded-l shadow-md" style="background: #fff; padding: 0">
         <menu-unfold-outlined v-if="collapsed" class="trigger" @click="() => (collapsed = !collapsed)" />
         <menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)" />
         <a-space direction="horizontal">
@@ -28,12 +33,24 @@
           {{ $page.props.user.name }}
         </div>
       </a-layout-header>
-      <a-layout-content :style="{ margin: '10px 10px', background: '#fff', minHeight: '280px' }">
-        <header class="flex justify-between items-center bg-gray-200 py-1 px-6 mb-3 bg-white shadow sm:rounded-lg">
-          <div class="gap-1 rounded-lg p-1 flex items-center !font-black text-lg">
-                <TagOutlined class="pb-1 !text-sky-700 "></TagOutlined>
-                <div class="text-sky-600">{{ title }}</div>
+      <a-layout-content :style="{ margin: '5px 15px', background: '#fff', minHeight: '280px' }">
+        <header class="flex justify-between items-center px-3 mb-3 sm:rounded-lg">
+          <!-- <div class="gap-1 rounded-lg p-1 flex items-center !font-black text-lg">
+            <TagOutlined class="pb-1 !text-sky-700 "></TagOutlined>
+            <div class="text-sky-600">{{ title }}</div>
+          </div> -->
+          <div v-if="breadcrumb">
+            <!-- <a-page-header :breadcrumb="{ 'routes': headerBreadcrumb }" :title="title" > -->
+            <a-page-header :title="title" >
+              <template #breadcrumb>
+                <template v-for="( crumb,key ) in headerBreadcrumb" >
+                  <span v-if=" key+1 == headerBreadcrumb.length"><span class="!text-black">{{ crumb.breadcrumbName }}</span></span>
+                  <span v-else><a class="!text-black opacity-50" :href="crumb.path">{{ crumb.breadcrumbName }} </a> ／ </span>
+                </template>
+              </template>
+            </a-page-header>
           </div>
+
           <nav class="text-sm " v-if="breadcrumb">
             <div class="list-none flex ">
               <div class="breadcrumb-item hidden md:inline" v-for="(item, idx) in breadcrumb">
@@ -58,8 +75,11 @@
                 <a href="javascript:history.back();" class="inline">返回</a>
               </div>
               <div>
-                  <a :href="route('manual',{route:route().current()})" target="_blank">
-                    <div class="flex items-center pl-1 pt-0.5"><QuestionCircleOutlined /></div></a>
+                <a :href="route('manual', { route: route().current() })" target="_blank">
+                  <div class="flex items-center pl-1 pt-0.5">
+                    <QuestionCircleOutlined />
+                  </div>
+                </a>
               </div>
             </div>
           </nav>
@@ -73,9 +93,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { router } from '@inertiajs/vue3';
-import { QuestionCircleOutlined ,TagOutlined} from '@ant-design/icons-vue';
+import { QuestionCircleOutlined, TagOutlined } from '@ant-design/icons-vue';
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -83,9 +103,22 @@ import {
 
 import AdminMenu from '@/Components/Admin/AdminMenu.vue';
 
-defineProps({
+  
+const props = defineProps({
   title: String,
   breadcrumb: Object,
+});
+
+
+const headerBreadcrumb = ref([]);
+
+onMounted(() => {
+  if (props.breadcrumb) {
+    headerBreadcrumb.value = props.breadcrumb.map(x => ({
+      path: x.url,
+      breadcrumbName: x.label
+    }));
+  }
 });
 
 const showingNavigationDropdown = ref(false);

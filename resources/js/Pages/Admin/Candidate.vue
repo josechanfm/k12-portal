@@ -28,16 +28,24 @@
                 <a-form-item label="出生日期" name="dob">
                     <a-date-picker v-model:value="candidate.dob" :format="dateFormat" :valueFormat="dateFormat" />
                 </a-form-item>
-                <a-form-item label="入讀年級" name="start_grades">
-                    <a-select v-model:value="candidate.start_grade" :options="gradesKlasses" :fieldNames="{value:'id',label:'tag'}" @change="onChangeGrade"/>
+                <a-form-item label="入讀年級" name="start_grade_tag">
+                    <a-select v-model:value="candidate.start_grade_tag" :options="gradesKlasses" :fieldNames="{value:'tag',label:'tag'}" @change="onChangeGrade"/>
                 </a-form-item>
-                <a-form-item label="入讀班別" name="start_klass">
-                    <a-select v-model:value="candidate.start_klass" :options="klassOptions" :fieldNames="{value:'id',label:'tag'}"/>
+                <a-form-item label="入讀班別" name="start_klass_tag">
+                    <a-select v-model:value="candidate.start_klass_tag" :options="klassOptions" :fieldNames="{value:'tag',label:'tag'}"/>
+                </a-form-item>
+                <a-form-item label="接收" name="accepted">
+                    <a-switch v-model:checked="candidate.accepted" :disabled="candidate.enrolled"   />
+                </a-form-item>
+                <a-form-item label="已注冊" name="enrolled">
+                    {{ candidate.student_id?'是':'否' }}
+                </a-form-item>
+                <a-form-item label="已分班" name="enrolled">
+                    {{ candidate.enrolled?'是':'否' }}
                 </a-form-item>
                 <a-form-item  :wrapper-col="{ span: 14, offset: 4 }">
                     <a-button key="back" :href="route('admin.candidates.index')">返回</a-button>
                     <a-button key="store" type="primary" html-type="submit" style="margin-left: 10px">保存</a-button>    
-                    <a-button key="enroll" type="primary" danger @click="onClickEnroll"  style="margin-left: 10px">確認入讀班別</a-button>    
                 </a-form-item>
             </a-form>
         </div>
@@ -65,15 +73,10 @@ export default {
             dateFormat:'YYYY-MM-DD',
             klassOptions:[],
             rules:{
-                name_zh:{
-                    required:true,
-                },
-                gender:{
-                    required:true,
-                },
-                mobile:{
-                    required:true,
-                }
+                name_zh:{required:true,},
+                dob:{required:true,},
+                gender:{required:true,},
+                mobile:{required:true,}
             },
             validateMessages:{
                 required: '${label} is required!',
@@ -108,7 +111,7 @@ export default {
     },
     methods: {
         onChangeGrade(){
-            this.klassOptions=this.gradesKlasses.find(g=>g.id==this.candidate.start_grade).klasses
+            this.klassOptions=this.gradesKlasses.find(g=>g.tag==this.candidate.start_grade_tag).klasses
             console.log(this.candidate.start_grade)
         },
         onFinish(){
@@ -136,21 +139,6 @@ export default {
                 });
             }
         },
-        onClickEnroll(){
-            this.candidate.enroll_confirm=true;
-            this.$inertia.put(route('admin.candidate.enroll'), this.candidate,{
-                onSuccess:(page)=>{
-                    console.log(page)
-                    this.candidate.enroll_confirm=false
-                },
-                onError:(error)=>{
-                    this.candidate.enroll_confirm=false
-                    console.log(error);
-                }
-            });
-        },
-
-
     },
 }
 </script>
