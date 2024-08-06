@@ -5,6 +5,8 @@
                 班別學生列表
             </h2>
         </template>
+        <!--  -->
+        <!--  -->
         <a-typography-title :level="3">班別: {{ klass.tag }}</a-typography-title>
         <div class="ant-table">
             <div class="ant-table-container">

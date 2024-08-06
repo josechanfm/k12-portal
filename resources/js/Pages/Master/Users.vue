@@ -19,7 +19,7 @@
                     <a-button @click="deleteRecord(record.id)" size="small" type="delete">刪除</a-button>
                 </div>
                 <template v-else-if="column.dataIndex=='roles'">
-                    <a-tag v-for="role in record.roles" color="green">{{ $t(role.name) }}</a-tag>
+                    <a-tag v-for="role in record.roles" :color="$page.props.roleConfig['color'][role.name]??'default' ">{{ $t(role.name) }}</a-tag>
                 </template>
                 <template v-else-if="column.dataIndex=='index'">
                   {{ index+1 }}
@@ -58,10 +58,6 @@
                         role=>({ value:role.id, label:$t(role.name) })
                     )" />
                 </a-form-item>
-                <a-button   v-if="modal.mode=='EDIT' && !modal.data.restPasswordStatus" 
-                    class="!rounded-lg !text-blue-800 !bg-blue-50 !font-black" 
-                    @click="addFieldRestPassword">重設密碼
-                </a-button>
                 <!-- new account -->
                  <template  v-if="modal.mode=='CREATE'">
                     <a-form-item  label="密碼" name="passowrd">
@@ -73,15 +69,15 @@
                 </template>
                 <!--  -->
                 <div v-if="modal.data.restPasswordStatus" 
-                    class="flex flex-col gap-3 px-2 p-1 rounded-lg  border-gray-500 border border-1">
-                    <div class="flex">
+                    class="flex flex-col gap-3 pr-4 pt-4 rounded-lg bg-slate-100">
+                    <!-- <div class="flex">
                             <div class="flex-1 ">
                             </div>
                             <a-button  
                                 class="!rounded-lg !text-red-800 !bg-red-50 !font-black"
                                 v-if="modal.data.restPasswordStatus"  @click="dropFieldRestPassword">取消重設密碼
                             </a-button>
-                    </div>
+                    </div> -->
                     <template v-if=" modal.data.restPasswordStatus">
                         <a-form-item  label="重設密碼" name="newPassowrd">
                             <a-input type="password" v-model:value="modal.data.newPassword" />
@@ -93,6 +89,10 @@
                 </div>
             </a-form>
         <template #footer>
+            <a-button  v-if="modal.mode=='EDIT' && !modal.data.restPasswordStatus" 
+                class="!rounded-lg !text-blue-800 !bg-blue-50 !font-black mr-2" 
+                @click="addFieldRestPassword">重設密碼
+            </a-button>
             <a-button key="back" @click="modalCancel">取消</a-button>
             <a-button v-if="modal.mode=='EDIT'" key="Update" type="primary" @click="updateRecord( modal.data )">更改</a-button>
             <a-button v-if="modal.mode=='CREATE'"  key="Store" type="primary" @click="storeRecord(modal.data )">新增</a-button>

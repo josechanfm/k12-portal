@@ -1,45 +1,62 @@
 <template>
     <AdminLayout title="學習主題">
-        <div class="bg-white shadow sm:rounded-lg my-5 p-5">
-            <a-row>
-                <a-col :sm="24" :lg="12">
-                    <a-typography-title :level="3">學年: {{ year.title }}</a-typography-title>
-                    <a-typography-title :level="3">年級: {{ grade.tag }}</a-typography-title>
-                </a-col>
-                <a-col :sm="24" :lg="12">
-                    <template v-for="grade in year.k_grades">
-                        <a-button as="link" class="ant-btn" :href="route('master.grade.themeTemplates.index', grade.id)">{{
-                    grade.tag }}</a-button>
-                    </template>
-                </a-col>
-            </a-row>
-            <a-row class="pt-5">
-                <a-col :span="24">
-
-                </a-col>
-            </a-row>
-        </div>
-        <!-- topic section-->
-        <div class="bg-white sm:rounded-lg my-5 p-5">
-            <div class="float-right">
-                修開 <a-switch v-model:checked="themeEditable" />
-                <span class="pr-5">&nbsp;</span>
-                <button @click="themeCreate()"
-                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">新增主題</button>
+        <!--  -->
+        <div class="flex flex-col gap-1">
+        <div class="flex flex-wrap font-bold text-sm gap-1">
+            <div class="flex bg-gray-300 rounded-lg p-1 px-2 items-center gap-1">
+                <div class="text-gray-600 font-black rounded-l-lg bg-gray-100 p-1">
+                學年代號
+                </div>
+                <div class=" ">{{ year.code }}</div>
             </div>
-            <div v-if="!themeEditable">
-                <span class="text-lg">基力學習主題：</span>
+            <div class="flex bg-gray-300 rounded-lg p-1 items-center gap-1">
+                <div class="text-gray-600 font-black rounded-l-lg bg-gray-100 p-1">
+                學年全稱
+                </div>
+                <div class=" ">{{ year.title }}</div>
+            </div>
+            <div class="flex bg-gray-300 rounded-lg p-1 items-center gap-1">
+                <div class="text-gray-600 font-black rounded-l-lg bg-gray-100 p-1">
+                年級
+                </div>
+                <template v-for="y_grade in year.k_grades" :key="y_grade">
+                        <a-button as="link" class="font-black"
+                        :class="y_grade.tag==grade.tag?'hover:!text-black bg-blue-500/90 text-white':''"
+                        :href="route('master.grade.themeTemplates.index', y_grade.id)">
+                            {{y_grade.tag }}
+                        </a-button>
+                 </template>
+            </div>
+            <div class="flex bg-gray-300 rounded-lg p-1 items-center gap-1">
+                <div class="text-gray-600 font-black rounded-l-lg bg-gray-100 p-1">
+                    基力學習主題
+                </div>
                 <a-select v-model:value="selectedThemeId" :options="themeTemplates"
                     :fieldNames="{ value: 'id', label: 'title' }" @change="onChangeSelectedTheme" />
             </div>
-            <div v-else class="pb-5">{{ selectedTheme.title }}</div>
-            <div v-if="themeEditable">
+            <div class="flex bg-gray-300 rounded-lg p-1 items-center gap-1">
+                <div class="text-gray-600 font-black rounded-l-lg bg-gray-100 p-1">
+                    修改學習主題
+                </div>
+                 <a-switch v-model:checked="themeEditable" />
+            </div>
+        </div>
+        <!--  -->
+        <!-- topic section-->
+        <Transition >
+        <div class="h-[80vh] overflow-y-scroll bg-white rounded-lg border border-gray-300 p-3" v-if="themeEditable">
+                <div class="flex ">
+                    <div class="text-slate-500 text-lg font-black flex-1">修改學習主題</div>
+                    <span class="pr-5">&nbsp;</span>
+                    <a-button @click="themeCreate()"
+                    size="small"   type="create">新增主題</a-button>
+                </div>
                 <a-table :dataSource="themeTemplates" :columns="themeColumns">
                     <template #bodyCell="{ column, text, record, index }">
-                        <template v-if="column.dataIndex == 'operation'">
-                            <a-button @click="themeEdit(theme)" :style="'Edit'">修改</a-button>
-                            <a-button @click="themeDelete(theme)" :style="'Delete'">刪除</a-button>
-                        </template>
+                        <div class="flex gap-1" v-if="column.dataIndex == 'operation'">
+                            <a-button @click="themeEdit(theme)" type="edit" size="small">修改</a-button>
+                            <a-button @click="themeDelete(theme)" type="delete" size="small" >刪除</a-button>
+                        </div>
                         <template v-else-if="column.dataIndex == 'term_id'">
                             {{ record.term_id }} / {{ record.id }}
                         </template>
@@ -51,25 +68,24 @@
                         </template>
                     </template>
                 </a-table>
-            </div>
         </div>
+        </Transition>
 
         <!--Topics section-->
-        <div>
-            
-            <div class="text-right">
-                <button @click="topicCreate()"
-                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">新增內容</button>
-            </div>
-            <div class="text-lg">
-                基力項目：
+        <div class="flex flex-col gap-1 rounded-lg border p-2 bg-white !border-gray-300">
+            <div class="flex">
+                <div class="flex-1 text-lg text-slate-500 font-black"> 基力項目</div>
+                <div >
+                    <a-button @click="topicCreate()"
+                    size="small"   type="create">新增內容</a-button>
+                </div>
             </div>
             <a-table :dataSource="selectedTheme.topic_templates" :columns="topicColumns">
                 <template #bodyCell="{ column, text, record, index }">
-                    <template v-if="column.dataIndex == 'operation'">
-                        <a-button @click="topicEdit(record)" :style="'Edit'">修改</a-button>
-                        <a-button @click="topicDelete(record)" :style="'Delete'">刪除</a-button>
-                    </template>
+                    <div class="flex gap-1" v-if="column.dataIndex == 'operation'">
+                        <a-button @click="topicEdit(record)" type="edit" size="small">修改</a-button>
+                        <a-button @click="topicDelete(record)" type="delete" size="small">刪除</a-button>
+                    </div>
                     <template v-else>
                         {{ record[column.dataIndex] }}
                     </template>
@@ -78,7 +94,9 @@
         </div>
 
         <!-- modalTheme Start-->
-        <a-modal v-model:open="modalTheme.isOpen" :title="modalTheme.title" @ok="themeOnOk">
+        <a-modal :cancelButtonProps="{type:'delete',size:'small'}"  cancelText="取消"
+                :okButtonProps="{type:modalTheme.mode.toLowerCase(),size:'small'}"   :okText="modalTheme.mode=='CREATE'?'新增':'保存'"
+                v-model:open="modalTheme.isOpen" :title="modalTheme.title" @ok="themeOnOk">
             <a-form :model="modalTheme.data" name="Theme" ref="modalThemeRef" :rules="themeRules"
                 :validate-messages="validateMessages" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
                 <a-form-item label="學段" name="term_id">
@@ -90,11 +108,12 @@
                 <a-form-item label="主題簡介" name="description">
                     <a-textarea v-model:value="modalTheme.data.description" />
                 </a-form-item>
-
             </a-form>
         </a-modal>
         <!-- modalTopic Start-->
-        <a-modal v-model:open="modalTopic.isOpen" :title="modalTopic.title" @ok="topicOnOK">
+        <a-modal  :cancelButtonProps="{type:'delete',size:'small'}"  cancelText="取消"
+                    :okButtonProps="{type:modalTheme.mode.toLowerCase(),size:'small'}"   :okText="modalTheme.mode=='CREATE'?'新增':'保存'"
+            v-model:open="modalTopic.isOpen" :title="modalTopic.title" @ok="topicOnOK">
             <a-form :model="modalTopic.data" name="Topic" ref="modalTopicRef" :rules="topicRules"
                 :validate-messages="validateMessages" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
                 <a-form-item label="分類" name="section_code">
@@ -108,7 +127,7 @@
                 </a-form-item>
             </a-form>
         </a-modal>
-
+    </div>
     </AdminLayout>
 </template>
 
@@ -350,3 +369,14 @@ export default {
     },
 }
 </script>
+<style scoped>
+.v-enter-active,
+.v-leave-active {
+    transition: opacity 0.3s ease-out, height 0.3s linear;
+}
+.v-enter-from,
+.v-leave-to {
+    opacity:0;
+    height:0px;
+  }
+</style>

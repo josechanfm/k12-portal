@@ -106,13 +106,13 @@ export default {
     },
     created(){
        if(this.candidate.start_grade){
-        this.klassOptions=this.gradesKlasses.find(g=>g.id==this.candidate.start_grade).klasses
+        this.klassOptions=this.gradesKlasses.find(g=>g.id==this.candidate.start_grade_tag).klasses
        }
     },
     methods: {
         onChangeGrade(){
             this.klassOptions=this.gradesKlasses.find(g=>g.tag==this.candidate.start_grade_tag).klasses
-            console.log(this.candidate.start_grade)
+            this.candidate.start_klass_tag= this.klassOptions[0]?.tag??null
         },
         onFinish(){
             console.log('onfinish');

@@ -38,7 +38,8 @@ class HandleInertiaRequests extends Middleware
     {
         return array_merge(parent::share($request), [
             'currentUserPermissions'=>$request->user()?->getAllPermissions()->pluck('name'),
-            'currentUserRoles'=>$request->user()?->getRoleNames()
+            'currentUserRoles'=>$request->user()?->getRoleNames(),
+            'roleConfig'=>config('role'),
         ]);
     }
 }
