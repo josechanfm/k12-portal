@@ -62,6 +62,7 @@ class Student extends Model implements HasMedia
                 'full_tag'=>$ks->klass->tag.substr('00'.$ks->student_number,-2),
                 'student_name'=>$ks->student->name_zh,
                 'student_number'=>$ks->student_number,
+                'klass_student_id'=>$ks->id,
                 'image'=>$ks->getMedia('avatar')->first(),
             ];
         }

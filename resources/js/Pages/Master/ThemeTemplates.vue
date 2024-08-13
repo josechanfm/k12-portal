@@ -43,7 +43,7 @@
         </div>
         <!--  -->
         <!-- topic section-->
-        <Transition >
+        <Transition>
         <div class="h-[80vh] overflow-y-scroll bg-white rounded-lg border border-gray-300 p-3" v-if="themeEditable">
                 <div class="flex ">
                     <div class="text-slate-500 text-lg font-black flex-1">修改學習主題</div>
@@ -61,10 +61,11 @@
                             {{ record.term_id }} / {{ record.id }}
                         </template>
                         <template v-else>
-                            <a @click="selectedTheme = record">
-                                {{ record.title }}
-                            </a>
-
+                            <a-button 
+                                type="link"
+                                @click="()=>{selectedThemeId = record.id, onChangeSelectedTheme()}">
+                                {{ record.title }} 
+                            </a-button>
                         </template>
                     </template>
                 </a-table>
@@ -72,6 +73,7 @@
         </Transition>
 
         <!--Topics section-->
+      
         <div class="flex flex-col gap-1 rounded-lg border p-2 bg-white !border-gray-300">
             <div class="flex">
                 <div class="flex-1 text-lg text-slate-500 font-black"> 基力項目</div>
@@ -80,22 +82,23 @@
                     size="small"   type="create">新增內容</a-button>
                 </div>
             </div>
-            <a-table :dataSource="selectedTheme.topic_templates" :columns="topicColumns">
-                <template #bodyCell="{ column, text, record, index }">
-                    <div class="flex gap-1" v-if="column.dataIndex == 'operation'">
-                        <a-button @click="topicEdit(record)" type="edit" size="small">修改</a-button>
-                        <a-button @click="topicDelete(record)" type="delete" size="small">刪除</a-button>
-                    </div>
-                    <template v-else>
-                        {{ record[column.dataIndex] }}
-                    </template>
+            <Transition name="cus">
+            <a-table  :dataSource="selectedTheme.topic_templates" :columns="topicColumns" :rowKey="(e)=>e.id" :key="selectedThemeId">
+                <template  #bodyCell="{ column, text, record, index }">
+                        <div class="flex gap-1" v-if="column.dataIndex == 'operation'">
+                            <a-button @click="topicEdit(record)" type="edit" size="small">修改</a-button>
+                            <a-button @click="topicDelete(record)" type="delete" size="small">刪除</a-button>
+                        </div>
+                        <div v-else>
+                            {{ record[column.dataIndex] }}
+                        </div>
                 </template>
             </a-table>
+            </Transition>
         </div>
-
         <!-- modalTheme Start-->
         <a-modal :cancelButtonProps="{type:'delete',size:'small'}"  cancelText="取消"
-                :okButtonProps="{type:modalTheme.mode.toLowerCase(),size:'small'}"   :okText="modalTheme.mode=='CREATE'?'新增':'保存'"
+                :okButtonProps="{type:(modalTheme?.mode??'').toLowerCase(),size:'small'}"   :okText="modalTheme.mode=='CREATE'?'新增':'保存'"
                 v-model:open="modalTheme.isOpen" :title="modalTheme.title" @ok="themeOnOk">
             <a-form :model="modalTheme.data" name="Theme" ref="modalThemeRef" :rules="themeRules"
                 :validate-messages="validateMessages" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
@@ -112,7 +115,7 @@
         </a-modal>
         <!-- modalTopic Start-->
         <a-modal  :cancelButtonProps="{type:'delete',size:'small'}"  cancelText="取消"
-                    :okButtonProps="{type:modalTheme.mode.toLowerCase(),size:'small'}"   :okText="modalTheme.mode=='CREATE'?'新增':'保存'"
+                    :okButtonProps="{type:(modalTopic?.mode??'').toLowerCase(),size:'small'}"   :okText="modalTopic.mode=='CREATE'?'新增':'保存'"
             v-model:open="modalTopic.isOpen" :title="modalTopic.title" @ok="topicOnOK">
             <a-form :model="modalTopic.data" name="Topic" ref="modalTopicRef" :rules="topicRules"
                 :validate-messages="validateMessages" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
@@ -379,4 +382,22 @@ export default {
     opacity:0;
     height:0px;
   }
+
+
+.cus-enter-active{
+  transition: all 0.3s ease-out;
+  transition-delay: 0.3s;
+}
+.cus-leave-active {
+  transition: all 0.3s ease-out;
+
+}
+.cus-enter-from{
+    transform: translateX(300px);
+    opacity: 0;
+}
+.cus-leave-to {
+  opacity: 0;
+  transform: translateX(300px);
+}
 </style>

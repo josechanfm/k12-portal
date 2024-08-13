@@ -40,11 +40,10 @@ class StudentController extends Controller
         $student->relatives;
         $student->guardians;
         //$student->archives=$student->archives();
-        
         $student->medias=$student->klassStudent?$student->klassStudent->media->all():null;
         $student->avatars=$student->avatars();
         $student->siblings=$student->siblings();
-
+        $student->klasses;
         return Inertia::render('Director/StudentProfile',[
             'student'=>$student
         ]);

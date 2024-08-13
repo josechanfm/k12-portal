@@ -39,22 +39,23 @@
         </a-space>
        -->
       </a-layout-header>
-      <a-layout-content :style="{ margin: '5px 15px', background: '#fff', minHeight: '180px' }">
-        <header class="flex justify-between items-center px-3 mb-3 sm:rounded-lg">
+      <a-layout-content :style="{ margin: '5px 15px', background: '#fff', minHeight: '50px' }">
+        <header class="bg-slate-300/30 py-1 flex justify-between items-center px-3 mb-3 sm:rounded-lg">
           <!-- <div class="gap-1 rounded-lg p-1 flex items-center !font-black text-lg">
             <TagOutlined class="pb-1 !text-sky-700 "></TagOutlined>
             <div class="text-sky-600">{{ title }}</div>
           </div> -->
-          <div v-if="breadcrumb">
+          <div class="text-xl text-slate-600 font-black">
             <!-- <a-page-header :breadcrumb="{ 'routes': headerBreadcrumb }" :title="title" > -->
-            <a-page-header :title="title" >
+            <!-- v-if="breadcrumb <a-page-header :title="title" >
               <template #breadcrumb>
                 <template v-for="( crumb,key ) in headerBreadcrumb" >
                   <span v-if=" key+1 == headerBreadcrumb.length"><span class="!text-black">{{ crumb.breadcrumbName }}</span></span>
                   <span v-else><a class="!text-black opacity-50" :href="crumb.path">{{ crumb.breadcrumbName }} </a> ／ </span>
                 </template>
               </template>
-            </a-page-header>
+            </a-page-header> -->
+            <TagOutlined class="pb-1  "></TagOutlined> {{ title }}
           </div>
 
           <nav class="text-sm " v-if="breadcrumb">

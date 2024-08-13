@@ -64,13 +64,21 @@ button[disabled]{
    @apply cursor-not-allowed hover:!bg-gray-500
   }
 .student-form-layout{
-    @apply min-w-[320px]
+    @apply min-w-[8cm] mx-2 !mb-0 flex items-start
 }
-
+.student-form-layout .ant-form-item-label {
+    @apply  !w-[3.2cm] bg-gray-300/70  !rounded-l-2xl  h-fit
+}
+.student-form-layout .ant-form-item-label > label{
+    @apply !text-slate-500 text-base inline-block p-1
+}
+.ant-row.ant-form-item-row{
+    @apply  flex items-start 
+}
 /* checkbox-layout checkbox button style */
 .checkbox-btn{
     @apply bg-slate-400/40 p-1 rounded-2xl min-w-16 flex items-center justify-center
-         text-slate-700 text-base font-bold hover:bg-sky-500/50
+         text-slate-600 text-lg font-bold hover:bg-sky-500/50
 }
 .checkbox-btn .ant-checkbox-inner{
     display: none;
@@ -79,10 +87,31 @@ button[disabled]{
     display: none;
 }
 .checkbox-btn.ant-checkbox-wrapper-checked{
-    @apply !bg-sky-500/50 text-sky-800 font-extrabold
+    @apply !bg-sky-400/50 text-sky-800 font-extrabold
     
 }
 /* end */
+.ant-form-bg{
+@apply bg-stone-200/80 rounded-2xl p-2 font-black 
+}
 .form-header{
     @apply font-black text-2xl text-slate-500 px-1
 }
+
+
+/**/
+/* TransitionGroup list */
+.list-move, 
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.2s ease;
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(90px);
+}
+.list-leave-active {
+  position: absolute;
+}
+/* TransitionGroup */

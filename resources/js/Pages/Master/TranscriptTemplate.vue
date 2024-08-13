@@ -5,14 +5,13 @@
                 成績表項目列表
             </h2>
         </template>
-        <button @click="onClickCreate()"
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Create Transcript template</button>
+        <a-button @click="onClickCreate()" size="small" type="info">成績表轉換項目</a-button>
             <a-table :dataSource="transcripts" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
-                    <template v-if="column.dataIndex=='operation'">
-                        <a-button @click="onClickEdit(record)">Edit</a-button>
-                        <a-button @click="onClickDelete(record.id)">Delete</a-button>
-                    </template>
+                    <div class="flex gap-1" v-if="column.dataIndex=='operation'">
+                        <a-button @click="onClickEdit(record)" type="edit" size="small">編輯</a-button>
+                        <a-button @click="onClickDelete(record.id)" type="delete" size="small">刪除</a-button>
+                    </div>
                     <template v-else-if="column.dataIndex=='courses'">
                         <ul>
                             <li v-for="klass in record['klasses']">Class: {{klass.acronym}}</li>
@@ -48,7 +47,7 @@
                 <a-form-item label="備註" name="remark">
                     <a-textarea v-model:value="modal.data.remark" placeholder="textarea with clear icon" allow-clear />
                 </a-form-item>
-\            </a-form>
+            </a-form>
         <template #footer>
             <a-button key="back" @click="modalCancel">Return</a-button>
             <a-button v-if="modal.mode=='EDIT'" key="Update" type="primary" @click="updateRecord()">Update</a-button>
