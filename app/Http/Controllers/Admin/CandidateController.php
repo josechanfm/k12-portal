@@ -106,11 +106,13 @@ class CandidateController extends Controller
     public function accepted(Request $request){
         //enroll_confirm column is not included in fillable
         $candidate=Candidate::find($request->id);
-        $grade=Grade::find($candidate->start_grade);
-        $klass=Klass::find($candidate->start_klass);
+        $grade=Grade::where('tag',$candidate->start_grade_tag)->first();
+        $klass=Klass::where('tag',$candidate->start_klass_tag)->first();
+
         if($grade->id != $klass->grade_id){
             return redirect()->back()->withErrors(['message'=>'Grade and Class information not consistent!']);
         }
+
         if($request->accepted && $request->accepted==true){
             //$candidate->update($request->all());
             $candidate->accepted=true;

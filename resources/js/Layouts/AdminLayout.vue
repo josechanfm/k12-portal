@@ -4,8 +4,8 @@
     <!-- side menu -->
     <a-layout-sider class="shadow-md" v-model:collapsed="collapsed" :trigger="null" collapsible
       style="background: #fff">
-      <a :href="route('director.dashboard')">
-        <div class="logo">AIMS</div>
+      <a :href="route('director.dashboard')" class="flex justify-center">
+        <div class="h-12 flex items-center">AIMS</div>
       </a>
       <AdminMenu />
     </a-layout-sider>
@@ -13,27 +13,33 @@
     <!-- above menu -->
     <a-layout class="!min-h-screen ">
       <a-layout-header class="h-fit rounded-l shadow-md" style="background: #fff; padding: 0">
-        <menu-unfold-outlined v-if="collapsed" class="trigger" @click="() => (collapsed = !collapsed)" />
-        <menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)" />
-        <a-space direction="horizontal">
-          <div class="inline">
+        <div class="flex h-fit  items-center gap-3">
+          <menu-unfold-outlined v-if="collapsed" class="trigger" @click="() => (collapsed = !collapsed)" />
+          <menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)" />
+          <div >
             學校網站
           </div>
-          <div class="inline">
+          <div >
             資產管理
           </div>
-          <div class="inline">
+          <div >
             家校通
           </div>
-          <div class="inline">
+          <div >
             工作評核
           </div>
-        </a-space>
-        <div class="float-right pr-5">
-          {{ $page.props.user.name }}
+          <div class="flex-1"></div>
+          <div>
+            {{ $page.props.user.name }}
+          </div>
         </div>
+        <!-- 
+        <a-space direction="horizontal">
+        
+        </a-space>
+       -->
       </a-layout-header>
-      <a-layout-content :style="{ margin: '5px 15px', background: '#fff', minHeight: '280px' }">
+      <a-layout-content :style="{ margin: '5px 15px', background: '#fff', minHeight: '180px' }">
         <header class="flex justify-between items-center px-3 mb-3 sm:rounded-lg">
           <!-- <div class="gap-1 rounded-lg p-1 flex items-center !font-black text-lg">
             <TagOutlined class="pb-1 !text-sky-700 "></TagOutlined>
@@ -132,7 +138,14 @@ const switchToTeam = (team) => {
     preserveState: false,
   });
 };
+window.onresize=()=>{
+  if(window.innerWidth<=1024){
+    collapsed.value=true
+  }else{
+    collapsed.value=false
 
+  }
+}
 </script>
 
 <style>
@@ -148,11 +161,6 @@ const switchToTeam = (team) => {
   color: #1890ff;
 }
 
-#app .logo {
-  height: 32px;
-  background: rgba(255, 255, 255, 0.3);
-  margin: 16px;
-}
 
 .site-layout .site-layout-background {
   background: #fff;

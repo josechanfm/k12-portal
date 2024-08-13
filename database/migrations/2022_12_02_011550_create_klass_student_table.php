@@ -16,14 +16,15 @@ return new class extends Migration
         Schema::create('klass_student', function (Blueprint $table) {
             $table->id();
             $table->foreignId('klass_id');
-            $table->foreignId('student_id')->constrained('students')->onDelete('restrict')->onUpdate('cascade');
+            $table->foreignId('student_id');
             $table->string('student_number')->default(0);
             $table->char('state',3)->default('ACT');
-            $table->char('stream',3)->default('ART');
+            $table->char('stream',3)->default('ALL');
             $table->bigInteger('promote')->default(0);
             $table->bigInteger('promote_to')->default(0);
             $table->string('score_scheme')->nullable();
             $table->timestamps();
+            $table->unique(['klass_id', 'student_id']);
         });
     }
 

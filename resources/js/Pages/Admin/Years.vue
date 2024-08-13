@@ -1,10 +1,11 @@
 <template>
-    <AdminLayout title="學年列表" :breadcrumb="breadcrumb">
-        <div class="p-2 bg-white rounded-lg flex flex-col gap-1">
-        <div class="flex">
-            <div class="flex-1"></div> <a-button @click="createRecord()" type="create" size="small">創建新學年</a-button>
-        </div>
-        <div class="rounded-lg border-gray-200 border p-2">
+    <AdminLayout title="學年" :breadcrumb="breadcrumb">
+        <a-card class="flex flex-col gap-1 shadow-md ">
+            <div class="flex">
+                <div class="flex-1"></div> <a-button @click="createRecord()" type="create" size="small">創建新學年＋</a-button>
+            </div>
+        <!-- <div class="rounded-lg border-gray-200 p-2"> -->
+           
             <a-table :dataSource="years" :columns="columns">
                 <template #bodyCell="{column, text, record, index}">
                     <div v-if="column.dataIndex=='operation'" class="flex gap-1">
@@ -18,133 +19,134 @@
                             :color="item.initial=='P'?'blue':item.initial=='S'?'green':'cyan'">{{item.initial}}:{{item.count}}</a-tag>
                     </template>
                     <template v-else-if="column.dataIndex=='current_year'">
-                        <CheckOutlined />
+                        <div  v-if="record[column.dataIndex]"><CheckOutlined /></div>
                     </template>
                     <template v-else>
                         {{record[column.dataIndex]}}
                     </template>
                 </template>
             </a-table>
-        </div>
-        <!-- Modal Start-->
-        <a-modal v-model:open="modal.isOpen" :title="modal.title" width="60%" @update="updateRecord(modalForm)" @onCancel="closeModal()">
-            <a-form
-            ref="modalRef"
-            :model="modal.data"
-            name="year"
-            :label-col="{ span: 4 }"
-            :wrapper-col="{ span: 20 }"
-            autocomplete="off"
-            :rules="rules"
-            :validate-messages="validateMessages"
-            @finish="onFinish"
-            @onFinishFailed="onFinishFailed"
-        >
-        <!-- @validate="handleValidate" -->
+            
+            <!-- </div> -->
+            <!-- Modal Start-->
+            <a-modal v-model:open="modal.isOpen" :title="modal.title" width="60%" @update="updateRecord(modalForm)" @onCancel="closeModal()">
+                <a-form
+                ref="modalRef"
+                :model="modal.data"
+                name="year"
+                :label-col="{ span: 4 }"
+                :wrapper-col="{ span: 20 }"
+                autocomplete="off"
+                :rules="rules"
+                :validate-messages="validateMessages"
+                @finish="onFinish"
+                @onFinishFailed="onFinishFailed"
+            >
+            <!-- @validate="handleValidate" -->
 
-            <a-form-item label="學年代號" name="code">
-                <a-input v-model:value="modal.data.code" style="width: 100px"/>
-            </a-form-item>
-            <a-form-item label="學年標題" name="title">
-                <a-input v-model:value="modal.data.title" />
-            </a-form-item>
-            <a-form-item label="時期" name="period">
-                <a-range-picker v-model:value="modal.data.period" :valueFormat="dateFormat" :format="dateFormat"/>
-            </a-form-item>
-            <a-form-item label="開始學段" name="current_term">
-                <a-radio-group v-model:value="modal.data.current_term">
-                    <template v-for="term in yearTerms">
-                        <a-radio-button :value="term.value">{{term.label}}</a-radio-button>
-                    </template>
-                </a-radio-group>
-            </a-form-item>
-            <a-form-item label="當前學年" name="current_year">
-                <a-switch v-model:checked="modal.data.current_year" />
-            </a-form-item>
-            <a-form-item label="有效" name="active">
-                <a-switch v-model:checked="modal.data.active" />
-            </a-form-item>
-            <div v-if="modal.mode=='CREATE'">
-                <a-form-item label="簡介" name="description">
-                    <a-textarea v-model:value="modal.data.description" />
+                <a-form-item label="學年代號" name="code">
+                    <a-input v-model:value="modal.data.code" style="width: 100px"/>
                 </a-form-item>
+                <a-form-item label="學年標題" name="title">
+                    <a-input v-model:value="modal.data.title" />
+                </a-form-item>
+                <a-form-item label="時期" name="period">
+                    <a-range-picker v-model:value="modal.data.period" :valueFormat="dateFormat" :format="dateFormat"/>
+                </a-form-item>
+                <a-form-item label="開始學段" name="current_term">
+                    <a-radio-group v-model:value="modal.data.current_term">
+                        <template v-for="term in yearTerms">
+                            <a-radio-button :value="term.value">{{term.label}}</a-radio-button>
+                        </template>
+                    </a-radio-group>
+                </a-form-item>
+                <a-form-item label="當前學年" name="current_year">
+                    <a-switch v-model:checked="modal.data.current_year" />
+                </a-form-item>
+                <a-form-item label="有效" name="active">
+                    <a-switch v-model:checked="modal.data.active" />
+                </a-form-item>
+                <div v-if="modal.mode=='CREATE'">
+                    <a-form-item label="簡介" name="description">
+                        <a-textarea v-model:value="modal.data.description" />
+                    </a-form-item>
 
-                <a-divider orientation="left">幼稚園</a-divider>
-                <a-row>
-                    <a-col :span="8"></a-col>
-                    <a-col :span="8">
-                        <a-form-item label="年級數" name="kgrade">
-                            <a-select
-                            v-model:value="modal.data.kgrade"
-                            :options="kgradeOptions"
-                            style="width: 80px"
-                            />
-                        </a-form-item>
-                    </a-col>
-                    <a-col :span="8">
-                        <a-form-item label="班別數" name="kklass">
-                            <a-select
-                            v-model:value="modal.data.kklass"
-                            :options="kklassOptions"
-                            style="width: 80px"
-                            />
-                        </a-form-item>
-                    </a-col>
-                </a-row>
-                <a-divider orientation="left">小學</a-divider>
-                <a-row>
-                    <a-col :span="8"></a-col>
-                    <a-col :span="8">
-                        <a-form-item label="年級數" name="pgrade">
-                            <a-select
-                            v-model:value="modal.data.pgrade"
-                            :options="pgradeOptions"
-                            style="width: 80px"
-                            />
-                        </a-form-item>
-                    </a-col>
-                    <a-col :span="8">
-                        <a-form-item label="班級數" name="pklass">
-                            <a-select
-                            v-model:value="modal.data.pklass"
-                            :options="pklassOptions"
-                            style="width: 80px"
-                            />
-                        </a-form-item>
-                    </a-col>
-                </a-row>
-                <a-divider orientation="left">中學</a-divider>
-                <a-row>
-                    <a-col :span="8"></a-col>
-                    <a-col :span="8">
-                        <a-form-item label="年級數" name="sgrade">
-                            <a-select
-                            v-model:value="modal.data.sgrade"
-                            :options="sgradeOptions"
-                            style="width: 80px"
-                            />
-                        </a-form-item>
-                    </a-col>
-                    <a-col :span="8">
-                        <a-form-item label="班級數" name="sklass">
-                            <a-select
-                            v-model:value="modal.data.sklass"
-                            :options="sklassOptions"
-                            style="width: 80px"
-                            />
-                        </a-form-item>
-                    </a-col>
-                </a-row>
-            </div>
-        </a-form>
-        <template #footer>
-            <a-button key="back" @click="modalCancel">返回</a-button>
-            <a-button v-if="modal.mode=='EDIT'" key="Update" type="primary"  @click="updateRecord(modalForm)">更新</a-button>
-            <a-button v-if="modal.mode=='CREATE'"  key="Store" type="primary"  @click="storeRecord(modalForm)">創建</a-button>
-        </template>
-    </a-modal>    
-    <!-- Modal End-->
-    </div>
+                    <a-divider orientation="left">幼稚園</a-divider>
+                    <a-row>
+                        <a-col :span="8"></a-col>
+                        <a-col :span="8">
+                            <a-form-item label="年級數" name="kgrade">
+                                <a-select
+                                v-model:value="modal.data.kgrade"
+                                :options="kgradeOptions"
+                                style="width: 80px"
+                                />
+                            </a-form-item>
+                        </a-col>
+                        <a-col :span="8">
+                            <a-form-item label="班別數" name="kklass">
+                                <a-select
+                                v-model:value="modal.data.kklass"
+                                :options="kklassOptions"
+                                style="width: 80px"
+                                />
+                            </a-form-item>
+                        </a-col>
+                    </a-row>
+                    <a-divider orientation="left">小學</a-divider>
+                    <a-row>
+                        <a-col :span="8"></a-col>
+                        <a-col :span="8">
+                            <a-form-item label="年級數" name="pgrade">
+                                <a-select
+                                v-model:value="modal.data.pgrade"
+                                :options="pgradeOptions"
+                                style="width: 80px"
+                                />
+                            </a-form-item>
+                        </a-col>
+                        <a-col :span="8">
+                            <a-form-item label="班級數" name="pklass">
+                                <a-select
+                                v-model:value="modal.data.pklass"
+                                :options="pklassOptions"
+                                style="width: 80px"
+                                />
+                            </a-form-item>
+                        </a-col>
+                    </a-row>
+                    <a-divider orientation="left">中學</a-divider>
+                    <a-row>
+                        <a-col :span="8"></a-col>
+                        <a-col :span="8">
+                            <a-form-item label="年級數" name="sgrade">
+                                <a-select
+                                v-model:value="modal.data.sgrade"
+                                :options="sgradeOptions"
+                                style="width: 80px"
+                                />
+                            </a-form-item>
+                        </a-col>
+                        <a-col :span="8">
+                            <a-form-item label="班級數" name="sklass">
+                                <a-select
+                                v-model:value="modal.data.sklass"
+                                :options="sklassOptions"
+                                style="width: 80px"
+                                />
+                            </a-form-item>
+                        </a-col>
+                    </a-row>
+                </div>
+            </a-form>
+            <template #footer>
+                <a-button key="back" @click="modalCancel">返回</a-button>
+                <a-button v-if="modal.mode=='EDIT'" key="Update" type="primary"  @click="updateRecord(modalForm)">更新</a-button>
+                <a-button v-if="modal.mode=='CREATE'"  key="Store" type="primary"  @click="storeRecord(modalForm)">創建</a-button>
+            </template>
+        </a-modal>    
+        <!-- Modal End-->
+        </a-card>
     </AdminLayout>
 
 </template>

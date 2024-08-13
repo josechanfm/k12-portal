@@ -4,7 +4,7 @@
             <a-table :dataSource="candidates.data" :columns="columns" :pagination="pagination" @change="onPaginationChange" ref="dataTable">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
-                        <a-button href="" :disabled="record.accepted" @click="onClickAccepted(record)" size="small" type="info">接收</a-button>
+                        <a-button  :disabled="record.accepted" @click="onClickAccepted(record)" size="small" type="info">接收</a-button>
                         <a-button :disabled="!record.accepted || record.student_id!=null" :href="route('admin.registrations.create',{candidate_id:record.id})" size="small" type="info">注冊</a-button>
                         <a-button :disabled="record.student_id==null || record.enrolled" :href="route('admin.enrollments.create',{student_id:record.student_id})"  size="small"  type="info">分班</a-button>
                         <a-button @click="onClickEdit(record)" size="small" type="edit">修改</a-button>
@@ -138,7 +138,8 @@ export default {
         },
         onClickAccepted(record){
             record.accepted=true;
-            this.$inertia.put(route('admin.candidate.accepted',record.id), record,{
+            console.log(record)
+            this.$inertia.put(route('admin.candidate.accepted'), record,{
                 onSuccess:(page)=>{
                     console.log(page)
                     record.enroll_confirm=false

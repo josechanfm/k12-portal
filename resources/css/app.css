@@ -59,3 +59,30 @@
 .profile-row{
    @apply flex gap-1 hover:bg-slate-100 rounded-lg
 }
+
+button[disabled]{
+   @apply cursor-not-allowed hover:!bg-gray-500
+  }
+.student-form-layout{
+    @apply min-w-[320px]
+}
+
+/* checkbox-layout checkbox button style */
+.checkbox-btn{
+    @apply bg-slate-400/40 p-1 rounded-2xl min-w-16 flex items-center justify-center
+         text-slate-700 text-base font-bold hover:bg-sky-500/50
+}
+.checkbox-btn .ant-checkbox-inner{
+    display: none;
+}
+.checkbox-btn .ant-checkbox-checked{
+    display: none;
+}
+.checkbox-btn.ant-checkbox-wrapper-checked{
+    @apply !bg-sky-500/50 text-sky-800 font-extrabold
+    
+}
+/* end */
+.form-header{
+    @apply font-black text-2xl text-slate-500 px-1
+}

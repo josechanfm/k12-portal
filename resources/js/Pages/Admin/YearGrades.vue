@@ -1,9 +1,13 @@
 <template>
     <AdminLayout title="年級列表" :breadcrumb="breadcrumb">
-        <div class="p-2 bg-white rounded-lg flex flex-col gap-1">
+        <a-card class="flex flex-col gap-1 shadow-md ">
             <!--  -->
             
             <div class="flex flex-wrap font-bold text-sm gap-1">
+                <Pill>
+                    <template #head>h</template>
+                    <template #body>b</template>
+                </Pill>
                 <div class="flex bg-gray-300 rounded-lg p-1 px-2 items-center gap-1">
                     <div class="text-gray-600 font-black rounded-l-lg bg-gray-100  p-1 ">學年代號</div>
                     <div class=" "> 
@@ -24,36 +28,33 @@
                 </div>
                 <div class="flex-1"></div>
                 <a-button @click="createRecord()" type="create" size="small">
-                    新增學年級別
+                    新增學年級別＋
                 </a-button>
             </div>
             <!--  -->
-        <div class="rounded-lg border-gray-200 border p-2">
-        <a-table :dataSource="grades" :columns="columns" :pagination="{ pageSize: 20 }"
->
-            <template #bodyCell="{column, text, record, index}">
-                <div v-if="column.dataIndex=='operation'" class="flex gap-1">
-                    <a-button as="link" :href="route('admin.grade.klasses.index',record.id)" size="small" type="info">班別</a-button>
-                    <a-button @click="editRecord(record)" size="small" type="edit">修改</a-button>
-                    <a-button @click="deleteRecord(record)" size="small" type="delete">刪除</a-button>
-                    <a-popconfirm
-                        title='是否確定鎖定 "全級" 的成績表?'
-                        ok-text="Yes"
-                        cancel-text="No"
-                        @confirm="lockTranscript(record)"
-                    >
-                    </a-popconfirm>
-                </div>
-                <template v-if="column.dataIndex=='active'">
-                    <check-square-outlined v-if="text=='1'" :style="{color:'green'}"/>
-                    <stop-outlined v-else :style="{color:'red'}"/>
+            <a-table :dataSource="grades" :columns="columns" :pagination="{ pageSize: 20 }">
+                <template #bodyCell="{column, text, record, index}">
+                    <div v-if="column.dataIndex=='operation'" class="flex gap-1">
+                        <a-button as="link" :href="route('admin.grade.klasses.index',record.id)" size="small" type="info">班別</a-button>
+                        <a-button @click="editRecord(record)" size="small" type="edit">修改</a-button>
+                        <a-button @click="deleteRecord(record)" size="small" type="delete">刪除</a-button>
+                        <a-popconfirm
+                            title='是否確定鎖定 "全級" 的成績表?'
+                            ok-text="Yes"
+                            cancel-text="No"
+                            @confirm="lockTranscript(record)"
+                        >
+                        </a-popconfirm>
+                    </div>
+                    <template v-if="column.dataIndex=='active'">
+                        <check-square-outlined v-if="text=='1'" :style="{color:'green'}"/>
+                        <stop-outlined v-else :style="{color:'red'}"/>
+                    </template>
+                    <template v-else>
+                        {{record[column.dataIndex]}}
+                    </template>
                 </template>
-                <template v-else>
-                    {{record[column.dataIndex]}}
-                </template>
-            </template>
-        </a-table>
-        </div>
+            </a-table>
             <!-- Modal Start-->
             <a-modal v-model:open="modal.isOpen"  :title="modal.title" width="60%" >
                 <a-form
@@ -107,13 +108,14 @@
                 </template>
             </a-modal>    
             <!-- Modal End-->
-        </div>
+        </a-card>
         </AdminLayout>
 </template>
 
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import ButtonLink from '@/Components/ButtonLink.vue';
+import Pill from '@/Components/Pill.vue';
 import {ArrowRightOutlined, CheckSquareOutlined, StopOutlined} from '@ant-design/icons-vue';
 import { Modal } from 'ant-design-vue';
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
@@ -124,6 +126,7 @@ export default {
     components: {
         AdminLayout,
         ButtonLink,
+        Pill,
         ArrowRightOutlined, CheckSquareOutlined, StopOutlined,
         Modal, ExclamationCircleOutlined, createVNode
     },

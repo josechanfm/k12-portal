@@ -22,7 +22,7 @@ class KlassObserver
     {
         //幼稚園一至三年級
         if($klass->grade->grade_year <= 3){
-            $themeTemplates=ThemeTemplate::where('grade_year',$klass->grade->grade_year)->orderBy('term_id')->orderBy('sequence')->get();
+            $themeTemplates=ThemeTemplate::select('term_id','sequence','title','description')->where('grade_year',$klass->grade->grade_year)->orderBy('term_id')->orderBy('sequence')->get();
             foreach($themeTemplates as $themeTemplate){
                 $theme=$klass->themes()->create($themeTemplate->toArray());
                 // $theme=Theme::create([
@@ -74,7 +74,6 @@ class KlassObserver
             ['klass_id','code'],
             ['title_zh','title_en','type','stream','elective','in_transcript','unit','active']
         );
-
         $courses=Course::whereBelongsTo($klass)->get();
         $scoreTemplate=json_decode(Config::where('key','score_template')->first()->value);
         
