@@ -8,20 +8,20 @@
                     <template #head>h</template>
                     <template #body>b</template>
                 </Pill>
-                <div class="flex bg-gray-300 rounded-lg p-1 px-2 items-center gap-1">
-                    <div class="text-gray-600 font-black rounded-l-lg bg-gray-100  p-1 ">學年代號</div>
+                <div class=" capsule-outline ">
+                    <div class="capsule-label ">學年代號</div>
                     <div class=" "> 
                         <a-select  ref="select"   v-model:value="year.id"  style="width: 120px"
                             @change="selectYear"    :options="years"  :field-names="{label:'code',value:'id'}" >
                         </a-select>       
                     </div>
                 </div>
-                <div class="flex bg-gray-300 rounded-lg p-1 items-center gap-1">
-                    <div class="text-gray-600 font-black rounded-l-lg bg-gray-100  p-1 ">學年全稱</div>
+                <div class="capsule-outline">
+                    <div class="capsule-label ">學年全稱</div>
                     <div class=" ">{{ year.title }}</div>
                 </div>
-                <div class="flex bg-gray-300 rounded-lg p-1 items-center gap-1 ">
-                    <div class="text-gray-600 font-black rounded-l-lg bg-gray-100  p-1 ">日期</div>
+                <div class="capsule-outline ">
+                    <div class="capsule-label ">日期</div>
                     <div>{{ year.start }}</div>
                 <ArrowRightOutlined/>
                     <div>{{ year.end }}</div>

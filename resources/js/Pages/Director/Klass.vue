@@ -2,22 +2,22 @@
     <AdminLayout title="班別管理" :breadcrumb="breadcrumb">
         <!--  -->
         <div class="flex flex-wrap font-bold text-sm gap-1">
-                <div class="flex bg-gray-300 rounded-lg p-1 px-2 items-center gap-1">
-                    <div class="text-gray-600 font-black rounded-l-lg bg-gray-100  p-1 ">學年</div>
+                <div class=" capsule-outline ">
+                    <div class="capsule-label ">學年</div>
                     <div class=" "> 
                        {{ klass.grade.year.title }}    
                     </div>
                 </div>
-                <div class="flex bg-gray-300 rounded-lg p-1 items-center gap-1">
-                    <div class="text-gray-600 font-black rounded-l-lg bg-gray-100  p-1 ">年級</div>
+                <div class="capsule-outline">
+                    <div class="capsule-label ">年級</div>
                     <div class=" ">{{ klass.grade.tag  }}</div>
                 </div>
-                <div class="flex bg-gray-300 rounded-lg p-1 items-center gap-1">
-                    <div class="text-gray-600 font-black rounded-l-lg bg-gray-100  p-1 ">學段</div>
+                <div class="capsule-outline">
+                    <div class="capsule-label ">學段</div>
                     <div class=" ">{{ currentTerm.label  }}</div>
                 </div>
-                <div class="flex bg-gray-300 rounded-lg p-1 items-center gap-1">
-                    <div class="text-gray-600 font-black rounded-l-lg bg-gray-100  p-1 ">學生人數</div>
+                <div class="capsule-outline">
+                    <div class="capsule-label ">學生人數</div>
                     <div class=" ">{{ klass.student_count  }}</div>
                 </div>
                 <div class="flex-1"></div>

@@ -3,14 +3,14 @@
         <div  class="p-2 bg-white rounded-lg flex flex-col gap-1">
         <!--  -->
         <div class="flex flex-wrap font-bold text-sm gap-1">
-                <div class="flex bg-gray-300 rounded-lg p-1 px-2 items-center gap-1">
-                    <div class="text-gray-600 font-black rounded-l-lg bg-gray-100  p-1 ">學年</div>
+                <div class=" capsule-outline ">
+                    <div class="capsule-label ">學年</div>
                     <div class=" "> 
                        {{ grade.year.title }}    
                     </div>
                 </div>
-                <div class="flex bg-gray-300 rounded-lg p-1 items-center gap-1">
-                    <div class="text-gray-600 font-black rounded-l-lg bg-gray-100  p-1 ">年級</div>
+                <div class="capsule-outline">
+                    <div class="capsule-label ">年級</div>
                     <div class=" ">{{ grade.tag  }}</div>
                 </div>
                 <div class="flex-1"></div>

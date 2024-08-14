@@ -18,9 +18,8 @@
   }
   
 .ant-btn-secondary{
-    background: #10b981 !important;
-    border-color: #10b981 !important;
-    color: white!important;
+  @apply !h-fit font-black text-lg text-white 
+  !bg-green-600/80   hover:!bg-green-700  hover:!text-white 
 }
 
 .hover-scale{ 
@@ -115,3 +114,40 @@ button[disabled]{
   position: absolute;
 }
 /* TransitionGroup */
+
+/*capsule layout label*/
+.capsule-outline{
+  @apply  flex bg-gray-300 rounded-lg p-1 px-2 items-center gap-1
+}
+.capsule-label{
+  @apply   text-gray-600 font-black rounded-l-lg bg-gray-100 p-1
+}
+/*capsule layout label*/
+
+
+/*sorttable_chosen*/
+.sortable-chosen >td{
+  animation: opacityFlash 2s infinite;
+
+}
+
+@keyframes opacityFlash {
+  0%, 100% {
+    animation-timing-function:linear;
+    @apply opacity-80 font-black bg-white
+}
+50% {
+    animation-timing-function: linear;
+    @apply opacity-100   bg-indigo-100
+}
+}
+
+.v-enter-active,
+.v-leave-active {
+    transition: opacity 0.3s ease-out, height 0.3s linear;
+}
+.v-enter-from,
+.v-leave-to {
+    opacity:0;
+    height:0px;
+  }

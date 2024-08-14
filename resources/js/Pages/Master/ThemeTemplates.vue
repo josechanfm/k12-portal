@@ -3,20 +3,20 @@
         <!--  -->
         <div class="flex flex-col gap-1">
         <div class="flex flex-wrap font-bold text-sm gap-1">
-            <div class="flex bg-gray-300 rounded-lg p-1 px-2 items-center gap-1">
-                <div class="text-gray-600 font-black rounded-l-lg bg-gray-100 p-1">
+            <div class=" capsule-outline ">
+                <div class=" capsule-label ">
                 學年代號
                 </div>
                 <div class=" ">{{ year.code }}</div>
             </div>
-            <div class="flex bg-gray-300 rounded-lg p-1 items-center gap-1">
-                <div class="text-gray-600 font-black rounded-l-lg bg-gray-100 p-1">
+            <div class="capsule-outline">
+                <div class=" capsule-label ">
                 學年全稱
                 </div>
                 <div class=" ">{{ year.title }}</div>
             </div>
-            <div class="flex bg-gray-300 rounded-lg p-1 items-center gap-1">
-                <div class="text-gray-600 font-black rounded-l-lg bg-gray-100 p-1">
+            <div class="capsule-outline">
+                <div class=" capsule-label ">
                 年級
                 </div>
                 <template v-for="y_grade in year.k_grades" :key="y_grade">
@@ -27,15 +27,15 @@
                         </a-button>
                  </template>
             </div>
-            <div class="flex bg-gray-300 rounded-lg p-1 items-center gap-1">
-                <div class="text-gray-600 font-black rounded-l-lg bg-gray-100 p-1">
+            <div class="capsule-outline">
+                <div class=" capsule-label ">
                     基力學習主題
                 </div>
                 <a-select v-model:value="selectedThemeId" :options="themeTemplates"
                     :fieldNames="{ value: 'id', label: 'title' }" @change="onChangeSelectedTheme" />
             </div>
-            <div class="flex bg-gray-300 rounded-lg p-1 items-center gap-1">
-                <div class="text-gray-600 font-black rounded-l-lg bg-gray-100 p-1">
+            <div class="capsule-outline">
+                <div class=" capsule-label ">
                     修改學習主題
                 </div>
                  <a-switch v-model:checked="themeEditable" />
