@@ -38,8 +38,6 @@
             </div>
             <div class="mx-auto ">
                 <div class="border border-solid border-stone-400 rounded-lg overflow-hidden">
-                    <!--  -->
-                    <!--  -->
                     <table class="itxst border-collapse " component='VueDraggableNext' animation="500" force-fallback="true" width="100%">
                         <thead>
                             <tr>
@@ -80,12 +78,12 @@
             </div>
         </div>
     </Transition>
-    <div class="">
-        <div class="mx-auto flex flex-col gap-1">
-           <div class="flex">   
+    <div class="mx-auto flex flex-col gap-1 ">
+        <div class="flex">   
                 <a-button type="primary" @click="storeAllScores" :disabled="disabledByTerm()">更新並保存</a-button>
                 <a-button @click="sampleData" :disabled="disabledByTerm()">Sample Data</a-button>
              </div>
+        <div class="bg-white p-1 rounded-lg shadow-lg">
             <div class="border border-solid border-stone-400 rounded-lg overflow-hidden">
                 <table id="dataTable" ref="dataTable">
                     <thead>
@@ -115,7 +113,7 @@
                                                 {{ score.point }}
                                             </span>
                                             <span v-else>
-                                                <a-input v-if="!disabledByTerm()" v-model:value="score.point" @blur="onScoreCellChange(student)" @keyup.arrow-keys="onKeypressed" />
+                                                <a-input v-if="!disabledByTerm()" v-model:value="score.point" @focus="score.old_point = score.point" @blur="onTimeUpdate(score)" @keyup.arrow-keys="onKeypressed" />
                                                 <span v-else>
                                                     {{score.point}}
                                                 </span>
@@ -277,10 +275,11 @@ export default {
 
     },
     mounted() {
+        window.a=this
         //add Click EventListenter to dataTable
         this.$refs.dataTable.addEventListener('click', (e) => {
-            this.tableCell.row = e.target.closest('tr').rowIndex;
-            this.tableCell.col = e.target.closest('td').cellIndex;
+            this.tableCell.row = e.target.closest('tr')?.rowIndex??0;
+            this.tableCell.col = e.target.closest('td')?.cellIndex??0;
         })
         //add KeyDown (ArrowKeys) EventListenter to dataTable
         this.$refs.dataTable.addEventListener('keydown', (e) => {
@@ -311,21 +310,16 @@ export default {
             }
             var input = this.$refs.dataTable.rows[this.tableCell.row].cells[this.tableCell.col].getElementsByTagName("input");
             if (input.length > 0 && isActive) {
-                 input[0].focus();
+                setTimeout(_=>{  input[0].select();},10) 
             }
         })
-
-        //onclick of input box, calebrate the row, col values
-        //only apply for multiple table in the same page
-        const inputs = this.$refs.dataTable.getElementsByTagName("input");
-        for (var i = 0; i < inputs.length; i++) {
-            inputs[i].addEventListener("focus", (e) => {
-                this.tableCell.row = e.target.closest('tr').rowIndex;
-                this.tableCell.col = e.target.closest('td').cellIndex;
-            })
-        }
     },
     methods: {
+        onTimeUpdate(score){
+            if(score.old_point===undefined|| score.old_point!=score.point){
+                this.storeAllScores()
+            }
+        },
         onKeypressed(event) {
             this.keypressed = event.keyCode;
         },
@@ -411,6 +405,8 @@ export default {
                 })
             })
             this.$inertia.post(route("teacher.course.scores.batchUpdate", this.course), data, {
+                preserveScroll:true,
+                preserveState:true,
                 onSuccess: (page) => {
                     console.log("update " + page)
                 },
