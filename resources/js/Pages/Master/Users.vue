@@ -14,7 +14,7 @@
             <template #headerCell="{ column }">
                  <div class="text-center flex gap-1 w-fit text-nowrap items-center justify-center" v-if="column.title=='Name'">
                      <div>{{ $t(column.title) }}</div>
-                    <a-input class="w-fit" placeholder="搜尋名字/帳戶" v-model="search"></a-input>
+                    <a-input class="w-fit" placeholder="搜尋名字/帳戶" v-model:value="search"></a-input>
                 </div>
                  <div class="text-center" v-else>   {{ $t(column.title) }}</div>
             </template>
@@ -183,6 +183,7 @@ export default {
             if(this.search.length==0){
                 return this.users
             }
+            console.log(this.users.filter(x=> JSON.stringify(x).includes(this.search)) )
             return this.users.filter(x=> JSON.stringify(x).includes(this.search)) 
         }
     },

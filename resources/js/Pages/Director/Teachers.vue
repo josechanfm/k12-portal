@@ -7,12 +7,22 @@
                         <a-button as="link" :href="route('director.teachers.show',record.id)">任教</a-button>
                     </template>
                     <template v-else-if="column.dataIndex=='courses'">
-                        <ul>
+                        <div class="flex gap-3   lex-col">
+                            <div v-for="vc in viewCourses(record.courses) " class="flex gap-1">
+                                <div><a-tag>{{vc.tag}}</a-tag></div>
+                                <div>
+                                    <div v-for="course in vc.courses">
+                                        {{ course.klass.tag }} - {{ course.code }}-{{ course.title_zh }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <ul>
                             <li v-for="course in record.courses">
                                 {{ course.klass.tag }} - {{ course.code }}-{{ course.title_zh }}
                                 <a-button as="link" :href="route('teacher.course.scores.index', course.id)" class="ant-btn">學分</a-button>
                             </li>
-                        </ul>
+                        </ul> -->
                     </template>
                     <template v-else>
                         {{record[column.dataIndex]}}
@@ -40,26 +50,38 @@ export default {
                 {label:"老師" ,url:null},
             ],
             columns:[
+                // {
+                //     title: 'Staff #',
+                //     dataIndex: 'staff_code',
+                // },
                 {
-                    title: 'Staff #',
-                    dataIndex: 'staff_code',
-                },{
                     title: 'Name',
                     dataIndex: 'name_zh',
-                },{
-                    title: 'Subject',
-                    dataIndex: 'subject_ara',
-                },{
+                },
+                // {
+                //     title: 'Subject',
+                //     dataIndex: 'subject_ara',
+                // },
+                {
                     title: 'Courses',
                     dataIndex: 'courses',
-                },{
-                    title: 'Operation',
-                    dataIndex: 'operation',
-                }
+                },
+                // {
+                //     title: 'Operation',
+                //     dataIndex: 'operation',
+                // }
             ]
         }
     },
+    mounted(){
+        window.a=this.teachers
+       // console.log(_.groupBy(this.teachers,(x)=>x.grade.id))
+    },
     methods: {
+        viewCourses(courses){
+            let groups=_.groupBy(courses,(x)=>x.klass.grade.tag)
+           return  Object.keys(groups).map(tag=>({tag:tag ,courses:groups[tag]}))
+        }
     },
 }
 </script>
