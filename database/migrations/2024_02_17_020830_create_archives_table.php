@@ -21,7 +21,6 @@ return new class extends Migration
             $table->foreignId('year_id')->nullable();
             $table->integer('term_id')->nullable();
             $table->string('original_name')->nullable();
-            $table->string('age')->nullable();
             $table->string('file_name')->nullable();
             $table->string('file_path')->nullable();
             $table->string('full_path')->nullable();

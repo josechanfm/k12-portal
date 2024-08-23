@@ -24,6 +24,8 @@ return new class extends Migration
             $table->string('organization')->nullable();
             $table->string('occupation')->nullable();
             $table->string('mobile')->nullable();
+            $table->string('age')->nullable();
+
             $table->timestamps();
         });
     }
