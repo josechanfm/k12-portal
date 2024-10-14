@@ -1,8 +1,8 @@
 <template>
-    <div class="flex flex-col items-center justify-center w-fit  border border-2 rounded-lg border-gray-400">
-            <a-image v-if='avatar.image' width="2.4cm" height="3.2cm"  :src="avatar.image.preview_url" />
+    <div class="flex flex-col items-center justify-center w-fit overflow-hidden  border border-2 rounded-lg border-gray-400">
+            <a-image v-if='avatar.avatar' width="3.2cm" height="4cm"  :src="avatar.avatar.preview_url" />
             <div v-else >
-                   <div  class='bg-white rounded-lg w-[2.4cm] h-[3.2cm] flex flex-col items-center justify-center font-black'>
+                   <div  class='bg-white rounded-lg w-[3.2cm] h-[4cm] flex flex-col items-center justify-center font-black'>
                         <UserOutlined class='text-4xl'  />
                         <div>未有相關</div>
                         <div>相片</div>

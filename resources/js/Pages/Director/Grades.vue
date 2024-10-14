@@ -39,7 +39,7 @@
                 <template #default="{record}">
                     <div v-if="record.klasses[aph]">
                         <a-button as="link"  type="text" class="hover-scale"
-                          :href="route(routeName(record.id),record.klasses[aph].id)" >
+                          :href="route(routeName(record.grade_year),record.klasses[aph].id)" >
                             <div class="flex  gap-1 items-center">
                                 <div  class="font-bold text-lg !text-blue-500 underline">{{ record.klasses[aph].tag }}</div>
                                 <a-tag class="font-bold"> {{ record.klasses[aph].student_count}} 人</a-tag>
@@ -96,8 +96,8 @@ export default {
     // });
   },
   methods: {
-    routeName(gradeId){
-      return gradeId<=3?'director.pre.klasses.show':'director.klasses.show'
+    routeName(grade_year){
+      return grade_year<=3?'director.pre.klasses.show':'director.klasses.show'
     }
     // selectKlass(klass,activeKey){
     //     this.selectedKlass=klass;

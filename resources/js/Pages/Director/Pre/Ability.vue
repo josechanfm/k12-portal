@@ -2,26 +2,8 @@
     <AdminLayout title="學習主題" :breadcrumb="breadcrumb">
         <div class="py-12">
             <div class="mx-auto sm:px-6 lg:px-8">
-                <div class="flex gap-5">
-                    <a-form ref="importlRef" >
-                        <input type="file" name="importFile" id="import-file" hidden @change="onImport" />
-                        <label for="import-file" class="ant-btn ant-btn-primary mr-5">
-                            匯入
-                        </label>
-                    </a-form>
-                    <a :href="route('director.pre.klass.ability.export', 
-                        {
-                            klass: klass.id,
-                            term_id: selectedTermId,
-                            theme_id: selectedThemeId,
-                        }
-                    )"
-                    class="ant-btn ant-btn-primary">
-                        <DownloadOutlined /> 滙出
-                    </a>
-                </div>
-
-                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+        
+                <div class="bg-blue-50 p-1 flex items-center">
                     <a-button type="primary" @click="saveAbilities">更新並保存</a-button>
                     <a-divider type="vertical" />
                     <a-select
@@ -41,13 +23,34 @@
                     <a-divider type="vertical" />
                     <a :href="route('director.pre.klass.themes',{klass:klass.id,format:'pdf'})" class="ant-btn" target="_blank">年度總表</a>
                     <a-button @click="sampleData()">Sample Data</a-button>
-                    <table id="abilityTable" ref="abilityTable">
+                    <div class="flex-1"></div>
+                    <div class="flex gap-1">
+                    <a-form ref="importlRef" class="!m-0 !p-0 align-top" >
+                        <input type="file" name="importFile" id="import-file" hidden @change="onImport" />
+                        <div for="import-file" class="cursor-pointer rounded-lg bg-blue-50 p-1 text-blue-500">
+                            匯入
+                        </div>
+                    </a-form>
+                    <a :href="route('director.pre.klass.ability.export', 
+                        {
+                            klass: klass.id,
+                            term_id: selectedTermId,
+                            theme_id: selectedThemeId,
+                        }
+                    )"
+                    class="align-middle cursor-pointer rounded-lg bg-blue-50 p-2 text-blue-500">
+                        <DownloadOutlined /> 滙出
+                    </a>
+                </div>
+                </div>
+                <div class="p-1 bg-white overflow-hidden shadow-xl sm:rounded-lg">
+                    <table id="dataTable" ref="abilityTable">
                         <thead>
                             <tr>
                                 <th rowspan="2">Student name</th>
                                 <template v-for="topic in klass.themes.find(theme=>theme.id==selectedThemeId).topics"  >
                                     <th class="text-center">
-                                        {{ topic.section }} 
+                                        {{ topic.section??'--' }} 
                                     </th>
                                 </template>
                                 <td rowspan="2">Report</td>
@@ -243,4 +246,37 @@ export default {
   width: 100%;
   border-collapse: collapse;
 }
+
+
+table#dataTable {
+    @apply  text-center bg-slate-100 w-full text-2xl
+}
+table#dataTable th {
+    @apply border-solid border border-collapse
+        border-t-0 border-r-0 text-lg font-black 
+        border-slate-400   text-slate-500/90
+}
+table#dataTable td {
+    @apply  border-solid border border-collapse border-t-0 border-r-0
+       font-black text-sky-600/90
+       border-slate-400  
+}
+table#dataTable td:first-child {
+    @apply  border-l-0 
+}
+table#dataTable th:first-child {
+    @apply  border-l-0 
+}
+table#dataTable td {
+    @apply bg-sky-100 
+}
+
+table#dataTable input {
+    @apply font-black text-center  text-xl
+}
+table#dataTable input:focus {
+    @apply border-4 border-indigo-600
+}
+
+
 </style>

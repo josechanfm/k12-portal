@@ -36,6 +36,7 @@
                         <span v-if="record.grade.grade_year <= 3">
                             <a-button class="w-full"  type="xs-normal" as="link"  :href="route('admin.klass.themes.index', record.id)" >主題</a-button>
                         </span>
+                      
                         <span v-else>
                             <a-button class="w-full"  type="xs-normal" as="link"  :href="route('admin.klass.courses.index', record.id)">科目</a-button>
                         </span>
@@ -62,7 +63,21 @@
                 </template>
                 <template v-else-if="column.dataIndex == 'head_teacher'">
                     <!-- {{ record.klass_heads }} -->
-                    {{ record.klass_heads.map(t=>t.name_zh).toString() }}
+                      <div class="flex items-center gap-1">
+                        <div class="cursor-pointer "  >
+                            <div class=" rounded-lg p-1 !text-blue-600 font-black bg-blue-200" v-if="record.is_modify_head_ids===true" @click="storeHeadIds(record)">保存 </div>
+                            <div class=" rounded-lg p-1 !text-green-600 font-black bg-green-200" v-else @click="record.is_modify_head_ids=!!!(record.is_modify_head_ids)">修改 </div>
+                        </div>
+                        <div v-if="record.is_modify_head_ids===true">
+                            <a-select  v-model:value="record.klass_head_ids" class="!min-w-32 !w-64" placeholder="請選擇..."
+                            max-tag-count="responsive" :options="teachers" mode="multiple"
+                            :field-names="{ value: 'id', label: 'name_zh'  }"></a-select>
+                        </div>
+                        <div  v-else>
+                           <a-tag v-for="x in  record.klass_heads" :key="x">{{ x.name_zh }}</a-tag>
+                        </div>
+                    </div>
+                
                 </template>
                 <template v-else-if="column.dataIndex == 'room'">
                     {{ record.room }}
@@ -248,6 +263,24 @@ export default {
             this.isOpen = false;
             this.reset();
             this.editMode = false;
+        },
+        storeHeadIds(record) {
+            let data={klass_head_ids:record.klass_head_ids,
+                    id:record.id,
+                    tag:record.tag,
+                    letter:record.letter,
+                    grade_id:record.grade.id
+            }      
+            this.$inertia.put(route('admin.grade.klasses.update',[record.grade.id,record.id]), data, {
+                    preserveScroll: true,
+                    preserveState: true,    
+                    onSuccess: (page) => {
+                     
+                    },
+                    onError: (err) => {
+                       
+                    }
+                });
         },
         storeRecord() {
             console.log(this.modal.data);

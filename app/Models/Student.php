@@ -63,7 +63,7 @@ class Student extends Model implements HasMedia
                 'student_name'=>$ks->student->name_zh,
                 'student_number'=>$ks->student_number,
                 'klass_student_id'=>$ks->id,
-                'image'=>$ks->getMedia('avatar')->first(),
+                'avatar'=>$ks->getMedia('avatar')->first(),
             ];
         }
         return $avatars;

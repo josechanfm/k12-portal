@@ -24,9 +24,9 @@ class AvatarController extends Controller
         $studentNumber=intval(substr($filename,-2));
         //return $gradeTag.'/'.$klassLetter.'/'.$studentNumber;
         $student=Year::currentYear()
-            ->grades->where('tag',$gradeTag)->first()
-            ->klasses->where('letter',$klassLetter)->first()
-            ->students->where('pivot.student_number',$studentNumber)->first();
+            ?->grades->where('tag',$gradeTag)->first()
+            ?->klasses->where('letter',$klassLetter)->first()
+            ?->students->where('pivot.student_number',$studentNumber)->first()??null;
         if($student){
             return json_encode($student);
         }

@@ -4,10 +4,7 @@
             <!--  -->
             
             <div class="flex flex-wrap font-bold text-sm gap-1">
-                <Pill>
-                    <template #head>h</template>
-                    <template #body>b</template>
-                </Pill>
+                
                 <div class=" capsule-outline ">
                     <div class="capsule-label ">學年代號</div>
                     <div class=" "> 
@@ -89,6 +86,21 @@
                         <a-input-number v-model:value="modal.data.transcript_template_id" />
                     </a-form-item>
                     <a-form-item label="操行分比" name="behaviour_scheme_data">
+                        <div class="flex gap-1">
+                            <a-select v-model:value="selectConductKey"
+                             :options="Object.keys(conductObjectKeys).map(key=>({value:key, label:conductObjectKeys[key]}))"
+                            >
+                            </a-select>
+                            <a-input v-model:value="selectConductValue"></a-input>
+                            <a-button @click="addBehaviourSchemeData()">新增</a-button>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <div class="bg-gray-100 text-gray-600 font-black items-center rounded-lg p-1 flex gap-1" :key="key" v-for="(val,key) in vailJsonParse(modal.data.behaviour_scheme_data)">
+                                  <div class="w-32">{{ conductObjectKeys[ key]}}</div>
+                                  <div class="w-8">{{ val }}</div>
+                                <span class="cursor-pointer text-red-500" @click="removeBehaviourSchemeData(key)">移除</span>
+                            </div>
+                        </div>
                         <a-textarea v-model:value="modal.data.behaviour_scheme_data" />
                     </a-form-item>
                     <a-form-item label="版本" name="version">
@@ -138,6 +150,9 @@ export default {
                 {label:"學年" ,url:route('admin.years.index')},
                 {label:"年級" ,url:null},
             ],
+            selectConductKey:'',
+            selectConductValue:'',
+            conductObjectKeys:{SUBJECT:'科目老師佔比',KLASS_HEAD:'班主任佔比',DIRECTOR:'主任佔比',ADJUST:'調整佔比'},
             selectedYear:this.year.id,
             modal: {
                 mode:null,
@@ -184,6 +199,24 @@ export default {
      
     },
     methods: {
+        vailJsonParse(str){
+            try{
+                return JSON.parse( str )
+            }catch{
+                return {}
+            }
+        },
+        removeBehaviourSchemeData(key){
+            let obj= this.vailJsonParse( this.modal.data.behaviour_scheme_data)
+            delete obj[key]
+            this.modal.data.behaviour_scheme_data=JSON.stringify( obj)
+        },
+        addBehaviourSchemeData(){
+            if(this.selectConductKey==''){return false}
+            let obj= this.vailJsonParse( this.modal.data.behaviour_scheme_data)??{}
+            obj[this.selectConductKey]=this.selectConductValue
+            this.modal.data.behaviour_scheme_data=JSON.stringify( obj)
+        },
         createRecord(){
             this.modal.data={}
             this.modal.data.year_id=this.year.id;

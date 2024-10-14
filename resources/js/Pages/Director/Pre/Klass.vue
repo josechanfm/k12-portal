@@ -6,8 +6,8 @@
         
         <template v-if="klass.grade_year<=3">
             <a-button as="link" :href="route('director.klass.students.index', klass.id)" class="ant-btn">學生名單</a-button>
-            <a-button as="link" :href="route('director.klass.habits', klass.id)" class="ant-btn">生活習摜</a-button>
-            <a-button as="link" :href="route('director.klass.abilities', klass.id)" class="ant-btn">學習主題</a-button>
+            <a-button as="link" :href="route('director.pre.klass.habits', klass.id)" class="ant-btn">生活習摜</a-button>
+            <a-button as="link" :href="route('director.pre.klass.abilities', klass.id)" class="ant-btn">學習主題</a-button>
             <a-button as="link" :href="route('director.pre.klass.finalScores', klass.id)" class="ant-btn">期末成績</a-button>
         </template>
         <template v-else>
@@ -74,7 +74,7 @@
                                     </ol>
                                 </td>
                                 <th class="text-left">
-                                    <a-button as="link" :href="route('director.course.scores.index', course.id)"
+                                    <a-button as="link" :href="route('teacher.course.scores.index', course.id)"
                                         class="ant-btn">學分</a-button>
                                     <a-button as="link" :href="route('director.course.makeups', course.id)"
                                         class="ant-btn">補考</a-button>
