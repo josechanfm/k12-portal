@@ -25,6 +25,7 @@ use Illuminate\Http\Request;
 */
 
 Route::get('excel/read_file',[App\Http\Controllers\ExcelController::class,'readFile']);
+Route::get('excel/form1',[App\Http\Controllers\ExcelController::class,'form1']);
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [

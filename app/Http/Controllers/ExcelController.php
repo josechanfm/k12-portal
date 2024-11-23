@@ -156,6 +156,6 @@ class ExcelController extends Controller
         }
         
         $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Mpdf');
-        $writer->save(storage_path('template//form2.pdf'));
+        $writer->save(storage_path('template//form2.pdf'),'I');
     }
 }
