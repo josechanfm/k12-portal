@@ -475,30 +475,30 @@ export default {
             if (this.student.bank == null) this.student.bank = {}
             if (this.student.detail == null) this.student.detail = {}
             if (this.student.health == null) this.student.health = {}
-            if(this.student.relations){
-                var mother=this.student.relations.find(r=>r.relation=='0MOTHER')
-                var father=this.student.relations.find(r=>r.relation=='1FATHER')
-                var guardian=this.student.relations.find(r=>r.relation=='0MOTHER')
+            if(this.student.relatives){
+                var mother=this.student.relatives.find(r=>r.relation=='MOTHER')
+                var father=this.student.relatives.find(r=>r.relation=='FATHER')
+                var guardian=this.student.relatives.find(r=>r.relation=='GUARDIAN')
             }else{
-                this.student.relations=[];
+                this.student.relatives=[];
             }
             if(mother){
                 this.student.mother=mother
             }else{
-                this.student.mother={"relation":'0MOTHER'}
-                this.student.relations.push({"relation":'0MOTHER'})
+                this.student.mother={"relation":'MOTHER'}
+                this.student.relatives.push({"relation":'MOTHER'})
             }
             if(father){
                 this.student.father=father
             }else{
-                this.student.father={"relation":'1FATHER'}
-                this.student.relations.push(this.student.father)
+                this.student.father={"relation":'FATHER'}
+                this.student.relatives.push(this.student.father)
             }
             if(guardian){
                 this.student.guardian=guardian
             }else{
-                this.student.guardian={"relation":'2GUARDIAN'}
-                this.student.relations.push(this.student.guardian)
+                this.student.guardian={"relation":'GUARDIAN'}
+                this.student.relatives.push(this.student.guardian)
             }
             // this.student.father=father??{"relation":'1FATHER'};
             // this.student.mother=mother??{"relation":'0MONTHER'};

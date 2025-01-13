@@ -16,7 +16,7 @@
   ::-webkit-scrollbar-thumb {
     @apply bg-slate-400 rounded-2xl hover:bg-black 
   }
-  
+
 .ant-btn-secondary{
   @apply !h-fit font-black text-lg text-white 
   !bg-green-600/80   hover:!bg-green-700  hover:!text-white 

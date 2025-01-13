@@ -24,6 +24,8 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::get('excel/download_sheet',[App\Http\Controllers\ExcelController::class,'downloadSheet']);
+
 Route::get('excel/read_file',[App\Http\Controllers\ExcelController::class,'readFile']);
 Route::get('excel/form1',[App\Http\Controllers\ExcelController::class,'form1']);
 
@@ -146,6 +148,8 @@ Route::group([
 
     Route::post('lock/course/{courseId}/{termId}',[\App\Http\Controllers\Admin\LockController::class,'course'])->name('admin.lock.course');
     Route::post('lock/klass/{klassId}/{termId}',[\App\Http\Controllers\Admin\LockController::class,'klass'])->name('admin.lock.klass');
+
+    Route::post('excel/excel_to_students',[App\Http\Controllers\ExcelController::class,'excelToStudents'])->name('admin.excelToStudents');
 
 });
 //Route::prefix('manage/')->middleware([ 'checkRole:master|admin|director|teacher'])->group(function(){

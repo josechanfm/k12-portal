@@ -14,7 +14,7 @@ class Student extends Model implements HasMedia
 {
     use HasFactory;
     use InteractsWithMedia;
-    
+    protected $hidden = ['created_at','updated_at'];
     protected $fillable=['suid','name_zh','name_fn','name_display','gender','dob','pob','pob_other','nationality','native','religion',
     'sid','id_num','id_type','id_type_other','id_issue','id_expired','hrc_num','hrc_issue','hrc_expired','dsedj_num','ssm_num',
     'entry_date','previour_school','previour_grade','start_klass',
@@ -108,14 +108,14 @@ class Student extends Model implements HasMedia
     }
     public function parents()
     {
-        return $this->hasMany(Relative::class)->whereIn('relation',['1FATHER','0MOTHER'])->orderBy('relation','DESC');
+        return $this->hasMany(Relative::class)->whereIn('relation',['FATHER','MOTHER'])->orderBy('relation','DESC');
     }
     public function relatives(){
         return $this->hasMany(Relative::class)->orderBy('relation','DESC');
     }
     public function guardians()
     {
-        return $this->belongsToMany(Guardian::class);
+        return $this->hasMany(Relative::class)->whereIn('relation',['GUARDIAN']);
     }
 
     public function guardiansWithRelatives()
@@ -193,5 +193,27 @@ class Student extends Model implements HasMedia
 
     public function newStudents(){
         return $this->klasses->count();
+    }
+
+ 
+    public static function excelKeys(){
+        $studentKeys=[
+            'suid','name_zh','name_fn','name_display','gender','dob','pob','pob_other','nationality','native','religion',
+            'sid','id_num','id_type','id_type_other','id_issue','id_expired','hrc_num','hrc_issue','hrc_expired','dsedj_num','ssm_num',
+            'entry_date','previour_school','previour_grade','start_klass',
+            'phone','phone_sms','phone_home'
+        ];
+        $guardianKeys=['relation','kinship','name_zh','name_fn','birth_year','age','organization','occupation','mobile'];
+        $studentKeys= array_map(function($v){return "students-".$v;},$studentKeys);
+        $allGuardianKeys= [];
+        foreach(['father','mother','guardian'] as $kinship){
+            $allGuardianKeys=[...$allGuardianKeys,...array_map(function($v)use($kinship){return "relatives-"."$kinship-".$v;},$guardianKeys)];
+        }
+        //
+        //
+        $allKeys=[...$studentKeys,...$allGuardianKeys];
+        return [ 'keys'=>[...$studentKeys,...$allGuardianKeys] ,
+                'zh'=> array_map(function($v){return __($v);},$allKeys)
+            ];
     }
 }

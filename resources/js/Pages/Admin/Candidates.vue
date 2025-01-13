@@ -1,6 +1,66 @@
 <template>
     <AdminLayout title="入學報名列表" :breadcrumb="breadcrumb">
-        <a-button @click="onClickCreate()" type="primary">新增報名</a-button>
+        <div class="flex items-center gap-1 my-1">
+            <a-button @click="onClickCreate()" type="primary">新增報名</a-button>
+            <div class="flex-1 "></div>
+          
+                <a-upload v-model:file-list="fileList"
+                :customRequest="onXlsxUpload"
+                :maxCount="1"  >
+                    <a-button>
+                    <upload-outlined></upload-outlined>
+                        上傳學生資料
+                    </a-button>
+                </a-upload>
+                <a _blank href="../excel/download_sheet">download</a>
+        </div>
+        <div v-if="$page.props.data" class="my-1"> 
+            <div class="bg-white rounded-lg px-2 py-2">
+                <div class="text-gray-400 font-extrabold">匯入資料</div>
+                <a-tabs  :v-model:activeKey="'success'">
+                    <a-tab-pane key="success"  :tab="'成功匯入('+$page.props.data.successes.length+')'">
+                        <div class="rounded-lg border border-gray-50 p-1 bg-blue-100 text-base ">
+                            <div class="font-semibold flex text-sm  text-gray-500  border-gray-400 border border-b border-t-0 border-l-0 border-r-0">
+                                <div class="text-center w-1/3">校內編號</div>
+                                <div class="w-1/3 text-center">姓名</div>
+                                <div class="w-1/3 text-center">身份證</div>
+                            </div>
+                            <div class="overflow-y-scroll  max-h-[600px]">
+                                <div class="font-base flex  border border-b border-t-0 border-l-0 border-r-0  border-gray-400 py-1" :key="idx" v-for="row,idx in $page.props.data.successes">
+                                    <div class="text-center w-1/3">{{ row.suid }}</div>
+                                    <div class="w-1/3 text-center">{{ row.name_zh }}</div>
+                                    <div class="w-1/3 text-center">{{ row.id_num }}</div>
+                                </div>
+                            </div>
+                            <div class="w-full text-center py-4" v-if="$page.props.data.successes.length==0">
+                                無匯入學生
+                            </div>
+                        </div>
+                    </a-tab-pane>
+                    <a-tab-pane key="failure" :tab="'失敗('+$page.props.data.failures.length+')'">
+                        <div class="rounded-lg border border-gray-50 p-1 bg-red-100 text-sm ">
+                            <div class="font-semibold flex text-sm  text-gray-500  border-gray-400 border border-b border-t-0 border-l-0 border-r-0">
+                                <div class="text-center w-1/3">行數</div>
+                                <div class="w-1/3 text-center">欄位</div>
+                                <div class="w-1/3 text-center">數誤信息</div>
+                                <div class="w-1/3 text-center">數誤值</div>
+                            </div>
+                            <div class="overflow-y-scroll  max-h-[600px]">
+                                <div class="font-base flex  border border-b border-t-0 border-l-0 border-r-0  border-gray-400 py-1" :key="idx" v-for="row,idx in $page.props.data.failures">
+                                    <div class="text-center w-1/3">{{ row.row }}</div>
+                                    <div class="w-1/3 text-center ">{{ $t(row.attribute) }}</div>
+                                    <div class="w-1/3 text-center">{{ row.errors }}</div>
+                                    <div class="w-1/3 text-center text-red-500">{{ row.values[row.attribute] }}</div>
+                                </div>
+                            </div>
+                            <div class="w-full text-center py-4" v-if="$page.props.data.failures.length==0">
+                                無匯入失敗學生
+                            </div>
+                        </div>
+                    </a-tab-pane>
+                </a-tabs>
+            </div>
+        </div>
             <a-table :dataSource="candidates.data" :columns="columns" :pagination="pagination" @change="onPaginationChange" ref="dataTable">
                 <template #bodyCell="{column, text, record, index}">
                     <template v-if="column.dataIndex=='operation'">
@@ -45,6 +105,8 @@ export default {
     props: ['gradesKlasses','candidates'],
     data() {
         return {
+            csrfToken:'',
+            fileList :[],
             breadcrumb:[
                 {label:"行政管理" ,url:route('admin.dashboard')},
                 {label:"入學報名" ,url:null},
@@ -87,7 +149,7 @@ export default {
         }
     },
     created(){
-       
+       window.app=this
     },
     methods: {
         onPaginationChange(page, filters, sorter){
@@ -151,7 +213,19 @@ export default {
             });
 
         },
-
+        onXlsxUpload(fileObj){
+            this.$inertia.post(route('admin.excelToStudents'),{
+                file:fileObj.file
+            },{
+                onSuccess(data){
+                    console.log(data)
+                },
+                onCancel(err){
+                  
+                },
+            })
+            this.fileList=[]
+        },
     },
 }
 </script>
