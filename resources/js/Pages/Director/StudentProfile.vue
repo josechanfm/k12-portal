@@ -465,6 +465,15 @@ export default {
     mounted(){
     },  
     watch:{
+        activeKeys: {
+            handler (newVal, oldVal) {
+                if(newVal.includes('all') && oldVal.includes('all')  &&  newVal.length>1){
+                    this.activeKeys=this.activeKeys.filter(x=>x!='all')
+                }else if(newVal.includes('all') && newVal.length>1){
+                    this.activeKeys=["all"]
+                }
+            }
+        }
        
     },
     methods: {

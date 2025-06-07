@@ -17,7 +17,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('study_id');
             $table->foreignId('subject_id');
+            $table->foreignId('year_id'); //要做每年記錄
             $table->string('subject_head_ids')->nullable();
+            $table->string('unit')->nullable();
+            $table->string('main')->nullable();
+            $table->string('is_letter')->nullable();
             $table->timestamps();
         });
     }

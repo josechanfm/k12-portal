@@ -38,24 +38,24 @@ class StudySeeder extends Seeder
         }
 
         $data=[
-            ['grade_year'=>'4','title_zh'=>'小學一年級','stream'=>'ALL','version'=>1,'active'=>true],
-            ['grade_year'=>'5','title_zh'=>'小學二年級','stream'=>'ALL','version'=>1,'active'=>true],
-            ['grade_year'=>'6','title_zh'=>'小學三年級','stream'=>'ALL','version'=>1,'active'=>true],
-            ['grade_year'=>'7','title_zh'=>'小學四年級','stream'=>'ALL','version'=>1,'active'=>true],
-            ['grade_year'=>'8','title_zh'=>'小學五年級','stream'=>'ALL','version'=>1,'active'=>true],
-            ['grade_year'=>'9','title_zh'=>'小學六年級','stream'=>'ALL','version'=>1,'active'=>true],
-            ['grade_year'=>'10','title_zh'=>'初中一年級','stream'=>'ALL','version'=>1,'active'=>true],
-            ['grade_year'=>'11','title_zh'=>'初中二年級','stream'=>'ALL','version'=>1,'active'=>true],
-            ['grade_year'=>'12','title_zh'=>'初中三年級','stream'=>'ALL','version'=>1,'active'=>true],
-            ['grade_year'=>'13','title_zh'=>'高中一年級','stream'=>'ALL','version'=>1,'active'=>true],
-            ['grade_year'=>'14','title_zh'=>'高中二年級','stream'=>'ALL','version'=>1,'active'=>true],
-            ['grade_year'=>'15','title_zh'=>'高中三年級','stream'=>'ALL','version'=>1,'active'=>true],
+            ['grade_year'=>'4','title_zh'=>'小一','stream'=>'ALL','version'=>1,'active'=>true],
+            ['grade_year'=>'5','title_zh'=>'小二','stream'=>'ALL','version'=>1,'active'=>true],
+            ['grade_year'=>'6','title_zh'=>'小三','stream'=>'ALL','version'=>1,'active'=>true],
+            ['grade_year'=>'7','title_zh'=>'小四','stream'=>'ALL','version'=>1,'active'=>true],
+            ['grade_year'=>'8','title_zh'=>'小五','stream'=>'ALL','version'=>1,'active'=>true],
+            ['grade_year'=>'9','title_zh'=>'小六','stream'=>'ALL','version'=>1,'active'=>true],
+            ['grade_year'=>'10','title_zh'=>'初一','stream'=>'ALL','version'=>1,'active'=>true],
+            ['grade_year'=>'11','title_zh'=>'初二','stream'=>'ALL','version'=>1,'active'=>true],
+            ['grade_year'=>'12','title_zh'=>'初三','stream'=>'ALL','version'=>1,'active'=>true],
+            ['grade_year'=>'13','title_zh'=>'高一','stream'=>'ALL','version'=>1,'active'=>true],
+            ['grade_year'=>'14','title_zh'=>'高二','stream'=>'ALL','version'=>1,'active'=>true],
+            ['grade_year'=>'15','title_zh'=>'高三','stream'=>'ALL','version'=>1,'active'=>true],
         ];
 
         foreach($data as $d){
             $study=Study::create($d);
             $subjectIds=array_column(Subject::get()->toArray(),'id');
-            $study->subjects()->sync($subjectIds);
+            $study->subjects()->syncWithPivotValues($subjectIds, ['year_id' => 1]);
         }
     }
 }

@@ -73,7 +73,7 @@
                             @change="onChangeGradeSelected"
                         ></a-select>
                     </a-form-item>
-                    <a-form-item label="年級代號" name="tag" v-else >
+                    <a-form-item label="年級代號" name="tag"  >
                         {{ modal.data.initial }}{{ modal.data.level }}
                     </a-form-item>
                     <a-form-item label="中文名稱" name="title_zh">
