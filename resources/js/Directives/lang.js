@@ -1,4 +1,4 @@
-import zh from "../lang/zh.json"
+import zh from "../../../lang/zh.json"
 function lang(text){
     return zh[text]??text;
 }

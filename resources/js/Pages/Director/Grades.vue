@@ -2,20 +2,20 @@
   <AdminLayout title="年級班別" :breadcrumb="breadcrumb">
     <div class="p-2 bg-white rounded-lg flex flex-col gap-1">
     <div class="flex flex-wrap font-bold text-sm gap-1">
-      <div class="flex bg-gray-300 rounded-lg p-1 px-2 items-center gap-1">
-        <div class="text-gray-600 font-black rounded-l-lg bg-gray-100 p-1">
+      <div class=" capsule-outline ">
+        <div class=" capsule-label ">
           學年代號
         </div>
         <div class=" ">{{ year.code }}</div>
       </div>
-      <div class="flex bg-gray-300 rounded-lg p-1 items-center gap-1">
-        <div class="text-gray-600 font-black rounded-l-lg bg-gray-100 p-1">
+      <div class="capsule-outline">
+        <div class=" capsule-label ">
           學年全稱
         </div>
         <div class=" ">{{ year.title }}</div>
       </div>
-      <div class="flex bg-gray-300 rounded-lg p-1 items-center gap-1">
-        <div class="text-gray-600 font-black rounded-l-lg bg-gray-100 p-1">
+      <div class="capsule-outline">
+        <div class=" capsule-label ">
           日期
         </div>
         <div>{{ year.start }}</div>
@@ -39,7 +39,7 @@
                 <template #default="{record}">
                     <div v-if="record.klasses[aph]">
                         <a-button as="link"  type="text" class="hover-scale"
-                          :href="route(routeName(record.id),record.klasses[aph].id)" >
+                          :href="route(routeName(record.grade_year),record.klasses[aph].id)" >
                             <div class="flex  gap-1 items-center">
                                 <div  class="font-bold text-lg !text-blue-500 underline">{{ record.klasses[aph].tag }}</div>
                                 <a-tag class="font-bold"> {{ record.klasses[aph].student_count}} 人</a-tag>
@@ -96,8 +96,8 @@ export default {
     // });
   },
   methods: {
-    routeName(gradeId){
-      return gradeId<=3?'director.pre.klasses.show':'director.klasses.show'
+    routeName(grade_year){
+      return grade_year<=3?'director.pre.klasses.show':'director.klasses.show'
     }
     // selectKlass(klass,activeKey){
     //     this.selectedKlass=klass;

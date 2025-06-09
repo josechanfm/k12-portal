@@ -54,6 +54,7 @@ class Year extends Model
     }
     public function autoGenerate($data){
         $gradeLetters=array_column(Config::item('grade_years'),null,'value');
+        $klass_letter_map=Config::item('klass_letter_map');
         
         $kklass=$data['kklass'];
         $kgrade=$data['kgrade'];
@@ -66,32 +67,7 @@ class Year extends Model
         $klassLetters=array_column(Config::item('klass_letters'),'label');
         //幼稚園一至三年級
         //如果沒有相應學習計劃，study_id設為0
-        $gradeYear=1; 
-        for($i=1;$i<=$kgrade;$i++){ //$i is going to transfer to letter
-            //$grade=new Grade;
-            $g['year_id']=$this->id;
-            $g['initial']=$gradeLetters[$gradeYear]->initial;
-            $g['grade_year']=$gradeYear++;
-            $g['level']=$i;
-            $g['tag']=$g['initial'].($i);
-            $g['title_zh']=$g['initial'].($i).'班';
-            $g['transcript_template_id']=Config::item('transcript_template');
-            $g['behaviour_scheme']=json_encode(Config::item('behaviour_scheme'));
-            $g['active']=1;
-            $grade=Grade::create($g);
-            $k=[];
-            for($j=1;$j<=$kklass;$j++){
-                $k['grade_id']=$grade->id;
-                $k['letter']=$klassLetters[$j-1];
-                $k['tag']=$grade->tag.$klassLetters[$j-1];
-                $k['stream']='ALL';
-                $k['byname']=$grade->tag.$klassLetters[$j-1];
-                $k['study_id']=Study::where('active',true)->where('grade_year',$grade->grade_year)->latest()->first()->id??0;
-                Klass::create($k);
-            }
-        }
-        //小一至小六
-        //如果沒有相應學習計劃，study_id設為0
+       
         $gradeYear=4;
         for($i=1;$i<=$pgrade;$i++){
             $g['year_id']=$this->id;
@@ -100,46 +76,23 @@ class Year extends Model
             $g['initial']='P';
             $g['level']=$i;
             $g['tag']=$g['initial'].($i);
-            $g['title_zh']=$g['initial'].($i).'班';
+            $g['title_zh']=$g['initial'].($i);
             $g['active']=1;
             $g['transcript_template_id']=Config::item('transcript_template');
             $g['behaviour_scheme']=json_encode(Config::item('behaviour_scheme'));
             $grade=Grade::create($g);
             $k=[];
             for($j=1;$j<=$pklass;$j++){
+                $letter=$klassLetters[$j-1];
                 $k['grade_id']=$grade->id;
                 $k['letter']=$klassLetters[$j-1];
                 $k['tag']=$grade->tag.$klassLetters[$j-1];
                 $k['stream']='ALL';
-                $k['byname']=$grade->tag.$klassLetters[$j-1];
+                $k['byname']= $g['title_zh']. $klass_letter_map->$letter??$letter;
                 $k['study_id']=Study::where('active',true)->where('grade_year',$grade->grade_year)->latest()->first()->id??0;
                 Klass::create($k);
             }
         }
-        //初一至高三
-        //如果沒有相應學習計劃，study_id設為0
-        $gradeYear=10;
-        for($i=1;$i<=$sgrade;$i++){
-            $g['year_id']=$this->id;
-            $g['initial']=$gradeLetters[$gradeYear]->initial;
-            $g['grade_year']=$gradeYear++;
-            $g['level']=$i;
-            $g['tag']=$g['initial'].($i);
-            $g['title_zh']=$g['initial'].($i).'班';
-            $g['active']=1;
-            $g['transcript_template_id']=Config::item('transcript_template');
-            $g['behaviour_scheme']=json_encode(Config::item('behaviour_scheme'));
-            $grade=Grade::create($g);
-            $k=[];
-            for($j=1;$j<=$sklass;$j++){
-                $k['grade_id']=$grade->id;
-                $k['letter']=$klassLetters[$j-1];
-                $k['tag']=$grade->tag.$klassLetters[$j-1];
-                $k['stream']='ALL';
-                $k['byname']=$grade->tag.$klassLetters[$j-1];
-                $k['study_id']=Study::where('active',true)->where('grade_year',$grade->grade_year)->latest()->first()->id??0;
-                Klass::create($k);
-            }
-        }
+    
     }  
 }

@@ -85,9 +85,12 @@ class Klass extends Model
     }
     public function studentsWithAvatar(){
         $students=$this->belongsToMany(Student::class)
-                ->withPivot(['id as pivot_klass_student_id','student_number','stream','state','promote','promote_to'])->get();
+            ->withPivot(['id as pivot_klass_student_id','student_number','stream','state','promote','promote_to'])->get();
+      
         foreach($students as $student){
             $student->avatar=KlassStudent::find($student->pivot->klass_student_id)->getMedia('avatar')->first();
+            $student->klass_student_id=$student->pivot->klass_student_id;
+            $student->full_tag=$this->tag.substr('00'.$student->pivot->student_number,-2);
         }
         return $students;
     }

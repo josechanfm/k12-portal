@@ -7,11 +7,16 @@
                     新增用戶
                 </a-button>
             </div>
-        <a-table :dataSource="users" :columns="columns" size="small"
-            :pagination="false" :scroll="{ y: '60vh' }"
+            <!-- :pagination="false"               :scroll="{ y: '80vh' }"-->
+        <a-table :dataSource="viewUsers" :columns="columns" size="small"
+
             class="rounded-lg border-gray-200  border p-2 "  bordered>
             <template #headerCell="{ column }">
-                 <div class="text-center">   {{ $t(column.title) }}</div>
+                 <div class="text-center flex gap-1 w-fit text-nowrap items-center justify-center" v-if="column.title=='Name'">
+                     <div>{{ $t(column.title) }}</div>
+                    <a-input class="w-fit" placeholder="搜尋名字/帳戶" v-model:value="search"></a-input>
+                </div>
+                 <div class="text-center" v-else>   {{ $t(column.title) }}</div>
             </template>
             <template #bodyCell="{column, text, record, index}">
                 <div v-if="column.dataIndex=='operation'" class="flex gap-1  justify-center">
@@ -117,6 +122,7 @@ export default {
     props: ['users','roles','permissions'],
     data() {
         return {
+            search:'',
             modal: {
                 mode:null,
                 isOpen: false,
@@ -132,13 +138,22 @@ export default {
                 {   align:'center',
                     title: 'Name',
                     dataIndex: 'name',
-                },{
+                    width:150,
+                },
+                {   align:'center',
+                    title: 'username',
+                    dataIndex: 'username',
+                },
+                
+                {
                     title: 'Roles',
                     dataIndex: 'roles',
-                },{
-                    title: 'Permissions',
-                    dataIndex: 'permissions',
-                },{
+                },
+                // {
+                //     title: 'Permissions',
+                //     dataIndex: 'permissions',
+                // },
+                {
                     align:'center',
                     title: 'Operation',
                     dataIndex: 'operation',
@@ -162,6 +177,15 @@ export default {
         }
     },
     mounted() {
+    },
+    computed:{
+        viewUsers(){
+            if(this.search.length==0){
+                return this.users
+            }
+            console.log(this.users.filter(x=> JSON.stringify(x).includes(this.search)) )
+            return this.users.filter(x=> JSON.stringify(x).includes(this.search)) 
+        }
     },
     methods: {
         editRecord(record){

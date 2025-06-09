@@ -1,9 +1,19 @@
 <template>
     <AdminLayout title="科目列表" :breadcrumb="breadcrumb">
-            <a-typography-title :level="3">班別: {{ klass.tag }} - {{ klass.title_zh }}</a-typography-title>
-            <a-typography-title :level="3">
-                班主任: <span :key="teacher" v-for="teacher in klass.klass_heads">{{ teacher.name_zh }}, </span>
-            </a-typography-title>
+            <div class="flex gap-1 font-black">
+                <div class="capsule-outline">
+                    <div class=" capsule-label ">
+                        班別
+                    </div>
+                    <div class=" "> {{ klass.tag }} - {{ klass.title_zh }}</div>
+                </div>
+                <div class="capsule-outline">
+                    <div class=" capsule-label ">
+                        班主任
+                    </div>
+                    <div class=" "> <span :key="teacher" v-for="teacher in klass.klass_heads">{{ teacher.name_zh }}, </span></div>
+                </div>
+            </div>
             <div>
                 <a-switch v-model:checked="toAssignTeachers" :checkedValue="1" :uncheckedValue="0"/>&nbsp;調整老師
             </div>

@@ -119,7 +119,7 @@ class KlassController extends Controller
      */
     public function update(Grade $grade, Klass $klass, Request $request)
     {
-
+       
         Validator::make($request->all(), [
             'grade_id' => ['required'],
             'letter' => ['required'],
@@ -129,7 +129,6 @@ class KlassController extends Controller
             $input=$request->all();
             $input['tag']=Grade::find($request->grade_id)->tag.$request->letter;
             $klass->update($input);
-
             // $klass->grade_id=$request->grade_id;
             // $klass->letter=$request->letter;
             // $klass->stream=$request->stream;

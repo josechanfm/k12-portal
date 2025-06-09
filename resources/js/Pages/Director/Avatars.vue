@@ -1,66 +1,90 @@
 <template>
-    <AdminLayout title="Dashboard">
-        Avatars
-        <a-row>
-            <a-col :span="6">
-                <div class="flex items-center justify-center w-full">
-            <label for="dropzone-file"
-                class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                    <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                    </svg>
-                    <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to
-                            upload</span> or drag and drop</p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-                </div>
-                <input id="dropzone-file" type="file" ref="fileInput" multiple class="hidden" @change="handleFileChange" />
-            </label>
+<AdminLayout title="Dashboard">
+    <div>
+        <div class="font-black text-zinc-500 text-2xl"> 學生頭像</div>
+        <div class="text-red-500 font-black text-lg bg-gray-200 p-4  w-full rounded-lg">
+            *注意事項: 相片命名請以<span  class="text-red-700 italic">大寫班別+學號形式(e.g K1A01, P1B32)</span> ,文件只接受SVG, PNG, JPG 等圖片格式, 尺寸不超過800x400, 文件大小不大於2MB
         </div>
+        <div>
+            <div class="flex items-center justify-center w-full">
+                <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                    <div class=" flex flex-col items-center justify-center font-black text-2xl text-slate-500">
+                        <UploadOutlined class="text-3xl"></UploadOutlined>點擊或拖曳圖片到此位置以進行上傳
+                    </div>
+                    <input id="dropzone-file" type="file" ref="fileInput" multiple class="hidden" @change="handleFileChange" />
+                </label>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg p-4">
+            <div class="flex">
+                <div class="flex-1 font-black text-slate-700 text-2xl">處理列</div><a-button class="text-blue-500" type="text"  @click="displayh=!displayh">隱藏/展開</a-button>
+            </div>
+            <div  class="flex items-center justify-center"
+                    v-if="processList.map(x=>x.status).includes(0)">
+                    <div class="text-2xl font-black text-blue-500">處理中</div><a-spin></a-spin>
+             </div>
+             <div   :class="displayh?'h-full':'h-0 overflow-hidden'">
+                <div v-for="p in processList" :key="p"  class="bg-gray-100 p-1 rounded-lg  flex gap-1 font-black" :class="status_color[p.status]" >
+                <div class="w-[4cm]"> {{ status[ p.status] }}</div>
+                    <div> {{ p.name }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="bg-sky-50 p-4 flex flex-col gap-2">
+            <div class="font-black text-sky-500 text-2xl">已成功上傳</div>
 
-            </a-col>
-            <a-col :span="18">
-                <div class="grid grid-cols-8 gap-4">
-                <div v-for="avatar in avatars">
-                    <img :src="avatar.url" width="100"/>
-                    {{ avatar.full_tag }}
-                    {{ avatar.student_name }}
+           
+            <div class="flex gap-4">
+                <div :key=" avatar.full_tag " v-for="avatar in avatars" class="flex flex-col items-center justify-center bg-zinc-50 border-sky-600 rounded-lg  bg-slate-100">
+                    <img class="border rounded-t-lg" :src="avatar.url" width="100" />
+                    <div class="bg-zinc-500 py-1 w-full text-white flex flex-col items-center rounded-b-lg">
+                        <div class="font-black"> {{ avatar.full_tag }}</div>
+                        <div class="font-black"> {{ avatar.student_name }}</div>
+                    </div>
                 </div>
             </div>
 
-            </a-col>
-        </a-row>
-
-    </AdminLayout>
+        </div>
+    </div>
+</AdminLayout>
 </template>
 
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
-import { InboxOutlined } from '@ant-design/icons-vue';
-import { AvatarGroup, message } from 'ant-design-vue';
+import {
+    InboxOutlined,UploadOutlined,
+} from '@ant-design/icons-vue';
+import {
+    AvatarGroup,
+    message
+} from 'ant-design-vue';
 
 export default {
     components: {
-        AdminLayout,
+        AdminLayout,UploadOutlined,
         InboxOutlined,
         message
     },
     props: [],
     data() {
         return {
+            displayh:true,
+            status_color:{'0':'text-black','1':'text-red-500','2':'text-amber-600','3':'text-green-600'},
+            status:{'0':'Proccessing','1':'Fail size or Ext','2':'Not found student','3':'Success'},
+            processList:[],
             avatars: [],
             dragging: false,
         }
     },
-    created() {
-    },
+    created() {},
     mounted() {
 
     },
     methods: {
-
+        emptyProcessList(){
+            this.processList=[]
+            this.avatars=[]
+        },
         handleDragEnter(event) {
             event.preventDefault();
             this.dragging = true;
@@ -79,24 +103,22 @@ export default {
         },
         handleFileChange() {
             var files = this.$refs.fileInput.files;
-            Object.entries(files).forEach(([i,file])=>{
+            Object.entries(files).forEach(([i, file]) => {
                 this.verifyFile(file)
             })
         },
-        uploadFile(klassStudentId, file){
-            axios.post(route('teacher.avatars.store'),{
-                avatar:file,
-                klassStudentId:klassStudentId
-            },{
-            headers: {
-                'Content-Type': 'multipart/form-data'
+        
+      async  uploadFile(klassStudentId, file) {
+        const resp =  await axios.post(route('teacher.avatars.store'), {
+                avatar: file,
+                klassStudentId: klassStudentId
+            }, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
                 }
-            }).then(resp=>{
-                this.avatars.push(resp.data)
-            }).catch(err=>{
-                console.log(err);
             })
-
+            this.avatars.push(resp.data)
+            return resp.data.length!=0
         },
         handleFile(file) {
             // Perform any necessary file handling logic
@@ -118,23 +140,29 @@ export default {
                 message.error(`${info.file.name} file upload failed.`);
             }
         },
-        verifyFile(file) {
-            console.log(file);
+     async   verifyFile(file) {
+            let temp_id= this.processList.length
+            this.processList[temp_id]={ name:file?.name??'error-name',status:0}
             const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
             if (!isJpgOrPng) {
                 message.error('You can only upload JPG file!');
+                this.processList[temp_id]['status']=1;
+                return false
             }
             const isLt2M = file.size / 1024 / 1024 < 2;
             if (!isLt2M) {
                 message.error('Image must smaller than 2MB!');
+                this.processList[temp_id]['status']=1;
+                return false
             }
-
-            axios.get(route('avatar.verifyFilename', {
-                filename: file.name
-            }),).then(res => {
-                console.log(res.data);
-                this.uploadFile(res.data.pivot.klass_student_id,file)
-            })
+          const res= await axios.get(route('avatar.verifyFilename', {
+                filename: file.name}), )
+            if(!res.data){
+                 this.processList[temp_id]['status']=2
+                return false
+            }
+              const check=  await this.uploadFile(res.data.pivot.klass_student_id, file)
+                this.processList[temp_id]['status']=check?3:1
             //return isJpgOrPng && isLt2M;
         },
         handleDrop() {

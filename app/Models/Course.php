@@ -118,6 +118,7 @@ class Course extends Model
                 foreach($scores as $score){
                     if($score->course_student_id==$tmp['course_student_id'] && $score->score_column_id==$column->id){
                         $score['column_letter']=$column->column_letter;
+                        $score['old_point']=$score->point;
                         $tmp['scores'][$score->score_column_id]=$score;
                     }
                 }

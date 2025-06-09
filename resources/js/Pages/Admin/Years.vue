@@ -72,9 +72,8 @@
                     </a-form-item>
 
                     <a-divider orientation="left">幼稚園</a-divider>
-                    <a-row>
-                        <a-col :span="8"></a-col>
-                        <a-col :span="8">
+                    <div class="flex gap-1">
+                        <div >
                             <a-form-item label="年級數" name="kgrade">
                                 <a-select
                                 v-model:value="modal.data.kgrade"
@@ -82,8 +81,8 @@
                                 style="width: 80px"
                                 />
                             </a-form-item>
-                        </a-col>
-                        <a-col :span="8">
+                        </div>
+                        <div :span="8">
                             <a-form-item label="班別數" name="kklass">
                                 <a-select
                                 v-model:value="modal.data.kklass"
@@ -91,12 +90,11 @@
                                 style="width: 80px"
                                 />
                             </a-form-item>
-                        </a-col>
-                    </a-row>
+                        </div>
+                    </div>
                     <a-divider orientation="left">小學</a-divider>
-                    <a-row>
-                        <a-col :span="8"></a-col>
-                        <a-col :span="8">
+                    <div class="flex">
+                        <div >
                             <a-form-item label="年級數" name="pgrade">
                                 <a-select
                                 v-model:value="modal.data.pgrade"
@@ -104,8 +102,8 @@
                                 style="width: 80px"
                                 />
                             </a-form-item>
-                        </a-col>
-                        <a-col :span="8">
+                        </div>
+                        <div >
                             <a-form-item label="班級數" name="pklass">
                                 <a-select
                                 v-model:value="modal.data.pklass"
@@ -113,12 +111,11 @@
                                 style="width: 80px"
                                 />
                             </a-form-item>
-                        </a-col>
-                    </a-row>
+                        </div>
+                    </div>
                     <a-divider orientation="left">中學</a-divider>
-                    <a-row>
-                        <a-col :span="8"></a-col>
-                        <a-col :span="8">
+                    <div class="flex">
+                        <div >
                             <a-form-item label="年級數" name="sgrade">
                                 <a-select
                                 v-model:value="modal.data.sgrade"
@@ -126,8 +123,8 @@
                                 style="width: 80px"
                                 />
                             </a-form-item>
-                        </a-col>
-                        <a-col :span="8">
+                        </div>
+                        <div >
                             <a-form-item label="班級數" name="sklass">
                                 <a-select
                                 v-model:value="modal.data.sklass"
@@ -135,8 +132,8 @@
                                 style="width: 80px"
                                 />
                             </a-form-item>
-                        </a-col>
-                    </a-row>
+                        </div>
+                    </div>
                 </div>
             </a-form>
             <template #footer>
@@ -163,7 +160,7 @@ export default {
         AdminLayout, Modal, createVNode, 
         ExclamationCircleOutlined, CheckOutlined
     },
-    props: ['years','param','yearTerms'],
+    props: ['years','param','yearTerms','gradeYears'],
     data() {
         return {
             breadcrumb:[
@@ -257,24 +254,13 @@ export default {
       
     },
     mounted() {
-        this.kgradeOptions=Array(this.param.kgrade+1).fill().map((_, i) => {return {value:i, label:i++}});
-        this.kklassOptions=Array(this.param.kklass+1).fill().map((_, i) => {return {value:i, label:i++}});
-        this.pgradeOptions=Array(this.param.pgrade+1).fill().map((_, i) => {return {value:i, label:i++}});
-        this.pklassOptions=Array(this.param.pklass+1).fill().map((_, i) => {return {value:i, label:i++}});
-        this.sgradeOptions=Array(this.param.sgrade+1).fill().map((_, i) => {return {value:i, label:i++}});
-        this.sklassOptions=Array(this.param.sklass+1).fill().map((_, i) => {return {value:i, label:i++}});
-    },
+   },
     methods: {
         createRecord(){
             this.modalForm={};
             this.modal.data.period=[dayjs('2022/09/01', this.dateFormat), dayjs('2023/07/01', this.dateFormat)];
             this.modal.data.current_term=1;
-            this.modal.data.kklass=this.param.kklassDefault;
-            this.modal.data.kgrade=this.param.kgradeDefault;
-            this.modal.data.pklass=this.param.pklassDefault;
-            this.modal.data.pgrade=this.param.pgradeDefault;
-            this.modal.data.sklass=this.param.sklassDefault;
-            this.modal.data.sgrade=this.param.sgradeDefault;
+            this.modal.data.grade=[];
             this.modal.mode="CREATE";
             this.modal.isOpen=true
             this.modal.title="創建學年"

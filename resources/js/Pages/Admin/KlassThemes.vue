@@ -1,42 +1,42 @@
 <template>
     <AdminLayout title="主題列表" :breadcrumb="breadcrumb">
         <a-typography-title :level="3">班別: {{ klass.tag }}</a-typography-title>
-        <a-button @click="themeCreate()"
-            type="primary">新增主題
-        </a-button>
-
-        <div class="ant-table">
-            <div class="ant-table-container">
-                <div class="ant-table-content">
-                    <table style="table-layout: auto;">
-                        <thead class="ant-table-thead">
-                            <tr>
-                                <th class="ant-table-cell">學段</th>
-                                <th class="ant-table-cell">主題</th>
-                                <th>操作</th>
-                            </tr>
-                        </thead>
-                        <tbody class="ant-table-tbody">
-                            <tr v-for="theme in themes">
-                                <td>{{ theme.term_id }}</td>
-                                <td>{{ theme.title }}</td>
-                                <td>
-                                    <a-button @click="themeEdit(theme)" :style="'Edit'">修改</a-button>
-                                    <a-button @click="themeDelete(theme)" :style="'Delete'">刪除</a-button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+        <div class="flex">
+            <a-button @click="themeCreate()"
+                type="primary">新增主題
+            </a-button>
+            <div class="flex-1"></div>
+            <a-button @click="hiddenTheme=!(hiddenTheme)"
+                type="">摺疊主題
+            </a-button>
+        </div>
+        <div :class="hiddenTheme?'h-16 overflow-hidden':'h-[70vh] overflow-y-scroll'" class=" duration-500 transition-all">
+            <a-table :dataSource="themes" :pagination="false">
+                <a-table-column title="學段"  align="center">
+                    <template #default="{record}">
+                        {{ record.term_id }}
+                        </template>
+                </a-table-column>
+                <a-table-column title="主題" align="center">
+                    <template #default="{record}">
+                        {{ record.title }}
+                        </template>
+                </a-table-column>
+                <a-table-column title="操作" align="center">
+                    <template #default="{record}">
+                        <a-button @click="themeEdit(record)" :style="'Edit'">修改</a-button>
+                        <a-button @click="themeDelete(record)" :style="'Delete'">刪除</a-button>
+                        </template>
+                </a-table-column>
+            </a-table>
         </div>
 
         <template v-if="themes.length > 0">
-            <a-button @click="topicCreate()" type="primary">新增話題</a-button>
+            <a-button @click="topicCreate()" type="primary">新增基力項目</a-button>
             <a-divider type="vertical"></a-divider>
             <a-select v-model:value="selectedThemeId" :options="themes" :fieldNames="{ value: 'id', label: 'title' }" style="width:150px" />
             <template v-if="themes && selectedThemeId">
-                <a-table :dataSource="themes.find(theme => theme.id == selectedThemeId).topics" :columns="columns">
+                <a-table :pagination="false" :dataSource="themes.find(theme => theme.id == selectedThemeId).topics" :columns="columns">
                     <template #bodyCell="{ column, text, record, index }">
                         <template v-if="column.dataIndex == 'operation'">
                             <a-button @click="topicEdit(record)" :style="'Edit'">修改</a-button>
@@ -75,13 +75,13 @@
         <a-modal v-model:open="modalTopic.isOpen" :title="modalTopic.title">
             <a-form :model="modalTopic.data" name="Topic" ref="modalTopicRef" :rules="topicRules"
                 :validate-messages="validateMessages" :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
-                <a-form-item label="話題分類" name="ability_code">
+                <a-form-item label="基力項目分類" name="ability_code">
                     <a-select v-model:value="modalTopic.data.ability_code" :options="topicAbilities" />
                 </a-form-item>
-                <a-form-item label="話題標題" name="abbr">
+                <a-form-item label="基力項目標題" name="abbr">
                     <a-input v-model:value="modalTopic.data.abbr" />
                 </a-form-item>
-                <a-form-item label="話題全稱" name="title">
+                <a-form-item label="基力項目全稱" name="title">
                     <a-input v-model:value="modalTopic.data.title" />
                 </a-form-item>
             </a-form>
@@ -110,6 +110,7 @@ export default {
     props: ['yearTerms', 'topicAbilities', 'klass', 'themes'],
     data() {
         return {
+            hiddenTheme:false,
             breadcrumb:[
                 {label:"行政管理" ,url:route('admin.dashboard')},
                 {label:"學年" ,url:route('admin.years.index')},
@@ -132,13 +133,13 @@ export default {
             },
             columns: [
                 {
-                    title: '話題名稱',
+                    title: '基力項目名稱',
                     dataIndex: 'ability',
                 }, {
-                    title: '話題標題',
+                    title: '基力項目標題',
                     dataIndex: 'abbr',
                 }, {
-                    title: '話題全稱',
+                    title: '基力項目全稱',
                     dataIndex: 'title',
                 }, {
                     title: '操作',
@@ -253,7 +254,7 @@ export default {
         topicCreate() {
             this.modalTopic.data = {}
             this.modalTopic.data.theme_id = this.selectedThemeId
-            this.modalTopic.title = "新增話題"
+            this.modalTopic.title = "新增基力項目"
             this.modalTopic.mode = 'CREATE'
             this.modalTopic.isOpen = true
         },
@@ -262,7 +263,7 @@ export default {
             this.modalTopic.data = { ...topic }
             this.modalTopic.isOpen = true
             this.modalTopic.mode = 'EDIT'
-            this.modalTopic.title = "修改話題"
+            this.modalTopic.title = "修改基力項目"
         },
         topicUpdate() {
             this.$refs.modalTopicRef.validateFields().then(() => {

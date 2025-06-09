@@ -134,6 +134,11 @@ export default {
                     title: '學科代號',
                     dataIndex: 'code',
                     key: 'code',
+                },
+                  {
+                    title: 'eng',
+                    dataIndex: 'title_en',
+                    key: 'title_en',
                 },{
                     title: '中文名稱',
                     dataIndex: 'title_zh',
@@ -201,7 +206,7 @@ export default {
     },
     methods: {
         onClickCreate(record){
-            this.selectedSubjects=this.study.subjects.map(subject=>subject.code);
+            this.selectedSubjects=this.subjects.map(subject=>subject.code);
             this.modal.title="新增學科";
             this.modal.mode='CREATE';
             this.modal.isOpen = true;

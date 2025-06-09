@@ -16,11 +16,10 @@
   ::-webkit-scrollbar-thumb {
     @apply bg-slate-400 rounded-2xl hover:bg-black 
   }
-  
+
 .ant-btn-secondary{
-    background: #10b981 !important;
-    border-color: #10b981 !important;
-    color: white!important;
+  @apply !h-fit font-black text-lg text-white 
+  !bg-green-600/80   hover:!bg-green-700  hover:!text-white 
 }
 
 .hover-scale{ 
@@ -64,13 +63,21 @@ button[disabled]{
    @apply cursor-not-allowed hover:!bg-gray-500
   }
 .student-form-layout{
-    @apply min-w-[320px]
+    @apply min-w-[8cm] mx-2 !mb-0 flex items-start
 }
-
+.student-form-layout .ant-form-item-label {
+    @apply  !w-[3.2cm] bg-gray-300/70  !rounded-l-2xl  h-fit
+}
+.student-form-layout .ant-form-item-label > label{
+    @apply !text-slate-500 text-base inline-block p-1
+}
+.ant-row.ant-form-item-row{
+    @apply  flex items-start 
+}
 /* checkbox-layout checkbox button style */
 .checkbox-btn{
     @apply bg-slate-400/40 p-1 rounded-2xl min-w-16 flex items-center justify-center
-         text-slate-700 text-base font-bold hover:bg-sky-500/50
+         text-slate-600 text-lg font-bold hover:bg-sky-500/50
 }
 .checkbox-btn .ant-checkbox-inner{
     display: none;
@@ -79,10 +86,68 @@ button[disabled]{
     display: none;
 }
 .checkbox-btn.ant-checkbox-wrapper-checked{
-    @apply !bg-sky-500/50 text-sky-800 font-extrabold
+    @apply !bg-sky-400/50 text-sky-800 font-extrabold
     
 }
 /* end */
+.ant-form-bg{
+@apply bg-stone-200/80 rounded-2xl p-2 font-black 
+}
 .form-header{
     @apply font-black text-2xl text-slate-500 px-1
 }
+
+
+/**/
+/* TransitionGroup list */
+.list-move, 
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.2s ease;
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(90px);
+}
+.list-leave-active {
+  position: absolute;
+}
+/* TransitionGroup */
+
+/*capsule layout label*/
+.capsule-outline{
+  @apply  flex bg-gray-300 rounded-lg p-1 px-2 items-center gap-1
+}
+.capsule-label{
+  @apply   text-gray-600 font-black rounded-l-lg bg-gray-100 p-1
+}
+/*capsule layout label*/
+
+
+/*sorttable_chosen*/
+.sortable-chosen >td{
+  animation: opacityFlash 2s infinite;
+
+}
+
+@keyframes opacityFlash {
+  0%, 100% {
+    animation-timing-function:linear;
+    @apply opacity-80 font-black bg-white
+}
+50% {
+    animation-timing-function: linear;
+    @apply opacity-100   bg-indigo-100
+}
+}
+
+.v-enter-active,
+.v-leave-active {
+    transition: opacity 0.3s ease-out, height 0.3s linear;
+}
+.v-enter-from,
+.v-leave-to {
+    opacity:0;
+    height:0px;
+  }

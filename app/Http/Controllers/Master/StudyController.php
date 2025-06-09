@@ -24,8 +24,7 @@ class StudyController extends Controller
             'studies'=>$studies,
             'studyStreams'=>Config::item('study_streams'),
             'gradeYears'=>Config::item('grade_years'),
-            'versions'=>Study::versions()
-            // 'versions'=>'[{value:1},{value:2}]'
+            'versions'=>Study::versions(),
         ]);
     }
 

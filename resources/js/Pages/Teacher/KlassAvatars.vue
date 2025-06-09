@@ -1,35 +1,29 @@
 <template>
     <AdminLayout title="學生名單" :breadcrumb="breadcrumb">
-        <a-button as="link" :href="route('teacher.avatars.index')" class="ant-btn ant-btn-default float-right">學生上載</a-button>
-        <a-typography-title :level="3">班別: {{ klass.tag }}</a-typography-title>
-        <a-row>
-            <a-col :span="4" v-for="student in students">
-                <p class="height-100">
-                    <div v-if="student.avatar">
-                        <a-image  width="100px" :src="student.avatar.preview_url"/>
-                    </div>
-                    <div v-else>
-                        <a-avatar shape="square" :size="128">
-                            <template #icon><UserOutlined /></template>
-                        </a-avatar>                            
-                    </div>
-                    <div class="text-lg">
-                        {{ student.pivot.student_number }} | 
-                        {{ student.name_zh }}
-                    </div>
-                </p>
-            </a-col>
-        </a-row>
+     
+        <div class="font-black text-lg bg-white p-4 rounded-lg shadow-2xl ">
+            <div class="flex">
+                <div class="flex-1 font-black text-zinc-400 text-2xl ">班別 {{ klass.tag }}</div>
+                <a-button  size="small" type="info"  as="link" :href="route('teacher.avatars.index')" >批量學生上載</a-button>
+            </div>
+            <div class="flex gap-4 flex-wrap ">
+                <div  :key="student"  v-for="student in students">
+                    <UploadAvatars :avatar="student"></UploadAvatars>
+                </div>
+            </div>
+        </div>
     </AdminLayout>
 </template>
 
 <script>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { UserOutlined } from '@ant-design/icons-vue';
+import UploadAvatars from "../../Components/UploadAvatars.vue";
+
 
 export default {
     components: {
-        AdminLayout,
+        AdminLayout,UploadAvatars,
         UserOutlined
     },
     props: ['klass','students'],

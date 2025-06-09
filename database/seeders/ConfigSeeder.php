@@ -56,21 +56,21 @@ class ConfigSeeder extends Seeder
         DB::table('configs')->insert([
             'key'=>'grade_years',
             'value' =>'[
-                {"value": 1, "label": "K1", "initial": "K"},
-                {"value": 2, "label": "K2", "initial": "K"},
-                {"value": 3, "label": "K3", "initial": "K"},
-                {"value": 4, "label": "P1", "initial": "P"},
-                {"value": 5, "label": "P2", "initial": "P"},
-                {"value": 6, "label": "P3", "initial": "P"},
-                {"value": 7, "label": "P4", "initial": "P"},
-                {"value": 8, "label": "P5", "initial": "P"},
-                {"value": 9, "label": "P6", "initial": "P"},
-                {"value": 10, "label": "F1", "initial": "F"},
-                {"value": 11, "label": "F2", "initial": "F"},
-                {"value": 12, "label": "F3", "initial": "F"},
-                {"value": 13, "label": "F4", "initial": "F"},
-                {"value": 14, "label": "F5", "initial": "F"},
-                {"value": 15, "label": "F6", "initial": "F"}
+                {"value": 1, "label": "K1", "initial": "K","level":1,"zh_name":"幼兒"},
+                {"value": 2, "label": "K2", "initial": "K","level":2,"zh_name":"幼初"},
+                {"value": 3, "label": "K3", "initial": "K","level":3,"zh_name":"幼高"},
+                {"value": 4, "label": "P1", "initial": "P","level":1,"zh_name":"小一"},
+                {"value": 5, "label": "P2", "initial": "P","level":2,"zh_name":"小二"},
+                {"value": 6, "label": "P3", "initial": "P","level":3,"zh_name":"小三"},
+                {"value": 7, "label": "P4", "initial": "P","level":4,"zh_name":"小四"},
+                {"value": 8, "label": "P5", "initial": "P","level":5,"zh_name":"小五"},
+                {"value": 9, "label": "P6", "initial": "P","level":6,"zh_name":"小六"},
+                {"value": 10, "label": "F1", "initial": "F","level":1,"zh_name":"初一"},
+                {"value": 11, "label": "F2", "initial": "F","level":2,"zh_name":"初二"},
+                {"value": 12, "label": "F3", "initial": "F","level":3,"zh_name":"初三"},
+                {"value": 13, "label": "F4", "initial": "F","level":1,"zh_name":"高一"},
+                {"value": 14, "label": "F5", "initial": "F","level":2,"zh_name":"高二"},
+                {"value": 15, "label": "F6", "initial": "F","level":3,"zh_name":"高三"}
             ]',
             'remark'=>'value 用時用於gradeYear, 主要用於Year_model autoGenerate function上。
                         K1-K3: 1-3
@@ -399,9 +399,37 @@ class ConfigSeeder extends Seeder
                 {"label":"社工","value":"socialwork"}
             ]'
         ]);
-
-        
-
+        DB::table('configs')->insert([
+            'key'=>'klass_letter_map',
+            'value'=>'{
+                        "A": "A",
+                        "B": "B",
+                        "C": "C",
+                        "D": "D",
+                        "E": "E",
+                        "F": "F",
+                        "G": "G",
+                        "H": "H",
+                        "I": "I",
+                        "J": "J",
+                        "K": "K",
+                        "L": "L",
+                        "M": "M",
+                        "N": "N",
+                        "O": "O",
+                        "P": "P",
+                        "Q": "Q",
+                        "R": "R",
+                        "S": "S",
+                        "T": "T",
+                        "U": "U",
+                        "V": "V",
+                        "W": "W",
+                        "X": "X",
+                        "Y": "Y",
+                        "Z": "Z"
+                    }'
+        ]);
     }
 }
 

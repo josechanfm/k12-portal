@@ -477,7 +477,7 @@ export default {
             this.guardian.zone='ML'
             this.guardian.street_name='Rua Dois ....'
             this.guardian.building='Edif. AAA ..'
-            this.parents[0].relation='MOHTER'
+            this.parents[0].relation='MOTHER'
             this.parents[0].kinship='Mother'
             this.parents[0].name_zh='Mother Name'
             this.parents[0].occupation='Job Mother'

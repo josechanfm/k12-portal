@@ -7,6 +7,8 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import { notification } from 'ant-design-vue';
+
 
 defineProps({
     canResetPassword: Boolean,
@@ -15,8 +17,8 @@ defineProps({
 
 const form = useForm({
     //email: '',
-    email:'',
-    password: '',
+    username:'master',
+    password: 'password',
     remember: false,
 });
 
@@ -26,6 +28,12 @@ const submit = () => {
         remember: form.remember ? 'on' : '',
     })).post(route('login'), {
         onFinish: () => form.reset('password'),
+        onError: errors => { 
+            notification.warning({
+                message: '系統訊息',
+                description: '登入失敗',
+            });
+        },
     });
 };
 </script>
@@ -34,6 +42,7 @@ const submit = () => {
     <Head title="Log in" />
 
     <AuthenticationCard>
+        
         <template #logo>
             <AuthenticationCardLogo />
         </template>
@@ -42,7 +51,7 @@ const submit = () => {
             {{ status }}
         </div>
 
-        <form @submit.prevent="submit">
+        <form @submit.prevent="submit" class="m-4">
             <div>
                 <!-- <InputLabel for="email" value="Email" />
                 <TextInput
@@ -59,9 +68,9 @@ const submit = () => {
                 <InputLabel for="email" value="Email" />
                 <TextInput
                     id="email"
-                    v-model="form.email"
+                    v-model="form.username"
                     type="text"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full h-8"
                     required
                     autofocus
                 />
@@ -74,7 +83,7 @@ const submit = () => {
                     id="password"
                     v-model="form.password"
                     type="password"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full h-8"
                     required
                     autocomplete="current-password"
                 />

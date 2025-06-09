@@ -40,6 +40,7 @@ class HandleInertiaRequests extends Middleware
             'currentUserPermissions'=>$request->user()?->getAllPermissions()->pluck('name'),
             'currentUserRoles'=>$request->user()?->getRoleNames(),
             'roleConfig'=>config('role'),
+            'data'=>$request->session()->get('data')
         ]);
     }
 }

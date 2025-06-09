@@ -37,13 +37,17 @@ class EnrollmentController extends Controller
         $currentYear=Year::currentYear();
         $nextYear=$currentYear->nextYear();
 
-        if(empty($nextYear)){
-            return Inertia::render('Error',[
-                'message'=>"需要先創建下一個學年！",
-            ]);
-        }
+        // if(empty($nextYear)){
+        //     return Inertia::render('Error',[
+        //         'message'=>"需要先創建下一個學年！",
+        //     ]);
+        // }
         $currentYear->gradesKlasses;
-        $nextYear->gradesKlasses;
+        if($nextYear){
+            $nextYear->gradesKlasses;
+        }else{
+            $nextYear=$currentYear;
+        }
         //dd($currentYear,$nextYear, $student,);
         if($student->klasses->count()>0){
             return Inertia::render('Error',[

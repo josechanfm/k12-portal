@@ -26,7 +26,8 @@ class YearController extends Controller
         return Inertia::render('Admin/Years',[
             'years'=>$years,
             'param'=>$param,
-            'yearTerms'=>Config::item('year_terms')
+            'yearTerms'=>Config::item('year_terms'),
+            'gradeYears'=>Config::item('grade_years')
         ]);
         //return response()->json($data);
     }

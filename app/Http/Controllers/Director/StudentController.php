@@ -114,13 +114,12 @@ class StudentController extends Controller
         $student->identity_document;
         $student->bank;
         $student->relatives;
-        $student->guardians;
+        //$student->guardians;
         //$student->archives=$student->archives();
         
         $student->medias=$student->klassStudent?$student->klassStudent->media->all():null;
         $student->avatars=$student->avatars();
         $student->siblings=$student->siblings();
-
         return Inertia::render('Director/StudentProfile',[
             'student'=>$student
         ]);
@@ -145,17 +144,17 @@ class StudentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Student $student)
-    {
+    {  
         if($student->id != $request->id){
             return redirect()->back()->withErrors(['code'=>'match','message'=>'Student Id not match.']);
         }
         $student->update($request->all());
-        Relative::upsert(
-            $request->relatives,
-            uniqueBy:['id'],
-            update:['relation','kinship','name_zh','name_fn','birth_year','age','organization','occupation','mobile']
-        );
-
+        //
+        foreach($request->relatives as $relative){
+            $student->relatives()->updateOrCreate(['relation'=>$relative['relation']],$relative);
+        }
+        //
+     
         if(isset($request->address['id'])){
             $student->address->update($request->address);
         }else{

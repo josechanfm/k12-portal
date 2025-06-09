@@ -115,7 +115,7 @@ class AvatarController extends Controller
             'klass' => $klass,
             'students' => $klass->studentsWithAvatar(),
         ]);
-
+    
     }
 
 }

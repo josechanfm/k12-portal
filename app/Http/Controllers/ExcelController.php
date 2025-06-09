@@ -1,14 +1,16 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Student;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Illuminate\Support\Facades\Storage;
-
+use App\Imports\CommonImport;
+use App\exports\CommonExport;
+use App\Imports\StudentImport;
 
 class ExcelController extends Controller
 {
@@ -156,6 +158,29 @@ class ExcelController extends Controller
         }
         
         $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Mpdf');
-        $writer->save(storage_path('template//form2.pdf'));
+        $writer->save(storage_path('template//form2.pdf'),'I');
+    }
+
+    public function excelToStudents(Request $request){
+      
+        $tmpPath=$request->file('file')->getRealPath();
+        $studentImport= new StudentImport();
+        Excel::import($studentImport, $tmpPath);
+        $failures=[];
+        foreach( $studentImport->failures() as $failure ){
+            $failures[]=[
+                    'row'=> $failure->row(), // row that went wrong
+                    'attribute'=>$failure->attribute(), // either heading key (if using heading row concern) or column index
+                    'errors'=>$failure->errors(), // Actual error messages from Laravel validator
+                    'values'=>$failure->values(), // Th
+            ];
+        }
+        return redirect()->back()->with('data',['successes'=>$studentImport->getImportedRow(),'failures'=>$failures]);
+    }
+    public function downloadSheet(){
+        $instance=new CommonExport();
+        $excelKeys=Student::excelKeys();
+        $instance->set_export_data([$excelKeys['keys'],$excelKeys['zh']]);
+        return Excel::download($instance, 'example.xlsx');
     }
 }

@@ -36,6 +36,7 @@ return new class extends Migration
             $table->string('hrc_expired')->nullable();
             $table->string('dsedj_num')->nullable();
             $table->string('ssm_num')->nullable();
+            $table->string('registered')->nullable();
 
             $table->string('previour_school')->nullable();
             $table->string('previour_grade')->nullable();
