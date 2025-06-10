@@ -22,11 +22,12 @@ const goToRoute = (route) => {
 </script>
 
 <template>
-<Head title="Register" />
+<Head title="Portal" />
 
 <div class=" flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center sm:pt-0">
     <div class="w-1/2 flex  gap-1 ">
         <div class="text-2xl p-4 font-black bg-white flex-1 flex flex-col items-center justify-center">
+            <div>Portal</div>
             <div>Your Account Status</div>
             <div v-if=" $page?.props?.user??false">
                 Status : logining <br>

@@ -36,7 +36,7 @@ class AuthenticatedSessionController extends Controller
         //dd(auth()->user(), $request->all());
 
         if(auth()->user()){
-            return redirect()->intended('admin');
+            return redirect()->intended('student');
         }else{
             return redirect()->intended(RouteServiceProvider::HOME);
 
