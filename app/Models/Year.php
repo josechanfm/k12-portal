@@ -34,6 +34,9 @@ class Year extends Model
     public function getGradeGroupAttribute(){
         return Grade::where('year_id',$this->id)->groupBy('initial')->select('initial',DB::raw("count(*) as count"))->get();
     }
+    public function studies(){
+        return $this->hasMany(study::class);        
+    }
     public function kGrades(){
         return $this->hasMany(Grade::class)->where('grade_year','<=',3);        
     }

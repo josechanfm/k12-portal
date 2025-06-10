@@ -59,11 +59,7 @@ class SubjectController extends Controller
         $subject->code=$request->code;
         $subject->title_zh=$request->title_zh;
         $subject->title_en=$request->title_en;
-        $subject->type=$request->type;
-        $subject->stream=$request->stream;
-        $subject->elective=$request->elective;
         $subject->description=$request->description;
-        $subject->version=$request->version;
         $subject->active=$request->active;
         $subject->save();
         return redirect()->back();
@@ -122,11 +118,7 @@ class SubjectController extends Controller
             $subject->code=$request->code;
             $subject->title_zh=$request->title_zh;
             $subject->title_en=$request->title_en;
-            $subject->type=$request->type;
-            $subject->stream=$request->stream;
-            $subject->elective=$request->elective;
             $subject->description=$request->description;
-            $subject->version=$request->version;
             $subject->active=$request->active;
             $subject->save();
         }

@@ -40,7 +40,6 @@
                 :options="subjectTemplates.map(subject=>({value:subject.code,label:subject.title_zh+' ('+subject.stream+')'}))" 
             /> -->
             <a-form
-                v-if="modal.mode=='EDIT'"
                 name="Subject"
                 ref="modalRef"
                 :model="modal.data"
@@ -50,7 +49,7 @@
                 :validate-messages="validateMessages"
             >
                 <a-form-item label="科目代號" name="code">
-                    {{ modal.data.code }}
+                     <a-input v-model:value="modal.data.code" />
                 </a-form-item>
                 <a-form-item label="科目名稱 (中文)" name="title_zh">
                     <a-input v-model:value="modal.data.title_zh" />
@@ -58,34 +57,16 @@
                 <a-form-item label="科目名稱 (英文)" name="title_en">
                     <a-input v-model:value="modal.data.title_en" />
                 </a-form-item>
-                <a-form-item label="分類" name="type" hidden>
-                    <a-input v-model:value="modal.data.type" />
-                </a-form-item>
-                <a-form-item label="專業方向" name="stream">
-                    <a-radio-group v-model:value="modal.data.stream" button-style="solid">
-                        <template v-for="stream in studyStreams">
-                            <a-radio-button :value="stream.value">{{stream.label}}</a-radio-button>    
-                        </template>
-                    </a-radio-group>
-                </a-form-item>
-                <a-form-item label="必修/選修" name="elective">
-                    <a-radio-group v-model:value="modal.data.elective" button-style="solid">
-                        <a-radio-button value="COP">必修</a-radio-button>
-                        <a-radio-button value="ELE">選修</a-radio-button>
-                    </a-radio-group>
-                </a-form-item>
+         
                 <a-form-item label="簡介" name="description">
                     <a-textarea v-model:value="modal.data.description" placeholder="textarea with clear icon" allow-clear />
                 </a-form-item>
-                <!-- <a-form-item label="Subjtect Heads" name="subject_head_ids">
-                    <a-select v-model:value="modal.data.subject_head_ids" :options="teachers" :fieldNames="{value:'id',label:'name_zh'}"/>
-                </a-form-item> -->
+              
                 <a-form-item label="有效" name="active">
                     <a-switch v-model:checked="modal.data.active" :checkedValue="1" :uncheckedValue="0"/>
                 </a-form-item>
             </a-form>
         <template #footer>
-            <a-checkbox v-if="modal.mode=='CREATE'" class="float-left" v-model:checked="selectAll" @change="onChangeSelectAll">SelectAll</a-checkbox>
             <a-button key="back" @click="modalCancel" type="delete">關閉</a-button>
             <a-button v-if="modal.mode=='EDIT'" key="Update" type="edit" @click="updateRecord()">提交並更改</a-button>
             <a-button v-if="modal.mode=='CREATE'"  key="Store" type="create" @click="storeRecord()">提交並新增</a-button>
@@ -218,17 +199,19 @@ export default {
             this.modal.isOpen = true;
         },
         storeRecord(){
-            this.$inertia.post('/master/gradeSubjects/', {
-                selectedSubjects:this.selectedSubjects,
-                grade_id:this.grade.id
-            },{
-                onSuccess:(page)=>{
-                    //console.log(page);
-                    this.modal.isOpen=false;
-                },
-                onError:(err)=>{
-                    console.log(err);
-                }
+             console.log(this.modal.data);
+            this.$refs.modalRef.validateFields().then(()=>{
+                this.$inertia.post(route('master.subjects.store'), this.modal.data,{
+                    onSuccess:(page)=>{
+                        console.log(page);
+                        this.modal.isOpen=false;
+                    },
+                    onError:(error)=>{
+                        console.log(error);
+                    }
+                });
+            }).catch(err => {
+                console.log("error", err);
             });
         },
         updateRecord(){

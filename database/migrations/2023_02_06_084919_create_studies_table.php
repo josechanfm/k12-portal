@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('studies', function (Blueprint $table) {
             $table->id();
             $table->tinyInteger('version');
+            $table->foreignId('year_id')->nullable(); //要做每年記錄
             $table->tinyInteger('grade_year');
             $table->integer('sequence')->nullable();
             $table->string('title_zh');

@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Study;
 use App\Models\Subject;
+use App\Models\Year;
 use App\Models\Config;
 use Illuminate\Support\Facades\Validator;
-
 class StudyController extends Controller
 {
     /**
@@ -18,13 +18,24 @@ class StudyController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        $studies=Study::all();
+    {   
+        $yearCode=$_GET['yearCode']??false;
+        if($yearCode){
+            $year=Year::where('code',$yearCode)->first(); 
+        }   
+        else{
+            $year=Year::currentYear(); 
+            $yearCode=$year->code  ;
+        }
+        $studies=$year?$year->studies()->with('subjects')->get() : [];
         return Inertia::render('Master/Studies',[
-            'studies'=>$studies,
             'studyStreams'=>Config::item('study_streams'),
+            'studies'=> $studies,
             'gradeYears'=>Config::item('grade_years'),
+            'subjects'=>Subject::all(),
             'versions'=>Study::versions(),
+            'years'=>Year::all(),
+            'tempYearCode'=>$yearCode,
         ]);
     }
 
@@ -147,4 +158,7 @@ class StudyController extends Controller
         ]);
     }
     
+    public function updateCourse(Request $request){
+        dd($request);
+    }
 }

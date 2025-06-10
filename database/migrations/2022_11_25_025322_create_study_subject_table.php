@@ -17,11 +17,14 @@ return new class extends Migration
             $table->id();
             $table->foreignId('study_id');
             $table->foreignId('subject_id');
-            $table->foreignId('year_id'); //要做每年記錄
             $table->string('subject_head_ids')->nullable();
-            $table->string('unit')->nullable();
+            $table->tinyInteger('unit')->nullable();
             $table->string('main')->nullable();
+            $table->string('type',6)->nullable();
+            $table->string('stream',6)->nullable();
             $table->string('is_letter')->nullable();
+            $table->string('elective')->nullable();
+            $table->Integer('sort_num')->nullable();
             $table->timestamps();
         });
     }
