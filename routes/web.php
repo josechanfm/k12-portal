@@ -91,6 +91,7 @@ Route::group([
     ]
 ],function () {
         Route::resource('/studies',App\Http\Controllers\Master\StudyController::class)->names('master.studies');
+        Route::post('/study_subject/sortOrderSubject/{study}',[App\Http\Controllers\Master\StudySubjectController::class,'sortOrderSubject'])->name('master.studySubjects.sortOrder');
         Route::resource('/study_subjects',App\Http\Controllers\Master\StudySubjectController::class)->names('master.studySubjects');
         Route::resource('/subjects',App\Http\Controllers\Master\SubjectController::class)->names('master.subjects');
         Route::resource('/configs',App\Http\Controllers\Master\ConfigController::class)->names('master.configs');

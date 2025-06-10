@@ -12,7 +12,7 @@ use App\Models\StudySubject;
 use App\Models\SubjectTemplate;
 use App\Models\Config;
 use Illuminate\Support\Facades\Validator;
-
+//[update, store ] use on studies.vue function 
 class StudySubjectController extends Controller
 {
     /**
@@ -20,13 +20,9 @@ class StudySubjectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request) //not use
     {
-        return Inertia::render('Master/StudySubject',[
-            'subjects'=>Subject::all(),
-            //'subjectTypes'=>Config::item('subject_types'),
-            'studyStreams'=>Config::item('study_streams'),
-        ]);
+     
     }
 
     /**
@@ -46,24 +42,14 @@ class StudySubjectController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        Validator::make($request->all(), [
-            'code' => ['required'],
-        ])->validate();
-
-        $subject=new Subject;
-        $subject->code=$request->code;
-        $subject->title_zh=$request->title_zh;
-        $subject->title_en=$request->title_en;
-        $subject->type=$request->type;
-        $subject->stream=$request->stream;
-        $subject->elective=$request->elective;
-        $subject->description=$request->description;
-        $subject->version=$request->version;
-        $subject->active=$request->active;
-        $subject->save();
-        return redirect()->back();
-        
+    {   
+        $data= $request->validate([
+            'id'=>[''],
+            'newSubjects'=>[''],
+            'yearId'=>['']
+        ]);
+        $study=Study::where('id', $data['id'])->first();
+        $study->subjects()->syncWithoutDetaching($data['newSubjects']);
     }
 
     /**
@@ -74,16 +60,7 @@ class StudySubjectController extends Controller
      */
     public function show($id)
     {
-        $study=Study::with('subjects')->find($id);
-        $subjects=Subject::where('version',1)->get();
-        // echo json_encode($study);
-        // echo json_encode($subjects);
-        // return;
-        return Inertia::render('Master/Subject',[
-            'study'=>$study,
-            'subjects'=>$subjects,
-            'teachers'=>Staff::teachers()
-        ]);
+       
     }
 
     /**
@@ -92,16 +69,9 @@ class StudySubjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        $study=Study::with('subjects')->find($id);
-        $subjects=Subject::where('active',1)->with('studys')->get();
-        //dd($subjects[0]->study);
-        return Inertia::render('Master/StudySubjectEdit',[
-            'study'=>$study,
-            'subjects'=>$subjects,
-            'teachers'=>Staff::teachers()
-        ]);
+    public function edit($id) //not use
+    {   
+     
     }
 
     /**
@@ -111,33 +81,12 @@ class StudySubjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $studyId)
-    {
-        //dd($studyId);
-        //dd($request->all());
-        Study::find($studyId)->subjects()->sync($request->all());
-        $study=Study::find($studyId);
-        return redirect()->route('master.studies.index');
-        //return redirect()->back();
-        //return redirect()->route('master.studySubjects.edit',$study);
-        //dd($request->all());
-        // $data = array_map(function($d) use ($id){
-        //     return array(
-        //         'study_id'=>$id,
-        //         'subject_id'=>$d['id'],
-        //         'stream'=>$d['stream'],
-        //         'elective'=>$d['elective']
-        //     );
-        // }, $request->all());
-        // StudySubject::upsert(
-        //     $data,
-        //     ['study_id','subject_id'],
-        //     ['stream','elective']
-        // );
-
-        // StudySubject::whereNotIn('subject_id',array_column($data,'subject_id'))->where('study_id',$id)->delete();
-        // return response()->json($data);
-        //return response()->json($request->all());
+    public function update(Request $request,StudySubject $studySubject)
+    {   
+        $column=$request->column;
+        $updateStudySubject=$request->studySubject;
+        $studySubject->$column= $updateStudySubject[$column];
+        $studySubject->save();
     }
 
     /**
@@ -146,8 +95,21 @@ class StudySubjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
+    public function destroy(Request $request, StudySubject $studySubject)
+    {     
+        $studySubject->delete();  
+      
     }
+
+    public function sortOrderSubject(Request $request, $id)
+    {       
+       $data=[];
+        $pivots=array_column( $request->subjects,'pivot');
+        foreach($pivots as $idx=>$pivot){
+             $data[$pivot['subject_id']]= [ 'sort_num'=>$idx+1];
+        }
+        $study=Study::where('id',$id)->first();
+        $study->subjects()->sync( $data);
+    }
+
 }

@@ -11,7 +11,9 @@ class Study extends Model
     protected $fillable=['grade_year','version','sequence','title_zh','title_en','stream','active','description'];
 
     public function subjects(){
-        return $this->belongsToMany(Subject::class)->withPivot('subject_head_ids');
+        return $this->belongsToMany(Subject::class)
+        ->orderBy('sort_num', 'ASC')
+        ->withPivot(['id','subject_head_ids','unit','main','type','stream','is_letter','elective','sort_num']);
     }
     static function versions(){
         //$versions=Study::select('version as value','version as label')->groupBy('version')->get();
