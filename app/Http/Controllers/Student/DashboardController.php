@@ -10,7 +10,7 @@ class DashboardController extends Controller
 {
     public function index(){
         return Inertia::render('Student/Dashboard',[
-            'student'=>auth()->user()->student->load('notices')
+            'student'=>auth()->user()->student->load('courses')->load('notices')
         ]);
     }
 }
