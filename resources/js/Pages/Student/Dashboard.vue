@@ -1,5 +1,5 @@
 <template>
-    <WebLayout title="Dashboard">
+    <WebLayout title="Student">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Student Dashboard

@@ -77,5 +77,11 @@ class Student extends Model implements HasMedia
     public function notices(): MorphMany{
         return $this->morphMany(Notice::class, 'noticeable');
     }
+    public function guardians(){
+        return $this->belongsToMany(Guardian::class);
+    }
+    public function courses(){
+        return $this->hasMany(Course::class);
+    }
 
 }

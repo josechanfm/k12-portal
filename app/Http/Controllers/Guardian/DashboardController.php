@@ -10,7 +10,7 @@ class DashboardController extends Controller
 {
     public function index(){
         return Inertia::render('Guardian/Dashboard',[
-            'guardian'=>auth()->user()->guardian
+            'guardian'=>auth()->user()->guardian->load('students')->load('notices')
         ]);
     }
 }

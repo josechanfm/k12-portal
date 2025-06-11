@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Guardian;
+use App\Models\Student;
 
 class GuardianSeeder extends Seeder
 {
@@ -15,10 +16,14 @@ class GuardianSeeder extends Seeder
      */
     public function run()
     {
+        $sid=1;
         for ($i = 11; $i <= 20; $i++) {
-            Guardian::factory()->create([
+            $guardian=Guardian::factory()->create([
                 'user_id' => $i, 
             ]);
+            $student=Student::find($sid++);
+            $guardian->students()->attach($student,['relationship'=>'guardian']);
+
         }
 
     }

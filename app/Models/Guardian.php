@@ -71,4 +71,8 @@ class Guardian extends Authenticatable
     public function notices(): MorphMany{
         return $this->morphMany(Notice::class, 'noticeable');
     }
+
+    public function students(){
+        return $this->belongsToMany(Student::class)->with('courses');
+    }
 }
