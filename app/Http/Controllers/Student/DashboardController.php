@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Guardian;
+namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -9,8 +9,8 @@ use Inertia\Inertia;
 class DashboardController extends Controller
 {
     public function index(){
-        return Inertia::render('Guardian/Dashboard',[
-            'guardian'=>auth()->user()->guardian
+        return Inertia::render('Student/Dashboard',[
+            'student'=>auth()->user()->student->load('notices')
         ]);
     }
 }

@@ -67,21 +67,26 @@ class UserSeeder extends Seeder
             'personal_team' => true,
         ]));
 
-        User::factory()->count(100)->create();
         
-        $users=User::whereNull('username')->get();
-        foreach($users as $user){
-            $user->assignRole('teacher');
-            $user->ownedTeams()->save(Team::forceCreate([
-                'user_id' => $user->id,
-                'name' => explode(' ', $user->name, 2)[0]."'s Team",
-                'personal_team' => true,
-            ]));
-            $user->username='user'.$user->id;
-            $user->email='user'.$user->id."@example.com";
-            $user->save();
-    
+        for ($i = 1; $i <= 200; $i++) {
+            User::factory()->create([
+                'username'=>'user'.$i
+            ]);
         }
+
+        //$users=User::whereNull('username')->get();
+        // foreach($users as $user){
+        //     $user->assignRole('teacher');
+        //     $user->ownedTeams()->save(Team::forceCreate([
+        //         'user_id' => $user->id,
+        //         'name' => explode(' ', $user->name, 2)[0]."'s Team",
+        //         'personal_team' => true,
+        //     ]));
+        //     $user->username='user'.$user->id;
+        //     $user->email='user'.$user->id."@example.com";
+        //     $user->save();
+    
+        // }
 
         // User::whereNull('username')->update([
         //     'username'=>DB::raw("concat('user',id)"),

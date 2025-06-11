@@ -35,10 +35,6 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Klass::observe(KlassObserver::class);
-        Course::observe(CourseObserver::class);
-        Additive::observe(AdditiveObserver::class);
-        Task::observe(TaskObserver::class);
 
     }
 

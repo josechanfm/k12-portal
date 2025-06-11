@@ -13,18 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('成績s', function (Blueprint $table) {
+        Schema::create('guardians', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('theme_template_id');
-            $table->integer('sequence')->nullable();
-            $table->string('ability_code');
-            $table->string('ability');
-            $table->string('abbr');
-            $table->string('title');
-            $table->text('description')->nullable();
+            $table->foreignId('user_id');
+            $table->string('name_zh');
+            $table->string('name_fn');
+            $table->char('gender',1);
+            $table->date('dob')->nullable();
             $table->timestamps();
         });
-
     }
 
     /**
@@ -34,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('成績s');
+        Schema::dropIfExists('guardians');
     }
 };

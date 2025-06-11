@@ -77,6 +77,18 @@ Route::group([
 
 
 Route::group([
+    'prefix'=>'/guardian',
+    'middleware'=>[
+        'auth:sanctum',
+        config('jetstream.auth_session'),
+        'verified',
+        ]
+],function () {
+    Route::get('/', [App\Http\Controllers\Guardian\DashboardController::class,'index'])->name('guardian.dashboard');
+
+});
+
+Route::group([
     'prefix'=>'/student',
     'middleware'=>[
         'auth:sanctum',
@@ -84,9 +96,7 @@ Route::group([
         'verified',
         ]
 ],function () {
-    Route::get('/', function () {
-        dd('student');
-    })->name('student');
+    Route::get('/', [App\Http\Controllers\Student\DashboardController::class,'index'])->name('student.dashboard');
 
 });
 

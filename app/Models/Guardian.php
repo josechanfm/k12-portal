@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
@@ -12,13 +13,15 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+
+
+class Guardian extends Authenticatable
 {
     use HasRoles;
     use HasApiTokens;
     use HasFactory;
     use HasProfilePhoto;
-    use HasTeams;
+    //use HasTeams;
     use Notifiable;
     use TwoFactorAuthenticatable;
 
@@ -61,10 +64,11 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
-    public function student(){
-        return $this->hasOne(Student::class);
+    public function user(){
+        return $this->belongsTo(User::class);
     }
-    public function guardian(){
-        return $this->hasOne(Guardian::class);
+
+    public function notices(): MorphMany{
+        return $this->morphMany(Notice::class, 'noticeable');
     }
 }
