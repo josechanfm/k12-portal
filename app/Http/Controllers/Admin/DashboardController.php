@@ -12,10 +12,8 @@ use App\Models\Config;
 class DashboardController extends Controller
 {
     public function index(){
-        $currentYear=Year::currentYear();
         return  Inertia::render('Admin/Dashboard',[
-            'currentYear'=>$currentYear,
-            'grades'=>Grade::with('klasses')->whereBelongsTo($currentYear)->get(),
+            'currentYear'=>Config::item('current_year'),
         ]);    
     }
 }

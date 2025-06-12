@@ -15,7 +15,7 @@ class StudentSeeder extends Seeder
      */
     public function run()
     {
-        for ($i = 1; $i <= 10; $i++) {
+        for ($i = 4; $i <= 14; $i++) {
             Student::factory()->create([
                 'user_id' => $i, 
             ]);

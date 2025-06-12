@@ -23,8 +23,8 @@ createInertiaApp({
             .use(ZiggyVue, Ziggy)
             .use(Antd)
             .use(RolePermission).use(LangMapper)
-            // .component('inertia-head',Head)
-            // .component('inertia-link',Link)
+            .component('inertia-head',Head)
+            .component('inertia-link',Link)
             .mount(el);
     },
 });

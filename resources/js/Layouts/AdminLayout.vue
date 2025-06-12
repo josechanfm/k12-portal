@@ -4,7 +4,7 @@
     <!-- side menu -->
     <a-layout-sider class="shadow-md" v-model:collapsed="collapsed" :trigger="null" collapsible
       style="background: #fff">
-      <a :href="route('director.dashboard')" class="flex justify-center">
+      <a :href="route('admin.dashboard')" class="flex justify-center">
         <div class="h-12 flex items-center">AIMS</div>
       </a>
       <AdminMenu />
@@ -72,7 +72,7 @@
                   </a>
                 </span>
                 <span v-else>
-                  <a :href="route('director.dashboard')">
+                  <a :href="route('admin.dashboard')">
                     Home
                   </a>
                 </span>

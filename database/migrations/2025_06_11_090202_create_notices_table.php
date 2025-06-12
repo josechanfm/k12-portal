@@ -15,9 +15,13 @@ return new class extends Migration
             $table->id();
             $table->foreignId('noticeable_id');
             $table->string('noticeable_type');
-            $table->string('category');
-            $table->string('title');
-            $table->text('content');
+            $table->string('category')->nullable();
+            $table->string('title')->nullable();
+            $table->text('content')->nullable();
+            $table->boolean('acknowledge')->nullable();
+            $table->string('question_body')->nullable();
+            $table->string('question_option')->nullable();
+            $table->string('answer')->nullable();
             $table->timestamps();
         });
     }

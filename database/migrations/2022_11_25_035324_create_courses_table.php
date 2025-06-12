@@ -28,6 +28,8 @@ return new class extends Migration
             $table->boolean('active')->default(true);
             $table->text('description')->nullable();
             $table->tinyInteger('current_term')->default(1);
+            $table->text('marks_student')->nullable();
+            $table->text('marks_guardian')->nullable();
             $table->timestamps();
             $table->unique(['student_id','code'],'student_id_course_code');
         });

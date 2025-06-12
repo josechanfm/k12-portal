@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use App\Models\Config;
 
 class ConfigSeeder extends Seeder
 {
@@ -15,6 +16,28 @@ class ConfigSeeder extends Seeder
      */
     public function run()
     {
+        Config::create([
+            'key'=>'current_year',
+            'value'=>'"2025"'
+        ]);
+        Config::create([
+            'key'=>'field_types',
+            'value'=>'[
+                    { "value": "input", "label_zh": "單行文字","label_en":"Text","label_pt":"Text"},
+                    { "value": "textarea", "label_zh": "多行文字","label_en":"Multi Text","label_pt":"Multi Text" },
+                    { "value": "richtext", "label_zh": "格式文字" ,"label_en":"Rich Text","label_pt":"Rich Text"},
+                    { "value": "radio", "label_zh": "單項選擇" ,"label_en":"Radio","label_pt":"Radio"},
+                    { "value": "checkbox", "label_zh": "多項選擇" ,"label_en":"Checkbox","label_pt":"Checkbox"},
+                    { "value": "dropdown", "label_zh": "下拉清單" ,"label_en":"Dropdown","label_pt":"Dropdown"},
+                    { "value": "true_false", "label_zh": "真/偽" ,"label_en":"True/False","label_pt":"True/False"},
+                    { "value": "date", "label_zh": "日期格式" ,"label_en":"Date","label_pt":"Date"},
+                    { "value": "datetime", "label_zh": "日期時間" ,"label_en":"Date time","label_pt":"Date time"},
+                    { "value": "email", "label_zh": "電郵欄位" ,"label_en":"E-mail","label_pt":"E-mail"},
+                    { "value": "number", "label_zh": "數值欄位" ,"label_en":"Number","label_pt":"Numero"},
+                    { "value": "photo", "label_zh": "上傳相片" ,"label_en":"Photo","label_pt":"Photo"}
+                ]
+            '
+        ]);
         // DB::table('configs')->insert([
         //     'key' => 'grade_categories',
         //     'value' => '[
