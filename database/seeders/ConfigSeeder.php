@@ -21,6 +21,17 @@ class ConfigSeeder extends Seeder
             'value'=>'"2025"'
         ]);
         Config::create([
+            'key'=>'guardian_relationships',
+            'value'=>'[
+                {"value": "FATHER", "label_zh":"父親","label_en":"Father"},
+                {"value": "MOTHER", "label_zh":"母親","label_en":"Mother"},
+                {"value": "FFATHER", "label_zh":"爺爺","label_en":"Grand Father"},
+                {"value": "FMOTHER", "label_zh":"嫲嫲","label_en":"Grand Mother"},
+                {"value": "MFATHER", "label_zh":"公公","label_en":"Grand Father"},
+                {"value": "MMOTHER", "label_zh":"婆婆","label_en":"Grand Mother"}
+            ]'
+        ]);
+        Config::create([
             'key'=>'field_types',
             'value'=>'[
                     { "value": "input", "label_zh": "單行文字","label_en":"Text","label_pt":"Text"},

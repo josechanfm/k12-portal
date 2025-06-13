@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             GuardianSeeder::class,
             NoticeSeeder::class,
             CourseSeeder::class,
+            FormSeeder::class,
         ]);
 
     }

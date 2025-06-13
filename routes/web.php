@@ -60,6 +60,12 @@ Route::group([
     })->name('master');
 });
 
+Route::get('forms', [\App\Http\Controllers\FormController::class, 'index'])->name('forms');
+Route::post('form', [\App\Http\Controllers\FormController::class, 'store'])->name('form.store');
+Route::get('form', [\App\Http\Controllers\FormController::class, 'show'])->name('form.show');
+
+
+
 //admin
 Route::group([
     'prefix'=>'/admin',
@@ -93,7 +99,7 @@ Route::group([
         ]
 ],function () {
     Route::get('/', [App\Http\Controllers\Guardian\DashboardController::class,'index'])->name('guardian.dashboard');
-
+    Route::resource('profile', App\Http\Controllers\Guardian\ProfileController::class)->names('guardian.profile')->parameters(['profile' => 'guardian']);
 });
 
 Route::group([

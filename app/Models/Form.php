@@ -15,8 +15,8 @@ class Form extends Model implements HasMedia
 {
     use HasFactory;
     use InteractsWithMedia;
-    protected $fillable = ['uuid', 'name', 'title','tags','description', 'welcome','content', 'thanks','valid_at','expire_at', 'require_login', 'for_member', 'published', 'with_attendance'];
-    protected $casts=['require_login'=>'boolean','for_member'=>'boolean','published'=>'boolean','with_attendance'=>'boolean'];
+    protected $fillable = ['uuid', 'name', 'title','tags','description', 'welcome','content', 'thanks','valid_at','expire_at', 'require_login', 'for_whom', 'published'];
+    protected $casts=['require_login'=>'boolean','published'=>'boolean'];
     protected $appends=['banner_url','thumb_url'];
 
     public static function boot(){

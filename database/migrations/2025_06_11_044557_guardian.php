@@ -17,9 +17,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->string('name_zh');
-            $table->string('name_fn');
-            $table->char('gender',1);
+            $table->string('name_en')->nullable();
+            $table->char('gender',1)->nullable();
             $table->date('dob')->nullable();
+            $table->string('relationship')->nullable();
+            $table->string('email')->nullable();
             $table->timestamps();
         });
     }

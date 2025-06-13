@@ -27,6 +27,9 @@
             <a-button @click="editRecord(record)">{{ $t("edit") }}</a-button>
             <a-button @click="deleteRecord(record)" :disabled="form.published == 1">{{ $t("delete") }}</a-button>
           </template>
+          <template v-else-if="column.dataIndex === 'dragable'">
+            <HolderOutlined/>
+          </template>
       </template>
     </a-table>
 
@@ -81,7 +84,6 @@
               <a-radio @click="addOptionItem">{{ $t("add_option") }}</a-radio>
             </a-radio-group>
           </a-form-item>
-          ss
           <a-form-item :label="$t('template')" name="optionTemplate">
             <a-select :options="AdminLayout" @change="onChangeOptionTemplate" />
           </a-form-item>
@@ -164,30 +166,24 @@ export default {
       sourceObj:null,
       targetObj:null,
       isDraggable: false,
-      columns: [
+      columns2: [
         {
+          title: "Dragable",
+          dataIndex: "dragable",
+        },{
           title: "Field Label",
-          i18n: "field_label",
           dataIndex: "field_label",
-        },
-        {
+        },{
           title: "Field Type",
-          i18n: "field_type",
           dataIndex: "type",
-        },
-        {
+        },{
           title: "Compulsory",
-          i18n: "compulsory",
           dataIndex: "required",
-        },
-        {
+        },{
           title: "Column Data",
-          i18n: "column_data",
           dataIndex: "in_column",
-        },
-        {
+        },{
           title: "Operation",
-          i18n: "operation",
           dataIndex: "operation",
         },
       ],
@@ -220,6 +216,32 @@ export default {
   },
   created() {
     this.dataModel=this.fields
+  },
+  computed:{
+    columns(){
+      const columns=[
+        {
+          title: "Field Label",
+          dataIndex: "field_label",
+        },{
+          title: "Field Type",
+          dataIndex: "type",
+        },{
+          title: "Compulsory",
+          dataIndex: "required",
+        },{
+          title: "Column Data",
+          dataIndex: "in_column",
+        },{
+          title: "Operation",
+          dataIndex: "operation",
+        },
+      ];
+      if(this.isDraggable){
+        columns.unshift({title:"Dragable", dataIndex:"dragable"});
+      }
+      return columns;
+    }
   },
   methods: {
     createRecord() {
@@ -343,6 +365,7 @@ export default {
     },
 
     customRow(record, index){
+      console.log(this.isDraggable);
       return {
         domProps:{
           draggable:this.isDraggable

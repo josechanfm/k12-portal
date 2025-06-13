@@ -104,6 +104,7 @@ class FormController extends Controller
      */
     public function edit(Form $form)
     {
+        dd($form);
         return Inertia::render('Admin/Form', [
             'form' => $form
         ]);

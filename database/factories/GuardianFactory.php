@@ -18,7 +18,7 @@ class GuardianFactory extends Factory
     {
         return [
             'name_zh' => $this->faker->name,
-            'name_fn' => $this->faker->firstname,
+            'name_en' => $this->faker->firstname,
             'gender' => $this->faker->randomElement(['M','F']),
             'dob' => $this->faker->dateTimeBetween('1970-09-01','2000-09-01')->format('Y-m-d'),
         ];

@@ -59,7 +59,7 @@ export default {
     components: {
         WebLayout,
     },
-    props: ['student'],
+    props: ['student','forms'],
     data() {
         return {
         }
