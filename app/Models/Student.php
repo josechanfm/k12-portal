@@ -74,8 +74,8 @@ class Student extends Model implements HasMedia
         return $this->belongsTo(User::class);
     }
 
-    public function notices(): MorphMany{
-        return $this->morphMany(Notice::class, 'noticeable');
+    public function messages(): MorphMany{
+        return $this->morphMany(Message::class, 'messageable');
     }
     public function guardians(){
         return $this->belongsToMany(Guardian::class);

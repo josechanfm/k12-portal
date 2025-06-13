@@ -11,7 +11,7 @@ class DashboardController extends Controller
 {
     public function index(){
         return Inertia::render('Guardian/Dashboard',[
-            'guardian'=>auth()->user()->guardian->load('students')->load('notices'),
+            'guardian'=>auth()->user()->guardian->load('students')->load('messages'),
             'forms'=>Form::where('published', true)->whereJsonContains('for_whom','guardian')->orderBy('created_at','DESC')->get()
         ]);
     }

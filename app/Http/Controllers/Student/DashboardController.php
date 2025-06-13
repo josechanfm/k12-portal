@@ -11,7 +11,7 @@ class DashboardController extends Controller
 {
     public function index(){
         return Inertia::render('Student/Dashboard',[
-            'student'=>auth()->user()->student->load('courses')->load('notices'),
+            'student'=>auth()->user()->student->load('courses')->load('messages'),
             'forms'=>Form::where('published', true)->whereJsonContains('for_whom','student')->orderBy('created_at','DESC')->get()
         ]);
     }

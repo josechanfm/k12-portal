@@ -21,17 +21,17 @@
 
             <div>
                 <h3 class="text-lg font-semibold flex justify-between items-center">
-                    <span>Notices</span>
+                    <span>messages</span>
                     <span class="text-right">
                         <inertia-link href="#" class="text-sm">History</inertia-link>
                     </span>
                 </h3>
 
-                <div v-for="notice in guardian.notices" :key="notice.id" class="bg-white shadow rounded-lg p-4 mb-2">
-                    <div class="font-bold">Category: <span class="font-normal">{{ notice.category }}</span></div>
-                    <div class="font-bold">Title: <span class="font-normal">{{ notice.title }}</span></div>
-                    <div>Content: {{ notice.content }}</div>
-                    <a-button type="primary" @click="acknowledgeNotice(notice.id)" class="mt-2">Acknowledge</a-button>
+                <div v-for="message in guardian.messages" :key="message.id" class="bg-white shadow rounded-lg p-4 mb-2">
+                    <div class="font-bold">Category: <span class="font-normal">{{ message.category }}</span></div>
+                    <div class="font-bold">Title: <span class="font-normal">{{ message.title }}</span></div>
+                    <div>Content: {{ message.content }}</div>
+                    <a-button type="primary" @click="acknowledgeMessage(message.id)" class="mt-2">Acknowledge</a-button>
                 </div>
             </div>
 
@@ -106,8 +106,8 @@ export default {
         };
     },
     methods: {
-        acknowledgeNotice(noticeId) {
-            console.log(`Notice ${noticeId} acknowledged.`);
+        acknowledgeMessage(messageId) {
+            console.log(`message ${messageId} acknowledged.`);
         },
         viewCourseDetails(courseId) {
             console.log(`Viewing details for course ${courseId}`);

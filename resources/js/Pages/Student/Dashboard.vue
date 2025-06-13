@@ -10,7 +10,7 @@
             <div>Name: {{ student.name_zh }}</div>
             <div>Gender: {{ student.gender }}</div>
             <div>Date of Birth:{{ student.dob }}</div>
-            <div>{{ student.notices }}</div>
+            <div>{{ student.messages }}</div>
         </div>
 
 
@@ -31,17 +31,17 @@
 
 <div>
     <h3 class="text-lg font-semibold flex justify-between items-center">
-        <span>Notices</span>
+        <span>messages</span>
         <span class="text-right">
             <inertia-link href="#"  class="text-sm">History</inertia-link>
         </span>
     </h3>
     
-    <div v-for="notice in student.notices" :key="notice.id" class="bg-white shadow rounded-lg p-4 mb-2">
-        <div class="font-bold">Category: <span class="font-normal">{{ notice.category }}</span></div>
-        <div class="font-bold">Title: <span class="font-normal">{{ notice.title }}</span></div>
-        <div>Content: {{ notice.content }}</div>
-        <a-button type="primary" @click="acknowledgeNotice(notice.id)" class="mt-2">Acknowledge</a-button>
+    <div v-for="message in student.messages" :key="message.id" class="bg-white shadow rounded-lg p-4 mb-2">
+        <div class="font-bold">Category: <span class="font-normal">{{ message.category }}</span></div>
+        <div class="font-bold">Title: <span class="font-normal">{{ message.title }}</span></div>
+        <div>Content: {{ message.content }}</div>
+        <a-button type="primary" @click="acknowledgeMessage(message.id)" class="mt-2">Acknowledge</a-button>
     </div>
 </div>
         </div>
