@@ -27,8 +27,8 @@ return new class extends Migration
             $table->date('valid_at')->nullable();
             $table->date('expire_at')->nullable();
             $table->boolean('require_login')->default(false);
-            $table->json('for_whom')->default(false);
-            $table->boolean('published')->default(false);
+            $table->string('for_whom')->nullable();
+            $table->string('published')->default(false);
             $table->timestamps();   
         });
 

@@ -79,12 +79,14 @@ Route::group([
     Route::get('/',[App\Http\Controllers\Admin\DashboardController::class,'index'])->name('admin.dashboard');
 
     Route::resource('forms', App\Http\Controllers\Admin\FormController::class)->names('admin.forms');
+    Route::post('form/distribute', [App\Http\Controllers\Admin\FormController::class,'distribute'])->name('admin.form.distribute');
     Route::resource('form/{form}/fields', App\Http\Controllers\Admin\FormFieldController::class)->names('admin.form.fields');
     Route::resource('form/{form}/entries', App\Http\Controllers\Admin\EntryController::class)->names('admin.form.entries');
     Route::get('entry/{form}/export', [App\Http\Controllers\Admin\EntryController::class, 'export'])->name('admin.entry.export');
     Route::get('form/{form}/entry/{entry}/success', [App\Http\Controllers\Admin\EntryController::class, 'success'])->name('admin.form.entry.success');
     Route::post('form/delete_media/{form}', [App\Http\Controllers\Admin\FormController::class, 'deleteMedia'])->name('admin.form.deleteMedia');
 
+    Route::resource('notices', App\Http\Controllers\Admin\NoticeController::class)->names('admin.notices');
 
 });
 

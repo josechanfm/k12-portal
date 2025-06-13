@@ -69,30 +69,14 @@ const logout = () => {
 };
 
 const list = [{
-    key: 'master',
+    key: 'admin',
     roles: ['master'],
-    title: '系統維護管理',
+    title: '系統管理',
     children: [{
-        key: 'subjects',
-        title: '全校學科總表',
-        url: '/master/subjects',
-        route: 'master.subjects'
-            }, {
-                key: 'studies',
-                title: '學習計劃',
-                url: '/master/studies',
-            }, {
-                key: 'theme_templates',
-                title: '基力設置',
-                url: '/master/theme_templates',
-            }, {
-                key: 'transcriptTemplate',
-                title: '成績表欄位',
-                url: '/master/transcriptTemplate',
-            }, {
-                key: 'configs',
-                title: '系統參數',
-                url: '/master/configs',
+                key: 'subjects',
+                title: '全校學科總表',
+                url: '/admin',
+                route: 'master.subjects'
             }, {
                 key: 'roles',
                 title: '角色及權限',
@@ -110,33 +94,33 @@ const list = [{
                 title: '問題日志',
                 url: '/master/issues',
             }
-    ],
-}, {
-    key: 'admin',
-    roles: ['master', 'admin'],
-    title: '行政管理',
-    children: [{
-        key: 'years',
-        title: '學年',
-        url: '/admin/years',
+        ],
     }, {
-        key: 'year',
-        title: '年級',
-        url: '/admin/grades',
+        key: 'admin',
+        roles: ['master', 'admin'],
+        title: '行政管理',
+        children: [{
+            key: 'forms',
+            title: '表格',
+            url: '/admin/forms',
+        }, {
+            key: 'notices',
+            title: '通告',
+            url: '/admin/notices',
+        }, {
+            key: 'grade',
+            title: '班別',
+            url: '/admin/klasses',
+        }, {
+            key: 'students',
+            title: '學生',
+            url: '/admin/students',
+        }, {
+            key: 'student',
+            title: '新生',
+            url: '/admin/candidates',
+        }],
     }, {
-        key: 'grade',
-        title: '班別',
-        url: '/admin/klasses',
-    }, {
-        key: 'students',
-        title: '學生',
-        url: '/admin/students',
-    }, {
-        key: 'student',
-        title: '新生',
-        url: '/admin/candidates',
-    }],
-}, {
     key: 'director',
     roles: ['master', 'admin', 'director'],
     title: '教務管理',
@@ -167,33 +151,7 @@ const list = [{
         title: '升留班預處理',
         url: '/director/promotes',
     }],
-}, {
-    key: 'teacher',
-    roles: ['teacher'],
-    title: '教師',
-    children: [{
-        key: 'teacher',
-        title: '任教',
-        url: '/teacher',
-    }],
-}, {
-    key: 'medical',
-    roles: ['master', 'admin', 'director'],
-    title: '保健醫療',
-    children: [{
-        key: '4.1',
-        title: '總覽統計',
-        url: '/medical',
-    }, {
-        key: '4.2',
-        title: '就診記錄',
-        url: '/medical/treatments',
-    }, {
-        key: '4.3',
-        title: '體檢保建',
-        url: '/medical/healthcares',
-    }],
-}, {
+
     key: '5',
     roles: ['master', 'admin', 'director'],
     title: '社工輔導',

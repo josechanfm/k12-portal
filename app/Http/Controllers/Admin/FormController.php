@@ -9,8 +9,8 @@ use Inertia\Inertia;
 use App\Models\Form;
 use App\Models\Entry;
 use App\Models\EntryRecord;
-use App\Models\Event;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use App\Models\Config;
+
 
 class FormController extends Controller
 {
@@ -92,8 +92,10 @@ class FormController extends Controller
      */
     public function show(Form $form)
     {
-
-        echo 'edit form';
+        return Inertia::render('Admin/FormDistribution', [
+            'form' => $form,
+            'klasses'=>Config::item('year_klasses'),
+        ]);
     }
 
     /**
@@ -104,7 +106,7 @@ class FormController extends Controller
      */
     public function edit(Form $form)
     {
-        dd($form);
+        // dd($form);
         return Inertia::render('Admin/Form', [
             'form' => $form
         ]);
@@ -174,5 +176,9 @@ class FormController extends Controller
     {
         $form->getFirstMedia($request->collection)->delete();
         return redirect()->back();
+    }
+
+    public function distribute(Request $request){
+        dd($request->all());
     }
 }

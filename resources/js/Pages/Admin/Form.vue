@@ -117,8 +117,8 @@
         </a-form-item>
       </a-form>
       <div v-if="form.id">
-        <a :href="route('form.item', { t: form.uuid })" target="_blank" ref="formUrl">
-          {{ route('form.item', {t: form.uuid}) }}</a>
+        <a :href="route('form.show', { t: form.uuid })" target="_blank" ref="formUrl">
+          {{ route('form.show', {t: form.uuid}) }}</a>
         <a-button @click="copyUrl">{{ $t('copy_to_clipboard') }}</a-button>
       </div>
     </div>

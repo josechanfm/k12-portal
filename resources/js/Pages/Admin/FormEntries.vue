@@ -243,7 +243,7 @@ export default {
   data() {
     return {
       breadcrumb: [
-        { label: "表格列表", url:route('organizer.forms.index')},
+        { label: "表格列表", url:route('admin.forms.index')},
         { label: "表格報名", url: null }
       ],
       dateFormat: "YYYY-MM-DD",
@@ -291,7 +291,7 @@ export default {
           }
         }
       });
-      this.$inertia.post(route("organizer.form.createEventAttendees", this.form.id), data, {
+      this.$inertia.post(route("admin.form.createEventAttendees", this.form.id), data, {
         onSuccess: (page) => {
           this.modal.isOpen = false;
           this.imageUrl = null;
@@ -314,7 +314,7 @@ export default {
     updateRecord() {
       console.log(this.formData);
       this.$inertia.patch(
-        route("organizer.form.entries.update", { form: this.form, entry: this.modal.data }),
+        route("admin.form.entries.update", { form: this.form, entry: this.modal.data }),
         { fields: this.formData },
         {
           onSuccess: (page) => {
@@ -343,7 +343,7 @@ export default {
     },
     deleteRecord(record) {
       this.$inertia.delete(
-        route("organizer.form.entries.destroy", { form: this.form, entry: record }),
+        route("admin.form.entries.destroy", { form: this.form, entry: record }),
         {
           onSuccess: (page) => {
             message.success(this.$t("delete_success"));

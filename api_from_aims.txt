@@ -1,0 +1,15 @@
+###Grades,
+#Get all grades by years, store in Config record, key=grades
+{db:"grades", columns:"['year']", value:"['2025']"}
+
+###Klasses, 
+#Get all klasses by year, store in Config record, key=klasses
+{db:"grades", columns:"['year']", value:"['2025']"}
+
+###Students, 
+#Get all students by year, store in students table
+{db:"students", columns:"['year']", value:"['2025']"}
+
+###Courses
+#Get all courses by year, store in students table
+{db:"courses", columns:"['year']", value:"['2025']"}

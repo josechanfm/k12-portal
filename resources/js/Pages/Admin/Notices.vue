@@ -2,7 +2,7 @@
   <AdminLayout title="表格" :breadcrumb="breadcrumb">
     <div class="flex-auto pb-3 text-right">
       <a-button
-          :href="route('admin.forms.create')"
+          :href="route('admin.notices.create')"
           as="link"
           type="primary"
       >
@@ -26,25 +26,16 @@
     </div>
     <div class="container mx-auto py-5">
       <div class="bg-white relative shadow rounded-lg overflow-x-auto">
-        <a-table :dataSource="forms.data" :columns="columns" :pagination="false">
+        <a-table :dataSource="notices.data" :columns="columns" :pagination="false">
           <template #headerCell="{ column }">
             {{ column.i18n ? $t(column.i18n) : column.title }}
           </template>
           <template #bodyCell="{ column, text, record, index }">
             <template v-if="column.dataIndex == 'operation'">
-              <a-button :href="route('admin.form.entries.index', { form: record.id })" as="link" >
-                {{ $t("applications") }}
-              </a-button>
-              <a-button :href="route('admin.entry.export', { form: record.id })" as="link">
-                {{ $t("export") }}
-              </a-button>
-              <a-button :href="route('admin.form.fields.index', { form: record.id }) "as="link">
-                {{ $t("data_fields") }}
-              </a-button>
-              <a-button :href="route('admin.forms.edit', record.id)" as="link">
+              <a-button :href="route('admin.notices.edit', record.id)" as="link">
                 {{ $t("edit") }}
               </a-button>
-              <a-button :href="route('admin.forms.show', record.id)" as="link">
+              <a-button :href="route('admin.notices.show', record.id)" as="link">
                 {{ $t("distribute") }}
               </a-button>
 
@@ -103,7 +94,7 @@ export default {
     // quillEditor,
     message,
   },
-  props: ["forms"],
+  props: ["notices"],
   data() {
     return {
       breadcrumb: [{ label: "表格列表", url: null }],
@@ -111,9 +102,9 @@ export default {
       imageUrl: null,
       search: {},
       pagination: {
-        total: this.forms.total,
-        current: this.forms.current_page,
-        pageSize: this.forms.per_page,
+        total: this.notices.total,
+        current: this.notices.current_page,
+        pageSize: this.notices.per_page,
       },
       modal: {
         isOpen: false,
@@ -123,36 +114,15 @@ export default {
       },
       columns: [
         {
-          title: "Name",
-          i18n: "name",
-          dataIndex: "name",
+          title: "Category",
+          dataIndex: "category",
         },
         {
           title: "Title",
-          i18n: "title",
           dataIndex: "title",
         },
         {
-          title: "Require_login",
-          i18n: "require_login",
-          dataIndex: "require_login",
-          type: "yesno",
-        },
-        {
-          title: "Published",
-          i18n: "published",
-          dataIndex: "published",
-          type: "yesno",
-        },
-        {
-          title: "Entries",
-          i18n: "entries",
-          dataIndex: "entries",
-          key: "entries",
-        },
-        {
           title: "Operation",
-          i18n: "operation",
           dataIndex: "operation",
           key: "operation",
         },
@@ -171,7 +141,7 @@ export default {
     deleteConfirmed(record) {
       console.log("delete");
       console.log(record);
-      this.$inertia.delete(route("admin.forms.destroy", { form: record.id }), {
+      this.$inertia.delete(route("admin.notices.destroy", { form: record.id }), {
         onSuccess: (page) => {
           console.log(page);
         },
@@ -193,7 +163,7 @@ export default {
     },
     searchData() {
       this.$inertia.get(
-        route("admin.forms.index"),
+        route("admin.notices.index"),
         { search: this.search, pagination: this.pagination },
         {
           onSuccess: (page) => {

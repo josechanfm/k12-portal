@@ -17,8 +17,28 @@ class ConfigSeeder extends Seeder
     public function run()
     {
         Config::create([
-            'key'=>'current_year',
+            'key'=>'year_current',
             'value'=>'"2025"'
+        ]);
+        Config::create([
+            'key'=>'year_klasses',
+            'value'=>'[
+                {"value": "K1", "label": "K1", "name_zh":"幼兒"},
+                {"value": "K2", "label": "K2", "name_zh":"幼初"},
+                {"value": "K3", "label": "K3", "name_zh":"幼高"},
+                {"value": "P1", "label": "P1", "name_zh":"小一"},
+                {"value": "P2", "label": "P2", "name_zh":"小二"},
+                {"value": "P3", "label": "P3", "name_zh":"小三"},
+                {"value": "P4", "label": "P4", "name_zh":"小四"},
+                {"value": "P5", "label": "P5", "name_zh":"小五"},
+                {"value": "P6", "label": "P6", "name_zh":"小六"},
+                {"value": "F1", "label": "F1", "name_zh":"初一"},
+                {"value": "F2", "label": "F2", "name_zh":"初二"},
+                {"value": "F3", "label": "F3", "name_zh":"初三"},
+                {"value": "F4", "label": "F4", "name_zh":"高一"},
+                {"value": "F5", "label": "F5", "name_zh":"高二"},
+                {"value": "F6", "label": "F6", "name_zh":"高三"}
+            ]'
         ]);
         Config::create([
             'key'=>'guardian_relationships',
@@ -90,21 +110,21 @@ class ConfigSeeder extends Seeder
         DB::table('configs')->insert([
             'key'=>'grade_years',
             'value' =>'[
-                {"value": 1, "label": "K1", "initial": "K","level":1,"zh_name":"幼兒"},
-                {"value": 2, "label": "K2", "initial": "K","level":2,"zh_name":"幼初"},
-                {"value": 3, "label": "K3", "initial": "K","level":3,"zh_name":"幼高"},
-                {"value": 4, "label": "P1", "initial": "P","level":1,"zh_name":"小一"},
-                {"value": 5, "label": "P2", "initial": "P","level":2,"zh_name":"小二"},
-                {"value": 6, "label": "P3", "initial": "P","level":3,"zh_name":"小三"},
-                {"value": 7, "label": "P4", "initial": "P","level":4,"zh_name":"小四"},
-                {"value": 8, "label": "P5", "initial": "P","level":5,"zh_name":"小五"},
-                {"value": 9, "label": "P6", "initial": "P","level":6,"zh_name":"小六"},
-                {"value": 10, "label": "F1", "initial": "F","level":1,"zh_name":"初一"},
-                {"value": 11, "label": "F2", "initial": "F","level":2,"zh_name":"初二"},
-                {"value": 12, "label": "F3", "initial": "F","level":3,"zh_name":"初三"},
-                {"value": 13, "label": "F4", "initial": "F","level":1,"zh_name":"高一"},
-                {"value": 14, "label": "F5", "initial": "F","level":2,"zh_name":"高二"},
-                {"value": 15, "label": "F6", "initial": "F","level":3,"zh_name":"高三"}
+                {"value": 1, "label": "K1", "initial": "K","level":1,"name_zh":"幼兒"},
+                {"value": 2, "label": "K2","name_zh":"幼初"},
+                {"value": 3, "label": "K3", "initial": "K","level":3,"name_zh":"幼高"},
+                {"value": 4, "label": "P1", "initial": "P","level":1,"name_zh":"小一"},
+                {"value": 5, "label": "P2", "initial": "P","level":2,"name_zh":"小二"},
+                {"value": 6, "label": "P3", "initial": "P","level":3,"name_zh":"小三"},
+                {"value": 7, "label": "P4", "initial": "P","level":4,"name_zh":"小四"},
+                {"value": 8, "label": "P5", "initial": "P","level":5,"name_zh":"小五"},
+                {"value": 9, "label": "P6", "initial": "P","level":6,"name_zh":"小六"},
+                {"value": 10, "label": "F1", "initial": "F","level":1,"name_zh":"初一"},
+                {"value": 11, "label": "F2", "initial": "F","level":2,"name_zh":"初二"},
+                {"value": 12, "label": "F3", "initial": "F","level":3,"name_zh":"初三"},
+                {"value": 13, "label": "F4", "initial": "F","level":1,"name_zh":"高一"},
+                {"value": 14, "label": "F5", "initial": "F","level":2,"name_zh":"高二"},
+                {"value": 15, "label": "F6", "initial": "F","level":3,"name_zh":"高三"}
             ]',
             'remark'=>'value 用時用於gradeYear, 主要用於Year_model autoGenerate function上。
                         K1-K3: 1-3
