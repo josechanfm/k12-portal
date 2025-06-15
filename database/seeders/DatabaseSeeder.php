@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             StudentSeeder::class,
             GuardianSeeder::class,
             NoticeSeeder::class,
+            MessageSeeder::class,
             CourseSeeder::class,
             FormSeeder::class,
         ]);

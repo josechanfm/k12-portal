@@ -87,6 +87,8 @@ Route::group([
     Route::post('form/delete_media/{form}', [App\Http\Controllers\Admin\FormController::class, 'deleteMedia'])->name('admin.form.deleteMedia');
 
     Route::resource('notices', App\Http\Controllers\Admin\NoticeController::class)->names('admin.notices');
+    Route::post('notice/distribute', [App\Http\Controllers\Admin\NoticeController::class,'distribute'])->name('admin.notice.distribute');
+    Route::resource('notice/{notice}/messages', App\Http\Controllers\Admin\MessageController::class)->names('admin.notice.messages');
 
 });
 

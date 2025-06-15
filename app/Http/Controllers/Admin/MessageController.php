@@ -6,17 +6,19 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Notice;
-use App\Models\Config;
+use App\Models\Message;
 
-class NoticeController extends Controller
+class MessageController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Notice $notice)
     {
-        return Inertia::render('Admin/Notices',[
-            'notices'=>Notice::orderBy('created_at','desc')->paginate()
+    //  dd($notice, $notice->with('messages')->paginate());
+        return Inertia::render('Admin/Messages',[
+            'notice'=>$notice->load('messages')->paginate(),
+            'messages'=>$notice->with('messages')->paginate()
         ]);
     }
 
@@ -39,12 +41,9 @@ class NoticeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Notice $notice)
+    public function show(string $id)
     {
-        return Inertia::render('Admin/NoticeDistribution', [
-            'notice' => $notice,
-            'klasses'=>Config::item('year_klasses'),
-        ]);
+        //
     }
 
     /**
@@ -69,9 +68,5 @@ class NoticeController extends Controller
     public function destroy(string $id)
     {
         //
-    }
-
-    public function distribute(Request $request){
-        dd($request->all());
     }
 }

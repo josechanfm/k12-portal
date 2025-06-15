@@ -13,8 +13,6 @@ return new class extends Migration
     {
         Schema::create('notices', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('noticeable_id');
-            $table->string('noticeable_type');
             $table->string('category')->nullable();
             $table->string('title')->nullable();
             $table->text('content')->nullable();
