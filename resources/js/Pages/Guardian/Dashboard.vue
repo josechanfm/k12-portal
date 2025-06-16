@@ -23,7 +23,7 @@
                 <h3 class="text-lg font-semibold flex justify-between items-center">
                     <span>messages</span>
                     <span class="text-right">
-                        <inertia-link href="#" class="text-sm">History</inertia-link>
+                        <inertia-link :href="route('guardian.messages.index')" class="text-sm">History</inertia-link>
                     </span>
                 </h3>
 

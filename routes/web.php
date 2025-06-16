@@ -104,6 +104,7 @@ Route::group([
 ],function () {
     Route::get('/', [App\Http\Controllers\Guardian\DashboardController::class,'index'])->name('guardian.dashboard');
     Route::resource('profile', App\Http\Controllers\Guardian\ProfileController::class)->names('guardian.profile')->parameters(['profile' => 'guardian']);
+    Route::resource('messages', App\Http\Controllers\Guardian\MessageController::class)->names('guardian.messages');
 });
 
 Route::group([

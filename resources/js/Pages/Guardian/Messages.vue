@@ -1,5 +1,5 @@
 <template>
-  <AdminLayout title="表格" :breadcrumb="breadcrumb">
+  <WebLayout title="表格" :breadcrumb="breadcrumb">
     <div class="flex-auto pb-3 text-right">
       <!-- <a-button
           :href="route('admin.notice.messages.create',{notice:notice.id})"
@@ -32,28 +32,7 @@
           </template>
           <template #bodyCell="{ column, text, record, index }">
             <template v-if="column.dataIndex == 'operation'">
-              <a-button @click="onClickEdit(record)">{{ $t("edit") }}</a-button>
-              <!-- <a-button :href="route('admin.notice.messages.edit', record.id)" as="link">
-                {{ $t("edit") }}
-              </a-button>
-              <a-button :href="route('admin.messages.show', record.id)" as="link">
-                {{ $t("distribute") }}
-              </a-button> -->
-
-              <a-popconfirm
-                :title="$t('confirm_delete_record')"
-                :ok-text="$t('yes')"
-                :cancel-text="$t('no')"
-                @confirm="deleteConfirmed(record)"
-                :disabled="record.entries_count > 0"
-              >
-                <a-button :disabled="record.entries_count > 0">{{
-                  $t("delete")
-                }}</a-button>
-              </a-popconfirm>
-              <a-button @click="backupRecords(record)" v-if="record.entries_count > 0">{{
-                $t("backup")
-              }}</a-button>
+              <a-button @click="onClickShow(record)">{{ $t("show") }}</a-button>
             </template>
             <template v-else-if="column.type == 'yesno'">
               <span v-if="record[column.dataIndex] == 1">{{ $t("yes") }}</span>
@@ -80,22 +59,22 @@
       <a-form :model="modal.data" name="Staff" ref="modalRef" :rules="rules" :validate-messages="validateMessages"
         :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
         <a-form-item label="Category" name="category">
-          <a-input v-model:value="modal.data.category" />
+          {{ modal.data.category }}
         </a-form-item>
         <a-form-item label="Title" name="title">
-          <a-input v-model:value="modal.data.title" />
+          {{ modal.data.title }}
         </a-form-item>
         <a-form-item label="Content" name="content">
-          <a-textarea v-model:value="modal.data.content" />
+          {{ modal.data.content }}
         </a-form-item>
         <a-form-item label="Start at" name="date_start">
-          <a-date-picker v-model:value="modal.data.date_start" :format="dateFormat" :valueFormat="dateFormat"/>
+          {{ modal.data.date_start }}
         </a-form-item>
         <a-form-item label="Due at" name="date_due">
-          <a-date-picker v-model:value="modal.data.date_due" :format="dateFormat" :valueFormat="dateFormat"/>
+          {{ modal.data.date_due }}
         </a-form-item>
         <a-form-item label="acknowledge" name="acknowledge">
-          <a-switch v-model:checked="modal.data.is_teacher"/>
+          {{ modal.data.acknowledge }}
         </a-form-item>
       </a-form>
       <template #footer>
@@ -105,11 +84,11 @@
       </template>
 
     </a-modal>
-  </AdminLayout>
+  </WebLayout>
 </template>
 
 <script>
-import AdminLayout from "@/Layouts/AdminLayout.vue";
+import WebLayout from "@/Layouts/WebLayout.vue";
 import {
   UploadOutlined,
   LoadingOutlined,
@@ -122,7 +101,7 @@ import { message } from "ant-design-vue";
 
 export default {
   components: {
-    AdminLayout,
+    WebLayout,
     UploadOutlined,
     LoadingOutlined,
     PlusOutlined,
@@ -130,10 +109,10 @@ export default {
     // quillEditor,
     message,
   },
-  props: ["notice","messages","categories"],
+  props: ["guardian","messages","categories"],
   data() {
     return {
-      breadcrumb: [{ label: "表格列表", url: null }],
+      breadcrumb: [{ label: "信息列表", url: null }],
       loading: false,
       imageUrl: null,
       search: {},
@@ -203,8 +182,7 @@ export default {
   },
   created() {},
   mounted() {
-    
-
+   
     this.pagination = {
       currentPage: this.route().params.currentPage ?? 1,
       pageSize: this.route().params.pageSize ?? 10,
@@ -212,8 +190,8 @@ export default {
     this.search = this.route().params.search ?? {};
   },
   methods: {
-    onPaginationChange(page, filters, sorter){
-        this.$inertia.get(route('admin.notices.index'),{
+      onPaginationChange(page, filters, sorter){
+        this.$inertia.get(route('admin.messages.index'),{
             page:page.current,
             per_page:page.pageSize,
             //filter:filters,
@@ -227,35 +205,12 @@ export default {
             }
         });
     },
-    onClickEdit(record) {
+
+    onClickShow(record) {
       this.modal.data = { ...record };
       this.modal.title = "修改";
       this.modal.mode = 'EDIT';
       this.modal.isOpen = true;
-    },
-
-    deleteConfirmed(record) {
-      console.log("delete");
-      console.log(record);
-      this.$inertia.delete(route("admin.notice.messages.destroy", { form: record.id }), {
-        onSuccess: (page) => {
-          console.log(page);
-        },
-        onError: (error) => {
-          alert(error.message);
-        },
-      });
-    },
-    backupRecords(record) {
-      if (!confirm("Do you sure want to backup?")) return;
-      this.$inertia.post(route("admin.form.backup", record.id), {
-        onSuccess: (page) => {
-          console.log(page);
-        },
-        onError: (error) => {
-          alert(error.message);
-        },
-      });
     },
     searchData() {
       this.$inertia.get(

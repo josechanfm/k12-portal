@@ -18,8 +18,9 @@ return new class extends Migration
             $table->text('content')->nullable();
             $table->boolean('acknowledge')->nullable();
             $table->string('question_body')->nullable();
-            $table->string('question_option')->nullable();
-            $table->string('answer')->nullable();
+            $table->string('question_options')->nullable();
+            $table->date('date_start')->nullable();
+            $table->date('date_due')->nullable();
             $table->timestamps();
         });
     }

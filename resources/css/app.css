@@ -18,7 +18,7 @@
   }
 
 .ant-btn-secondary{
-  @apply !h-fit font-black text-lg text-white 
+  @apply !h-fit font-black text-white 
   !bg-green-600/80   hover:!bg-green-700  hover:!text-white 
 }
 
@@ -26,19 +26,19 @@
   @apply  hover:!bg-blue-100  hover:animate-pulse 
 }
 .ant-btn-info{
-    @apply !h-fit font-black text-lg text-white 
+    @apply !h-fit font-black text-white 
         !bg-gray-600/80   hover:!bg-gray-700  hover:!text-white 
 }
 .ant-btn-edit{
-    @apply !h-fit font-black text-lg text-white 
+    @apply !h-fit font-black text-white 
    bg-amber-600/80   hover:bg-amber-700
 }
 .ant-btn-delete{
-    @apply !h-fit font-black text-lg text-white  
+    @apply !h-fit font-black text-white  
     bg-rose-600/80   hover:bg-rose-700
 }
 .ant-btn-create{
-    @apply !h-fit font-black text-lg text-white 
+    @apply !h-fit font-black text-white 
     bg-blue-600/80   hover:bg-blue-700
 }
 .ant-btn-active{

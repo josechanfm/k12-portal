@@ -9,7 +9,9 @@ class Message extends Model
 {
     use HasFactory;
 
-        public function messageable(): MorphTo{
+    public function messageable(): MorphTo{
         return $this->morphTo();
     }
+
+
 }

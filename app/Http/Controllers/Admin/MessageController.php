@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Notice;
-use App\Models\Message;
+use App\Models\Config;
 
 class MessageController extends Controller
 {
@@ -18,7 +18,8 @@ class MessageController extends Controller
     //  dd($notice, $notice->with('messages')->paginate());
         return Inertia::render('Admin/Messages',[
             'notice'=>$notice->load('messages')->paginate(),
-            'messages'=>$notice->with('messages')->paginate()
+            'messages'=>$notice->with('messages')->paginate(),
+            'categories'=>Config::item('notice_categories')
         ]);
     }
 

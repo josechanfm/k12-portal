@@ -41,6 +41,14 @@ class ConfigSeeder extends Seeder
             ]'
         ]);
         Config::create([
+            'key'=>'notice_categories',
+            'value'=>'[
+                {"value": "NOTICE", "label": "通告", "name_zh":"通告"},
+                {"value": "RECEIPT", "label": "回執", "name_zh":"回執"},
+                {"value": "FORM", "label": "表格", "name_zh":"表格"}
+            ]'
+        ]);     
+        Config::create([
             'key'=>'guardian_relationships',
             'value'=>'[
                 {"value": "FATHER", "label_zh":"父親","label_en":"Father"},

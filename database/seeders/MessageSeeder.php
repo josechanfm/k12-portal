@@ -18,7 +18,7 @@ class messageseeder extends Seeder
             $student=Student::find($i);
             $student->messages()->create([
                 'notice_id'=>1,
-                'category'=>'INFO',
+                'category'=>'NOTICE',
                 'title'=>'Information S'.$i,
                 'content'=>'Content of Information S'.$i,
             ]);
@@ -28,7 +28,7 @@ class messageseeder extends Seeder
             $guardian=Guardian::find($i);
             $guardian->messages()->create([
                 'notice_id'=>2,
-                'category'=>'INFO',
+                'category'=>'RECEIPT',
                 'title'=>'Information G'.$i,
                 'content'=>'Content of Information G'.$i,
             ]);

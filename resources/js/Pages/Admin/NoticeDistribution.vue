@@ -2,20 +2,21 @@
   <AdminLayout :title="notice.id ? '表格修改' : '表格新增'" :breadcrumb="breadcrumb">
     <div class="bg-white relative shadow  p-5 rounded-lg overflow-x-auto">
       <div>
-        <div>{{ notice.title }}</div>
-        <div v-html="notice.description"/>
+        <div>類型:{{ categories.find(c=>c.value==notice.category)?.label }}</div>
+        <div>標題:{{ notice.title }}</div>
+        <div>內容:</div>
+        <div v-html="notice.content"/>
       </div>
       <hr>
       <a-form ref="modalRef" :model="distribute" name="From" layout="vertical" autocomplete="off" :rules="rules"
         :validate-messages="validateMessages" @finish="onFinish" @finishFailed="onFinishFailed">
-
+        <a-form-item :label="$t('recipient')" name="reciptients">
+          <a-checkbox-group v-model:value="distribute.recipients" :options="recipientOptions"/>
+        </a-form-item>
         <a-form-item :label="$t('klasses')" name="klasses">
           <a-checkbox-group v-model:value="distribute.klasses" >
             <a-checkbox v-for="klass in klasses" :value="klass.value" :key="klass.value">{{ klass.name_zh }}</a-checkbox>
           </a-checkbox-group>
-        </a-form-item>
-        <a-form-item :label="$t('recipient')" name="reciptients">
-          <a-checkbox-group v-model:value="distribute.recipients" :options="recipientOptions"/>
         </a-form-item>
 
         <a-form-item :label="$t('specific_students')" name="specific_students">
@@ -61,7 +62,7 @@ export default {
     message,
     PlusOutlined, DeleteOutlined
   },
-  props: ["notice","klasses"],
+  props: ["notice","klasses","categories"],
   data() {
     return {
       breadcrumb: [

@@ -4,15 +4,22 @@ namespace App\Http\Controllers\Guardian;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use App\Models\Notice;
+use App\Models\Message;
 
-class NoticeController extends Controller
+class MessageController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $guardian=auth()->user()->guardian()->first();
+        return Inertia::render('Guardian/Messages',[
+            'guradian'=>$guardian,
+            'messages'=>$guardian->messages()->paginate(),
+        ]);
     }
 
     /**
